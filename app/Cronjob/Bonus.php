@@ -9,6 +9,7 @@ namespace App\Cronjob;
 
 use App\UserPackage;
 use App\User;
+use App\UserData;
 use App\Wallet;
 use App\BonusBinary;
 use App\ExchangeRate;
@@ -225,5 +226,132 @@ class Bonus
 
         //Update status from 1 => 0 after run all user
         DB::table('cron_binary_logs')->update(['status' => 0]);
+    }
+
+    /**
+    * This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
+    */
+    public static function bonusCongHuongWeek()
+    {
+        set_time_limit(0);
+        /* Get previous weekYear */
+        /* =======BEGIN ===== */
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
+        $firstWeek = $weeked - 1;
+        $firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
+
+        if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
+        /* =======END ===== */
+
+        //Get all user in loyalty table with loyaltyId > 0
+        $listLoyaltyUser = UserData::where('loyaltyId', '>', 0)->where('status', 1)->get();
+        foreach($listLoyaltyUser as $user)
+        {
+            //Get cron status
+            $cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+            if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
+            $totalGenealogyBonus = 0;
+            self::calTotalBonus(&$totalGenealogyBonus, $user->userId, $user->loyaltyId, 1);
+            $bonus = $totalGenealogyBonus * config('cryptolanding.binary_bonus_1_pay');
+
+            if($bonus > 0)
+            {
+                $usdAmount = $bonus * config('cryptolanding.usd_bonus_pay');
+                $reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+
+                $userCoin = $binary->userCoin;
+                $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+                $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+                $userCoin->save();
+
+                $fieldUsd = [
+                    'walletType' => Wallet::USD_WALLET,//usd
+                    'type' =>  Wallet::BINARY_TYPE,//bonus week
+                    'inOut' => Wallet::IN,
+                    'userId' => $binary->userId,
+                    'amount' => $usdAmount,
+                ];
+
+                Wallet::create($fieldUsd);
+
+                $fieldInvest = [
+                    'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                    'type' => Wallet::BINARY_TYPE,//bonus week
+                    'inOut' => Wallet::IN,
+                    'userId' => $binary->userId,
+                    'amount' => $reinvestAmount,
+                ];
+
+                Wallet::create($fieldInvest);
+            }
+
+            //Update cron status from 0 => 1
+            $cronStatus->status = 1;
+            $cronStatus->save();
+        }
+
+        //Update status from 1 => 0 after run all user
+        DB::table('cron_binary_logs')->update(['status' => 0]);
+    }
+
+    public static function calTotalBonus(&$totalBonus, $referralId, $loyaltyId, $deepLevel = 1)
+    {
+        //Cal total member F1
+        $f1Users = UserData::where('refererId', $referralId)->get();
+        //Total binany bonus F1
+        foreach($f1Users as $userId) {
+            $bonusBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->where('userId', $userId)->get();
+            $totalBonus += $bonusBinary->bonus;
+        }
+
+        $deepLevel++;
+        //IsSilver
+        if($loyaltyId == 1 && $deepLevel <= 2) {
+            foreach($f1Users as $userId) {
+                self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+            }
+        }
+
+        //IsGold
+        if($loyaltyId == 2 && $deepLevel <= 4){
+            foreach($f1Users as $userId) {
+                self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+            }
+        }
+
+        //IsPear
+        if($loyaltyId == 3 && $deepLevel <= 6){
+            foreach($f1Users as $userId) {
+                self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+            }
+        }
+
+        //IsEmerald
+        if($loyaltyId == 4 && $deepLevel <= 8){
+            foreach($f1Users as $userId) {
+                self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+            }
+        }
+
+        //IsDiamond
+        if($loyaltyId == 5 && $deepLevel <= 10) {
+            foreach($f1Users as $userId) {
+                self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+            }
+        }
     }
 }

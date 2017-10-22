@@ -188,6 +188,8 @@ class User extends Authenticatable
 						$user->lastUserIdLeft = $userRoot->lastUserIdLeft;
                     $user->leftMembers = $user->leftMembers + 1;
 
+                    //Update genelogy on left
+                    self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
                 }else{
                     //Total sale on right
                     $user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
@@ -195,6 +197,9 @@ class User extends Authenticatable
                     if($continue) 
 						$user->lastUserIdRight = $userRoot->lastUserIdRight;
                     $user->rightMembers = $user->rightMembers + 1;
+
+                    //Update genelogy on right
+                    self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
                 }
 
                 $user->totalMembers = $user->totalMembers + 1;
@@ -228,7 +233,8 @@ class User extends Authenticatable
 
             $user->save();
 
-            
+            //Update binary list user
+            self::updateUserBinary($binaryUserId, $userId);
 
             //Caculate binary bonus for up level of $userRoot in binary tree
 			// $binaryUserId = $user->userId
@@ -362,44 +368,20 @@ class User extends Authenticatable
     */
     public static function bonusLoyaltyUser($userId, $refererId, $legpos){
         $leftRight = $legpos == 1 ? 'left' : 'right';
-        $users = UserData::where('refererId', '=', $userId)
-			->where('isBinary', '=', 1)
-            ->groupBy(['packageId', 'leftRight'])
-            ->selectRaw('packageId, leftRight, count(*) as num')
-            ->get();
 
-        $totalf1Left = $totalf1Right = 0;
         $isSilver = 0;
         $isGold = 0;
         $isPear = 0;
         $isEmerald = 0;
         $isDiamond = 0;
 
-        foreach ($users as $user) {
-            if($user->packageId > 0){
-                $package = Package::find($user->packageId);
-                if($package){
-                    if($user->leftRight == 'left'){
-                        $totalf1Left += $package->price * $user->num;
-                    }else{
-                        $totalf1Right += $package->price * $user->num;
-                    }
-                }
-            }
-        }
-
         //Get UserData
         $userInfo = UserData::where('userId', '=', $userId)->get()->first();
         $loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
-
-        if($totalf1Left >= config('cryptolanding.loyalty_upgrate_silver') 
-            && $totalf1Right >= config('cryptolanding.loyalty_upgrate_silver')
-            && $userInfo->packageId > 2) {
-            $isSilver = 1;
-            
-        }
-
         $loyaltyBonus = config('cryptolanding.loyalty_bonus');
+
+        if( isset($loyaltyUser->isSilver) && $loyaltyUser->isSilver == 0 )
+            $isSilver = self::getBonusLoyaltyUser($userId, 'silver',$userInfo->packageId);
         if( isset($loyaltyUser->isGold) && $loyaltyUser->isGold == 0 ) 
             $isGold = self::getBonusLoyaltyUser($userId, 'gold',$userInfo->packageId);
         if(isset($loyaltyUser->isPear) && $loyaltyUser->isPear == 0 ) 
@@ -474,9 +456,6 @@ class User extends Authenticatable
         }
         else
         {
-            $fields['f1Left'] = $totalf1Left;
-            $fields['f1Right'] = $totalf1Right;
-
             LoyaltyUser::create($fields);
         }
     }
@@ -517,72 +496,111 @@ class User extends Authenticatable
     }
 
     /**
+    * Return amount loyalty bonus to usd wallet, reinvest wallet
+    */
+    public static function bonusLoyaltyCongHuong($userId, $amount, $type){
+        $usdAmount = $amount * config('cryptolanding.usd_bonus_pay');
+        $reinvestAmount = $amount * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+
+        $userCoin = UserCoin::where('userId', $userId)->get()->first();
+        $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+        $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+        $userCoin->save();
+
+        $fieldUsd = [
+            'walletType' => Wallet::USD_WALLET,//usd
+            'type' => Wallet::LTOYALTY_TYPE,//bonus f1
+            'inOut' => Wallet::IN,
+            'userId' => $userId,
+            'amount' => $usdAmount,
+            'note' => $type,
+        ];
+
+        Wallet::create($fieldUsd);
+
+        $fieldInvest = [
+            'walletType' => Wallet::REINVEST_WALLET,//reinvest
+            'type' => Wallet::LTOYALTY_TYPE,//bonus f1
+            'inOut' => Wallet::IN,
+            'userId' => $userId,
+            'amount' => $reinvestAmount,
+            'note' => $type,
+        ];
+        
+        Wallet::create($fieldInvest);
+    }
+
+    /**
     *  Check and Get loyalty type
     */
     public static function getBonusLoyaltyUser($userId, $type, $packageId)
     {
-        if($type == 'gold') 
+        $user = UserTreePermission::find($binaryUserId);
+
+        //Get list user genealogy on left, right
+        $leftGenealogy = explode(',', $user->genealogy_left);
+        $rightGenealogy = explode(',', $user->genealogy_right);
+
+        //Calculate sale
+        $saleOnLeft = 0;
+        foreach($leftGenealogy as $genId {
+            $userData = UserData::where('userId', $genId)->first();
+            $saleOnLeft += $userData->package->price;
+        }
+
+        $saleOnRight = 0;
+        foreach($rightGenealogy as $genId {
+            $userData = UserData::where('userId', $genId)->first();
+            $saleOnRight += $userData->package->price;
+        }
+
+
+        
+        if($type == 'silver') 
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isSilver', 1)
-                            ->where('leftRight', '=', 'left')
-                            ->count();
-
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isSilver', 1)
-                            ->where('leftRight', '=', 'right')
-                            ->count();
-
-            if($countLeft >= 1 && $countRight >= 1 && $packageId > 4){
+            
+            if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_silver') 
+                && $saleOnRight >= config('cryptolanding.loyalty_upgrate_silver')
+                && $packageId > 2) {
                 return 1;
+                
+            }
+        }
+        elseif($type == 'gold') 
+        {
+            
+            if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_gold') 
+                && $saleOnRight >= config('cryptolanding.loyalty_upgrate_gold')
+                && $packageId > 2) {
+                return 1;
+                
             }
         }
         elseif($type == 'pear')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isGold', 1)
-                            ->where('leftRight', '=', 'left')
-                            ->count();
-
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isGold', 1)
-                            ->where('leftRight', '=', 'right')
-                            ->count();
-
-            if($countLeft >= 1 && $countRight >= 1 && $packageId > 5){
+            if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_pear') 
+                && $saleOnRight >= config('cryptolanding.loyalty_upgrate_pear')
+                && $packageId > 4) {
                 return 1;
+                
             }
         }
         elseif($type == 'emerald')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isPear', 1)
-                            ->where('leftRight', '=', 'left')
-                            ->count();
-
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isPear', 1)
-                            ->where('leftRight', '=', 'right')
-                            ->count();
-
-            if($countLeft >= 2 && $countRight >= 2 && $packageId > 5){
+            if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_emerald') 
+                && $saleOnRight >= config('cryptolanding.loyalty_upgrate_emerald')
+                && $packageId > 4) {
                 return 1;
+                
             }
         }
         elseif($type == 'diamond')
         {
-            $countLeft = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isEmerald', 1)
-                            ->where('leftRight', '=', 'left')
-                            ->count();
-
-            $countRight = LoyaltyUser::where('refererId', '=', $userId)
-                            ->where('isEmerald', 1)
-                            ->where('leftRight', '=', 'right')
-                            ->count();
-
-            if($countLeft >= 3 && $countRight >= 3 && $packageId > 5){
+            if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_diamond') 
+                && $saleOnRight >= config('cryptolanding.loyalty_upgrate_diamond')
+                && $packageId > 4) {
                 return 1;
+                
             }
         }
 
@@ -621,8 +639,27 @@ class User extends Authenticatable
             UserTreePermission::create(['userId'=>$binaryUserId, 'binary' => $userId, 'binary_total' => 1]);
             $user = UserTreePermission::find($userId);
         }
-        if($user->userData && $user->userData->binaryUserId > 0)
-            self::updateUserBinary($user->userData->binaryUserId, $userId);
+    }
+
+    /**
+    *  Update Genealogy on the left leg
+    *
+    */
+    public static function updateUserGenealogyLeftRight($binaryUserId, $userId, $leftOrRight = ''){
+        $user = UserTreePermission::find($binaryUserId);
+        //Get first left binary
+        $listGenealogyUser = explode(',', $user->genealogy);
+        if( $lstGenealogyUser && in_array($userId, $listGenealogyUser) ) {
+            if($leftOrRight == 1) {
+                $user->genealogy_left = $user->genealogy_left .',' . $userId;
+                $user->save();
+            }
+
+            if($leftOrRight == 2) {
+                $user->genealogy_right = $user->genealogy_right .',' . $userId;
+                $user->save();
+            }
+        }
     }
 
 }
