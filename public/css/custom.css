@@ -1,0 +1,247 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?lxdrfb');
+  src:  url('fonts/icomoon.eot?lxdrfb#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?lxdrfb') format('truetype'),
+    url('fonts/icomoon.woff?lxdrfb') format('woff'),
+    url('fonts/icomoon.svg?lxdrfb#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-clp-icon:before {
+  content: "\e900";
+}
+
+
+.box-widget .wallet-title{
+        padding: 0;
+        text-align: left;
+        max-width: 50px;
+    }
+    .box-widget  .wallet-amount{
+        padding: 0;
+        text-align: left;
+    }
+    .box-widget  .wallet-amount .description-block{
+        text-align: left;
+    }
+    .content .widget-user .box-footer{
+        padding: 15px 0;
+    }
+    .widget-user .btn-success{
+        float: right;
+        margin-right: 15px;    
+    }
+    .box .box-footer  .border-right{
+        border: none;
+    }
+
+    .box .icon-wallet {
+        width: 2%;
+        padding-top: 12px;
+        padding-bottom: 10px;
+        padding-right: 0px;
+    }
+
+    .box .wallet-amount {
+        width: 20%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 20px;
+        color: #85bb65 
+    }
+
+    .box .wallet-amount-released {
+        width: 46%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 20px;
+        color: #85bb65 
+    }
+
+     @media (max-width: 768px) {
+        .box .wallet-amount {
+        width: 36%;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 20px;
+        color: #85bb65 
+    }
+        
+    }
+
+    .box .wallet-table {
+        margin-bottom: 0px;
+    }
+
+    .main-header .clp-news {
+        font-size: 20px;
+    }
+
+    @media only screen and (max-width: 500px) {
+        .content .widget-user .box-footer{
+            padding: 15px 0px 15px 15px;
+        }
+    }
+
+    .psi {
+        width: 15px;
+        margin: 0 1px 0 0;
+        border: 1px solid gray;
+        display: inline-block;
+        cursor: default;
+        font-weight: 100;
+        text-align: center;
+        line-height: 7px;
+        padding: 2px 2px;
+        color: white;
+        background-color: lightgray;
+        border: 1px solid lightgray;
+        font-weight: bold;
+        font-size: 10px;
+        font-family: Verdana, Arial, Helvetica, sans-serif
+    }
+
+    .psi1 {
+        background-color: #2b9690;
+    }
+
+    .psi2 {
+        background-color: #1f4268;
+    }
+
+    .psi3 {
+        background-color: #3488c8;
+    }
+
+    .psi4 {
+        background-color: #c78907;
+    }
+
+    .psi5 {
+        background-color: #006403;
+    }
+
+    .psi6 {
+        background-color: #c00000;
+    }
+
+    .psr {
+        background-color: green;
+    }
+
+    .clp-home .table-bordered > thead > tr > th,.clp-home .table-bordered > tbody > tr > th,.clp-home .table-bordered > tfoot > tr > th,.clp-home .table-bordered > thead > tr > td, .clp-home .table-bordered > tbody > tr > td, .clp-home .table-bordered > tfoot > tr > td {
+        border: 1px solid #eeeeee;
+    }
+
+    .clp-home h3 { font-size: 30px; }
+
+/* Error page */
+    .error-page > .error-content {
+        margin-left: 112px;
+    }
+
+    .error-page > h2.headline  {
+        font-size: 82px;
+        margin-top: 0px;
+        margin-right: 5px;
+    }
+
+    .logo-lg img{ width: 35px; float: left; margin-top: 8px;}
+    .logo-lg b{ font-size: 20px;  margin-right: 25px;}
+
+    .logo-mini img{ width: 30px; float: left; margin-top: 8px; margin-left: 10px;}
+    .logo-mini b{ font-size: 18px; float: left; margin-left: 10px; }
+    
+    @media (max-width: 767px) {
+        .logo-lg img{
+            float: none;
+            margin-top: 0px;
+            padding-right: 5px;
+        }
+
+        .logo-lg b{
+            float: none;
+        }
+        
+    }
+
+    .box-body .input-group .input-group-addon{min-width: 40px;}
+
+    .binary-search #search-input {}
+    .binary-search #search-button {min-width: 106px; }
+
+    .binary-search .col-lg-6{ padding-right: 0px; padding-left: 0px; }
+
+     @media (max-width: 767px) {
+        .binary-search #search-input {max-width: 106px; margin-bottom: 10px;}
+    }
+
+    .signupSteps h2 {
+        text-align: center;
+        font-size: 18px;
+        margin-top: 8px;
+        color: #3c8dbc;
+        font-weight: 400;
+    }
+
+    .noti-active {
+        width: 780px;
+    }
+
+    @media (max-width: 767px) {
+        .signupSteps h2 {
+            font-size: 16px;
+        }
+
+        .noti-active {
+            width: 100%;
+        }
+    }
+
+    .signupSteps .fa-stack {
+        width: 1em;
+        margin-left: 0.3em;
+    }
+
+    .thanks-header {
+        text-align: center;
+        color: #3c8dbc;
+        font-size: 16px;
+    }
+
+    .thanks-body {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .thanks-footer {
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .thanks-login {
+        cursor: pointer;
+        text-align: center;
+        color: #3c8dbc;
+        text-decoration: underline;
+        font-size: 14px;
+        font-weight: bold;
+    }
