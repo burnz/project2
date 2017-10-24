@@ -133,7 +133,7 @@ class Bonus
             $userPackage = $binary->userData->package;
             if(isset($userPackage))
             {
-                if (User::checkBinaryCount($binary->userId, 1)) {
+                if (User::checkBinaryCount($binary->userId, 5)) {
                     if ($userPackage->pack_id == 1) {
                         $bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
                     } elseif ($userPackage->pack_id == 2) {
@@ -146,6 +146,10 @@ class Bonus
                         $bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
                     } elseif ($userPackage->pack_id == 6) {
                         $bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
+                    } elseif ($userPackage->pack_id == 7) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_7_pay');
+                    } elseif ($userPackage->pack_id == 8) {
+                        $bonus = $settled * config('cryptolanding.binary_bonus_8_pay');
                     }
                 }
             }
@@ -159,7 +163,7 @@ class Bonus
             $binary->save();
 
             if($bonus > 0){
-                $usdAmount = $bonus * config('cryptolanding.usd_bonus_pay');
+                $usdAmount = $bonus * config('cryptolanding.clp_bonus_pay');
                 $reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
                 $userCoin = $binary->userCoin;
@@ -231,7 +235,7 @@ class Bonus
     /**
     * This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
     */
-    public static function bonusCongHuongWeek()
+    public static function bonusMatchingWeek()
     {
         set_time_limit(0);
         /* Get previous weekYear */
@@ -261,25 +265,25 @@ class Bonus
         foreach($listLoyaltyUser as $user)
         {
             //Get cron status
-            $cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+            $cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
             if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
             $totalGenealogyBonus = 0;
             self::calTotalBonus(&$totalGenealogyBonus, $user->userId, $user->loyaltyId, 1);
-            $bonus = $totalGenealogyBonus * config('cryptolanding.binary_bonus_1_pay');
+            $bonus = $totalGenealogyBonus * config('cryptolanding.binary_matching_bonus');
 
             if($bonus > 0)
             {
-                $usdAmount = $bonus * config('cryptolanding.usd_bonus_pay');
+                $clpAmount = $bonus * config('cryptolanding.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
                 $reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
                 $userCoin = $binary->userCoin;
-                $userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+                $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
                 $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                 $userCoin->save();
 
                 $fieldUsd = [
-                    'walletType' => Wallet::USD_WALLET,//usd
+                    'walletType' => Wallet::CLP_WALLET,//
                     'type' =>  Wallet::BINARY_TYPE,//bonus week
                     'inOut' => Wallet::IN,
                     'userId' => $binary->userId,
@@ -305,7 +309,7 @@ class Bonus
         }
 
         //Update status from 1 => 0 after run all user
-        DB::table('cron_binary_logs')->update(['status' => 0]);
+        DB::table('cron_matching_logs')->update(['status' => 0]);
     }
 
     public static function calTotalBonus(&$totalBonus, $referralId, $loyaltyId, $deepLevel = 1)

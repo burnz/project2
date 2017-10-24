@@ -11,13 +11,13 @@ class Wallet extends Model
     ];
 
     // Wallet Type
-    const USD_WALLET = 1;
+    //const USD_WALLET = 1;
 
-    const BTC_WALLET = 2;
+    const BTC_WALLET = 1;
 
-    const CLP_WALLET = 3;
+    const CLP_WALLET = 2;
 
-    const REINVEST_WALLET = 4;
+    const REINVEST_WALLET = 3;
 
 
     /**
