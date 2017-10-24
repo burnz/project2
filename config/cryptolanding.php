@@ -24,6 +24,10 @@ return [
 	'binary_bonus_8_pay' => 0.12,
 
 	'binary_matching_bonus' => 0.05,
+
+	'diamond_leadership_bonus' => 0.01,
+	'bluediamond_leadership_bonus' => 0.005,
+	'blackdiamond_leadership_bonus' => 0.0025,
 	
 	'loyalty_upgrate_silver' => 20000,
 	'loyalty_upgrate_gold' => 50000,
