@@ -3,25 +3,22 @@
 return [
 	'clp_bonus_pay' => 0.6,
 	'reinvest_bonus_pay' => 0.4,
-	'bonus_maxout' => 35000, //Binary bonus cannot over $35000
+	'bonus_maxout' => 30000, //Binary bonus cannot over $35000
 	
-	'bonus_f1_pay' => 0.1,
-	'bonus_f2_pay' => 0.02,
-	'bonus_f3_pay' => 0.01,
-
 	'bonus_range_1_pay' => 0.07,
 	'bonus_range_2_pay' => 0.08,
 	'bonus_range_3_pay' => 0.09,
 	'bonus_range_4_pay' => 0.1,
 	
-	'binary_bonus_1_pay' => 0.05,
-	'binary_bonus_2_pay' => 0.06,
-	'binary_bonus_3_pay' => 0.07,
-	'binary_bonus_4_pay' => 0.08,
-	'binary_bonus_5_pay' => 0.09,
-	'binary_bonus_6_pay' => 0.1,
-	'binary_bonus_7_pay' => 0.11,
-	'binary_bonus_8_pay' => 0.12,
+	'bi_sale_cond_lv_1' => 10000,
+	'bi_sale_cond_lv_2' => 100000,
+	'bi_sale_cond_lv_3' => 1000000,
+	'bi_sale_cond_lv_4' => 2000000,
+
+	'bi_lv_1_bonus' => 0.04,
+	'bi_lv_2_bonus' => 0.06,
+	'bi_lv_3_bonus' => 0.08,
+	'bi_lv_4_bonus' => 0.1,
 
 	'binary_matching_bonus' => 0.05,
 

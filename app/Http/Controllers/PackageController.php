@@ -66,46 +66,38 @@ class PackageController extends Controller
         {
             Validator::extend('packageCheck', function ($attribute, $value) {
                 $user = Auth::user();
-                if($user->userData->packageId < $value)
+
+                //Get packageid 
+                $package = Package::find($request->packageId);
+                if($package->min_price <= $value && $value <= $package->max_price)
                 {
-                    $package = Package::find($value);
-                    if($package){
-                        $packageOldId = $user->userData->packageId;
-                        $usdCoinAmount = $package->price;
-
-                        if($packageOldId > 0){
-                            $usdCoinAmount = $usdCoinAmount - $user->userData->package->price;
-                        }
-
-                        $clpCoinAmount = $usdCoinAmount / ExchangeRate::getCLPUSDRate();
-                        if($user->userCoin->clpCoinAmount >= $clpCoinAmount){
-                            return true;
-                        }
-                    }
+                    return true;
                 }
+
                 return false;
             });
 
             $this->validate($request, [
-                'packageId' => 'required|not_in:0|packageCheck',
+                'amount_lending'    => 'required|packageCheck',
+                'packageId' => 'required|not_in:0',
                 'terms'    => 'required',
-            ],['packageId.package_check' => 'You selected wrong package']);
+            ],['amount_lending.package_check' => 'Lending amount and package selected does not match']);
 
-            $amount_increase = $packageOldId = 0;
+            $amount_increase = $request->amountLending;
+            $packageOldId = 0;
+
             $userData = $user->userData;
             $packageOldId = $userData->packageId;
-            $packageOldPrice = isset($userData->package->price) ? $userData->package->price : 0;
 
-            $userData->packageDate = date('Y-m-d H:i:s');
-            $userData->packageId = $request->packageId;
-            $userData->status = 1;
-            $userData->save();
-
-            $package = Package::find($request->packageId);
-            if ($package) {
-                $amount_increase = $package->price;
+            if($request->packageId > $packageOldId) {
+                $userData->packageDate = date('Y-m-d H:i:s');
+                $userData->packageId = $request->packageId;
+                $userData->status = 1;
+                $userData->save();
             }
 
+           
+            
             //Insert to cron logs for binary, profit
             if($packageOldId == 0) {
                 if(CronProfitLogs::where('userId', $currentuserid)->count() < 1) 
@@ -118,10 +110,6 @@ class PackageController extends Controller
                     CronLeadershipLogs::create(['userId' => $currentuserid]);
             }
 
-            if($packageOldId > 0){
-                $amount_increase = $package->price - $packageOldPrice;
-            }
-
             //Get weekYear
             $weeked = date('W');
             $year = date('Y');
@@ -129,22 +117,22 @@ class PackageController extends Controller
 
             if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
+            $packageSelected = Package::find($request->packageId);
+
             UserPackage::create([
                 'userId' => $currentuserid,
-                'packageId' => $userData->packageId,
+                'packageId' => $request->packageId,
                 'amount_increase' => $amount_increase,
                 'buy_date' => date('Y-m-d H:i:s'),
-                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 6 months")),
+                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ " . $packageSelected->capital_release ." days")),
                 'weekYear' => $weekYear,
             ]);
 
-            $amountCLPDecrease = $amount_increase / ExchangeRate::getCLPUSDRate();
+            $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(), 2);
             $userCoin = $userData->userCoin;
+
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
             $userCoin->save();
-
-            //get package name
-            $package = Package::where('pack_id', $userData->packageId)->get()->first();
 
             $fieldUsd = [
                 'walletType' => Wallet::CLP_WALLET,//usd
@@ -152,7 +140,7 @@ class PackageController extends Controller
                 'inOut' => Wallet::OUT,
                 'userId' => Auth::user()->id,
                 'amount' => $amountCLPDecrease,
-                'note'   => $package->name
+                'note'   => 'USD value ' . $amount_increase 
             ];
             Wallet::create($fieldUsd);
 

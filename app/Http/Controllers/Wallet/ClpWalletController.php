@@ -56,7 +56,7 @@ class ClpWalletController extends Controller {
         }
         $requestQuery = $request->query();
 
-        $all_wallet_type = config('cryptolanding.wallet_type');
+        $all_wallet_type = config('carcoin.wallet_type');
 
         //CLP Wallet has 6 type:15-buy pack, 14-Deposit, 10-Withdraw, 7-Buy CLP by BTC, 8-Sell CLP, 5-Buy CLP by USD, 6-Transfer From Holding Wallet
         $wallet_type = [];

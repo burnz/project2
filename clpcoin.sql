@@ -296,8 +296,9 @@ CREATE TABLE `packages` (
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `thumb` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `price` smallint(6) NOT NULL,
+  `min_price` int(10) NOT NULL,
+  `max_price` int(10) NOT NULL,
+  `capital_release` int(10) NOT NULL,
   `bonus` float DEFAULT '0',
   `pack_id` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -309,12 +310,10 @@ CREATE TABLE `packages` (
 -- ----------------------------
 -- Records of packages
 -- ----------------------------
-INSERT INTO `packages` VALUES ('1', 'TINY', '2017-08-16 07:06:07', '2017-09-18 04:14:44', null, '100', '0.001', '1');
-INSERT INTO `packages` VALUES ('2', 'SMALL', '2017-08-16 07:06:33', '2017-09-18 04:14:48', null, '500', '0.002', '2');
-INSERT INTO `packages` VALUES ('3', 'MEDIUM', '2017-08-16 07:58:10', '2017-09-18 04:14:55', null, '1000', '0.003', '3');
-INSERT INTO `packages` VALUES ('4', 'LARGE', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '2000', '0.004', '4');
-INSERT INTO `packages` VALUES ('5', 'HUGE', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '5000', '0.005', '5');
-INSERT INTO `packages` VALUES ('6', 'ANGEL', '2017-08-16 07:58:10', '2017-08-16 07:58:10', null, '10000', '0.006', '6');
+INSERT INTO `packages` VALUES ('1', 'TINY', '2017-08-16 07:06:07', '2017-09-18 04:14:07', '200', '1000', '299', '0', '1');
+INSERT INTO `packages` VALUES ('2', 'SMALL', '2017-08-16 07:06:35', '2017-09-18 04:14:46', '1010', '10000', '239', '0.001', '2');
+INSERT INTO `packages` VALUES ('3', 'MEDIUM', '2017-08-16 07:58:33', '2017-09-18 04:14:33', '10010', '50000', '179', '0.0015', '3');
+INSERT INTO `packages` VALUES ('4', 'LARGE', '2017-08-16 07:58:22', '2017-08-16 07:58:22', '50010', '100000', '120', '0.002', '4');
 
 -- ----------------------------
 -- Table structure for password_resets
@@ -552,40 +551,6 @@ CREATE TABLE `user_datas` (
 INSERT INTO `user_datas` VALUES ('1', '0', '0', null, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 INSERT INTO `user_datas` VALUES ('2', '0', '6', null, '0', '1', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
 
--- ----------------------------
--- Table structure for user_has_permissions
--- ----------------------------
-DROP TABLE IF EXISTS `user_has_permissions`;
-CREATE TABLE `user_has_permissions` (
-  `user_id` int(10) unsigned NOT NULL,
-  `permission_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`user_id`,`permission_id`),
-  KEY `user_has_permissions_permission_id_foreign` (`permission_id`),
-  CONSTRAINT `user_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_has_permissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of user_has_permissions
--- ----------------------------
-
--- ----------------------------
--- Table structure for user_has_roles
--- ----------------------------
-DROP TABLE IF EXISTS `user_has_roles`;
-CREATE TABLE `user_has_roles` (
-  `role_id` int(10) unsigned NOT NULL,
-  `user_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`role_id`,`user_id`),
-  KEY `user_has_roles_user_id_foreign` (`user_id`),
-  CONSTRAINT `user_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_has_roles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of user_has_roles
--- ----------------------------
-INSERT INTO `user_has_roles` VALUES ('2', '1');
 
 -- ----------------------------
 -- Table structure for user_packages
@@ -616,7 +581,8 @@ DROP TABLE IF EXISTS `user_tree_permissions`;
 CREATE TABLE `user_tree_permissions` (
   `userId` int(10) unsigned NOT NULL,
   `binary` text COLLATE utf8mb4_unicode_ci,
-  `genealogy` text COLLATE utf8mb4_unicode_ci,
+  `genealogy_left` text COLLATE utf8mb4_unicode_ci,
+  `genealogy_right` text COLLATE utf8mb4_unicode_ci,
   `binary_total` int(11) DEFAULT '0',
   `genealogy_total` int(11) DEFAULT '0',
   UNIQUE KEY `userId` (`userId`)

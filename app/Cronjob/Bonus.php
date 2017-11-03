@@ -119,60 +119,68 @@ class Bonus
 			$leftOver = $binary->leftOpen + $binary->leftNew;
 			$rightOver = $binary->rightOpen + $binary->rightNew;
 
-			if ($leftOver >= $rightOver) {
-				$leftOpen = $leftOver - $rightOver;
-				$rightOpen = 0;
-				$settled = $rightOver;
-			} else {
-				$leftOpen = 0;
-				$rightOpen = $rightOver - $leftOver;
-				$settled = $leftOver;
-			}
-
-			$bonus = 0;
-			$userPackage = $binary->userData->package;
-			if(isset($userPackage))
+			//Caculate level to get binary commision
+			$level = 0;
+			$percentBonus = 0;
+			$packageId = $binary->userData->packageId;
+			
+			if($leftOver >= config('carcoin.bi_sale_cond_lv_1') && 
+				$rightOver >= config('carcoin.bi_sale_cond_lv_1') && 
+				$packageId >= 1 )
 			{
-				if (User::checkBinaryCount($binary->userId, 5)) {
-					if ($userPackage->pack_id == 1) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
-					} elseif ($userPackage->pack_id == 2) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
-					} elseif ($userPackage->pack_id == 3) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
-					} elseif ($userPackage->pack_id == 4) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
-					} elseif ($userPackage->pack_id == 5) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
-					} elseif ($userPackage->pack_id == 6) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
-					} elseif ($userPackage->pack_id == 7) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_7_pay');
-					} elseif ($userPackage->pack_id == 8) {
-						$bonus = $settled * config('cryptolanding.binary_bonus_8_pay');
-					}
-				}
+				$level = config('carcoin.bi_sale_cond_lv_1');
+				$percentBonus = config('carcoin.bi_lv_1_bonus');
 			}
 
-			$binary->settled = $settled;
+			if($leftOver >= config('carcoin.bi_sale_cond_lv_2') && 
+				$rightOver >= config('carcoin.bi_sale_cond_lv_2') && 
+				$packageId >= 2)
+			{
+				$level = config('carcoin.bi_sale_cond_lv_2');
+				$percentBonus = config('carcoin.bi_lv_2_bonus');
+			}
 
-			//Bonus canot over maxout $35,000
-			if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
+			if($leftOver >= config('carcoin.bi_sale_cond_lv_3') && 
+				$rightOver >= config('carcoin.bi_sale_cond_lv_3') && 
+				$packageId >= 3)
+			{
+				$level = config('carcoin.bi_sale_cond_lv_3');
+				$percentBonus = config('carcoin.bi_lv_3_bonus');
+			}
+
+			if($leftOver > config('carcoin.bi_sale_cond_lv_4') && 
+				$rightOver > config('carcoin.bi_sale_cond_lv_4') && 
+				$packageId == 4)
+			{
+				$level = config('carcoin.bi_sale_cond_lv_4');
+				$percentBonus = config('carcoin.bi_lv_4_bonus');
+			}
+
+			$leftOpen = $leftOver - $level;
+			$rightOpen = $rightOver - $level;
+
+			$bonus = $level * $percentBonus;
+			
+
+			$binary->settled = $level;
+
+			//Bonus canot over maxout $30,000
+			if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
 
 			$binary->bonus = $bonus;
 			$binary->save();
 
 			if($bonus > 0){
-				$usdAmount = $bonus * config('cryptolanding.clp_bonus_pay');
-				$reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
 				$userCoin = $binary->userCoin;
-				$userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
+				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
 				$userCoin->save();
 
 				$fieldUsd = [
-					'walletType' => Wallet::USD_WALLET,//usd
+					'walletType' => Wallet::CLP_WALLET,//usd
 					'type' =>  Wallet::BINARY_TYPE,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
@@ -270,12 +278,12 @@ class Bonus
 
 			$totalGenealogyBonus = 0;
 			self::calTotalBonus(&$totalGenealogyBonus, $firstWeekYear, $user->userId, $user->loyaltyId, 1);
-			$bonus = $totalGenealogyBonus * config('cryptolanding.binary_matching_bonus');
+			$bonus = $totalGenealogyBonus * config('carcoin.binary_matching_bonus');
 
 			if($bonus > 0)
 			{
-				$clpAmount = $bonus * config('cryptolanding.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
 				$userCoin = $binary->userCoin;
 				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
@@ -405,9 +413,9 @@ class Bonus
 				->where('packageId', '>', 0)
 				->get();
 
-		$diamondBonus = config('cryptolanding.diamond_leadership_bonus');
-		$blueDiamondBonus = config('cryptolanding.bluediamond_leadership_bonus');
-		$blackDiamondBonus = config('cryptolanding.blackdiamond_leadership_bonus');
+		$diamondBonus = config('carcoin.diamond_leadership_bonus');
+		$blueDiamondBonus = config('carcoin.bluediamond_leadership_bonus');
+		$blackDiamondBonus = config('carcoin.blackdiamond_leadership_bonus');
 
 		$bonusDiamond = $totalCompanyIncome * $diamondBonus / ($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
 
@@ -438,8 +446,8 @@ class Bonus
 
 			if($bonus > 0)
 			{
-				$clpAmount = $bonus * config('cryptolanding.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$reinvestAmount = $bonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
 				$userCoin = $binary->userCoin;
 				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);

@@ -72,16 +72,19 @@ class User extends Authenticatable
 			$packageBonus = 0;
 			$userData = UserData::find($refererId);
 			
-			if($userData && $userData->packageId > 0)
+			if(isset($userData) && $userData->packageId > 0)
 			{
-				if($userData->packageId < 3)
-					$packageBonus = $usdCoinAmount * config('cryptolanding.bonus_range_1_pay');
-				if($userData->packageId > 2 && $userData->packageId < 5)
-					$packageBonus = $usdCoinAmount * config('cryptolanding.bonus_range_2_pay');
-				if($userData->packageId > 4 && $userData->packageId < 7)
-					$packageBonus = $usdCoinAmount * config('cryptolanding.bonus_range_3_pay');
-				if($userData->packageId > 6)
-					$packageBonus = $usdCoinAmount * config('cryptolanding.bonus_range_4_pay');
+				if($userData->packageId == 1)
+					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_1_pay');
+
+				if($userData->packageId == 2)
+					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_2_pay');
+
+				if($userData->packageId ==3)
+					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_3_pay');
+
+				if($userData->packageId == 4)
+					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_4_pay');
 
 				$userData->totalBonus = $userData->totalBonus + $packageBonus;
 				$userData->save();
@@ -92,8 +95,8 @@ class User extends Authenticatable
 					//Get info of user
 					$user = Auth::user();
 
-					$clpAmount = ($packageBonus * config('cryptolanding.clp_bonus_pay') / ExchangeRate::getCLPUSDRate());
-					$reinvestAmount = ($packageBonus * config('cryptolanding.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
+					$clpAmount = ($packageBonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate());
+					$reinvestAmount = ($packageBonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
 					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 					$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
 					$userCoin->save();
@@ -123,7 +126,7 @@ class User extends Authenticatable
 					self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
 			}
 			
-			self::bonusBinaryThisWeek($refererId);
+			self::bonusBinaryThisWeek($userId);
 		}
 	}
 
@@ -291,56 +294,56 @@ class User extends Authenticatable
 		if($binary){
 			$leftOver = $binary->leftOpen + $binary->leftNew;
 			$rightOver = $binary->rightOpen + $binary->rightNew;
-
-			if ($leftOver >= $rightOver) {
-				$settled = $rightOver;
-			} else {
-				$settled = $leftOver;
-			}
-
+			
+			//Caculate level to get binary commision
 			$bonus = 0;
-			$userPackage = $binary->userData->package;
-
-			if (self::checkBinaryCount($binary->userId, 5)) {
-				if ($userPackage->pack_id == 1) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_1_pay');
-				} elseif ($userPackage->pack_id == 2) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_2_pay');
-				} elseif ($userPackage->pack_id == 3) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_3_pay');
-				} elseif ($userPackage->pack_id == 4) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_4_pay');
-				} elseif ($userPackage->pack_id == 5) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_5_pay');
-				} elseif ($userPackage->pack_id == 6) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_6_pay');
-				} elseif ($userPackage->pack_id == 7) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_7_pay');
-				} elseif ($userPackage->pack_id == 8) {
-					$bonus = $settled * config('cryptolanding.binary_bonus_8_pay');
-				}
+			$level = 0;
+			$percentBonus = 0;
+			$packageId = $binary->userData->packageId;
+			
+			if($leftOver >= config('carcoin.bi_sale_cond_lv_1') && 
+				$rightOver >= config('carcoin.bi_sale_cond_lv_1') && 
+				$packageId >= 1 )
+			{
+				$level = config('carcoin.bi_sale_cond_lv_1');
+				$percentBonus = config('carcoin.bi_lv_1_bonus');
 			}
 
-			if($bonus > config('cryptolanding.bonus_maxout')) $bonus = config('cryptolanding.bonus_maxout');
-			$binary->settled = $settled;
+			if($leftOver >= config('carcoin.bi_sale_cond_lv_2') && 
+				$rightOver >= config('carcoin.bi_sale_cond_lv_2') && 
+				$packageId >= 2)
+			{
+				$level = config('carcoin.bi_sale_cond_lv_2');
+				$percentBonus = config('carcoin.bi_lv_2_bonus');
+			}
+
+			if($leftOver >= config('carcoin.bi_sale_cond_lv_3') && 
+				$rightOver >= config('carcoin.bi_sale_cond_lv_3') && 
+				$packageId >= 3)
+			{
+				$level = config('carcoin.bi_sale_cond_lv_3');
+				$percentBonus = config('carcoin.bi_lv_3_bonus');
+			}
+
+			if($leftOver > config('carcoin.bi_sale_cond_lv_4') && 
+				$rightOver > config('carcoin.bi_sale_cond_lv_4') && 
+				$packageId == 4)
+			{
+				$level = config('carcoin.bi_sale_cond_lv_4');
+				$percentBonus = config('carcoin.bi_lv_4_bonus');
+			}
+
+			$bonus = $level * $percentBonus;
+
+			if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
+
+			$binary->settled = $level;
 			$binary->bonus_tmp = $bonus;
 			$binary->save();
 		}
 
 	}
 
-
-	/**
-	*   Check condition this this user to know he can get binary bonus and how much bonus or not get anything
-	*/
-	public static function checkBinaryCount($userId, $packageId){
-		$countLeft = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'left')->count();
-		$countRight = UserData::where('refererId', '=', $userId)->where('packageId', '>', $packageId)->where('leftRight',  'right')->count();
-		if($countLeft >= 1 && $countRight >= 1){
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	*   Calculate loyalty bonus
@@ -439,8 +442,8 @@ class User extends Authenticatable
 		if($type == 'silver') 
 		{
 			
-			if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_silver') 
-				&& $saleOnRight >= config('cryptolanding.loyalty_upgrate_silver')
+			if($saleOnLeft >= config('carcoin.loyalty_upgrate_silver') 
+				&& $saleOnRight >= config('carcoin.loyalty_upgrate_silver')
 				&& $packageId > 4) {
 				return 1;
 				
@@ -449,8 +452,8 @@ class User extends Authenticatable
 		elseif($type == 'gold') 
 		{
 			
-			if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_gold') 
-				&& $saleOnRight >= config('cryptolanding.loyalty_upgrate_gold')
+			if($saleOnLeft >= config('carcoin.loyalty_upgrate_gold') 
+				&& $saleOnRight >= config('carcoin.loyalty_upgrate_gold')
 				&& $packageId > 4) {
 				return 1;
 				
@@ -458,8 +461,8 @@ class User extends Authenticatable
 		}
 		elseif($type == 'pear')
 		{
-			if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_pear') 
-				&& $saleOnRight >= config('cryptolanding.loyalty_upgrate_pear')
+			if($saleOnLeft >= config('carcoin.loyalty_upgrate_pear') 
+				&& $saleOnRight >= config('carcoin.loyalty_upgrate_pear')
 				&& $packageId > 5) {
 				return 1;
 				
@@ -467,8 +470,8 @@ class User extends Authenticatable
 		}
 		elseif($type == 'emerald')
 		{
-			if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_emerald') 
-				&& $saleOnRight >= config('cryptolanding.loyalty_upgrate_emerald')
+			if($saleOnLeft >= config('carcoin.loyalty_upgrate_emerald') 
+				&& $saleOnRight >= config('carcoin.loyalty_upgrate_emerald')
 				&& $packageId > 6) {
 				return 1;
 				
@@ -476,8 +479,8 @@ class User extends Authenticatable
 		}
 		elseif($type == 'diamond')
 		{
-			if($saleOnLeft >= config('cryptolanding.loyalty_upgrate_diamond') 
-				&& $saleOnRight >= config('cryptolanding.loyalty_upgrate_diamond')
+			if($saleOnLeft >= config('carcoin.loyalty_upgrate_diamond') 
+				&& $saleOnRight >= config('carcoin.loyalty_upgrate_diamond')
 				&& $packageId > 7) {
 				return 1;
 				
