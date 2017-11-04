@@ -580,6 +580,9 @@ DROP TABLE IF EXISTS `user_tree_permissions`;
 CREATE TABLE `user_tree_permissions` (
   `userId` int(10) unsigned NOT NULL,
   `binary` text COLLATE utf8mb4_unicode_ci,
+  `genealogy` text COLLATE utf8mb4_unicode_ci,
+  `binary_left` text COLLATE utf8mb4_unicode_ci,
+  `binary_right` text COLLATE utf8mb4_unicode_ci,
   `genealogy_left` text COLLATE utf8mb4_unicode_ci,
   `genealogy_right` text COLLATE utf8mb4_unicode_ci,
   `binary_total` int(11) DEFAULT '0',

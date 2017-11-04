@@ -219,6 +219,9 @@ class User extends Authenticatable
 			//Update binary list user
 			self::updateUserBinary($binaryUserId, $userId);
 
+			//Update binary left, right list user
+			self::updateUserBinaryLeftRight($binaryUserId, $userId, $legpos);
+
 			//Caculate binary bonus for up level of $userRoot in binary tree
 			// $binaryUserId = $user->userId
 			self::bonusBinaryWeek($binaryUserId, $usdCoinAmount, $legpos);
@@ -368,7 +371,6 @@ class User extends Authenticatable
 
 		$saleOnRight = $userData->totalSaleRight;
 		
-
 		//Get UserData
 		$userInfo = UserData::where('userId', '=', $userId)->get()->first();
 		$loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
@@ -514,6 +516,22 @@ class User extends Authenticatable
 		}else{
 			UserTreePermission::create(['userId'=>$binaryUserId, 'binary' => $userId, 'binary_total' => 1]);
 			$user = UserTreePermission::find($userId);
+		}
+	}
+
+	public static function updateUserBinaryLeftRight($binaryUserId, $userId, $leftOrRight = '')
+	{
+		$user = UserTreePermission::find($binaryUserId);
+		if($user){
+			if($leftOrRight == 1) {
+				$user->binary_left = $user->binary_left .',' . $userId;
+				$user->save();
+			}
+
+			if($leftOrRight == 2) {
+				$user->binary_right = $user->binary_right .',' . $userId;
+				$user->save();
+			}
 		}
 	}
 
