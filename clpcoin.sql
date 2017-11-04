@@ -303,7 +303,6 @@ CREATE TABLE `packages` (
   `pack_id` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_name_unique` (`name`),
-  UNIQUE KEY `price` (`price`),
   UNIQUE KEY `pack_id` (`pack_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -530,8 +529,8 @@ CREATE TABLE `user_datas` (
   `totalBonus` double DEFAULT '0',
   `isBinary` tinyint(1) DEFAULT '0',
   `leftRight` enum('right','left') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `totalBonusLeft` double DEFAULT '0',
-  `totalBonusRight` double DEFAULT '0',
+  `totalSaleLeft` double DEFAULT '0',
+  `totalSaleRight` double DEFAULT '0',
   `binaryUserId` int(10) DEFAULT '0',
   `lastUserIdLeft` int(10) DEFAULT '0',
   `lastUserIdRight` int(10) DEFAULT '0',

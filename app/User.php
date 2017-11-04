@@ -171,10 +171,10 @@ class User extends Authenticatable
 
 				if ($legpos == 1){
 					//Total sale on left
-					$user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
+					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
 				}else{
 					//Total sale on right
-					$user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
+					$user->totalSaleRight = $user->totalSaleRight + $usdCoinAmount;
 				}
 			} 
 			elseif($userRoot->totalMembers == 0) 
@@ -184,26 +184,29 @@ class User extends Authenticatable
 				$usdCoinAmount = isset($userPackage->price) ? $userPackage->price : 0;
 
 				if ($legpos == 1){
+					//Update genelogy on left
+					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
+
 					//Total sale on left
-					$user->totalBonusLeft = $user->totalBonusLeft + $usdCoinAmount;
+					if($isInGenealogy)
+						$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
 					//$user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
 					//$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
 					if($continue)
 						$user->lastUserIdLeft = $userRoot->lastUserIdLeft;
 					$user->leftMembers = $user->leftMembers + 1;
 
-					//Update genelogy on left
-					self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
+					
 				}else{
+					//Update genelogy on right
+					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
 					//Total sale on right
-					$user->totalBonusRight = $user->totalBonusRight + $usdCoinAmount;
+					if($isInGenealogy)
+						$user->totalSaleRight = $user->totalSaleRight + $usdCoinAmount;
 					//$user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
 					if($continue) 
 						$user->lastUserIdRight = $userRoot->lastUserIdRight;
 					$user->rightMembers = $user->rightMembers + 1;
-
-					//Update genelogy on right
-					self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
 				}
 
 				$user->totalMembers = $user->totalMembers + 1;
@@ -357,24 +360,14 @@ class User extends Authenticatable
 		$isEmerald = 0;
 		$isDiamond = 0;
 
-		$user = UserTreePermission::find($userId);
+		$userData = UserData::where('userId', $userId)->where('packageId', '>', 0)->first();
 
-		//Get list user genealogy on left, right
-		$leftGenealogy = explode(',', $user->genealogy_left);
-		$rightGenealogy = explode(',', $user->genealogy_right);
 
-		//Calculate sale
-		$saleOnLeft = 0;
-		foreach($leftGenealogy as $genId {
-			$userData = UserData::where('userId', $genId)->where('packageId', '>', 0)->first();
-			$saleOnLeft += $userData->package->price;
-		}
+		//Get sale left, right
+		$saleOnLeft = $userData->totalSaleLeft;
 
-		$saleOnRight = 0;
-		foreach($rightGenealogy as $genId {
-			$userData = UserData::where('userId', $genId)->where('packageId', '>', 0)->first();
-			$saleOnRight += $userData->package->price;
-		}
+		$saleOnRight = $userData->totalSaleRight;
+		
 
 		//Get UserData
 		$userInfo = UserData::where('userId', '=', $userId)->get()->first();
@@ -542,7 +535,11 @@ class User extends Authenticatable
 				$user->genealogy_right = $user->genealogy_right .',' . $userId;
 				$user->save();
 			}
+
+			return true;
 		}
+
+		return false;
 	}
 
 }

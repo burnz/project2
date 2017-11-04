@@ -56,6 +56,8 @@ class Wallet extends Model
     const BUY_PACK_TYPE = 15;
     // withdraw Package
     const WITHDRAW_PACK_TYPE = 16;
+    // Pack bonus type
+    const BONUS_TYPE = 17;
     //inOut 
     const IN = "in" ;
     

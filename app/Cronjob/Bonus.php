@@ -16,6 +16,7 @@ use App\ExchangeRate;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
 use DB;
+use Log;
 
 /**
  * Description of UpdateStatusBTCTransaction
@@ -32,6 +33,7 @@ class Bonus
 		set_time_limit(0);
 		try {
 			$lstUser = User::where('active', '=', 1)->get();
+
 			foreach($lstUser as $user){
 				//Get cron status
 				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
@@ -39,31 +41,61 @@ class Bonus
 
 				$userData = $user->userData;
 				//Get all pack in user_packages
-				$package = UserPackage::where('userId', $user->id)
+				$packages = UserPackage::where('userId', $user->id)
 							->where('withdraw', '<', 1)
-							->groupBy(['userId'])
-							->selectRaw('sum(amount_increase) as totalValue')
-							->get()
-							->first();
-				if($package) 
+							->get();
+				if($packages)
 				{
-					$bonus = isset($userData->package->bonus) ? $userData->package->bonus : 0;
+					//Pakages
+					foreach($packages as $pack){
+						$bonus = rand(config('carcoin.min_interest'), config('carcoin.max_interest'));
 
-					$usdAmount = $package->totalValue * $bonus;
+						$usdAmount = $pack->amount_increase * $bonus;
+						$clpAmount = $usdAmount / ExchangeRate::getCLPUSDRate();
 
-					$userCoin = $user->userCoin;
-					$userCoin->usdAmount = ($userCoin->usdAmount + $usdAmount);
-					$userCoin->save();
+						//Them bang nua interest_weekly
 
-					$fieldUsd = [
-						'walletType' => Wallet::USD_WALLET,//usd
-						'type' => Wallet::INTEREST_TYPE,//bonus day
-						'inOut' => Wallet::IN,
-						'userId' => $user->id,
-						'amount' => $usdAmount
-					];
+						$userCoin = $user->userCoin;
+						$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+						$userCoin->save();
 
-					Wallet::create($fieldUsd);
+						//Get package information
+						$packInfo = Pakages::where('pack_id', $pack->packageId)->first();
+
+						$fieldUsd = [
+							'walletType' => Wallet::CLP_WALLET,//usd
+							'type' => Wallet::INTEREST_TYPE,//bonus day
+							'inOut' => Wallet::IN,
+							'userId' => $user->id,
+							'amount' => $clpAmount,
+							'note' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
+						];
+
+						Wallet::create($fieldUsd);
+
+						if($pack->packageId > 1)
+						{
+							$bonusPack = $pack->amount_increase * $packInfo->bonus;
+
+							$clpAmount = $bonusPack / ExchangeRate::getCLPUSDRate();
+
+							$userCoin = $user->userCoin;
+							$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+							$userCoin->save();
+
+							//Get package information
+							$packInfo = Pakages::where('pack_id', $pack->packageId)->first();
+
+							$fieldUsd = [
+								'walletType' => Wallet::CLP_WALLET,//usd
+								'type' => Wallet::BONUS_TYPE,//bonus day
+								'inOut' => Wallet::IN,
+								'userId' => $user->id,
+								'amount' => $clpAmount,
+								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
+							];
+						}
+					}
 
 					//Update cron status from 0 => 1
 					$cronStatus->status = 1;
@@ -75,8 +107,8 @@ class Bonus
 			DB::table('cron_profit_day_logs')->update(['status' => 0]);
 
 		} catch(\Exception $e) {
-			\Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
-			//throw new \Exception("Running bonusDayCron has error");
+			Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
+			Log::info($e->getTraceAsString());
 		}
 	}    
 
@@ -123,7 +155,7 @@ class Bonus
 			$level = 0;
 			$percentBonus = 0;
 			$packageId = $binary->userData->packageId;
-			
+
 			if($leftOver >= config('carcoin.bi_sale_cond_lv_1') && 
 				$rightOver >= config('carcoin.bi_sale_cond_lv_1') && 
 				$packageId >= 1 )
@@ -387,7 +419,21 @@ class Bonus
 
 		$totalCompanyIncome = $buyPack->sumamount;
 
-		
+		//Number of Sapphire
+		$numberOfSapphire = DB::table('user_datas')
+				->select(DB::raw('count(userId) as number_of_sapphire'))
+				->where('loyaltyId', 1)
+				->where('status', 1)
+				->where('packageId', '>', 0)
+				->get();
+
+		//Number of Emerald
+		$numberOfEmerald = DB::table('user_datas')
+				->select(DB::raw('count(userId) as number_of_emerald'))
+				->where('loyaltyId', 2)
+				->where('status', 1)
+				->where('packageId', '>', 0)
+				->get();
 
 		//Number of Diamond
 		$numberOfDiamond = DB::table('user_datas')
@@ -413,13 +459,23 @@ class Bonus
 				->where('packageId', '>', 0)
 				->get();
 
+		$sapphireBonus = config('carcoin.sapphire_leadership_bonus');
+		$emeraldBonus = config('carcoin.emerald_leadership_bonus');
 		$diamondBonus = config('carcoin.diamond_leadership_bonus');
 		$blueDiamondBonus = config('carcoin.bluediamond_leadership_bonus');
 		$blackDiamondBonus = config('carcoin.blackdiamond_leadership_bonus');
 
-		$bonusDiamond = $totalCompanyIncome * $diamondBonus / ($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+		$bonusSapphire = $totalCompanyIncome * $sapphireBonus / 
+						($numberOfSapphire + $numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
 
-		$bonusBlueDiamond = $totalCompanyIncome * $blueDiamondBonus / ($numberOfBlueDiamond + $numberOfBlackDiamond);
+		$bonusEmerald = $totalCompanyIncome * $emeraldBonus / 
+						($bonusEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+
+		$bonusDiamond = $totalCompanyIncome * $diamondBonus / 
+						($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+
+		$bonusBlueDiamond = $totalCompanyIncome * $blueDiamondBonus / 
+						($numberOfBlueDiamond + $numberOfBlackDiamond);
 
 		$bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / $numberOfBlackDiamond;
 
@@ -434,6 +490,12 @@ class Bonus
 			//Get cron status
 			$cronStatus = CronLeadershipLogs::where('userId', $binary->userId)->first();
 			if(isset($cronStatus) && $cronStatus->status == 1) continue;
+
+			if($user->loyaltyId == 1)
+				$bonus = $bonusSapphire;
+
+			if($user->loyaltyId == 2)
+				$bonus = $bonusEmerald;
 
 			if($user->loyaltyId == 3)
 				$bonus = $bonusDiamond;
