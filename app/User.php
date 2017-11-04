@@ -280,6 +280,17 @@ class User extends Authenticatable
 			}
 
 			BonusBinary::create($fields);
+
+			$interestFields = [
+				'userId'     => $binaryUserId,
+				'weekYear'     => $weekYear,
+				'leftOpen'	=> 0,
+				'rightOpen'	=> 0,
+				'leftNew'	=> 0,
+				'rightNew'	=> 0
+			];
+
+			BonusBinaryInterest::create($interestFields);
 		}
 
 		//Caculate temporary binary bonus this week right after have a new user in tree

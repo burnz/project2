@@ -38,9 +38,40 @@ CREATE TABLE `bonus_binary` (
   UNIQUE KEY `weekYear_uid` (`userId`,`weekYear`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
 -- ----------------------------
--- Records of bonus_binary
+-- Table structure for bonus_binary
 -- ----------------------------
+DROP TABLE IF EXISTS `bonus_binary_interest`;
+CREATE TABLE `bonus_binary_interest` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `userId` int(10) NOT NULL,
+  `leftNew` double NOT NULL,
+  `rightNew` double NOT NULL,
+  `leftOpen` double DEFAULT '0',
+  `rightOpen` double DEFAULT '0',
+  `bonus` double DEFAULT NULL,
+  `weekYear` int(10) NOT NULL,
+  PRIMARY KEY (`id`,`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Table structure for total_week_sale
+-- ----------------------------
+DROP TABLE IF EXISTS `total_week_sale`;
+CREATE TABLE `total_week_sale` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `userId` int(10) NOT NULL,
+  `total_interest` double DEFAULT NULL,
+  `weekYear` int(10) NOT NULL,
+  PRIMARY KEY (`id`,`userId`),
+  UNIQUE KEY `weekYear_uid` (`userId`,`weekYear`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- ----------------------------
 -- Table structure for bonus_faststart

@@ -20,6 +20,7 @@ use App\CronProfitLogs;
 use App\CronBinaryLogs;
 use App\CronMatchingLogs;
 use App\CronLeadershipLogs;
+use App\TotalWeekSale;
 
 class PackageController extends Controller
 {
@@ -96,8 +97,6 @@ class PackageController extends Controller
                 $userData->save();
             }
 
-           
-            
             //Insert to cron logs for binary, profit
             if($packageOldId == 0) {
                 if(CronProfitLogs::where('userId', $currentuserid)->count() < 1) 
@@ -108,6 +107,8 @@ class PackageController extends Controller
                     CronMatchingLogs::create(['userId' => $currentuserid]);
                 if(CronLeadershipLogs::where('userId', $currentuserid)->count() < 1) 
                     CronLeadershipLogs::create(['userId' => $currentuserid]);
+                if(TotalWeekSale::where('userId', $currentuserid)->count() < 1) 
+                    TotalWeekSale::create(['userId' => $currentuserid]);
             }
 
             //Get weekYear

@@ -20,12 +20,25 @@ return [
 	'bi_sale_cond_lv_2' => 100000,
 	'bi_sale_cond_lv_3' => 1000000,
 	'bi_sale_cond_lv_4' => 2000000,
-
+	
 	//Bonus for each binary level
 	'bi_lv_1_bonus' => 0.04,
 	'bi_lv_2_bonus' => 0.06,
 	'bi_lv_3_bonus' => 0.08,
 	'bi_lv_4_bonus' => 0.1,
+
+	//Binary interest level
+	'bi_inter_cond_lv_1' => 500,
+	'bi_inter_cond_lv_2' => 3000,
+	'bi_inter_cond_lv_3' => 30000,
+	'bi_inter_cond_lv_4' => 50000,
+
+	//Bonus for each binary interest level
+	'bi_lv_1_inter_bonus' => 0.14,
+	'bi_lv_2_inter_bonus' => 0.16,
+	'bi_lv_3_inter_bonus' => 0.18,
+	'bi_lv_4_inter_bonus' => 0.2,
+
 
 	'binary_matching_bonus' => 0.05,
 

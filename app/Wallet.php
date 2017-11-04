@@ -58,6 +58,8 @@ class Wallet extends Model
     const WITHDRAW_PACK_TYPE = 16;
     // Pack bonus type
     const BONUS_TYPE = 17;
+    // Pack bonus type
+    const MATCHING_TYPE = 18;
     //inOut 
     const IN = "in" ;
     

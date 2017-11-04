@@ -15,6 +15,9 @@ use App\BonusBinary;
 use App\ExchangeRate;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
+use App\TotalWeekSale;
+use App\UserTreePermission;
+use App\BonusBinaryInterest;
 use DB;
 use Log;
 
@@ -31,6 +34,14 @@ class Bonus
 	*/
 	public static function bonusDayCron(){
 		set_time_limit(0);
+
+		/* Get current weekYear */
+		$weeked = date('W');
+		$year = date('Y');
+		$weekYear = $year.$weeked;
+
+		if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
 		try {
 			$lstUser = User::where('active', '=', 1)->get();
 
@@ -46,8 +57,13 @@ class Bonus
 							->get();
 				if($packages)
 				{
+					//Calculate total week interest for each users
+					$weekTotal = TotalWeekSale::where('userId', $user->id)->first();
+					$totalInterest = 0;
+
 					//Pakages
-					foreach($packages as $pack){
+					foreach($packages as $pack)
+					{
 						$bonus = rand(config('carcoin.min_interest'), config('carcoin.max_interest'));
 
 						$usdAmount = $pack->amount_increase * $bonus;
@@ -73,6 +89,16 @@ class Bonus
 
 						Wallet::create($fieldUsd);
 
+						$fieldTotal = [
+							'userId' => $user->id,
+							'total_interest' => $clpAmount,
+							'weekYear' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
+						];
+
+						//Calculate total week interest for each users
+						$totalInterest += $usdAmount;
+						
+
 						if($pack->packageId > 1)
 						{
 							$bonusPack = $pack->amount_increase * $packInfo->bonus;
@@ -83,10 +109,13 @@ class Bonus
 							$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 							$userCoin->save();
 
+							//Calculate total week interest for each users
+							$totalInterest += $bonusPack;
+
 							//Get package information
 							$packInfo = Pakages::where('pack_id', $pack->packageId)->first();
 
-							$fieldUsd = [
+							$fieldBonus = [
 								'walletType' => Wallet::CLP_WALLET,//usd
 								'type' => Wallet::BONUS_TYPE,//bonus day
 								'inOut' => Wallet::IN,
@@ -94,8 +123,14 @@ class Bonus
 								'amount' => $clpAmount,
 								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
 							];
+
+							Wallet::create($fieldBonus);
 						}
 					}
+
+					$weekTotal->total_interest = $totalInterest;
+					$weekTotal->weekYear = $weekYear;
+					$weekTotal->save();
 
 					//Update cron status from 0 => 1
 					$cronStatus->status = 1;
@@ -300,17 +335,59 @@ class Bonus
 
 		/* =======END ===== */
 
-		//Get all user in loyalty table with loyaltyId > 0
-		$listLoyaltyUser = UserData::where('loyaltyId', '>', 0)->where('status', 1)->get();
-		foreach($listLoyaltyUser as $user)
+		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
+		foreach($listBinaryInterest as $binary)
 		{
 			//Get cron status
 			$cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
 			if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
-			$totalGenealogyBonus = 0;
-			self::calTotalBonus(&$totalGenealogyBonus, $firstWeekYear, $user->userId, $user->loyaltyId, 1);
-			$bonus = $totalGenealogyBonus * config('carcoin.binary_matching_bonus');
+			$volInfo = self::calLeftRightVolume($binary->userId);
+
+			$leftOver = $volInfo['toalLeft'] + $binary->leftOpen;
+			$rightOver = $volInfo['totalRight'] + $binary->leftOpen;
+			
+			//Caculate level to get binary commision
+			$level = 0;
+			$percentBonus = 0;
+			$packageId = $binary->userData->packageId;
+
+			if($leftOver >= config('carcoin.bi_inter_cond_lv_1') && 
+				$rightOver >= config('carcoin.bi_inter_cond_lv_1') && 
+				$packageId >= 1 )
+			{
+				$level = config('carcoin.bi_inter_cond_lv_1');
+				$percentBonus = config('carcoin.bi_lv_1_inter_bonus');
+			}
+
+			if($leftOver >= config('carcoin.bi_inter_cond_lv_2') && 
+				$rightOver >= config('carcoin.bi_inter_cond_lv_2') && 
+				$packageId >= 2)
+			{
+				$level = config('carcoin.bi_inter_cond_lv_2');
+				$percentBonus = config('carcoin.bi_lv_2_inter_bonus');
+			}
+
+			if($leftOver >= config('carcoin.bi_inter_cond_lv_3') && 
+				$rightOver >= config('carcoin.bi_inter_cond_lv_3') && 
+				$packageId >= 3)
+			{
+				$level = config('carcoin.bi_inter_cond_lv_3');
+				$percentBonus = config('carcoin.bi_lv_3_inter_bonus');
+			}
+
+			if($leftOver > config('carcoin.bi_inter_cond_lv_4') && 
+				$rightOver > config('carcoin.bi_inter_cond_lv_4') && 
+				$packageId == 4)
+			{
+				$level = config('carcoin.bi_inter_cond_lv_4');
+				$percentBonus = config('carcoin.bi_lv_4_inter_bonus');
+			}
+
+			$leftOpen = $leftOver - $level;
+			$rightOpen = $rightOver - $level;
+
+			$bonus = $level * $percentBonus;
 
 			if($bonus > 0)
 			{
@@ -324,7 +401,7 @@ class Bonus
 
 				$fieldUsd = [
 					'walletType' => Wallet::CLP_WALLET,//
-					'type' =>  Wallet::BINARY_TYPE,//bonus week
+					'type' =>  Wallet::MATCHING_TYPE,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $usdAmount,
@@ -334,7 +411,7 @@ class Bonus
 
 				$fieldInvest = [
 					'walletType' => Wallet::REINVEST_WALLET,//reinvest
-					'type' => Wallet::BINARY_TYPE,//bonus week
+					'type' => Wallet::MATCHING_TYPE,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $reinvestAmount,
@@ -352,52 +429,91 @@ class Bonus
 		DB::table('cron_matching_logs')->update(['status' => 0]);
 	}
 
-	public static function calTotalBonus(&$totalBonus, $firstWeekYear, $referralId, $loyaltyId, $deepLevel = 1)
+	public static function calLeftRightVolume($userId)
 	{
-		//Cal total member F1
-		$f1Users = UserData::where('refererId', $referralId)->get();
-		//Total binany bonus F1
-		foreach($f1Users as $userId) {
-			$bonusBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->where('userId', $userId)->get();
-			$totalBonus += $bonusBinary->bonus;
+		$userTree = UserTreePermission::find($userId);
+
+		$memberLeft = $userTree->binary_left;
+		$memberRight = $userTree->binary_right;
+
+		$listMemberLeft = explode(',', $memberLeft);
+		$listMemberRight = explode(',', $memberRight);
+
+		$totalLeftVol = $totalRightVol = 0;
+
+		$chunkLeft = array_chunk($listMemberLeft, 50);
+		foreach($chunkLeft as $chunk)
+		{
+			$weekSale = TotalWeekSale::whereIn('userId', $chunk)
+									->selectRaw('sum(total_interest) as totalVol')
+									->get()
+									->first();
+
+			$totalLeftVol += $weekSale->totalVol;
 		}
 
-		$deepLevel++;
-		//IsSilver
-		if($loyaltyId == 1 && $deepLevel <= 2) {
-			foreach($f1Users as $userId) {
-				self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-			}
+		$chunkRight = array_chunk($listMemberLeft, 50);
+		foreach($chunkRight as $chunk)
+		{
+			$weekSale = TotalWeekSale::whereIn('userId', $chunk)
+									->selectRaw('sum(total_interest) as totalVol')
+									->get()
+									->first();
+
+			$totalRightVol += $weekSale->totalVol;
 		}
 
-		//IsGold
-		if($loyaltyId == 2 && $deepLevel <= 4){
-			foreach($f1Users as $userId) {
-				self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-			}
-		}
-
-		//IsPear
-		if($loyaltyId == 3 && $deepLevel <= 6){
-			foreach($f1Users as $userId) {
-				self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-			}
-		}
-
-		//IsEmerald
-		if($loyaltyId == 4 && $deepLevel <= 8){
-			foreach($f1Users as $userId) {
-				self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-			}
-		}
-
-		//IsDiamond
-		if($loyaltyId == 5 && $deepLevel <= 10) {
-			foreach($f1Users as $userId) {
-				self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-			}
-		}
+		return ['toalLeft' => $totalLeftVol, 'totalRight' => $totalRightVol];
 	}
+
+
+
+	// public static function calTotalBonus(&$totalBonus, $firstWeekYear, $referralId, $loyaltyId, $deepLevel = 1)
+	// {
+	// 	//Cal total member F1
+	// 	$f1Users = UserData::where('refererId', $referralId)->get();
+	// 	//Total binany bonus F1
+	// 	foreach($f1Users as $userId) {
+	// 		$bonusBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->where('userId', $userId)->get();
+	// 		$totalBonus += $bonusBinary->bonus;
+	// 	}
+
+	// 	$deepLevel++;
+	// 	//IsSilver
+	// 	if($loyaltyId == 1 && $deepLevel <= 2) {
+	// 		foreach($f1Users as $userId) {
+	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+	// 		}
+	// 	}
+
+	// 	//IsGold
+	// 	if($loyaltyId == 2 && $deepLevel <= 4){
+	// 		foreach($f1Users as $userId) {
+	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+	// 		}
+	// 	}
+
+	// 	//IsPear
+	// 	if($loyaltyId == 3 && $deepLevel <= 6){
+	// 		foreach($f1Users as $userId) {
+	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+	// 		}
+	// 	}
+
+	// 	//IsEmerald
+	// 	if($loyaltyId == 4 && $deepLevel <= 8){
+	// 		foreach($f1Users as $userId) {
+	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+	// 		}
+	// 	}
+
+	// 	//IsDiamond
+	// 	if($loyaltyId == 5 && $deepLevel <= 10) {
+	// 		foreach($f1Users as $userId) {
+	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
+	// 		}
+	// 	}
+	// }
 
 	/**
 	* This cronjob function will run every 00:01 first day of month to caculate and return bonus to user's wallet 
