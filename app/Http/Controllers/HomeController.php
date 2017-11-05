@@ -63,7 +63,7 @@ class HomeController extends Controller
 
         //Caculate total bonus from start
         $totalBonus = Wallet::where('userId', Auth::user()->id)
-                            ->where('walletType', Wallet::USD_WALLET)
+                            ->where('walletType', Wallet::CLP_WALLET)
                             ->where('inOut', Wallet::IN)
                             ->get();
         $amount = 0;

@@ -189,24 +189,24 @@ class User extends Authenticatable
 
 					//Total sale on left
 					if($isInGenealogy)
-						$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
-					//$user->lastUserIdLeft = $userRoot ? $userRoot->lastUserIdLeft : $userId;
-					//$userRoot always have lastUserIdLeft, lastUserIdRight > 0 ( = userid or #userid )
+						$user->saleGenLeft = $user->saleGenLeft + $usdCoinAmount;
+
 					if($continue)
 						$user->lastUserIdLeft = $userRoot->lastUserIdLeft;
-					$user->leftMembers = $user->leftMembers + 1;
 
-					
+					$user->leftMembers = $user->leftMembers + 1;
+					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
 				}else{
 					//Update genelogy on right
 					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
 					//Total sale on right
 					if($isInGenealogy)
-						$user->totalSaleRight = $user->totalSaleRight + $usdCoinAmount;
-					//$user->lastUserIdRight = $userRoot ? $userRoot->lastUserIdRight : $userId;
+						$user->saleGenRight = $user->saleGenRight + $usdCoinAmount;
 					if($continue) 
 						$user->lastUserIdRight = $userRoot->lastUserIdRight;
+
 					$user->rightMembers = $user->rightMembers + 1;
+					$user->totalSaleRight = $user->totalSaleRight + $usdCoinAmount;
 				}
 
 				$user->totalMembers = $user->totalMembers + 1;
@@ -554,7 +554,7 @@ class User extends Authenticatable
 		$user = UserTreePermission::find($binaryUserId);
 		//Get first left binary
 		$listGenealogyUser = explode(',', $user->genealogy);
-		if( $lstGenealogyUser && in_array($userId, $listGenealogyUser) ) {
+		if( $listGenealogyUser && in_array($userId, $listGenealogyUser) ) {
 			if($leftOrRight == 1) {
 				$user->genealogy_left = $user->genealogy_left .',' . $userId;
 				$user->save();

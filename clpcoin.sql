@@ -60,14 +60,14 @@ CREATE TABLE `bonus_binary_interest` (
 -- ----------------------------
 -- Table structure for total_week_sale
 -- ----------------------------
-DROP TABLE IF EXISTS `total_week_sale`;
-CREATE TABLE `total_week_sale` (
+DROP TABLE IF EXISTS `total_week_sales`;
+CREATE TABLE `total_week_sales` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `userId` int(10) NOT NULL,
   `total_interest` double DEFAULT NULL,
-  `weekYear` int(10) NOT NULL,
+  `weekYear` int(10) DEFAULT NULL,
   PRIMARY KEY (`id`,`userId`),
   UNIQUE KEY `weekYear_uid` (`userId`,`weekYear`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -562,6 +562,8 @@ CREATE TABLE `user_datas` (
   `leftRight` enum('right','left') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `totalSaleLeft` double DEFAULT '0',
   `totalSaleRight` double DEFAULT '0',
+  `saleGenLeft` double DEFAULT '0',
+  `saleGenRight` double DEFAULT '0',
   `binaryUserId` int(10) DEFAULT '0',
   `lastUserIdLeft` int(10) DEFAULT '0',
   `lastUserIdRight` int(10) DEFAULT '0',

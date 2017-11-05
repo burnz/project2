@@ -23,7 +23,7 @@ class UserData extends Model
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
-        $this->setTable('packages');
+        $this->setTable('user_datas');
     }
 
     public function user() {

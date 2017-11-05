@@ -15,7 +15,7 @@ use App\BonusBinary;
 use App\ExchangeRate;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
-use App\TotalWeekSale;
+use App\TotalWeekSales;
 use App\UserTreePermission;
 use App\BonusBinaryInterest;
 use DB;
@@ -58,7 +58,7 @@ class Bonus
 				if($packages)
 				{
 					//Calculate total week interest for each users
-					$weekTotal = TotalWeekSale::where('userId', $user->id)->first();
+					$weekTotal = TotalWeekSales::where('userId', $user->id)->first();
 					$totalInterest = 0;
 
 					//Pakages
@@ -444,7 +444,7 @@ class Bonus
 		$chunkLeft = array_chunk($listMemberLeft, 50);
 		foreach($chunkLeft as $chunk)
 		{
-			$weekSale = TotalWeekSale::whereIn('userId', $chunk)
+			$weekSale = TotalWeekSales::whereIn('userId', $chunk)
 									->selectRaw('sum(total_interest) as totalVol')
 									->get()
 									->first();
@@ -455,7 +455,7 @@ class Bonus
 		$chunkRight = array_chunk($listMemberLeft, 50);
 		foreach($chunkRight as $chunk)
 		{
-			$weekSale = TotalWeekSale::whereIn('userId', $chunk)
+			$weekSale = TotalWeekSales::whereIn('userId', $chunk)
 									->selectRaw('sum(total_interest) as totalVol')
 									->get()
 									->first();

@@ -20,7 +20,7 @@ use App\CronProfitLogs;
 use App\CronBinaryLogs;
 use App\CronMatchingLogs;
 use App\CronLeadershipLogs;
-use App\TotalWeekSale;
+use App\TotalWeekSales;
 
 class PackageController extends Controller
 {
@@ -65,11 +65,10 @@ class PackageController extends Controller
         $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
         if($user && $request->isMethod('post') && ($currentDate > $preSaleEnd)) 
         {
-            Validator::extend('packageCheck', function ($attribute, $value) {
-                $user = Auth::user();
-
+            Validator::extend('packageCheck', function ($attribute, $value, $parameters) {
+                $packageId = $parameters[0];
                 //Get packageid 
-                $package = Package::find($request->packageId);
+                $package = Package::find($packageId);
                 if($package->min_price <= $value && $value <= $package->max_price)
                 {
                     return true;
@@ -79,12 +78,12 @@ class PackageController extends Controller
             });
 
             $this->validate($request, [
-                'amount_lending'    => 'required|packageCheck',
+                'amount_lending'    => 'required|packageCheck:' . $request->packageId,
                 'packageId' => 'required|not_in:0',
                 'terms'    => 'required',
             ],['amount_lending.package_check' => 'Lending amount and package selected does not match']);
 
-            $amount_increase = $request->amountLending;
+            $amount_increase = $request->amount_lending;
             $packageOldId = 0;
 
             $userData = $user->userData;
@@ -107,8 +106,8 @@ class PackageController extends Controller
                     CronMatchingLogs::create(['userId' => $currentuserid]);
                 if(CronLeadershipLogs::where('userId', $currentuserid)->count() < 1) 
                     CronLeadershipLogs::create(['userId' => $currentuserid]);
-                if(TotalWeekSale::where('userId', $currentuserid)->count() < 1) 
-                    TotalWeekSale::create(['userId' => $currentuserid]);
+                if(TotalWeekSales::where('userId', $currentuserid)->count() < 1) 
+                    TotalWeekSales::create(['userId' => $currentuserid]);
             }
 
             //Get weekYear

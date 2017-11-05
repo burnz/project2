@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TotalWeekSale extends Model
+class TotalWeekSales extends Model
 {
 
     protected $primaryKey = 'id';
@@ -12,11 +12,11 @@ class TotalWeekSale extends Model
     protected $fillable = [
 		'userId', 'total_interest', 'weekYear'
 	];
-    
+
 	public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->setTable('total_week_sale');
+        $this->setTable('total_week_sales');
     }
     public function userData() {
         return $this->hasOne(UserData::class, 'userId', 'userId');

@@ -194,6 +194,9 @@
                 {{ Form::open(array('url' => 'packages/invest', 'id'=>'formPackage')) }}
                 <div class="modal-body">
                     <div id="msg_package"></div>
+                    <div>
+                        <input type="text" name="amount_lending">
+                    </div>
                     <table class="table" id="myTable">
                         <thead>
                         <tr id="table_th">
@@ -206,7 +209,7 @@
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
                                 <td>{{ $package->name }}</td>
-                                <td><i class="fa fa-usd"></i>{{ number_format($package->price) }}</td>
+                                <td><i class="fa fa-usd"></i>{{ number_format($package->min_price) }}-{{ number_format($package->max_price) }}</td>
                                 <td><span class="icon-clp-icon"></span>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
