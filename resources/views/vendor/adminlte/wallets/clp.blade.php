@@ -208,9 +208,9 @@
                         <tbody>
                         @foreach ($packages as $package)
                             <tr{{ Auth::user()->userData->packageId > 0 && $package->id == Auth::user()->userData->packageId ?  ' class=checked':'' }} data-id="{{ $package->pack_id }}">
-                                <td>{{ $package->name }}</td>
-                                <td><i class="fa fa-usd"></i>{{ number_format($package->min_price) }}-{{ number_format($package->max_price) }}</td>
-                                <td><span class="icon-clp-icon"></span>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</td>
+                            <td>{{ $package->name }}</td>
+                            <td><i class="fa fa-usd"></i>{{ number_format($package->min_price) }}-{{ number_format($package->max_price) }}</td>
+                            <td><span class="icon-clp-icon"></span>{{ number_format($package->price / App\ExchangeRate::getCLPUSDRate(), 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
                         </tbody>

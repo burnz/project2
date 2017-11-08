@@ -11,7 +11,7 @@
 
 @section('main-content')
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-lg-12 col-xs-12">
         @include('adminlte::layouts.wallet')
         <!-- body -->
 
@@ -291,6 +291,17 @@
     </button>
     <strong>Holy guacamole!</strong> You should check in on some of those fields below.
 </div>
+<script>
+    $.toast({
+        heading: 'Welcome to CLPLENDING page',
+        text: 'Happy Lucky!',
+        position: 'top-right',
+        loaderBg:'#ff6849',
+        icon: 'info',
+        hideAfter: 3000,
+        stack: 6
+    });
+</script>
 <script>
     $.ajaxSetup({
         headers: {

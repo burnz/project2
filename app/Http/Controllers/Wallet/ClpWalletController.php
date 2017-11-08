@@ -327,4 +327,59 @@ class ClpWalletController extends Controller {
             }
         }
     }
+
+    public function buyPackage(Request $request){
+        $currentuserid = Auth::user()->id;
+        $query = Wallet::where('userId', '=',$currentuserid);
+        if(isset($request->type) && $request->type > 0){
+            $query->where('type', $request->type);
+        }
+        $wallets = $query->where('walletType', Wallet::CLP_WALLET)->orderBy('id', 'desc')->paginate();
+        //get Packgage
+        $user = Auth::user();
+        $packages = Package::all();
+        $lstPackSelect = array();
+        foreach ($packages as $package){
+            $lstPackSelect[$package->id] = $package->name;
+        }
+        $requestQuery = $request->query();
+
+        $all_wallet_type = config('carcoin.wallet_type');
+
+        //CLP Wallet has 6 type:15-buy pack, 14-Deposit, 10-Withdraw, 7-Buy CLP by BTC, 8-Sell CLP, 5-Buy CLP by USD, 6-Transfer From Holding Wallet
+        $wallet_type = [];
+        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
+        foreach ($all_wallet_type as $key => $val) {
+            if($key == 5) $wallet_type[$key] = trans($val);
+            if($key == 6) $wallet_type[$key] = trans($val);
+            if($key == 7) $wallet_type[$key] = trans($val);
+            if($key == 8) $wallet_type[$key] = trans($val);
+            if($key == 10) $wallet_type[$key] = trans($val);
+            if($key == 12) $wallet_type[$key] = trans($val);
+            if($key == 14) $wallet_type[$key] = trans($val);
+            if($key == 15) $wallet_type[$key] = trans($val);
+        }
+
+        $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
+        $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
+
+        $currentDate = date('Y-m-d');
+        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
+
+        $active = 0;
+        if($currentDate > $preSaleEnd) {
+            $active = 1;
+        }
+
+        return view('adminlte::wallets.buy_package', ['packages' => $packages,
+            'user' => $user,
+            'lstPackSelect' => $lstPackSelect,
+            'wallets'=> $wallets,
+            'wallet_type'=> $wallet_type,
+            'walletAddress' =>  $walletAddress,
+            'requestQuery'=> $requestQuery,
+            'active' => $active
+        ]);
+
+    }
 }

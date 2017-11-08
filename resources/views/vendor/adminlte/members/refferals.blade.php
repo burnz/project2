@@ -6,23 +6,27 @@
 
 @section('main-content')
 <div class="row">
-    <div class="col-xs-12">
-        <div class="box">
-            <div class="box-header">
+    <div class="col-lg-12 col-xs-12">
+        <div class="card">
+            {{--<div class="card-header">--}}
 
-            </div>
-            <div class="box-body" style="padding-top:0;">
+            {{--</div>--}}
+            <div class="card-body" style="padding-top:0;">
+                <h4 class="card-title">Referrals Table</h4>
+                <h6 class="card-subtitle">7 column</h6>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped dataTable">
-                        <tr>
-                            <th>{{ trans('adminlte_lang::member.refferals_no') }}</th>
-                            <th>{{ trans('adminlte_lang::member.refferals_id') }}</th>
-                            <th>{{ trans('adminlte_lang::member.refferals_username') }}</th>
-                            <th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
-                            <th>{{ trans('adminlte_lang::member.refferals_package') }}</th>
-                            <th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
-                            <th>{{ trans('adminlte_lang::member.refferals_loyalty') }}</th>
-                        </tr>
+                    <table class="table color-table success-table dataTable">
+                        <thead>
+                            <tr>
+                                <th>{{ trans('adminlte_lang::member.refferals_no') }}</th>
+                                <th>{{ trans('adminlte_lang::member.refferals_id') }}</th>
+                                <th>{{ trans('adminlte_lang::member.refferals_username') }}</th>
+                                <th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
+                                <th>{{ trans('adminlte_lang::member.refferals_package') }}</th>
+                                <th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
+                                <th>{{ trans('adminlte_lang::member.refferals_loyalty') }}</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             @php
                             $i = 1

@@ -3,6 +3,7 @@
 @section('contentheader_title')
     {{ trans('adminlte_lang::member.binary') }}
 @endsection
+
 <style type="text/css">
     .binary-control {
         padding: 10px 10px !important;
@@ -20,48 +21,123 @@
     }
 </style>
 
+<style>
+    .chart-nhi-phan {
+        height: 400px;
+        margin: 5px auto;
+        width: auto;
+    }
+    .Treant > .node {
+    }
+    .Treant > p {
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+    }
+    .node-name {
+        font-weight: bold;
+        padding: 3px 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .tree-node {
+        padding: 0;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        border: 2px solid #888888;
+        width: 12%;
+        font-size: 10px;
+        text-align: center;
+        height: 60px;
+    }
+    @media only screen and (max-width: 1024px) {
+        .tree-node {
+            font-size: 8px;
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        .tree-node {
+            font-size: 6px;
+            height: 50px;
+        }
+    }
+    .tree-node:hover {
+        cursor: pointer;
+        background-color: #f5f5f5;
+    }
+    .tree-node img {
+        margin: 5px 10px 0 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    .tree-node p {
+        margin-bottom: 2px;
+    }
+    .rotate90 {
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
+        -ms-transform: rotate(90deg);
+    }
+    .rotate120 {
+        -webkit-transform: rotate(30deg);
+        -moz-transform: rotate(30deg);
+        -o-transform: rotate(30deg);
+        /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
+        -ms-transform: rotate(30deg);
+    }
+</style>
+<link rel="stylesheet" href="{{ asset('/css/jstree.css') }}"/>
+<link rel="stylesheet" href="{{ asset('/css/Treant.css') }}"/>
+
 @section('main-content')
     <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-body" style="padding-top:0;">
-                    <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
-                        {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
-                        <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
-                            {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
-                        </div>
-                        <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
-                            <input type="hidden" name="legpos" id="legpos" value="0">
-                            {!! Form::button('Push to Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
-                            <br>
-                            {!! Form::button('Push to Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
+        <div class="col-lg-12 col-xs-12">
+            <div class="card">
+                <div class="card-body" style="padding-top:0;">
+                    <div class="row">
+                        <div class="col-lg-5 col-xs-5" style="">
+                            {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
+                            <div class="col-lg-6 col-xs-12" style="padding-left: 0;">
+                                {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
+                            </div>
+                            <div class="col-lg-6 col-xs-12" style="padding-left: 0;" id="push_into">
+                                <input type="hidden" name="legpos" id="legpos" value="0">
+                                {!! Form::button('Push to Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
+                                <br>
+                                {!! Form::button('Push to Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
 
+                            </div>
+                            {!! Form::close() !!}
                         </div>
-                        {!! Form::close() !!}
-                    </div>
-                    <div class="col-xs-5 binary-search" style="padding-top: 15px;position: absolute;right:-14px;">
-                        <!-- <div class="input-group input-group-sm"> -->
+                        <div class="col-lg-5 col-xs-5 binary-search">
+                            <!-- <div class="input-group input-group-sm"> -->
                             <div class="col-lg-6">
-                            <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
+                                <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
                             </div>
                             <div class="col-lg-6">
-                            <!-- <span class="input-group-btn"> -->
-								<button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
-							<!-- </span> -->
+                                <!-- <span class="input-group-btn"> -->
+                                <button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
+                                <!-- </span> -->
                             </div>
-                        <!-- </div> -->
+                            <!-- </div> -->
+                        </div>
                     </div>
-                    
+
                     <div style="margin-top: 15px;text-align:center;">
                         <center>
                             <button class="btn btn-app btn-xs binary-control" type="button" id="refresh-tree"
                                     style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i></button>
-                            
+
                         </center>
                         <center><button class="btn btn-app btn-xs binary-control" type="button" id="go-up"><i
                                         class="fa fa-play rotate120 "></i></button></center>
                     </div>
-                    <div class="chart" id="tree-container"></div>
+                    <div class="chart-nhi-phan" id="tree-container"></div>
 
                     <div class="pull-left">
                         <button class="btn btn-app btn-xs binary-control" type="button" id="go-endleft"><i
@@ -79,79 +155,9 @@
             </div>
         </div>
     </div>
-    <style>
-        .chart {
-            height: 400px;
-            margin: 5px auto;
-            width: auto;
-        }
-        .Treant > .node {
-        }
-        .Treant > p {
-            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        .node-name {
-            font-weight: bold;
-            padding: 3px 0;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-        .tree-node {
-            padding: 0;
-            -webkit-border-radius: 10px;
-            -moz-border-radius: 10px;
-            border-radius: 10px;
-            background-color: #ffffff;
-            border: 2px solid #888888;
-            width: 12%;
-            font-size: 10px;
-            text-align: center;
-            height: 60px;
-        }
-        @media only screen and (max-width: 1024px) {
-            .tree-node {
-                font-size: 8px;
-            }
-        }
-        @media only screen and (max-width: 768px) {
-            .tree-node {
-                font-size: 6px;
-                height: 50px;
-            }
-        }
-        .tree-node:hover {
-            cursor: pointer;
-            background-color: #f5f5f5;
-        }
-        .tree-node img {
-            margin: 5px 10px 0 5px;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-        .tree-node p {
-            margin-bottom: 2px;
-        }
-        .rotate90 {
-            -webkit-transform: rotate(90deg);
-            -moz-transform: rotate(90deg);
-            -o-transform: rotate(90deg);
-            /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
-            -ms-transform: rotate(90deg);
-        }
-        .rotate120 {
-            -webkit-transform: rotate(30deg);
-            -moz-transform: rotate(30deg);
-            -o-transform: rotate(30deg);
-            /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
-            -ms-transform: rotate(30deg);
-        }
-    </style>
-    <link rel="stylesheet" href="{{ asset('/css/jstree.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('/css/Treant.css') }}"/>
 
+@endsection
+@section('script')
     <script src="{{ asset('/js/raphael.js') }}"></script>
     <script src="{{ asset('/js/Treant.js') }}"></script>
     <script src="{{ asset('/js/jst.js') }}"></script>
@@ -173,18 +179,18 @@
                     return false;
                 }else{
                     swal({
-                      title: "Are you sure?",
-                      text: $("#userSelect option:selected").html() + " will be push to the Left!",
-                      type: "warning",
-                      showCancelButton: true,
-                      confirmButtonClass: "btn-danger",
-                      confirmButtonText: "Yes, do it!",
-                      closeOnConfirm: false
-                    },
-                    function(){
-                        $('#legpos').val(1);
-                        $('#pushIntoTreeForm').submit();
-                    });
+                            title: "Are you sure?",
+                            text: $("#userSelect option:selected").html() + " will be push to the Left!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Yes, do it!",
+                            closeOnConfirm: false
+                        },
+                        function(){
+                            $('#legpos').val(1);
+                            $('#pushIntoTreeForm').submit();
+                        });
 
                 }
             });
@@ -194,18 +200,18 @@
                     return false;
                 }else{
                     swal({
-                      title: "Are you sure?",
-                      text: $("#userSelect option:selected").html() + " will be push to the Right!",
-                      type: "warning",
-                      showCancelButton: true,
-                      confirmButtonClass: "btn-danger",
-                      confirmButtonText: "Yes, do it!",
-                      closeOnConfirm: false
-                    },
-                    function(){
-                        $('#legpos').val(2);
-                        $('#pushIntoTreeForm').submit();
-                    });
+                            title: "Are you sure?",
+                            text: $("#userSelect option:selected").html() + " will be push to the Right!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Yes, do it!",
+                            closeOnConfirm: false
+                        },
+                        function(){
+                            $('#legpos').val(2);
+                            $('#pushIntoTreeForm').submit();
+                        });
                 }
             });
         });

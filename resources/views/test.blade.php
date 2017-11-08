@@ -1,220 +1,157 @@
-@extends('adminlte::layouts.auth')
+<!-- Main Header -->
+<header class="main-header">
 
-@section('htmlheader_title')
-    {{ trans('adminlte_lang::message.register') }}
-@endsection
+    <!-- Logo -->
+    <a href="{{ url('/home') }}" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"><img src="{{ url('/') }}/img/logo_gold.png"/></span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><img src="{{ url('/') }}/img/logo_gold.png"/><b>CLP</b></span>
+    </a>
 
-@section('content')
-    <link rel="stylesheet" href="{{ URL::to('css/intlTelInput.css')}}">
-    <style>
-        .iti-flag {background-image: url("{{ URL::to('img/flags.png')}}");}
+    <!-- Header Navbar -->
+    <nav class="navbar navbar-static-top" role="navigation">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
+        </a>
+        &nbsp;
+        <span class="hidden-xs" style="font-size: 14px;line-height: 50px;text-align: center;color: white">
+            <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
+        </span>
 
-        @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-            .iti-flag {background-image: url("{{ URL::to('img/flags@2x.png')}}");}
-        }
-    </style>
-    <body class="hold-transition register-page">
-    <div id="app" v-cloak>
-        <div class="register-box">
-            <div class="register-logo">
-                <a href="{{ url('/home') }}"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
-            </div>
-            <div class="signupSteps">
-                <h2>
-                    <span class="fa-stack fa-lg"><i class="fa fa-circle step"></i></span>Register
-                    <i class="fa fa-long-arrow-right"></i>
-                    <span class="fa-stack fa-lg"><i class="fa fa-circle-thin step"></i></span>Activate
-                    <i class="fa fa-long-arrow-right"></i>
-                    <span class="fa-stack fa-lg"><i class="fa fa-circle-thin step"></i></span>Complete
-                </h2>
-            </div>
-            <div class="register-box-body">
-                <p class="login-box-msg">{{ trans('adminlte_lang::message.registermember') }}</p>
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <!-- Messages: style can be found in dropdown.less-->
+                <li class="dropdown messages-menu" style="display: none">
+                    <!-- Menu toggle button -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="label label-success">4</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="header">{{ trans('adminlte_lang::message.tabmessages') }}</li>
+                        <li>
+                            <!-- inner menu: contains the messages -->
+                            <ul class="menu">
+                                <li><!-- start message -->
+                                    <a href="#">
+                                        <div class="pull-left">
+                                            <!-- User Image -->
+                                            <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image"/>
+                                        </div>
+                                    </a>
+                                </li><!-- end message -->
+                            </ul><!-- /.menu -->
+                        </li>
+                    </ul>
+                </li><!-- /.messages-menu -->
 
-                <form role="form" method="POST" action="{{ URL::to("/register") }}">
-                    {!! csrf_field() !!}
-                    <input type="hidden" name="refererId" value="{{$refererId}}" />
-                    <input type="hidden" name="referrerName" value="{{$referrerName}}" />
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('firstname') ? ' has-error' : '' }}">
-                        <input type="text" placeholder="{{ trans('adminlte_lang::user.firstname') }}" name="firstname" value="{{ old('firstname') }}" autofocus="autofocus" class="form-control">
-                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                        @if ($errors->has('firstname'))
-                            <span class="help-block">
-                                    {{ $errors->first('firstname') }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('lastname') ? ' has-error' : '' }}">
-                        <input type="text" placeholder="{{ trans('adminlte_lang::user.lastname') }}" name="lastname" value="{{ old('lastname') }}" autofocus="autofocus" class="form-control">
-                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                        @if ($errors->has('lastname'))
-                            <span class="help-block">
-                                    {{ $errors->first('lastname') }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('name') ? ' has-error' : '' }}">
-                        <input type="text" placeholder="{{ trans('adminlte_lang::user.username') }}" name="name" value="{{ old('name') }}" autofocus="autofocus" class="form-control">
-                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                        @if ($errors->has('name'))
-                            <span class="help-block">
-                                    {{ $errors->first('name') }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('phone') ? ' has-error' : '' }}">
-                        <input type="text" id="phone" name="phone" class="form-control" hidden="">
-                        <input type="text" id="country" name="country" class="form-control" style="display: none">
-                        <input type="text" id="name_country" name="name_country" class="form-control" style="display: none">
-                        <span class="glyphicon glyphicon-phone form-control-feedback"></span>
-                        @if ($errors->has('phone'))
-                            <span class="help-block">
-                                {{ $errors->first('phone') }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('email') ? ' has-error' : '' }}">
-                        <input type="email" placeholder="{{ trans('adminlte_lang::user.email') }}" name="email" value="{{ old('email') }}" class="form-control">
-                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                        @if ($errors->has('email'))
-                            <span class="help-block">
-                                {{ $errors->first('email') }}
-                            </span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
-                        <input type="password" placeholder="Password" name="password" class="form-control">
-                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                        @if ($errors->has('password'))
-                            <span class="help-block">
-                                {{ $errors->first('password') }}
-                             </span>
-                        @endif
-                    </div>
-                    <div class="form-group input-group-sm has-feedback{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                        <input type="password" placeholder="Retype Password" name="password_confirmation" class="form-control">
-                        @if ($errors->has('password_confirmation'))
-                            <span class="help-block">
-                                {{ $errors->first('password_confirmation') }}
-                            </span>
-                        @endif
-                    </div>
-                    @if (Config::get('app.enable_captcha'))
-                        <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
-                            {!! app('captcha')->display()!!}
-                            @if ($errors->has('g-recaptcha-response'))
-                                <span class="help-block">
-                                {{ $errors->first('g-recaptcha-response') }}
-                            </span>
-                            @endif
-                        </div>
-                    @endif
-                    <div class="row">
-                        <div class="col-xs-7 form-group has-feedback{{ $errors->has('terms') ? ' has-error' : '' }}">
-                            <label>
-                                <div class="checkbox_register icheck">
-                                    <input type="checkbox" name="terms">
-                                    <a href="/term-condition.html" class="text-danger" target="_blank">{{ trans('adminlte_lang::user.terms_text') }}</a>
+                @if (Auth::guest())
+                    <li><a href="{{ url('/register') }}">{{ trans('adminlte_lang::message.register') }}</a></li>
+                    <li><a href="{{ url('/login') }}">{{ trans('adminlte_lang::message.login') }}</a></li>
+            @else
+                <!-- User Account Menu -->
+                    <li class="dropdown user user-menu" id="user_menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="user-image" alt="User Image"/>
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs">{{ Auth::user()->name }}</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header" style="height: 190px;">
+                                <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" />
+                                <p style="font-size: 16px;margin-bottom: 0px;margin-top: 0px;">{{ Auth::user()->name }}</p>
+                                <div class="row" style="color:white">
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">ID:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">{{  Auth::user()->uid }}</i></div>
                                 </div>
-                            </label>
-                            @if ($errors->has('terms'))
-                                <span class="help-block">
-                                    {{ $errors->first('terms') }}
-                                </span>
-                            @endif
-                        </div>
-                        <div class="col-xs-4 col-xs-push-1">
-                            <button type="submit" class="btn btn-primary btn-block btn-flat">{{ trans('adminlte_lang::user.btn_register') }}</button>
-                        </div>
-                    </div>
+                                <div class="row" style="color:white">
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Pack:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</i></div>
+                                </div>
+                                <div class="row" style="color:white">
+                                    <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Loyalty:&nbsp</span></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
+                                </div>
+                            </li>
+                            <!-- Menu Body -->
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="{{ url('/profile') }}" class="btn btn-default btn-flat">{{ trans('adminlte_lang::message.profile') }}</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="{{ url('/logout') }}" class="btn btn-default btn-flat" id="logout"
+                                       onclick="event.preventDefault();
+                                                doLogout();
+                                                 document.getElementById('logout-form').submit();">
+                                        {{ trans('adminlte_lang::message.signout') }}
+                                    </a>
 
+                                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                        <input type="submit" value="logout" style="display: none;">
+                                    </form>
 
-                </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+            @endif
 
+            <!-- Control Sidebar Toggle Button -->
+                <li>
+                    <a href="#" data-toggle="control-sidebar" class="clp-news"><i class="fa fa-newspaper-o"></i>&nbsp{{ trans('adminlte_lang::news.title_news') }}</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<script>
+    var formatter = new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+    });
+    var formatterBTC = new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 8,
+    });
+    function doLogout(){
+        document.cookie = "open=1";
+    }
 
-                <a href="{{ url('/login') }}" class="text-center">{{ trans('adminlte_lang::user.membreship') }}</a>
-            </div><!-- /.form-box -->
-        </div><!-- /.register-box -->
-    </div>
-    @include('adminlte::layouts.partials.scripts_auth')
-    <script src="{{ URL::to('js/intlTelInput.js')}}"></script>
-    <script src="{{ URL::to('js/utils.js')}}"></script>
-    <script>
-        function changeUrl(){
-            var URL = window.location.href;
-            if (URL.split('/')[3] == 'ref') {
-                window.history.pushState("object or string", "Title", "/register");
-            }
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-        $(document).ready(function(){
-            var changurl = changeUrl();
-            $("#phone").intlTelInput({
-            });
+    });
 
-            $('form').submit(function(){
-                $("#phone").val($("#phone").intlTelInput("getNumber"));
-                $("#country").val($("#phone").intlTelInput("getSelectedCountryData").dialCode);
-                $("#name_country").val($("#phone").intlTelInput("getSelectedCountryData").name);
-            });
-
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%'
-            });
-            var mytimer;
-            $('#refererId').on('blur onmouseout', function () {
-                clearTimeout(mytimer);
-                var search = $(this).val();
-                if(search.length >= 1){
-                    mytimer = setTimeout(function(){
-                        $.ajax({
-                            type: "GET",
-                            url: "/users/search",
-                            data: {id : search}
-                        }).done(function(data){
-                            if(data.err) {
-                                $('#refererId').parent().addClass('has-error');
-                                $('#refererIdError').text(data.err);
-                                $('#referrerName').val('');
-                            }else{
-                                $('#referrerName').parent().removeClass('has-error');
-                                $('#refererNameError').text('');
-                                $('#refererId').parent().removeClass('has-error');
-                                $('#refererIdError').text('');
-                                $('#referrerName').val(data.username);
-                            }
-                        });
-                    }, 1000);
-                }
-            });
-            $('#referrerName').on('blur onmouseout', function () {
-                clearTimeout(mytimer);
-                var search = $(this).val();
-                if(search.length >= 3){
-                    mytimer = setTimeout(function(){
-                        $.ajax({
-                            type: "GET",
-                            url: "/users/search",
-                            data: {username : search}
-                        }).done(function(data){
-                            if(data.err) {
-                                $('#referrerName').parent().addClass('has-error');
-                                $('#refererNameError').text(data.err);
-                                $('#refererId').val('');
-                            }else{
-                                $('#refererId').parent().removeClass('has-error');
-                                $('#refererIdError').text('');
-                                $('#referrerName').parent().removeClass('has-error');
-                                $('#refererNameError').text('');
-                                $('#refererId').val(data.id);
-                            }
-                        });
-                    }, 1000);
-                }
-            });
+    function getRate(){
+        $.ajax({
+            dataType: "json",
+            url: '{{ URL::to("exchange") }}',
+            success: function(data){
+                $('.btcusd').html(formatter.format(data[1].exchrate));
+                $('.clpusd').html(formatter.format(data[2].exchrate));
+                $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
+                $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
+                globalBTCUSD = data[1].exchrate;
+                globalCLPUSD = data[2].exchrate; //clpUSD
+                globalCLPBTC = data[0].exchrate;
+            }
         });
-    </script>
-    </body>
+    }
 
-@endsection
+    $(function() {
+        getRate();
+        setInterval(function(){ getRate() }, {{ config('app.time_interval') }});
+    });
+
+</script>

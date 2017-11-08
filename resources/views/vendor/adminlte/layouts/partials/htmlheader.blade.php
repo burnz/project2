@@ -1,24 +1,21 @@
 <head>
-    <meta charset="UTF-8">
-    <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" />
-    <title> CLP - @yield('htmlheader_title', 'Lending Project') </title>
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <!-- CSRF Token -->
-    <meta name="google-site-verification" content="YoKxcLBO-buCnESjlFmmFeZqaNULyT4Z88cVN4OLqN0" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <link href="{{ mix('/css/all.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url('/css/sweetalert.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ url('/css/custom.css') }}" rel="stylesheet" type="text/css" />
-    <script src="{{ url('/js/sweetalert.min.js') }}"></script>
-    @yield('custome_css')
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon.ico')}}">
+    <title>CLP Lending page</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <!-- toast CSS -->
+    <link href="{{asset('assets/plugins/toast-master/css/jquery.toast.css')}}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="{{asset('css/colors/blue.css')}}" id="theme" rel="stylesheet">
     <script>
         window.trans = @php
             // copy all translations from /resources/lang/CURRENT_LOCALE/* to global JS variable
@@ -32,13 +29,18 @@
             echo json_encode($trans);
         @endphp
     </script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107989535-1"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-107989535-1');
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-85622565-1', 'auto');
+        ga('send', 'pageview');
     </script>
 </head>

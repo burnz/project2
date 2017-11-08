@@ -36,6 +36,7 @@ return [
     'add'						=> 'Add',
 	'welcome' 					=> 'Welcome',
 	'loyalty'					=> 'Loyalty',
-	'submit'					=> 'Submit'
+	'submit'					=> 'Submit',
+    'buy_package' => 'Buy Package',
     
 ];
