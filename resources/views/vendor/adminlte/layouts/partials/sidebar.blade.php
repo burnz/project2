@@ -25,10 +25,10 @@
             <ul id="sidebarnav">
                 <li class="nav-small-cap">MENU</li>
                 <li>
-                    <a class="" href="{{ url('home') }}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
+                    <a class="" href="{{ url('home') }}" aria-expanded="false"><i class="mdi mdi-home"></i><span class="hide-menu">Dashboard </span></a>
                 </li>
                 <li>
-                    <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">{{ trans('adminlte_lang::default.side_member') }} <span class="label label-rounded label-success">3</span></span></a>
+                    <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-human"></i><span class="hide-menu">{{ trans('adminlte_lang::default.side_member') }} <span class="label label-rounded label-success">3</span></span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ url('members/genealogy') }}">{{ trans('adminlte_lang::default.side_member_genealogy') }}</a></li>
                         <li><a href="{{ url('members/binary') }}">{{ trans('adminlte_lang::default.side_member_binary') }}</a></li>
@@ -36,7 +36,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a class="has-arrow " href="#" aria-expanded="false"><i class="mdi mdi-bullseye"></i><span class="hide-menu">{{ trans('adminlte_lang::default.side_wallet') }} <span class="label label-rounded label-success">4</span></span></a>
+                    <a class="has-arrow " href="#" aria-expanded="false"><i class="mdi mdi-wallet"></i><span class="hide-menu">{{ trans('adminlte_lang::default.side_wallet') }} <span class="label label-rounded label-success">4</span></span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ url('wallets/btc') }}">{{ trans('adminlte_lang::default.side_wallet_btc') }}</a></li>
                         <li><a href="{{ url('wallets/clp') }}">{{ trans('adminlte_lang::default.side_wallet_clp') }}</a></li>
@@ -45,7 +45,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a class="has-arrow " href="#" aria-expanded="false"><i class="mdi mdi-email"></i><span class="hide-menu">{{ trans('adminlte_lang::default.side_mybonus') }} <span class="label label-rounded label-success">3</span></span></a>
+                    <a class="has-arrow " href="#" aria-expanded="false"><i class="mdi mdi-flower"></i><span class="hide-menu">{{ trans('adminlte_lang::default.side_mybonus') }} <span class="label label-rounded label-success">3</span></span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ url('mybonus/faststart') }}">{{ trans('adminlte_lang::default.side_mybonust_fast') }}</a></li>
                         <li><a href="{{ url('mybonus/binary') }}">{{ trans('adminlte_lang::default.side_mybonus_binary') }}</a></li>

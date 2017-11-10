@@ -19,6 +19,7 @@ return [
     'refferals_package'           	=> 'Member',
     'refferals_more'           	=> 'Detail',
     'refferals_loyalty'            => 'Loyalty',
+    'action'            => 'Action',
 
 
 ];

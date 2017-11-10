@@ -291,60 +291,54 @@
     </button>
     <strong>Holy guacamole!</strong> You should check in on some of those fields below.
 </div>
-<script>
-    $.toast({
-        heading: 'Welcome to CLPLENDING page',
-        text: 'Happy Lucky!',
-        position: 'top-right',
-        loaderBg:'#ff6849',
-        icon: 'info',
-        hideAfter: 3000,
-        stack: 6
-    });
-</script>
-<script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    @if ($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
-            $('[data-toggle=confirmation]').confirmation({
-    rootSelector: '[data-toggle=confirmation]',
+@endsection
+@section('script')
+    <script>
+        $.toast({
+            heading: 'Welcome to CLPLENDING page',
+            text: 'Happy Lucky!',
+            position: 'top-right',
+            loaderBg:'#ff6849',
+            icon: 'info',
+            hideAfter: 3000,
+            stack: 6
+        });
+    </script>
+    <script>
+        @if ($disabled){{ "$('[data-toggle=confirmation]').confirmation('hide');" }}@endif
+        $('[data-toggle=confirmation]').confirmation({
+            rootSelector: '[data-toggle=confirmation]',
             onConfirm: function() {
-            $.ajax({
-            beforeSend: function(){
-            // Handle the beforeSend event
-            },
+                $.ajax({
+                    beforeSend: function(){
+                        // Handle the beforeSend event
+                    },
                     url:"packages/withdraw",
                     type:"post",
                     data : {
-                    type: "withdraw",
-                            _token:  $('meta[name="csrf-token"]').attr('content')
+                        type: "withdraw",
+                        _token:  $('meta[name="csrf-token"]').attr('content')
                     },
                     success : function(result){
-                    if (result.success){
-                    $(".usd-amount").html(formatter.format(result.result).replace("$", ""));
-                        swal("{{ trans('adminlte_lang::wallet.success')}}");
-                    } else{
-                        swal(result.message);
-                    }
+                        if (result.success){
+                            $(".usd-amount").html(formatter.format(result.result).replace("$", ""));
+                            swal("{{ trans('adminlte_lang::wallet.success')}}");
+                        } else{
+                            swal(result.message);
+                        }
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                
+
                     },
                     complete: function(){
 
                     }
-            // ......
-            });
+                    // ......
+                });
             },
             onCancel: function() {
 
             }
-    });
-
-
-</script>
+        });
+    </script>
 @endsection

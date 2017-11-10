@@ -183,6 +183,7 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    {{--Buy package--}}
     <div class="modal fade" id="buy-package" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -507,9 +508,9 @@
 
 
             $('#withdraw-clp').on('click', function () {
-                var withdrawAmount = $('#withdrawAmount').val();
-                var walletAddress = $('#walletAddress').val();
-                var withdrawOTP = $('#withdrawOTP').val();
+                var withdrawAmount  = $('#withdrawAmount').val();
+                var walletAddress   = $('#walletAddress').val();
+                var withdrawOTP     = $('#withdrawOTP').val();
 
                 if($.trim(withdrawAmount) == ''){
                     $("#withdrawAmount").parents("div.form-group").addClass('has-error');
