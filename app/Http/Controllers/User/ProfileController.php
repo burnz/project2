@@ -43,7 +43,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //$lstCountry = config('cryptolanding.lstCountry');
+        //$lstCountry = config('carcoin.lstCountry');
         //$lstCountry = array_merge(array("0" => 'Choose a country'), $lstCountry);
         $sponsor = User::where('id', Auth::user()->refererId)->first();
         $google2faUrl = Google2FA::getQRCodeGoogleUrl(

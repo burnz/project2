@@ -18,8 +18,14 @@ class UserData extends Model
      * @var array
      */
     protected $fillable = [
-        'userId', 'refererId', 'accountCoinBase', 'walletAddress', 'packageId', 'packageDate', 'isBinary', 'leftRight', 'totalBonusLeft', 'totalBonusRight', 'binaryUserId', 'lastUserIdLeft', 'lastUserIdRight', 'leftMembers', 'rightMembers', 'totalMembers',
+        'userId', 'refererId', 'accountCoinBase', 'walletAddress', 'packageId', 'packageDate', 'isBinary', 'leftRight', 'totalSaleLeft', 'totalSaleRight', 'binaryUserId', 'lastUserIdLeft', 'lastUserIdRight', 'leftMembers', 'rightMembers', 'totalMembers',
     ];
+
+    public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
+        $this->setTable('user_datas');
+    }
+
     public function user() {
         return $this->hasOne(User::class, 'id', 'userId');
     }

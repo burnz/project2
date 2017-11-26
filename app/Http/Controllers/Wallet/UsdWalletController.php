@@ -42,51 +42,7 @@ class UsdWalletController extends Controller
     {
         $this->middleware('auth');
     }
-    
-    /** 
-     * @author Huy NQ
-     * @param Request $request
-     * @return type
-     */
-    public function usdWallet( Request $request ) {
-        //tranfer if request post
-        if($request->isMethod('post')) {
-            $this->validate($request, [
-                'usd'=>'required|numeric',
-                'clp'=>'required|numeric'
-            ]);
-            //Tranfer
-            $this->tranferUSDCLP($request->usd, $request->clp, $request);
-            return redirect()->route("wallet.usd");
-        }
-        //get tỷ giá usd btc
-        //get dữ liệu bảng hiển thị trên site
-        $currentuserid = Auth::user()->id;
-        $query = Wallet::where('userId', '=',$currentuserid);
-        if(isset($request->type) && $request->type > 0){
-            $query->where('type', $request->type);
-        }
-        $wallets = $query->where('walletType', Wallet::USD_WALLET)->orderBy('id', 'desc')->paginate();
-        $wallets->currencyPair = Auth()->user()->usercoin->usdAmount ;
-           
-        $requestQuery = $request->query();
-        $all_wallet_type = config('cryptolanding.wallet_type');
 
-        //USD Wallet has 5 type: Profit day, farst start, binary, loyalty, buy CLP
-        $wallet_type = [];
-        $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
-        foreach ($all_wallet_type as $key => $val) {
-            if($key == 1) $wallet_type[$key] = trans($val);
-            if($key == 2) $wallet_type[$key] = trans($val);
-            if($key == 3) $wallet_type[$key] = trans($val);
-            if($key == 4) $wallet_type[$key] = trans($val);
-            if($key == 5) $wallet_type[$key] = trans('adminlte_lang::wallet.usd_clp_type_on_usd');
-            if($key == 16) $wallet_type[$key] = trans($val);
-        }
-
-        return view('adminlte::wallets.usd', compact('wallets','wallet_type', 'requestQuery'));
-    }
-    
     /** 
      * @author GiangDT
      * @edit Huynq

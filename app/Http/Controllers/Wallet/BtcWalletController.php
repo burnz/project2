@@ -64,7 +64,7 @@ class BtcWalletController extends Controller
         $requestQuery = $request->query();
 
 
-        $all_wallet_type = config('cryptolanding.wallet_type');
+        $all_wallet_type = config('carcoin.wallet_type');
 
         //BTC Wallet has 5 type: 13-Deposit, 9-Withdraw, 7-Buy CLP, 8-Sell CLP, 11-Transfer BTC
         $wallet_type = [];

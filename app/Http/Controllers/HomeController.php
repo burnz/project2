@@ -63,7 +63,7 @@ class HomeController extends Controller
 
         //Caculate total bonus from start
         $totalBonus = Wallet::where('userId', Auth::user()->id)
-                            ->where('walletType', Wallet::USD_WALLET)
+                            ->where('walletType', Wallet::CLP_WALLET)
                             ->where('inOut', Wallet::IN)
                             ->get();
         $amount = 0;
@@ -105,8 +105,8 @@ class HomeController extends Controller
         //$data['newF1InWeek'] = $newF1InWeek['total'];
         $data['leftNew']     = $newF1InWeek['leftNew'];
         $data['rightNew']    = $newF1InWeek['rightNew'];
-        $data['leftTotal']    = isset($userData->totalBonusLeft) ? $userData->totalBonusLeft : 0;
-        $data['rightTotal']   = isset($userData->totalBonusRight) ? $userData->totalBonusRight : 0;
+        $data['leftTotal']    = isset($userData->totalSaleLeft) ? $userData->totalSaleLeft : 0;
+        $data['rightTotal']   = isset($userData->totalSaleRight) ? $userData->totalSaleRight : 0;
         //Get số lương coin trong tài khoản
         $data['coin'] = $this->getInfoCoin();
         //Get lịch sử package

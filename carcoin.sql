@@ -600,6 +600,8 @@ CREATE TABLE `user_datas` (
   `leftRight` enum('right','left') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `totalSaleLeft` double DEFAULT '0',
   `totalSaleRight` double DEFAULT '0',
+  `saleGenLeft` double DEFAULT '0',
+  `saleGenRight` double DEFAULT '0',
   `binaryUserId` int(10) DEFAULT '0',
   `lastUserIdLeft` int(10) DEFAULT '0',
   `lastUserIdRight` int(10) DEFAULT '0',

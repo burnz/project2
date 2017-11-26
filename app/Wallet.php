@@ -11,13 +11,13 @@ class Wallet extends Model
     ];
 
     // Wallet Type
-    const USD_WALLET = 1;
+    //const USD_WALLET = 1;
 
-    const BTC_WALLET = 2;
+    const BTC_WALLET = 1;
 
-    const CLP_WALLET = 3;
+    const CLP_WALLET = 2;
 
-    const REINVEST_WALLET = 4;
+    const REINVEST_WALLET = 3;
 
 
     /**
@@ -56,6 +56,10 @@ class Wallet extends Model
     const BUY_PACK_TYPE = 15;
     // withdraw Package
     const WITHDRAW_PACK_TYPE = 16;
+    // Pack bonus type
+    const BONUS_TYPE = 17;
+    // Pack bonus type
+    const MATCHING_TYPE = 18;
     //inOut 
     const IN = "in" ;
     
