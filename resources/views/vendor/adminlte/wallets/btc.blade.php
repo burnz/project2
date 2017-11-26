@@ -188,21 +188,21 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                    {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw clp-input', 'placeholder' => "Amount BTC", 'id' => 'withdraw-btc-amount')) }}
+                                    {{ Form::number('withdrawAmount', '', array('class' => 'form-control input-sm btcwithdraw car-input', 'placeholder' => "Amount BTC", 'id' => 'withdraw-btc-amount')) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-address-card"></i></span>
-                                    {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm clp-input', 'placeholder' => "Bitcoin address E.g. 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v", 'id' => 'withdraw-address')) }}
+                                    {{ Form::text('walletAddress', '', array('class' => 'form-control input-sm car-input', 'placeholder' => "Bitcoin address E.g. 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v", 'id' => 'withdraw-address')) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                    {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm clp-input', 'placeholder' => "2FA Code E.g. 123456", 'id' => 'withdraw-otp')) }}
+                                    {{ Form::number('withdrawOPT', '', array('class' => 'form-control input-sm car-input', 'placeholder' => "2FA Code E.g. 123456", 'id' => 'withdraw-otp')) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
@@ -223,14 +223,14 @@
     </div>
     {{ Form::close() }}
 
-    <!--Buy CLP modal-->
+    <!--Buy CAE modal-->
     <div class="modal fade" id="buy" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbuyclp" data-type="btctranfer">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 2) }}</a></h4>
+                    <h4 class="modal-title">{{ trans("adminlte_lang::wallet.tranfer_to_clp")}}&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btcAmount maxbuy" data-type="btctranfer">{{ number_format(Auth()->user()->userCoin->btcCoinAmount, 2) }}</a></h4>
                 </div>
                 <div class="modal-body">
                     <div class="box no-border">
@@ -238,14 +238,14 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP clp-input', 'id' => 'btcAmount', 'placeholder' => "BTC Amount")) }}
+                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CAR car-input', 'id' => 'btcAmount', 'placeholder' => "BTC Amount")) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                    {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC clp-input', 'id' => 'clpAmount', 'placeholder' => "CLP Amount")) }}
+                                    <span class="input-group-addon"><span class="icon-car-icon"></span></span>
+                                    {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CAR-to-BTC car-input', 'id' => 'carAmount', 'placeholder' => "CAR Amount")) }}
                                 </div>
                                 <span class="help-block"></span>
                             </div>
@@ -254,7 +254,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'buy-clp')) }}
+                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'buy-car')) }}
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -354,7 +354,7 @@
                 }
             });
 
-            $('.clp-input').on('keyup', function () {
+            $('.car-input').on('keyup', function () {
                 $(this).parents("div.form-group").removeClass('has-error');
                 $(this).parents("div.form-group").find('.help-block').text('')
             }); 
@@ -365,15 +365,15 @@
                 }
             });
 
-            $('#buy-clp').on('click', function () {
-                var clpAmount = $('#clpAmount').val();
+            $('#buy-car').on('click', function () {
+                var carAmount = $('#carAmount').val();
                 var btcAmount = $('#btcAmount').val();
-                if($.trim(clpAmount) == ''){
-                    $("#clpAmount").parents("div.form-group").addClass('has-error');
-                    $("#clpAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
+                if($.trim(carAmount) == ''){
+                    $("#carAmount").parents("div.form-group").addClass('has-error');
+                    $("#carAmount").parents("div.form-group").find('.help-block').text("CAR Amount is required");
                 }else{
-                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
-                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                    $("#carAmount").parents("div.form-group").removeClass('has-error');
+                    $("#carAmount").parents("div.form-group").find('.help-block').text('');
                 }
                 if($.trim(btcAmount) == ''){
                     $("#btcAmount").parents("div.form-group").addClass('has-error');
@@ -383,11 +383,11 @@
                     $("#btcAmount").parents("div.form-group").find('.help-block').text('');
                 }
                 
-                if($.trim(clpAmount) != '' && $.trim(btcAmount) != ''){
+                if($.trim(carAmount) != '' && $.trim(btcAmount) != ''){
                     $.ajax({
                         method : 'POST',
                         url: "{{ url('wallets/btcbuyclp') }}",
-                        data: {clpAmount: clpAmount, btcAmount: btcAmount}
+                        data: {clpAmount: carAmount, btcAmount: btcAmount}
                     }).done(function (data) {
                         if (data.err) {
                             if(typeof data.msg !== undefined){
@@ -398,16 +398,16 @@
                                     $("#btcAmount").parents("div.form-group").removeClass('has-error');
                                     $("#btcAmount").parents("div.form-group").find('.help-block').text('');
 
-                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                    $("#carAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#carAmount").parents("div.form-group").find('.help-block').text('');
                                 }
 
-                                if(data.msg.clpAmountErr !== '') {
+                                if(data.msg.carAmountErr !== '') {
                                     $("#btcAmount").parents("div.form-group").addClass('has-error');
-                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.carAmountErr);
                                 }else {
-                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                    $("#carAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#carAmount").parents("div.form-group").find('.help-block').text('');
                                 }
 
                             }
@@ -548,16 +548,16 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
 
-        $(".switch-BTC-to-CLP").on('keyup change mousewheel', function () {
+        $(".switch-BTC-to-CAR").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var result = value / globalCLPBTC;
-            $(".switch-CLP-to-BTC").val(result.toFixed(2));
+            var result = value / globalCARBTC;
+            $(".switch-CAR-to-BTC").val(result.toFixed(2));
         });
 
-        $(".switch-CLP-to-BTC").on('keyup change mousewheel', function () {
+        $(".switch-CAR-to-BTC").on('keyup change mousewheel', function () {
             var value = $(this).val();
-            var result = value * globalCLPBTC;
-            $(".switch-BTC-to-CLP").val(result.toFixed(5));
+            var result = value * globalCARBTC;
+            $(".switch-BTC-to-CAR").val(result.toFixed(5));
         });
 
 
@@ -565,14 +565,14 @@
             $(".btcwithdraw").val($(".btc-amount").html())
         });
 
-        $( ".maxbuyclp" ).click(function() {
-            $(".switch-BTC-to-CLP").val($(".btc-amount").html());
-            var amountCLP = $(".btc-amount").html() / globalCLPBTC;
-            $(".switch-CLP-to-BTC").val(amountCLP.toFixed(5));
+        $( ".maxbuy" ).click(function() {
+            $(".switch-BTC-to-CAR").val($(".btc-amount").html());
+            var amountCAR = $(".btc-amount").html() / globalCARBTC;
+            $(".switch-CAR-to-BTC").val(amountCAR.toFixed(5));
         });
 
         $( ".maxbtctranfer" ).click(function() {
-            $(".switch-BTC-to-CLP-tranfer").val($(".btc-amount").html());
+            $(".switch-BTC-to-CAR-tranfer").val($(".btc-amount").html());
         });
 
     </script>

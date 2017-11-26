@@ -11,7 +11,7 @@
     <div id="app">
         <div class="login-box">
             <div class="login-logo">
-                <a href="#"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CLP</b></a>
+                <a href="#"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CarCoin</b></a>
             </div>
             @if (session('error'))
                 <div class="alert alert-danger">
@@ -19,7 +19,7 @@
                 </div>
             @endif
             <div class="login-box-body">
-                <p class="login-box-msg">Withdraw {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CLP') }} Coin Confirm</p>
+                <p class="login-box-msg">Withdraw {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CAR') }} Confirm</p>
                 @if(!$isConfirm)
                     <form class="form-horizontal" role="form" method="POST" id="withdraw_confirm">
                         {{ csrf_field() }}

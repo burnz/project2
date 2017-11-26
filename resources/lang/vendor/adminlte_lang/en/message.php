@@ -85,8 +85,6 @@ return [
     'friends'                 => 'Friends',
     'profile'                 => 'Profile',
     'signout'                 => 'Sign out',
-    'landingdescription'      => 'CLP - a peer-to-pear lending project that built on blockchain Ethereum',
-    'landingdescriptionpratt' => 'CLP',
     'description'             => 'Description',
     'showcase'                => 'Showcase',
     'contact'                 => 'Contact',

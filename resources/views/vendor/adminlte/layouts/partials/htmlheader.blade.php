@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" />
-    <title> CLP - @yield('htmlheader_title', 'Lending Project') </title>
+    <title> CarCoin - @yield('htmlheader_title', 'Lending Project') </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- CSRF Token -->
     <meta name="google-site-verification" content="YoKxcLBO-buCnESjlFmmFeZqaNULyT4Z88cVN4OLqN0" />

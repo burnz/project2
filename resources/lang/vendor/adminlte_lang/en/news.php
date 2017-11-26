@@ -19,7 +19,7 @@ return  [
     'error_delete'=> 'Delete error',
     'crypto_news' => 'Crypto News',
     'blockchain_news'=> 'Blockchain News',
-    'clp_news'=> 'CLP News',
+    'car_news'=> 'CAR News',
     'p2p_news'=> 'P2P News',
     'title_news'=> 'News',
 ];

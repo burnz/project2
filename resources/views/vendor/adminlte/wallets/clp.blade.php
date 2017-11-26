@@ -59,7 +59,6 @@
                                     </th>
                                     <th class="wallet-amount"><span class="icon-clp-icon" style="font-size: 16px;"></span>{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}  </th>
                                     <th style="min-width: 500px;">
-                                    <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#sell">{{ trans('adminlte_lang::wallet.sell_clp') }}</a>
                                     <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#buy-package">{{ trans("adminlte_lang::wallet.buy_package") }}</a>
                                     @if($active)
                                         <a href="#" class="btn bg-olive" data-toggle="modal" data-target="#withdraw">{{ trans("adminlte_lang::wallet.withdraw") }}</a>
@@ -139,49 +138,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--Sell CLP modal-->
-    <div class="modal fade" id="sell" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">Sell CLP&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default maxsellclp"
-                                                                               data-type="maxsellclp">{{ number_format(Auth()->user()->userCoin->clpCoinAmount, 2) }}</a>
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <div class="box no-border">
-                        <div class="box-body" style="padding-top:0;">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><span class="icon-clp-icon"></span></span>
-                                    {{ Form::number('clpAmount', '', array('class' => 'form-control input-sm switch-CLP-to-BTC-sellclp clp-input','placeholder' => "CLP Amount", 'id' => 'sellCLPAmount')) }}
-                                </div>
-                                <span class="help-block"></span>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-btc"></i></span>
-                                    {{ Form::number('btcAmount', '', array('class' => 'form-control input-sm switch-BTC-to-CLP-sellclp clp-input', 'placeholder' => "BTC Amount", 'id' => 'sellBTCAmount')) }}
-                                </div>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pull-right">
-                        <span><i>Rate:</i><i class="clpbtcsell">{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</i></span>
-                    </div>
-                </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    {{ Form::submit(trans('adminlte_lang::default.submit'), array('class' => 'btn btn-primary', 'id' => 'sell-clp')) }}
-                  </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
     </div>
     <div class="modal fade" id="buy-package" style="display: none;">
         <div class="modal-dialog">
@@ -578,56 +534,6 @@
                         }
                     }).fail(function () {
                         $('#withdraw-clp').attr('disabled', false);
-                        $('#tranfer').modal('hide');
-                        swal("Some things wrong!");
-                    });
-                }
-            });
-
-            
-            $('#sell-clp').on('click', function () {
-                var clpAmount = $('#sellCLPAmount').val();
-                var btcAmount = $('#sellBTCAmount').val();
-                if($.trim(clpAmount) == ''){
-                    $("#sellCLPAmount").parents("div.form-group").addClass('has-error');
-                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
-                }else{
-                    $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
-                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
-                }
-                if($.trim(btcAmount) == ''){
-                    $("#sellBTCAmount").parents("div.form-group").addClass('has-error');
-                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text("BTC Amount is required");
-                }else{
-                    $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
-                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
-                }
-                
-                if($.trim(clpAmount) != '' && $.trim(btcAmount) != ''){
-                    $.ajax({
-                        method : 'POST',
-                        url: "{{ url('wallets/sellclp') }}",
-                        data: {clpAmount: clpAmount, btcAmount: btcAmount}
-                    }).done(function (data) {
-                        if (data.err) {
-                            if(typeof data.msg !== undefined){
-                                if(data.msg.clpAmountErr !== '') {
-                                    $("#sellCLPAmount").parents("div.form-group").addClass('has-error');
-                                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
-                                }else {
-                                    $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
-
-                                    $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
-                                }
-
-                            }
-                        } else {
-                            $('#tranfer').modal('hide');
-                            location.href = '{{ url()->current() }}';
-                        }
-                    }).fail(function () {
                         $('#tranfer').modal('hide');
                         swal("Some things wrong!");
                     });

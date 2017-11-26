@@ -52,7 +52,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
         <div id="c">
             <div class="container">
                 <p>
-                    <strong>Copyright &copy; 2017 <a href="{{ URL::to("/") }}">CLP</a>
+                    <strong>Copyright &copy; 2017 <a href="{{ URL::to("/") }}">CarCoin</a>
                 </p>
 
             </div>

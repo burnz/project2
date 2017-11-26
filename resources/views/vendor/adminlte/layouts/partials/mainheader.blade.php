@@ -6,7 +6,7 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><img src="{{ url('/') }}/img/logo_gold.png"/></span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ url('/') }}/img/logo_gold.png"/><b>CLP</b></span>
+        <span class="logo-lg"><img src="{{ url('/') }}/img/logo_gold.png"/><b>CarCoin</b></span>
     </a>
 
     <!-- Header Navbar -->
@@ -18,8 +18,8 @@
         &nbsp;
         <span class="hidden-xs" style="font-size: 14px;line-height: 50px;text-align: center;color: white">
             <span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;
-            <span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;
-            <span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>
+            <span>1 <i style="color: #FA890F">CAR</i> = $<span class="carusd"></span></span>&nbsp;|&nbsp;
+            <span>1 <i style="color: #FA890F">CAR</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="carbtc"></span></span>
         </span>
        
         <!-- Navbar Right Menu -->
@@ -105,11 +105,6 @@
                         </ul>
                     </li>
                 @endif
-
-                <!-- Control Sidebar Toggle Button -->
-                <li>
-                    <a href="#" data-toggle="control-sidebar" class="clp-news"><i class="fa fa-newspaper-o"></i>&nbsp{{ trans('adminlte_lang::news.title_news') }}</a>
-                </li>
             </ul>
         </div>
     </nav>
@@ -139,12 +134,11 @@
             url: '{{ URL::to("exchange") }}',
             success: function(data){
                $('.btcusd').html(formatter.format(data[1].exchrate));
-               $('.clpusd').html(formatter.format(data[2].exchrate));
-               $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
-               $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
+               $('.carusd').html(formatter.format(data[2].exchrate));
+               $('.carbtc').html(formatterBTC.format(data[0].exchrate));
                globalBTCUSD = data[1].exchrate;
-               globalCLPUSD = data[2].exchrate; //clpUSD
-               globalCLPBTC = data[0].exchrate;
+               globalCARUSD = data[2].exchrate;
+               globalCARBTC = data[0].exchrate;
             }
         });
     }

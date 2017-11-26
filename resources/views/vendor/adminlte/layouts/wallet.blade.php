@@ -1,14 +1,14 @@
 <style>
-    .clp-home h3 {font-size: 30px;}
+    .car-home h3 {font-size: 30px;}
     
-    .clp-dashboard .icon {
+    .car-dashboard .icon {
         padding-top: 2px;
         padding-right: 0px;
         font-size: 78px;
     }
 </style>
-<div class="box clp-home">
-    <div class="box-header clp-dashboard">
+<div class="box car-home">
+    <div class="box-header car-dashboard">
         <div class="row">
             <div class="col-lg-3 col-xs-6">
                 <!-- small box -->
@@ -29,7 +29,7 @@
                         <h3>{{ number_format(Auth::user()->userCoin->clpCoinAmount, 2) }}</h3>
                         <p>{{ trans('adminlte_lang::home.clp_wallet') }}</p>
                     </div>
-                    <div class="icon"><span class="icon-clp-icon"></span></div>
+                    <div class="icon"><span class="icon-car-icon"></span></div>
                     <a href="{{ route('wallet.clp') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         <h3>{{ number_format(Auth::user()->userCoin->reinvestAmount, 2) }}</h3>
                         <p>{{ trans('adminlte_lang::home.re_invest_wallet') }}</p>
                     </div>
-                    <div class="icon"><span class="icon-clp-icon"></span></div>
+                    <div class="icon"><span class="icon-car-icon"></span></div>
                     <a href="{{ route('wallet.reinvest') }}" class="small-box-footer">{{ trans('adminlte_lang::home.more_info') }} <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
