@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-11-22 10:03:36
+Date: 2017-11-28 16:58:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,12 +36,7 @@ CREATE TABLE `bonus_binary` (
   `weekYear` int(10) NOT NULL,
   PRIMARY KEY (`id`,`weeked`,`userId`),
   UNIQUE KEY `weekYear_uid` (`userId`,`weekYear`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of bonus_binary
--- ----------------------------
-INSERT INTO `bonus_binary` VALUES ('1', '2017-11-05 19:17:28', '2017-11-05 19:17:28', '2', '44', '2017', '0', '0', '0', '0', '0', null, '0', '201744');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for bonus_binary_interest
@@ -59,12 +54,7 @@ CREATE TABLE `bonus_binary_interest` (
   `bonus` double DEFAULT NULL,
   `weekYear` int(10) NOT NULL,
   PRIMARY KEY (`id`,`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of bonus_binary_interest
--- ----------------------------
-INSERT INTO `bonus_binary_interest` VALUES ('1', '2017-11-05 19:17:28', '2017-11-05 19:17:28', '2', '0', '0', '0', '0', null, '201744');
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for bonus_faststart
@@ -83,10 +73,6 @@ CREATE TABLE `bonus_faststart` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of bonus_faststart
--- ----------------------------
-
--- ----------------------------
 -- Table structure for clp_api_logs
 -- ----------------------------
 DROP TABLE IF EXISTS `clp_api_logs`;
@@ -99,8 +85,20 @@ CREATE TABLE `clp_api_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of clp_api_logs
+-- Table structure for clp_notification
 -- ----------------------------
+DROP TABLE IF EXISTS `clp_notification`;
+CREATE TABLE `clp_notification` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `data` text NOT NULL,
+  `wallet_id` int(10) DEFAULT NULL,
+  `transaction_hash` varchar(255) DEFAULT NULL,
+  `completed_status` tinyint(1) DEFAULT NULL,
+  `pending_status` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for clp_wallets
@@ -115,12 +113,7 @@ CREATE TABLE `clp_wallets` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of clp_wallets
--- ----------------------------
-INSERT INTO `clp_wallets` VALUES ('1', '3', null, null, '2017-11-05 14:49:44', '2017-11-05 14:49:44', null);
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for cron_binary_logs
@@ -133,14 +126,7 @@ CREATE TABLE `cron_binary_logs` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of cron_binary_logs
--- ----------------------------
-INSERT INTO `cron_binary_logs` VALUES ('1', '4', null, '2017-11-05 19:03:11', '2017-11-05 19:03:11');
-INSERT INTO `cron_binary_logs` VALUES ('2', '5', null, '2017-11-05 19:14:51', '2017-11-05 19:14:51');
-INSERT INTO `cron_binary_logs` VALUES ('3', '7', null, '2017-11-05 19:19:43', '2017-11-05 19:19:43');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for cron_leadership_logs
@@ -156,13 +142,6 @@ CREATE TABLE `cron_leadership_logs` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of cron_leadership_logs
--- ----------------------------
-INSERT INTO `cron_leadership_logs` VALUES ('1', '4', null, '2017-11-05 19:06:04', '2017-11-05 19:06:04');
-INSERT INTO `cron_leadership_logs` VALUES ('2', '5', null, '2017-11-05 19:14:51', '2017-11-05 19:14:51');
-INSERT INTO `cron_leadership_logs` VALUES ('3', '7', null, '2017-11-05 19:19:43', '2017-11-05 19:19:43');
-
--- ----------------------------
 -- Table structure for cron_matching_logs
 -- ----------------------------
 DROP TABLE IF EXISTS `cron_matching_logs`;
@@ -173,14 +152,7 @@ CREATE TABLE `cron_matching_logs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of cron_matching_logs
--- ----------------------------
-INSERT INTO `cron_matching_logs` VALUES ('1', '4', null, '2017-11-05 19:05:11', '2017-11-05 19:05:11');
-INSERT INTO `cron_matching_logs` VALUES ('2', '5', null, '2017-11-05 19:14:51', '2017-11-05 19:14:51');
-INSERT INTO `cron_matching_logs` VALUES ('3', '7', null, '2017-11-05 19:19:43', '2017-11-05 19:19:43');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for cron_profit_day_logs
@@ -193,14 +165,7 @@ CREATE TABLE `cron_profit_day_logs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of cron_profit_day_logs
--- ----------------------------
-INSERT INTO `cron_profit_day_logs` VALUES ('1', '4', null, '2017-11-05 19:03:11', '2017-11-05 19:03:11');
-INSERT INTO `cron_profit_day_logs` VALUES ('2', '5', null, '2017-11-05 19:14:50', '2017-11-05 19:14:50');
-INSERT INTO `cron_profit_day_logs` VALUES ('3', '7', null, '2017-11-05 19:19:42', '2017-11-05 19:19:42');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for exchange_rates
@@ -234,14 +199,6 @@ CREATE TABLE `migrations` (
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of migrations
--- ----------------------------
-INSERT INTO `migrations` VALUES ('1', '2014_10_12_000000_create_users_table', '1');
-INSERT INTO `migrations` VALUES ('2', '2014_10_12_100000_create_password_resets_table', '1');
-INSERT INTO `migrations` VALUES ('3', '2017_02_20_233057_create_permission_tables', '1');
-INSERT INTO `migrations` VALUES ('4', '2017_02_22_171712_create_posts_table', '1');
 
 -- ----------------------------
 -- Table structure for model_has_permissions
@@ -301,10 +258,6 @@ CREATE TABLE `news` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of news
--- ----------------------------
-
--- ----------------------------
 -- Table structure for notification
 -- ----------------------------
 DROP TABLE IF EXISTS `notification`;
@@ -319,10 +272,6 @@ CREATE TABLE `notification` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of notification
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for packages
@@ -364,10 +313,6 @@ CREATE TABLE `password_resets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of password_resets
--- ----------------------------
-
--- ----------------------------
 -- Table structure for permissions
 -- ----------------------------
 DROP TABLE IF EXISTS `permissions`;
@@ -378,7 +323,7 @@ CREATE TABLE `permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of permissions
@@ -399,6 +344,10 @@ INSERT INTO `permissions` VALUES ('25', 'view_news', 'web', '2017-09-27 12:00:44
 INSERT INTO `permissions` VALUES ('26', 'add_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
 INSERT INTO `permissions` VALUES ('27', 'edit_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
 INSERT INTO `permissions` VALUES ('28', 'delete_news', 'web', '2017-09-27 12:00:44', '2017-09-27 12:00:44');
+INSERT INTO `permissions` VALUES ('29', 'view_admins', 'web', '2017-11-28 10:50:58', '2017-11-28 10:50:58');
+INSERT INTO `permissions` VALUES ('30', 'add_admins', 'web', '2017-11-28 10:50:58', '2017-11-28 10:50:58');
+INSERT INTO `permissions` VALUES ('31', 'edit_admins', 'web', '2017-11-28 10:50:58', '2017-11-28 10:50:58');
+INSERT INTO `permissions` VALUES ('32', 'delete_admins', 'web', '2017-11-28 10:50:58', '2017-11-28 10:50:58');
 
 -- ----------------------------
 -- Table structure for roles
@@ -453,6 +402,10 @@ INSERT INTO `role_has_permissions` VALUES ('25', '1');
 INSERT INTO `role_has_permissions` VALUES ('26', '1');
 INSERT INTO `role_has_permissions` VALUES ('27', '1');
 INSERT INTO `role_has_permissions` VALUES ('28', '1');
+INSERT INTO `role_has_permissions` VALUES ('29', '1');
+INSERT INTO `role_has_permissions` VALUES ('30', '1');
+INSERT INTO `role_has_permissions` VALUES ('31', '1');
+INSERT INTO `role_has_permissions` VALUES ('32', '1');
 
 -- ----------------------------
 -- Table structure for total_week_sales
@@ -468,10 +421,6 @@ CREATE TABLE `total_week_sales` (
   PRIMARY KEY (`id`,`userId`),
   UNIQUE KEY `weekYear_uid` (`userId`,`weekYear`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of total_week_sales
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for users
@@ -510,18 +459,13 @@ CREATE TABLE `users` (
   UNIQUE KEY `users_name_unique` (`name`),
   UNIQUE KEY `uid` (`uid`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$Iq70C4JgBBqhiuXBsb0RfOmBwalioGDjHMFs7JYcNsuxSPcnkzpn.', '5cZLo0pCAQ5ZEHXs671vRWa12vhWp8OdsNkmtuWnw4mf5PzjOtGmMyaZrejp', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
-INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$m/400CQhjiCEXSowiAO/c.hz4wnbMGO0qaLYrgY/bN6ylUu.XGoGi', '7GrJboRlsJAzUi4ABh9BN0RUW8wD5RQAuA1vXGfDUYpQWQDwZW4UU8F3WU2a', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
-INSERT INTO `users` VALUES ('4', 'user1', 'user1@gmail.com', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', 'KW7XZqLrrk7winIVLe5gV2IJ9I6bldueroh1mW9Q4bYYqZR3mzcTczFnC7yz', '2017-11-05 14:54:07', '2017-11-05 14:54:07', '0', 'user1', 'Do', '0978788999', '0', '2', 'ZFTRMVYTYEKWGSSO', '1', null, null, null, null, null, '704', null, null, null, '494570', null, '0');
-INSERT INTO `users` VALUES ('5', 'user2', 'user2@gmail.com', '$2y$10$9oMxNsgDCnDifYeaCZwMYeElqvnfiDezI4xi59SkmYmqwms3GnM/u', 'kVfpXC1BynCd7K3HfYcSHf3LyM6cArZP4FDj6zXz0Ec8fY2pGo59Kg9pAnLu', '2017-11-05 14:54:21', '2017-11-05 14:54:21', '0', 'user2', 'Do', '0978788999', '0', '1', '5WQQIM7RDOAD3B6W', '1', null, null, null, null, null, '704', null, null, null, '720420', null, '0');
-INSERT INTO `users` VALUES ('7', 'user3', 'user3@gmail.com', '$2y$10$uO9A0AtGzeIhopcZ2LHAbe85wFNRQI.bFrjIn5DGkqiXoOAgatskO', null, '2017-11-05 14:56:15', '2017-11-05 14:56:15', '0', 'user3', 'Do', '0978788999', '0', '2', '4OKABNEN75Q6PWXV', '1', null, null, null, null, null, '704', null, null, null, '960382', null, '0');
-INSERT INTO `users` VALUES ('8', 'user4', 'user4@gmail.com', '$2y$10$/nIf4VNRjCJXIcLHoepaweaBEee11DbZfWMODtjvj1mttkeDQjVCa', null, '2017-11-05 14:56:29', '2017-11-05 14:56:29', '0', 'user4', 'Do', '0978788999', '0', '2', 'BC5Z7TASVCKHME54', '1', null, null, null, null, null, '704', null, null, null, '574492', null, '0');
-INSERT INTO `users` VALUES ('9', 'user5', 'user5@gmail.com', '$2y$10$kXBeeV5ew/eNEfdinwthqejg0s2bVq74LcIx7XdnMoMDHPFPCVzpi', null, '2017-11-05 14:56:43', '2017-11-05 14:56:43', '0', 'user5', 'Do', '0978788999', '0', '5', 'ZZXG4WQKI5HPE6OT', '1', null, null, null, null, null, '704', null, null, null, '114978', null, '0');
+INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', '9j1mwxyMShYTbeKCgqXcvhi2E9P8NnAQlj6Viai5GWm6h2IBgDJVZfppL5WY', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
+INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', 'Z5JdC5ajn3QfWz5TH2BXkx9SV2szgFXLtyM1n7MLrvc3vEjFVmZjMDgW9YcC', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
@@ -549,14 +493,7 @@ CREATE TABLE `users_loyalty` (
   KEY `isDiamond` (`isDiamond`),
   KEY `refererId` (`refererId`),
   KEY `leftRight` (`leftRight`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of users_loyalty
--- ----------------------------
-INSERT INTO `users_loyalty` VALUES ('1', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', 'right');
-INSERT INTO `users_loyalty` VALUES ('2', '5', '0', '0', '0', '0', '0', '0', '0', '0', '2', 'right');
-INSERT INTO `users_loyalty` VALUES ('3', '7', '0', '0', '0', '0', '0', '0', '0', '0', '2', 'left');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for user_coins
@@ -566,25 +503,22 @@ CREATE TABLE `user_coins` (
   `userId` int(10) unsigned NOT NULL,
   `walletAddress` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `accountCoinBase` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `btcCoinAmount` double unsigned DEFAULT '0',
-  `clpCoinAmount` double unsigned DEFAULT '0',
-  `usdAmount` double unsigned DEFAULT '0',
-  `reinvestAmount` double unsigned DEFAULT '0',
+  `btcCoinAmount` double DEFAULT '0',
+  `clpCoinAmount` double DEFAULT '0',
+  `usdAmount` double DEFAULT '0',
+  `reinvestAmount` double DEFAULT '0',
   `backupKey` text COLLATE utf8mb4_unicode_ci,
   `availableAmount` double DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   UNIQUE KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user_coins
 -- ----------------------------
-INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null, '0');
-INSERT INTO `user_coins` VALUES ('2', 'root', 'root', '0', '0', '0', '0', null, '0');
-INSERT INTO `user_coins` VALUES ('4', null, null, '0', '99790', '0', '0', null, '0');
-INSERT INTO `user_coins` VALUES ('5', null, null, '0', '98900', '0', '0', null, '0');
-INSERT INTO `user_coins` VALUES ('7', null, null, '0', '89900', '0', '0', null, '0');
-INSERT INTO `user_coins` VALUES ('8', null, null, '0', '100000', '0', '0', null, '0');
-INSERT INTO `user_coins` VALUES ('9', null, null, '0', '100000', '0', '0', null, '0');
+INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null, '0', '2017-08-12 05:47:39');
+INSERT INTO `user_coins` VALUES ('2', 'root', 'root', '0', '0', '0', '0', null, '0', '2017-08-12 05:47:39');
 
 -- ----------------------------
 -- Table structure for user_datas
@@ -600,8 +534,8 @@ CREATE TABLE `user_datas` (
   `leftRight` enum('right','left') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `totalSaleLeft` double DEFAULT '0',
   `totalSaleRight` double DEFAULT '0',
-  `saleGenLeft` double DEFAULT '0',
-  `saleGenRight` double DEFAULT '0',
+  `saleGenLeft` double DEFAULT NULL,
+  `saleGenRight` double DEFAULT NULL,
   `binaryUserId` int(10) DEFAULT '0',
   `lastUserIdLeft` int(10) DEFAULT '0',
   `lastUserIdRight` int(10) DEFAULT '0',
@@ -610,6 +544,8 @@ CREATE TABLE `user_datas` (
   `totalMembers` int(10) DEFAULT '0',
   `loyaltyId` tinyint(2) DEFAULT '0',
   `status` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   UNIQUE KEY `userId` (`userId`),
   KEY `referrerId` (`refererId`),
   KEY `packageId` (`packageId`)
@@ -618,50 +554,9 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 -- Records of user_datas
 -- ----------------------------
-INSERT INTO `user_datas` VALUES ('1', '0', '0', null, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1');
-INSERT INTO `user_datas` VALUES ('2', '0', '6', null, '0', '1', null, '0', '0', '0', '7', '5', '1', '1', '2', '0', '1');
-INSERT INTO `user_datas` VALUES ('4', '2', '1', '2017-11-05 19:06:04', '0', '1', 'left', '0', '0', '2', '4', '4', '0', '0', '0', '0', '1');
-INSERT INTO `user_datas` VALUES ('5', '2', '2', '2017-11-05 19:14:50', '0', '1', 'right', '0', '0', '2', '5', '5', '0', '0', '0', '0', '1');
-INSERT INTO `user_datas` VALUES ('7', '2', '3', '2017-11-05 19:19:42', '0', '1', 'left', '0', '0', '2', '7', '7', '0', '0', '0', '0', '1');
-INSERT INTO `user_datas` VALUES ('8', '2', '0', null, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '0');
-INSERT INTO `user_datas` VALUES ('9', '5', '0', null, '0', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `user_datas` VALUES ('1', '0', '0', null, '0', '0', null, '0', '0', null, null, '0', '0', '0', '0', '0', '0', '0', '1', '2017-08-12 05:47:39');
+INSERT INTO `user_datas` VALUES ('2', '0', '6', null, '0', '1', null, '0', '0', '0', '0', '0', '10', '8', '3', '2', '5', '0', '1', '2017-08-12 05:47:39');
 
--- ----------------------------
--- Table structure for user_has_permissions
--- ----------------------------
-DROP TABLE IF EXISTS `user_has_permissions`;
-CREATE TABLE `user_has_permissions` (
-  `user_id` int(10) unsigned NOT NULL,
-  `permission_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`user_id`,`permission_id`),
-  KEY `user_has_permissions_permission_id_foreign` (`permission_id`),
-  CONSTRAINT `user_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_has_permissions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of user_has_permissions
--- ----------------------------
-
--- ----------------------------
--- Table structure for user_has_roles
--- ----------------------------
-DROP TABLE IF EXISTS `user_has_roles`;
-CREATE TABLE `user_has_roles` (
-  `role_id` int(10) unsigned NOT NULL,
-  `user_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`role_id`,`user_id`),
-  KEY `user_has_roles_user_id_foreign` (`user_id`),
-  CONSTRAINT `user_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `user_has_roles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of user_has_roles
--- ----------------------------
-INSERT INTO `user_has_roles` VALUES ('2', '1');
-
--- ----------------------------
 -- Table structure for user_packages
 -- ----------------------------
 DROP TABLE IF EXISTS `user_packages`;
@@ -677,14 +572,7 @@ CREATE TABLE `user_packages` (
   `withdraw` tinyint(1) DEFAULT '0',
   `weekYear` int(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of user_packages
--- ----------------------------
-INSERT INTO `user_packages` VALUES ('1', '4', '1', '2017-11-05 19:10:50', '2017-11-05 19:10:50', '210', '2017-11-05 19:10:50', '2018-08-31 19:10:50', '0', '201744');
-INSERT INTO `user_packages` VALUES ('2', '5', '2', '2017-11-05 19:17:17', '2017-11-05 19:17:17', '1100', '2017-11-05 19:17:17', '2018-07-02 19:17:17', '0', '201744');
-INSERT INTO `user_packages` VALUES ('3', '7', '3', '2017-11-05 19:20:45', '2017-11-05 19:20:45', '10100', '2017-11-05 19:20:45', '2018-05-03 19:20:45', '0', '201744');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for user_tree_permissions
@@ -704,17 +592,6 @@ CREATE TABLE `user_tree_permissions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of user_tree_permissions
--- ----------------------------
-INSERT INTO `user_tree_permissions` VALUES ('1', null, '5,5', null, null, null, null, '0', '1');
-INSERT INTO `user_tree_permissions` VALUES ('2', ',5,7', '4,4,7,8,9', ',7', ',5', ',7', null, '2', '4');
-INSERT INTO `user_tree_permissions` VALUES ('4', null, '4', null, null, null, null, '0', '0');
-INSERT INTO `user_tree_permissions` VALUES ('5', ',5', '5,9', null, null, null, null, '1', '1');
-INSERT INTO `user_tree_permissions` VALUES ('7', ',7', '7', null, null, null, null, '1', '0');
-INSERT INTO `user_tree_permissions` VALUES ('8', null, '8', null, null, null, null, '0', '0');
-INSERT INTO `user_tree_permissions` VALUES ('9', null, '9', null, null, null, null, '0', '0');
-
--- ----------------------------
 -- Table structure for wallets
 -- ----------------------------
 DROP TABLE IF EXISTS `wallets`;
@@ -729,14 +606,7 @@ CREATE TABLE `wallets` (
   `userId` int(10) NOT NULL,
   `amount` double unsigned DEFAULT '0',
   PRIMARY KEY (`id`,`type`,`inOut`,`walletType`,`userId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of wallets
--- ----------------------------
-INSERT INTO `wallets` VALUES ('1', '2017-11-05 19:10:50', '2017-11-05 19:10:50', '2', '15', 'USD value 210', 'out', '4', '210');
-INSERT INTO `wallets` VALUES ('2', '2017-11-05 19:17:17', '2017-11-05 19:17:17', '2', '15', 'USD value 1100', 'out', '5', '1100');
-INSERT INTO `wallets` VALUES ('3', '2017-11-05 19:20:45', '2017-11-05 19:20:45', '2', '15', 'USD value 10100', 'out', '7', '10100');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for withdraws
@@ -748,6 +618,7 @@ CREATE TABLE `withdraws` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `walletAddress` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `userId` int(10) NOT NULL,
+  `at_rate` float DEFAULT NULL,
   `wallet_id` int(10) DEFAULT NULL,
   `amountCLP` double DEFAULT NULL,
   `amountBTC` double DEFAULT NULL,
@@ -759,10 +630,6 @@ CREATE TABLE `withdraws` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
--- Records of withdraws
--- ----------------------------
-
--- ----------------------------
 -- Table structure for withdraw_confirm
 -- ----------------------------
 DROP TABLE IF EXISTS `withdraw_confirm`;
@@ -771,6 +638,7 @@ CREATE TABLE `withdraw_confirm` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `walletAddress` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `withdraw_id` int(10) DEFAULT NULL,
   `withdrawAmount` double DEFAULT NULL,
   `userId` int(10) NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -781,7 +649,3 @@ CREATE TABLE `withdraw_confirm` (
   KEY `updated_at` (`updated_at`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ----------------------------
--- Records of withdraw_confirm
--- ----------------------------
