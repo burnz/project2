@@ -38,9 +38,22 @@ class CLPWalletAPI
         return $result['responseResult'];
     }
 
-    public function addInvestor($address, $amount)
+    /*public function addInvestor($address, $amount)
     {
-        $path = $this->apiUrl . '/add-investor/' . $address . '/' . $amount;
+        
+        $response = $this->client->request('GET', $path);
+
+        //SUCCESS: responseResult = { success : 1, tx : result.tx, gasUsed : result.receipt.gasUsed };
+        //FAIL : responseResult = { success : 0, err : err };
+        $contents = $response->getBody()->getContents();
+        $result = json_decode($contents, true);
+
+        return $result['responseResult'];
+    }*/
+
+    public function transferCLP($address, $amount)
+    {
+        $path = $this->apiUrl . '/transfer/' . $address . '/' . $amount;
         $response = $this->client->request('GET', $path);
 
         //SUCCESS: responseResult = { success : 1, tx : result.tx, gasUsed : result.receipt.gasUsed };
@@ -61,5 +74,18 @@ class CLPWalletAPI
         $result = json_decode($result);
         
         return $result;
+    }
+
+    public function getTransactionInfo($transactionHash)
+    {
+        $path = $this->apiUrl . '/get-transaction/' . $transactionHash;
+        $response = $this->client->request('GET', $path);
+        $contents = $response->getBody()->getContents();
+        
+        $result = json_decode($contents, true);
+        
+        if($result['responseResult']['tx_status'] == 'error') throw new \Exception($result['responseResult']['err']);
+        
+        return $result['responseResult']['tx_status'];
     }
 }

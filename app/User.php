@@ -62,6 +62,13 @@ class User extends Authenticatable
 		}
 		return $uid;
 	}
+
+
+    public static function userHasRole( $user_id )
+    {
+       return DB::table('model_has_roles')->where('model_id', '=', $user_id)->get();
+    }
+
 	/**
 	* Calculate fast start bonus
 	*/

@@ -23,6 +23,7 @@ use App\CLPWalletAPI;
 use App\CLPWallet;
 use App\ExchangeRate;
 use Google2FA;
+use Carbon\Carbon;
 
 /**
  * Description of ClpWalletController
@@ -47,6 +48,11 @@ class ClpWalletController extends Controller {
             $query->where('type', $request->type);
         }
         $wallets = $query->where('walletType', Wallet::CLP_WALLET)->orderBy('id', 'desc')->paginate();
+        if(isset($request->type) && $request->type > 0){
+             $pagination = $wallets->appends ( array (
+                 'type' => $request->type
+             ));
+        }
         //get Packgage
         $user = Auth::user();
         $packages = Package::all();
@@ -218,6 +224,17 @@ class ClpWalletController extends Controller {
                 }
             }
 
+            //Only transfer CLP, Withdraw $10.000 per day
+            $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
+
+            $currentTotal = $request->clpAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
+
+            if($currentTotal > 10000)
+            {
+                $clpAmountErr = 'You cannot transfer & withdraw more than $10,000 a day';
+            }
+            
+
             /******************* Only transfer in Genealogy ***************/
             // Get all Genealogy current user
             $lstCurrentGenealogyUser = [];
@@ -261,7 +278,7 @@ class ClpWalletController extends Controller {
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
                         'amount' => $request->clpAmount,
-                        'note' => 'From ' . $request->clpUsername
+                        'note' => 'From ' . Auth::user()->name
                     ];
 
                     Wallet::create($field);
@@ -318,12 +335,20 @@ class ClpWalletController extends Controller {
             $clpAddress = new CLPWalletAPI();
             $result = $clpAddress->generateWallet();
 
-            if ($result['success']) {
-                CLPWallet::where('userId',$userId )->update(['address' => $result['address']]);
-                return response()->json(array('data'=>$result['address'],'err' => false, 'msg' => null));
-            } else {
+            try {
+                $clpAddress = new CLPWalletAPI();
+                $result = $clpAddress->generateWallet();
+
+                if ($result['success']) {
+                    CLPWallet::where('userId',$userId )->update(['address' => $result['address']]);
+                    return response()->json(array('data'=>$result['address'],'err' => false, 'msg' => null));
+                } else {
+                    CLPWallet::where('userId', $userId)->forcedelete();
+                    return response()->json(array('err' => true, 'msg' => null));
+                }
+            } catch ( \Exception $e) {
                 CLPWallet::where('userId', $userId)->forcedelete();
-                return response()->json(array('err' => true, 'msg' => null));
+                throw $e;
             }
         }
     }
