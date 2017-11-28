@@ -74,17 +74,10 @@ class UsdWalletController extends Controller
         //Add thêm tỷ giá vào $wallets
         $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
             
-        // $wallets->currencyBtc = round( $wallets->currencyPair / 
-        //     json_decode($dataCurrencyPair)->last , 4);
-        
-        // $wallets->currencyClp = $wallets->currencyPair / User::getCLPUSDRate() ;
-        
-        // $wallets->rateClpBtc = User::getCLPBTCRate();
-        // $wallets->rateClpUsd = User::getCLPUSDRate();
         $requestQuery = $request->query();
 
         //Holding Wallet has 4 types: Farst start, binary, loyalty, Transfer to CLP Wallet
-        $all_wallet_type = config('cryptolanding.wallet_type');
+        $all_wallet_type = config('carcoin.wallet_type');
 
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
