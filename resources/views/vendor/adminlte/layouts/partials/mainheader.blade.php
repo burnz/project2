@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="row" style="color:white">
                                     <div class="col-md-6 col-xs-6" style="padding-right: 0px;"><span style="float: right;">Loyalty:&nbsp</span></div>
-                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
+                                    <div class="col-md-6 col-xs-6" style="padding-left: 0px;"><i style="float: left;">@if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</i></div>
                                 </div>
                             </li>
                             <!-- Menu Body -->
