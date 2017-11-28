@@ -123,6 +123,12 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::resource('profile', 'User\ProfileController');
 
+    //Auction
+    Route::get('order','Order\OrderController@index')->name('order.manage');
+    Route::post('order', 'Order\OrderController@index');
+    Route::get('gethistorydataorder', 'Order\OrderController@getHistoryDataOrder');
+    Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
+
     
     //News
     Route::get('info','User\InfoController@clp');

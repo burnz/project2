@@ -1,0 +1,260 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: huydk
+ * Date: 11/10/2017
+ * Time: 2:20 PM
+ */
+namespace App\Http\Controllers\Order;
+
+use App\UserData;
+
+use Carbon\Carbon;
+use Coinbase\Wallet\Resource\Order;
+use Illuminate\Http\Request;
+use App\User;
+use App\BonusBinary;
+use App\UserPackage;
+use App\LoyaltyUser;
+use Auth;
+use Session;
+use App\Http\Controllers\Controller;
+use LRedis;
+use App\OrderList;
+use DB;
+
+class OrderController extends Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function index(Request $request)
+    {
+        if ( $request->isMethod('post') ){
+            if( $request->amount * $request->price <= 0 ){
+                return $this->responseError("Error");
+            }
+            try {
+                $orderList = new OrderList();
+                $orderList->code = md5(uniqid(Auth::user()->id, true));
+                $orderList->user_id = Auth::user()->id;
+                $orderList->amount = $request->amount;
+                $orderList->price = $request->price;
+                $orderList->total = $request->amount * $request->price;
+                $orderList->save();
+                $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();
+                $totalValueOrderInday = OrderList::whereDate('created_at',date('Y-m-d'))->sum('amount');
+                $data = [
+                        'totalOrderInDay' => $totalOrderInDay,
+                        'totalValueOrderInday' => $totalValueOrderInday
+                    ];
+                $dataTableRealTime = DB::table("order_lists")
+                    ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
+                    ->whereNull("deleted_at")
+                    ->whereDate('created_at', '=', date('Y-m-d'))
+                    ->groupBy('price')
+                    ->orderBy('price','desc')
+                    ->limit(20)
+                    ->get()
+                    ->toArray();
+
+                $html = '';
+                foreach ($dataTableRealTime as $value){
+                    $html .= '<tr>';
+                    $html .= '<td>'.$value->amount.'</td>';
+                    $html .= '<td>'.$value->price.'</td>';
+                    $html .= '<td>'.$value->total.'</td>';
+                    $html .= '</tr>';
+                }
+                $data['html'] = $html;
+                $redis = LRedis::connection();
+                $result = $redis->publish('message', json_encode($data) );
+                return $this->responseSuccess($result);
+            } catch (\Exception $exception){
+                return $this->responseError(404,'Error Socket');
+            }
+        }
+        $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();
+        $totalValueOrderInday = OrderList::whereDate('created_at',date('Y-m-d'))->sum('amount');
+        $dataTableRealTime = DB::table("order_lists")
+            ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
+            ->whereNull("deleted_at")
+            ->whereDate('created_at', '=', date('Y-m-d'))
+            ->groupBy('price')
+            ->orderByRaw('price Desc')
+            ->limit(20)
+            ->get()
+            ->toArray();
+        return view('adminlte::order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime'));
+    }
+
+    /*
+     * @author :huynq
+     * @input request
+     * @return json data
+     * */
+    public function getHistoryDataOrder(Request $request){
+        $requestData = $_REQUEST;
+        $columns = array(
+            0 => 'amount',
+            1 => 'price',
+            2 => 'total',
+            3 => 'created_at'
+        );
+        $count = DB::table("order_lists as a")
+            ->where('user_id',Auth::user()->id)
+            ->whereNull("deleted_at")
+            ->count();
+        $totalData = $count;
+        $totalFiltered = $totalData;
+        $sql = DB::table("order_lists as a")
+            ->select('a.code','a.amount','a.price','a.total','a.status','a.created_at')
+            //bản thân cần tìm gì ở đây
+            ->where('user_id',Auth::user()->id)
+            ->whereNull("deleted_at");
+        //Đếm số bản ghi ở đây
+        $totalFiltered = $sql;
+        $totalFiltered = $totalFiltered->count();
+        $sql = $sql->orderBy($columns[$requestData['order'][0]['column']],$requestData['order'][0]['dir']);
+        $sql = $sql->skip($requestData['start'])->take($requestData['length']);
+        $data = array();
+        $data = $sql->get();
+        $tmp = array();
+
+        foreach ($data as $key => $value) {
+            $nestedData=array();
+            // $nestedData[] = $value->unapproved_created_at;
+            $nestedData[] = $value->amount;
+            $nestedData[] = $value->price;
+            $nestedData[] = $value->total;
+            $nestedData[] = $value->created_at;
+
+            if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
+                if($value->status == 0){
+                    $nestedData[] = '<b><strong>Canceled</strong></b>';
+                } elseif($value->status == 2){
+                    $nestedData[] = '<b><strong>Success</strong></b>';
+                } else {
+                    $nestedData[] = 'Processing';
+                }
+            } else {
+                $nestedData[] = '<b><strong>Canceled</strong></b>';
+            }
+
+            // $deltail = "data-ot-register-id=".$value->ot_register_id." "."data-id-usercreat=".$value->usercreat;
+            $tmp[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw"            => intval( $requestData['draw'] ),
+            "recordsTotal"    => intval( $totalData ),
+            "recordsFiltered" => intval( $totalFiltered ),
+            "data"            => $tmp
+        );
+
+        echo json_encode($json_data);
+    }
+
+    public function getHistoryDataTradeMarket(Request $request){
+        $requestData = $_REQUEST;
+        $columns = array(
+            0 => 'amount',
+            1 => 'price',
+            2 => 'total',
+            3 => 'created_at'
+        );
+
+        $count = DB::select( DB::raw("SELECT count(*) as count
+                                        FROM (
+                                           SELECT
+                                                COUNT(id)
+                                            FROM
+                                                order_lists as a
+                                            WHERE
+                                                a.deleted_at IS NULL 
+                                            GROUP BY
+                                                date(a.created_at),
+                                                a.price
+                                        ) AS x") );
+
+        $totalData = $count[0]->count;
+        $totalFiltered = $totalData;
+        //Đếm số bản ghi ở đây
+        $totalFiltered = $count[0]->count;
+        $start = $requestData['start'];
+        $length = $requestData['length'];
+        $data = array();
+
+        if(isset($requestData['order'])){
+            $orderby = $columns[$requestData['order'][0]['column']];
+            $asc = $requestData['order'][0]['dir'];
+            $data = DB::select( DB::raw("SELECT
+                sum( a.amount ) as amount,
+                a.price,
+                sum( a.total ) as total,
+                date(a.created_at ) AS created_at
+            FROM
+                `order_lists` AS a 
+            GROUP BY
+                date(a.created_at),a.price
+            ORDER BY
+                 $orderby $asc
+            LIMIT $length OFFSET $start
+                "));
+        }else{
+            $data = DB::select( DB::raw("SELECT
+                        sum( a.amount ) as amount,
+                        a.price,
+                        sum( a.total ) as total,
+                        date(a.created_at ) AS created_at
+                    FROM
+                        `order_lists` AS a 
+                    GROUP BY
+                        date(a.created_at),a.price
+                    ORDER BY
+                        created_at DESC ,price DESC 
+                    LIMIT $length OFFSET $start
+                        "));
+        }
+
+
+
+
+        $tmp = array();
+
+        foreach ($data as $key => $value) {
+            $nestedData=array();
+            $nestedData[] = $value->amount;
+            $nestedData[] = $value->price;
+            $nestedData[] = $value->total;
+            $nestedData[] = $value->created_at;
+
+//            if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
+//                if($value->status == 0){
+//                    $nestedData[] = '<b><strong>Canceled</strong></b>';
+//                } elseif($value->status == 2){
+//                    $nestedData[] = '<b><strong>Success</strong></b>';
+//                } else {
+//                    $nestedData[] = 'Processing';
+//                }
+//            } else {
+//                $nestedData[] = '<b><strong>Canceled</strong></b>';
+//            }
+
+            // $deltail = "data-ot-register-id=".$value->ot_register_id." "."data-id-usercreat=".$value->usercreat;
+            $tmp[] = $nestedData;
+        }
+
+        $json_data = array(
+            "draw"            => intval( $requestData['draw'] ),
+            "recordsTotal"    => intval( $totalData ),
+            "recordsFiltered" => intval( $totalFiltered ),
+            "data"            => $tmp
+        );
+
+        echo json_encode($json_data);
+    }
+
+}
