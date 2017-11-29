@@ -208,6 +208,20 @@ CREATE TABLE `order_lists`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
 
 -- ----------------------------
+-- Table structure for price_order_list
+-- ----------------------------
+DROP TABLE IF EXISTS `price_order_list`;
+CREATE TABLE `price_order_list`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_date` timestamp NOT NULL,
+  `price` double NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+
+
+-- ----------------------------
 -- Table structure for migrations
 -- ----------------------------
 DROP TABLE IF EXISTS `migrations`;

@@ -222,27 +222,22 @@
                        $.ajax({
                            beforeSend:function () {
                                if( $('#total').val() == 0){
-                                   swal ( "Oops" ,  "Not order , Total Value must great 0  !" ,  "error" )
+                                   swal ( "Oops" ,  "Not order , Total Value must greater than 0  !" ,  "error" )
                                    return false;
                                };
                                if( $('#amount').val() == ''){
-                                   swal ( "Oops" ,  "Not order , please fill amount !" ,  "error" )
+                                   swal ( "Oops" ,  "Not order , Please fill amount !" ,  "error" )
                                    return false;
                                }
 
                                if( $('#price').val() == ''){
-                                   swal ( "Oops" ,  "Not order , please fill price !" ,  "error" )
+                                   swal ( "Oops" ,  "Not order , Please fill price !" ,  "error" )
                                    return false;
                                }
 
-                               if( parseFloat($('#price').val()) < 0.3 ){
-                                   swal ( "Oops" ,  "Not order , min price 0.3 !" ,  "error" )
-                                   return false;
-                               }
                            },
                            url : "{{ URL::to('/order') }}",
                            type : "post",
-//                    dataType:"text",
                            data : {
                                _token : "{{ csrf_token() }}",
                                amount : $('#amount').val(),
@@ -253,7 +248,7 @@
                                dataTableHistory.ajax.reload();
                            },
                            error: function(xhr) { // if error occured
-                               swal ( "Oops" ,  "Not order , please come back later !" ,  "error" )
+                               swal ( "Oops" ,  "Not order , Please come back later !" ,  "error" )
                            },
                            complete: function() {
                                //end loading
@@ -311,7 +306,7 @@
                 }
             } );
 
-            var socket = io.connect('http://test-csc.site:6378');
+            var socket = io.connect('{{config("app.api_app_url")}}');
             socket.on('message', function (data) {
                 var result = JSON.parse(data);
                 $(".totalOrderInDay").html(result.totalOrderInDay);
