@@ -194,7 +194,7 @@
             </div>
         </div>
     </div>
-@endsection
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -346,3 +346,4 @@
         });
 
     </script>
+@endsection
