@@ -190,6 +190,24 @@ INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4210', 'usd', '2017-10-04 17:3
 INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00023809524', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 
 -- ----------------------------
+-- Table structure for order_lists
+-- ----------------------------
+DROP TABLE IF EXISTS `order_lists`;
+CREATE TABLE `order_lists`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `amount` double NOT NULL,
+  `price` double NOT NULL,
+  `total` double NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `created_at` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime(0) NOT NULL,
+  `deleted_at` datetime(0) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
+
+-- ----------------------------
 -- Table structure for migrations
 -- ----------------------------
 DROP TABLE IF EXISTS `migrations`;
