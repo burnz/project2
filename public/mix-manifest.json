@@ -6,5 +6,7 @@
   "/css/toastr.css": "/css/toastr.css",
   "/js/app-landing.js": "/js/app-landing.js",
   "/css/all.css": "/css/all.css",
-  "/css/all-landing.css": "/css/all-landing.css"
+  "/css/all-landing.css": "/css/all-landing.css",
+  "/js/clp.js": "/js/clp.js",
+  "/css/clp.css": "/css/clp.css"
 }
