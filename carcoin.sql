@@ -201,6 +201,8 @@ CREATE TABLE `order_lists`  (
   `price` double NOT NULL,
   `total` double NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
+  `btc_rate` double NOT NULL,
+  `btc_value` double NOT NULL,
   `created_at` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime(0) NOT NULL,
   `deleted_at` datetime(0) DEFAULT NULL,
