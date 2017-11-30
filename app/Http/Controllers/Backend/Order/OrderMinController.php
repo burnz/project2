@@ -45,6 +45,17 @@ class OrderMinController extends Controller
                 'date'=>'required'
             ]);
             //category ??
+            $checkDate = OrderMin::whereDate('order_date',$request->date)->first();
+            if($request->price < 0){
+                $request->session()->flash( 'errorMessage',
+                    "Min không được nhỏ hơn 0 !" );
+                return redirect()->back();
+            }
+            if(count($checkDate)>0){
+                $request->session()->flash( 'errorMessage',
+                    "Đã tồn tại ngày này nhé !" );
+                return redirect()->back();
+            }
             $order = new OrderMin();
             $order->price = $request->price;
             $order->order_date = $request->date;

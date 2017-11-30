@@ -20,6 +20,9 @@
     @else
         <div></div>
     @endif
+    <div>
+        <a href="ordermin/create" class="btn btn-default btn-success">Add</a>
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
