@@ -1,4 +1,8 @@
 <?php
+Route::get('/design', function () {
+    return view('design');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -17,41 +21,15 @@ Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('users/root', 'User\UserController@root')->name('users.root');
+    Route::get('users/photo_approve', 'User\UserController@photo_approve')->name('users.photo_approve');
+    Route::post('users/approve_ok/{id}', 'User\UserController@approve_ok')->name('approve.ok');
+    Route::post('users/approve_cancel/{id}', 'User\UserController@approve_cancel')->name('approve.cancel');
+    Route::resource('users', 'User\UserController');
+    Route::resource('roles', 'User\RoleController');
+    Route::resource('posts', 'User\PostController');
     
-    Route::resource('users', 'Backend\User\UserController');
-    Route::resource('roles', 'Backend\User\RoleController');
-    Route::resource('posts', 'Backend\User\PostController');
-    Route::group(['middleware' => ['permission:view_admins']], function () {
-        Route::get('admin/home', 'Backend\HomeController@index')->name('backend.home');
-    });
 
-    Route::group(['middleware' => ['permission:add_users']], function () {
-        Route::post('users/approve_ok/{id}', 'Backend\User\UserController@approve_ok')->name('approve.ok');
-        Route::post('users/approve_cancel/{id}', 'Backend\User\UserController@approve_cancel')->name('approve.cancel');
-        Route::post('users/reset2fa', 'Backend\User\UserController@reset2fa')->name('users.reset2fa');
-        Route::post('users/lock', 'Backend\User\UserController@lock')->name('users.lock');
-    });
-
-    Route::group(['middleware' => ['permission:view_users']], function () {
-        Route::get('users/photo_approve', 'Backend\User\UserController@photo_approve')->name('users.photo_approve');
-    });
-
-    Route::group(['middleware' => ['permission:view_users']], function () {
-        Route::post('withdraw/approve', 'Backend\User\WithdrawController@withdrawApprove')->name('withdraw.approve');
-    });
-
-    Route::group(['middleware' => ['permission:view_users']], function () {
-        Route::get('withdraw/', 'Backend\User\WithdrawController@index')->name('withdraw.list');
-    });
-
-    Route::group(['middleware' => ['permission:view_users']], function () {
-        Route::get('wallet/history/', 'Backend\User\WalletController@index')->name('wallet.list');
-    });
-
-    Route::group(['middleware' => ['permission:view_reports']], function () {
-        Route::get('/report', 'Backend\Report\ReportController@getDataReport')->name('report');
-        Route::get('/report/commission', 'Backend\Report\ReportController@getDataCommissionReport');
-    });
 
     Route::get('members/genealogy', 'User\MemberController@genealogy');
     Route::get('members/binary', 'User\MemberController@binary');
@@ -85,10 +63,11 @@ Route::group( ['middleware' => ['auth']], function() {
     //Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
     
     //CLP WALLET
-    Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
-    Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
-    Route::get('wallets/car/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
+    Route::get('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
+    Route::post('wallets/clp', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
+    Route::get('wallets/clp/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
+    Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');
@@ -125,8 +104,13 @@ Route::group( ['middleware' => ['auth']], function() {
 
     
     //News
-    Route::get('info','User\InfoController@clp');
-    Route::resource('news','Backend\News\NewsController');
+    Route::get('news/manage','News\NewsController@newManagent')->name('news.manage');
+    Route::get('news/add','News\NewsController@newAdd');
+    Route::post('news/add','News\NewsController@newAdd');
+    Route::get('news/edit/{id}','News\NewsController@newEdit');
+    Route::put('news/edit/{id}','News\NewsController@newEdit');
+    Route::get('news/delete/{id}','News\NewsController@newDelete');
+    Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
     //get ty gia
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();
