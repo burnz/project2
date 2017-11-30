@@ -129,7 +129,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('gethistorydataorder', 'Order\OrderController@getHistoryDataOrder');
     Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
 
-    
+    Route::get('todayorder','Backend\Order\ToDayOrderController@show');
+    Route::get('gettodaydataorder','Backend\Order\ToDayOrderController@getToDayDataOrder');
+
     //News
     Route::get('info','User\InfoController@clp');
     Route::resource('news','Backend\News\NewsController');

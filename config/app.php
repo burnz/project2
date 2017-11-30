@@ -140,7 +140,7 @@ return [
     'amount_add_wallet'=> 10,
     'pre_sale_end'=> env('PRE_SALE_END', '2017-12-28'),
     'clp_price' => env('CLP_PRICE', 1),
-    
+    'virtual_account' => env('LIST_VIRTUAL_ACCOUNT'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

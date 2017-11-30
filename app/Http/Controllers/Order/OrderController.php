@@ -7,6 +7,7 @@
  */
 namespace App\Http\Controllers\Order;
 
+use App\Helper\Helper;
 use App\UserData;
 
 use Carbon\Carbon;
@@ -25,6 +26,10 @@ use DB;
 
 class OrderController extends Controller
 {
+    const PROCESSING = 1;
+    const CANCEL = 0;
+    const SUCCESS = 2;
+
     public function __construct()
     {
         parent::__construct();
@@ -33,7 +38,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ( $request->isMethod('post') ){
-            if( $request->amount * $request->price <= 0 ){
+            if( $request->amount * $request->price <= 0 || $request->price < 0.3){
                 return $this->responseError("Error");
             }
             try {
@@ -60,15 +65,7 @@ class OrderController extends Controller
                     ->get()
                     ->toArray();
 
-                $html = '';
-                foreach ($dataTableRealTime as $value){
-                    $html .= '<tr>';
-                    $html .= '<td>'.$value->amount.'</td>';
-                    $html .= '<td>'.$value->price.'</td>';
-                    $html .= '<td>'.$value->total.'</td>';
-                    $html .= '</tr>';
-                }
-                $data['html'] = $html;
+                $data['tableCommand'] = $dataTableRealTime;
                 $redis = LRedis::connection();
                 $result = $redis->publish('message', json_encode($data) );
                 return $this->responseSuccess($result);
@@ -132,12 +129,12 @@ class OrderController extends Controller
             $nestedData[] = $value->created_at;
 
             if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
-                if($value->status == 0){
+                if($value->status == self::CANCEL){
                     $nestedData[] = '<b><strong>Canceled</strong></b>';
-                } elseif($value->status == 2){
-                    $nestedData[] = '<b><strong>Success</strong></b>';
+                } elseif($value->status == self::SUCCESS){
+                    $nestedData[] = '<b style="color: green"><strong>Success</strong></b>';
                 } else {
-                    $nestedData[] = 'Processing';
+                    $nestedData[] = '<b style="color: orange"><strong>Processing</strong></b>';
                 }
             } else {
                 $nestedData[] = '<b><strong>Canceled</strong></b>';
@@ -158,6 +155,8 @@ class OrderController extends Controller
     }
 
     public function getHistoryDataTradeMarket(Request $request){
+        $helper = new Helper();
+        $dateNow = $helper->get_date_now();
         $requestData = $_REQUEST;
         $columns = array(
             0 => 'amount',
@@ -173,7 +172,9 @@ class OrderController extends Controller
                                             FROM
                                                 order_lists as a
                                             WHERE
-                                                a.deleted_at IS NULL 
+                                                a.deleted_at IS NULL AND 
+                                                a.status = 2 AND 
+                                                date(a.created_at) < $dateNow
                                             GROUP BY
                                                 date(a.created_at),
                                                 a.price
@@ -197,6 +198,10 @@ class OrderController extends Controller
                 date(a.created_at ) AS created_at
             FROM
                 `order_lists` AS a 
+            WHERE
+                 a.deleted_at IS NULL AND 
+                 a.status = 2 AND 
+                 date(a.created_at) < $dateNow
             GROUP BY
                 date(a.created_at),a.price
             ORDER BY
@@ -211,6 +216,10 @@ class OrderController extends Controller
                         date(a.created_at ) AS created_at
                     FROM
                         `order_lists` AS a 
+                    WHERE 
+                         a.deleted_at IS NULL AND
+                         a.status = 2 AND 
+                         date(a.created_at) < $dateNow
                     GROUP BY
                         date(a.created_at),a.price
                     ORDER BY
@@ -219,31 +228,13 @@ class OrderController extends Controller
                         "));
         }
 
-
-
-
         $tmp = array();
-
         foreach ($data as $key => $value) {
             $nestedData=array();
             $nestedData[] = $value->amount;
             $nestedData[] = $value->price;
             $nestedData[] = $value->total;
             $nestedData[] = $value->created_at;
-
-//            if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
-//                if($value->status == 0){
-//                    $nestedData[] = '<b><strong>Canceled</strong></b>';
-//                } elseif($value->status == 2){
-//                    $nestedData[] = '<b><strong>Success</strong></b>';
-//                } else {
-//                    $nestedData[] = 'Processing';
-//                }
-//            } else {
-//                $nestedData[] = '<b><strong>Canceled</strong></b>';
-//            }
-
-            // $deltail = "data-ot-register-id=".$value->ot_register_id." "."data-id-usercreat=".$value->usercreat;
             $tmp[] = $nestedData;
         }
 

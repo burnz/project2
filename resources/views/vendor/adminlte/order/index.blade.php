@@ -194,7 +194,8 @@
             </div>
         </div>
     </div>
-
+@endsection
+@section('script')
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -235,6 +236,10 @@
                                    return false;
                                }
 
+                               if( parseFloat($('#price').val()) < 0.3 ){
+                                   swal ( "Oops" ,  "Not order , min price 0.3 !" ,  "error" )
+                                   return false;
+                               }
                            },
                            url : "{{ URL::to('/order') }}",
                            type : "post",
@@ -306,12 +311,16 @@
                 }
             } );
 
-            var socket = io.connect('{{config("app.api_app_url")}}');
+            var socket = io.connect('http://localhost:6378');
             socket.on('message', function (data) {
                 var result = JSON.parse(data);
                 $(".totalOrderInDay").html(result.totalOrderInDay);
                 $(".totalValueOrderInDay").html(result.totalValueOrderInday);
-                $('#employee-grid tbody').html(result.html);
+                var html = '';
+                result.tableCommand.forEach(function (element) {
+                    html += '<tr>' + '<td>' + element.amount + '</td>' + '<td>' + element.price + '</td>' + '<td>' + element.total + '</td>' + '</tr>';
+                });
+                $('#employee-grid tbody').html(html);
             });
 
             $('#amount').on('keyup change mousewheel', function() {

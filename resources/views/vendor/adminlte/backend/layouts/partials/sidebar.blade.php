@@ -71,6 +71,13 @@
                 </ul>
             </li>
             @endcan
+            <li class="treeview{{ Request::is('todayorder') || Request::is('historyorder') ? ' active' : null  }}">
+                <a href="#"><i class=''></i> <span>Admin Order</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li class="{{ Request::segment(1) === 'todayorder' ? 'active' : null }}"><a href="{{ url('todayorder') }}">To Day Order</a></li>
+                    <li class="{{ Request::segment(1) === 'historyorder' ? 'active' : null }}"><a href="{{ url('historyorder') }}">History Order</a></li>
+                </ul>
+            </li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
