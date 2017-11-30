@@ -1,7 +1,7 @@
 @extends('adminlte::backend.layouts.member')
 
 @section('contentheader_title')
-    To Day Order
+    History Order
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 @endsection
 
@@ -10,33 +10,33 @@
         <div class="col-md-12">
             <table id="todayorder-grid"  cellpadding="0" cellspacing="0" border="0" class="table display" width="100%" >
                 <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Amount</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Ngày</th>
-                    </tr>
+                <tr>
+                    <th>User</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Ngày</th>
+                </tr>
                 </thead>
                 <thead>
-                    <tr>
-                        <td><input type="text"   data-column="0"  class="search-input-text"></td>
-                        <th><input type="number" data-column="1"  class="search-input-text"></td>
-                        <th><input type="number" data-column="2"  class="search-input-text"></td>
-                        <th><input type="number" data-column="3"  class="search-input-text"></td>
-                        <td>
-                            <select data-column="4"  class="search-input-select">
-                                <option value="">Select all</option>
-                                <option value="1">Processing</option>
-                                <option value="2">Success</option>
-                                <option value="3">Cancel</option>
-                            </select>
-                        </td>
-                        <td>
-                            {{--<input type="date" data-column="5"  class="search-input-select" >--}}
-                        </td>
-                    </tr>
+                <tr>
+                    <td><input type="text"   data-column="0"  class="search-input-text"></td>
+                    <th><input type="number" data-column="1"  class="search-input-text"></td>
+                    <th><input type="number" data-column="2"  class="search-input-text"></td>
+                    <th><input type="number" data-column="3"  class="search-input-text"></td>
+                    <td>
+                        <select data-column="4"  class="search-input-select">
+                            <option value="">Select all</option>
+                            <option value="1">Processing</option>
+                            <option value="2">Success</option>
+                            <option value="3">Cancel</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="date" data-column="5"  class="search-input-select" >
+                    </td>
+                </tr>
                 </thead>
             </table>
         </div>
@@ -59,7 +59,7 @@
                 "orderMulti": true,
                 "ordering": true,
                 "ajax":{
-                    url :"gettodaydataorder", // json datasource
+                    url :"gethistorydataorder", // json datasource
                     type: "get",  // method  , by default get
                     error: function(){  // error handling
                         $(".todayorder-grid-error").html("");

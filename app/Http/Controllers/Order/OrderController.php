@@ -38,7 +38,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ( $request->isMethod('post') ){
-            if( $request->amount * $request->price <= 0 || $request->price < 0.3){
+            if( $request->amount * $request->price <= 0 || $request->price < 0.3 || $request->price < 0){
                 return $this->responseError("Error");
             }
             try {

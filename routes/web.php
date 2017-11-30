@@ -130,8 +130,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
 
     Route::get('todayorder','Backend\Order\ToDayOrderController@show');
+    Route::get('historyorder','Backend\Order\HistoryOrderController@show');
     Route::get('gettodaydataorder','Backend\Order\ToDayOrderController@getToDayDataOrder');
-
+    Route::get('gethistorydataorder','Backend\Order\HistoryOrderController@getHistoryDataOrder');
+    Route::resource('ordermin', 'Backend\Order\OrderMinController');
     //News
     Route::get('info','User\InfoController@clp');
     Route::resource('news','Backend\News\NewsController');
@@ -139,7 +141,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();
     });
-    
+
 
 });
 Route::get('getnotification','GetNotificationController@getNotification');

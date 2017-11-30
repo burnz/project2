@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: huydk
+ * User: Admin
  * Date: 11/30/2017
- * Time: 4:23 PM
+ * Time: 10:00 PM
  */
 
 namespace App\Http\Controllers\Backend\Order;
@@ -12,18 +12,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class ToDayOrderController extends Controller
+class HistoryOrderController extends Controller
 {
     const CANCEL = 0;
     const PROCESSING = 1;
     const SUCCESS = 2;
 
     public function show(){
-        $arrayVirtualAcc = explode(',',config('app.virtual_account'));
-        return view('adminlte::backend.order.todayorder');
+        return view('adminlte::backend.order.historyorder');
     }
 
-    public function getToDayDataOrder(){
+    public function getHistoryDataOrder(){
         DB::enableQueryLog();
         $arrayVirtualAcc = explode(',',config('app.virtual_account'));
 
@@ -31,7 +30,7 @@ class ToDayOrderController extends Controller
         $requestData= $_REQUEST;
 
         $columns = array(
-        // datatable column index  => database column name
+            // datatable column index  => database column name
             0 => 'name',
             1 => 'amount',
             2 => 'price',
@@ -40,8 +39,9 @@ class ToDayOrderController extends Controller
             5 => 'created_at'
         );
 
-        $count = DB::table("order_lists as a")->whereNotIn('user_id',$arrayVirtualAcc)
-            ->whereDate('a.created_at',Carbon::now()->format('Y-m-d') )
+        $count = DB::table("order_lists as a")
+            ->whereNotIn('user_id',$arrayVirtualAcc)
+            ->whereDate('a.created_at','<',Carbon::now()->format('Y-m-d') )
             ->count();
         // getting total number records without any search
         $totalData = $count;
@@ -72,8 +72,12 @@ class ToDayOrderController extends Controller
             }
         }
 
-        $sql = $sql->whereDate('a.created_at',Carbon::now()->format('Y-m-d') );
+        if( !empty($requestData['columns'][5]['search']['value']) ){ //age
+            $sql = $sql->whereDate('a.created_at',$requestData['columns'][5]['search']['value'] );
+        }
+
         $sql = $sql->whereNotIn('user_id',$arrayVirtualAcc);
+        $sql = $sql->whereDate('a.created_at',' < ',Carbon::now()->format('Y-m-d') );
         $totalFiltered = $sql->count(); // when there is a search parameter then we have to modify total number filtered rows as per search result.
 //        $laQuery = DB::getQueryLog();
 //
@@ -102,7 +106,6 @@ class ToDayOrderController extends Controller
             } elseif($value->status == self::PROCESSING) {
                 $nestedData[] = '<b style="color: orange"><strong>Processing</strong></b>';
             }
-
 //            if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
 //
 //            } else {
