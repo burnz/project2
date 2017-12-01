@@ -16,7 +16,7 @@ use App\User;
 use App\Wallet;
 use App\Withdraw;
 use Auth;
-use Symfony\Component\HttpFoundation\Session\Session; 
+use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
 use Log;
 use App\CLPWalletAPI;
@@ -30,12 +30,12 @@ use Google2FA;
  * @author huydk
  */
 class ClpWalletController extends Controller {
-    
+
     public function __construct()
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * @author Huynq
      * @return type
@@ -83,16 +83,16 @@ class ClpWalletController extends Controller {
             $active = 1;
         }
 
-        return view('adminlte::wallets.clp', ['packages' => $packages, 
-            'user' => $user, 
-            'lstPackSelect' => $lstPackSelect, 
+        return view('adminlte::wallets.clp_vue', ['packages' => $packages,
+            'user' => $user,
+            'lstPackSelect' => $lstPackSelect,
             'wallets'=> $wallets,
             'wallet_type'=> $wallet_type,
             'walletAddress' =>  $walletAddress,
             'requestQuery'=> $requestQuery,
             'active' => $active
         ]);
-        
+
     }
 
     public static function generateCLPWallet() {
@@ -112,7 +112,7 @@ class ClpWalletController extends Controller {
 
     public function sellCLP(Request $request)
     {
-        if($request->ajax()) 
+        if($request->ajax())
         {
 
             $userCoin = Auth::user()->userCoin;
@@ -167,13 +167,13 @@ class ClpWalletController extends Controller {
 
                 return response()->json($result);
             }
-            
+
         }
 
         return response()->json(array('err' => false, 'msg' => null));
     }
 
-    /** 
+    /**
      * @author GiangDT
      * @param Request $request
      * @return type
@@ -230,7 +230,7 @@ class ClpWalletController extends Controller {
             if($userTreePermission = $transferUser->userTreePermission)
                 $lstTransferGenealogyUser = explode(',', $userTreePermission->genealogy);
 
-            if(!in_array($transferUser->id, $lstCurrentGenealogyUser) 
+            if(!in_array($transferUser->id, $lstCurrentGenealogyUser)
                 && !in_array(Auth::user()->id, $lstTransferGenealogyUser)) {
                 $transferRuleErr = trans('adminlte_lang::wallet.msg_transfer_rule');
             }

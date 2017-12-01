@@ -4,12 +4,13 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 @section('htmlheader')
     @include('adminlte::layouts.partials.htmlheader')
 @show
 
 <script src="/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
+
 {{--<script src="/AdminLTE/bower_components/bootstrap/dist/js/bootstrap-confirmation.min.js"></script>--}}
 <script src="/AdminLTE/bower_components/fastclick/lib/fastclick.js"></script>
 <body class="fix-header fix-sidebar card-no-border">
