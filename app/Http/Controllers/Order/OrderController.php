@@ -84,7 +84,7 @@ class OrderController extends Controller
             ->limit(20)
             ->get()
             ->toArray();
-        return view('adminlte::order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime'));
+        return view('v1.order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime'));
     }
 
     /*
@@ -157,6 +157,7 @@ class OrderController extends Controller
     public function getHistoryDataTradeMarket(Request $request){
         $helper = new Helper();
         $dateNow = $helper->get_date_now();
+
         $requestData = $_REQUEST;
         $columns = array(
             0 => 'amount',
@@ -174,12 +175,12 @@ class OrderController extends Controller
                                             WHERE
                                                 a.deleted_at IS NULL AND 
                                                 a.status = 2 AND 
-                                                date(a.created_at) < $dateNow
+                                                date(a.created_at) < ".$dateNow."
                                             GROUP BY
                                                 date(a.created_at),
                                                 a.price
                                         ) AS x") );
-
+        dd($count);
         $totalData = $count[0]->count;
         $totalFiltered = $totalData;
         //Đếm số bản ghi ở đây
