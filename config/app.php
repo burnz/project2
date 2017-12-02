@@ -215,6 +215,7 @@ return [
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
     /*
@@ -268,6 +269,7 @@ return [
 		'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
         'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         ],
 
 ];

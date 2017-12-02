@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\AuthPermissionCommand;
+use App\Console\Commands\ImportExcel;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
@@ -23,7 +24,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        AuthPermissionCommand::class
+        AuthPermissionCommand::class,
+        ImportExcel::class
     ];
 
     /**
