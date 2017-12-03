@@ -351,7 +351,7 @@
                 }
             } );
 
-            var socket = io.connect('http://localhost:6378');
+            var socket = io.connect('{{config("app.api_app_url")}}');
             socket.on('message', function (data) {
                 var result = JSON.parse(data);
                 $(".totalOrderInDay").html(result.totalOrderInDay);
