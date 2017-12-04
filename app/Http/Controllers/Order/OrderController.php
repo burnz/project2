@@ -17,6 +17,7 @@ use App\User;
 use App\BonusBinary;
 use App\UserPackage;
 use App\LoyaltyUser;
+use App\OrderMin;
 use Auth;
 use Session;
 use App\Http\Controllers\Controller;
@@ -84,7 +85,20 @@ class OrderController extends Controller
             ->limit(20)
             ->get()
             ->toArray();
-        return view('v1.order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime'));
+        //Get total value order
+        $oValueOrder = DB::table("order_lists")
+            ->select(DB::raw('SUM(total) as total'))
+            ->whereDate('created_at', '=', date('Y-m-d'))
+            ->get();
+        $totalValueOrder = isset($oValueOrder->total) ? $oValueOrder->total : 0;
+
+        //Get today min price
+        $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
+        $price = $oPrice->price;
+
+        //Get amount BTC
+        $amountBTC = Auth::user()->userCoin->btcCoinAmount;
+        return view('v1.order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalValueOrder', 'amountBTC'));
     }
 
     /*

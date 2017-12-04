@@ -14,7 +14,7 @@
                         </div>
                         <div class="card-content">
                             <p class="category">Today's Price</p>
-                            <h4 class="card-title">$ 0.3</h4>
+                            <h4 class="card-title">$ {{ $price }}</h4>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -30,7 +30,7 @@
                         </div>
                         <div class="card-content">
                             <p class="category">Order Total</p>
-                            <h4 class="card-title">$ 0.3</h4>
+                            <h4 class="card-title">$ {{ $totalValueOrder }}</h4>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -79,7 +79,7 @@
                         </div>
                         <div class="card-content">
                             <p class="category">Auction Order Volume</p>
-                            <h4 class="card-title"><img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px"> {{ $totalOrderInDay }}</h4>
+                            <h4 class="card-title"><img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px"> {{ number_format($totalOrderInDay) }}</h4>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -95,7 +95,7 @@
                         </div>
                         <div class="card-content">
                             <p class="category">Auction <br>Orders</p>
-                            <h4 class="card-title">1,000,000</h4>
+                            <h4 class="card-title">{{ number_format($totalValueOrderInday) }}</h4>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -114,7 +114,7 @@
                 </div>
                 <div class="card-content text-center">
                     <form method="#" action="regular.html#">
-                        <p class="text-primary">You have 2.67898000 BTC</p>
+                        <p class="text-primary">You have {{ number_format($amountBTC, 5) }} BTC</p>
                         <div class="input-group form-group">
                                                     <span class="input-group-addon">
                                                 <img src="{{asset('v1')}}/img/bitcoin-symbol.svg" style="width: 24px;">
@@ -130,7 +130,7 @@
                                        min="0"
                                        required
                                 >
-                                <span class="help-block" style="display: block;">USD 9,766</span>
+                                <span class="help-block" style="display: block;" id="valueInUSD"> </span>
                                 <span class="material-input"></span></div>
                         </div>
                         <div class="input-group form-group">
@@ -176,9 +176,9 @@
                     <div class="table-responsive">
                         <table class="table" id="employee-grid">
                             <thead class="text-primary">
-                                <th>Price (BTC)</th>
+                                <th>Price (USD)</th>
                                 <th>Volume (CAR)</th>
-                                <th>Total (BTC)</th>
+                                <th>Total (USD)</th>
                             </thead>
                             @foreach($dataTableRealTime as $data)
                                 <tr>
@@ -203,7 +203,7 @@
                         <table class="table" id="market-grid" >
                             <thead class="text-primary">
                                 <th>Date/Time</th>
-                                <th>Type</th>
+                                <th>Status</th>
                                 <th>Volume (CAR)</th>
                                 <th>Price (BTC)</th>
                                 <th>Total (BTC)</th>
@@ -224,11 +224,11 @@
                         <table id="history-grid" class="table">
                             <thead class="text-primary">
                                 <th>Time</th>
-                                <th>Type</th>
+                                <th>Status</th>
                                 <th>Pair</th>
                                 <th>Volume (CAR)</th>
-                                <th>Price (BTC)</th>
-                                <th>Total (BTC)</th>
+                                <th>Price (USD)</th>
+                                <th>Total (USD)</th>
                             </thead>
                         </table>
                     </div>
@@ -243,11 +243,18 @@
     <script>
         $(document).ready(function () {
             $('#employee-grid').DataTable({
-                "order": [[ 1, 'desc' ]],
+                "ordering": false,
                 "searching":false,
                 "bLengthChange": false,
                 paging: false
             });
+
+            var globalBTCUSD = 8600;
+            $('#amount').on('keyup change mousewheel', function () {
+            var value = $(this).val();
+            var result = value * globalBTCUSD;
+            $("#valueInUSD").html('USD ' + result.toFixed(2));
+        });
 
             $('#order').click(function (event) {
                 event.preventDefault();
@@ -310,16 +317,14 @@
                     "processing": "Updating..."
                 },
                 "serverSide": true,
-                "aaSorting": [],
-//                "orderMulti": true,
-//                "ordering": true,
                 "searching": false,
+                "ordering": false,
                 "ajax":{
                     url :"gethistorydatatrademarket", // json datasource
                     type: "get",  // method  , by default get
                     error: function(){  // error handling
                         $(".market-grid-error").html("");
-                        $("#market-grid").append('<tbody class="market-grid-error"><tr><th colspan="3">No data found in the server</th></tr></tbody>');
+                        $("#market-grid").append('<tbody class="market-grid-error"><tr><th colspan="3">No data available in table</th></tr></tbody>');
                         $("#market-grid_processing").css("display","none");
                     },
                     complete : function (dataTableHistory) {
@@ -335,14 +340,14 @@
                     "processing": "Updating..."
                 },
                 "serverSide": true,
-                "order": [[ 3, "desc" ],[ 1, "desc" ]],
                 "searching": false,
+                "ordering": false,
                 "ajax":{
                     url :"gethistorydataorder", // json datasource
                     type: "get",  // method  , by default get
                     error: function(){  // error handling
                         $(".history-grid-error").html("");
-                        $("#history-grid").append('<tbody class="history-grid-error"><tr><th colspan="3">No data found in the server</th></tr></tbody>');
+                        $("#history-grid").append('<tbody class="history-grid-error"><tr><th colspan="3">No data available in table</th></tr></tbody>');
                         $("#history-grid_processing").css("display","none");
                     },
                     complete : function (dataTableHistory) {
