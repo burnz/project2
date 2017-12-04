@@ -79,7 +79,7 @@
                         </div>
                         <div class="card-content">
                             <p class="category">Auction Order Volume</p>
-                            <h4 class="card-title"><img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px"> {{ number_format($totalOrderInDay) }}</h4>
+                            <h4 class="card-title"><img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px" > <span class="totalOrderInDay">{{ number_format($totalOrderInDay) }}</span></h4>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -95,7 +95,7 @@
                         </div>
                         <div class="card-content">
                             <p class="category">Auction <br>Orders</p>
-                            <h4 class="card-title">{{ number_format($totalValueOrderInday) }}</h4>
+                            <h4 class="card-title totalValueOrderInDay">{{ number_format($totalValueOrderInday) }}</h4>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -123,10 +123,10 @@
                                 <label class="control-label">You'll pay</label>
                                 <input type="number"
                                        class="form-control"
-                                       value
                                        name="amount"
                                        id="amount"
                                        autofocus="autofocus"
+                                       step="0.01"
                                        min="0"
                                        required
                                 >
@@ -144,7 +144,7 @@
                                         type="number"
                                         class="form-control"
                                         id="price"
-                                        min=""
+                                        min="{{ $price }}"
                                         step="0.01"
                                         required
                                 >
@@ -182,8 +182,8 @@
                             </thead>
                             @foreach($dataTableRealTime as $data)
                                 <tr>
-                                    <td>{{ $data->amount }}</td>
                                     <td>{{ $data->price }}</td>
+                                    <td>{{ $data->amount }}</td>
                                     <td>{{ $data->total }}</td>
                                 </tr>
                             @endforeach
@@ -203,7 +203,6 @@
                         <table class="table" id="market-grid" >
                             <thead class="text-primary">
                                 <th>Date/Time</th>
-                                <th>Status</th>
                                 <th>Volume (CAR)</th>
                                 <th>Price (BTC)</th>
                                 <th>Total (BTC)</th>
@@ -225,7 +224,6 @@
                             <thead class="text-primary">
                                 <th>Time</th>
                                 <th>Status</th>
-                                <th>Pair</th>
                                 <th>Volume (CAR)</th>
                                 <th>Price (USD)</th>
                                 <th>Total (USD)</th>
@@ -269,12 +267,9 @@
                     if(result){
                         $.ajax({
                             beforeSend:function () {
-                                if( $('#total').val() == 0){
-                                    swal ( "Oops" ,  "Not order , Total Value must greater than 0  !" ,  "error" )
-                                    return false;
-                                };
+
                                 if( $('#amount').val() == ''){
-                                    swal ( "Oops" ,  "Not order , Please fill amount !" ,  "error" )
+                                    swal ( "Oops" ,  "Not order , Please fill amount BTC !" ,  "error" );
                                     return false;
                                 }
 
@@ -283,10 +278,18 @@
                                     return false;
                                 }
 
-                                if( parseFloat($('#price').val()) < 0.3 ){
-                                    swal ( "Oops" ,  "Not order , min price 0.3 !" ,  "error" )
+                                if( parseFloat($('#price').val()) < {{ $price }} ){
+                                    swal ( "Oops" ,  "Not order , min price {{ $price }} !" ,  "error" )
                                     return false;
                                 }
+
+                                if( $('#total').val() == 0 ||
+                                    ( +$("#amount").val() * globalBTCUSD ) / (+$("#price").val()) <= 0
+                                ){
+                                    swal ( "Oops" ,  "Not order , Total Value must greater than 0  !" ,  "error" )
+                                    return false;
+                                };
+
                             },
                             url : "{{ URL::to('/order') }}",
                             type : "post",
@@ -363,16 +366,25 @@
                 $(".totalValueOrderInDay").html(result.totalValueOrderInday);
                 var html = '';
                 result.tableCommand.forEach(function (element) {
-                    html += '<tr>' + '<td>' + element.amount + '</td>' + '<td>' + element.price + '</td>' + '<td>' + element.total + '</td>' + '</tr>';
+                    html += '<tr>' + '<td>' + element.price + '</td>' + '<td>' + element.amount + '</td>' + '<td>' + element.total + '</td>' + '</tr>';
                 });
                 $('#employee-grid tbody').html(html);
             });
 
             $('#amount').on('keyup change mousewheel', function() {
-                $('#total').val($(this).val()*$("#price").val());
+                if( +$("#amount").val() > 0 && +$("#price").val() >= {{ $price }} ){
+                    $('#total').val(  ( +$("#amount").val() * globalBTCUSD ) / (+$("#price").val()) );
+                }else {
+                    $('#total').val('');
+                }
             });
+
             $('#price').on('keyup change mousewheel', function() {
-                $('#total').val($(this).val()*$("#amount").val());
+                if( +$("#amount").val()  > 0 && +$("#price").val() >= {{ $price }} ){
+                    $('#total').val( ( +$("#amount").val() * globalBTCUSD ) / (+$("#price").val()) );
+                }else{
+                    $('#total').val('');
+                }
 //                $(this).val(parseFloat(Math.round($(this).val() * 100) / 100).toFixed(2))
             });
 

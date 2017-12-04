@@ -145,12 +145,7 @@ class OrderController extends Controller
 
         foreach ($data as $key => $value) {
             $nestedData=array();
-            // $nestedData[] = $value->unapproved_created_at;
-            $nestedData[] = $value->amount;
-            $nestedData[] = $value->price;
-            $nestedData[] = $value->total;
-            $nestedData[] = $value->created_at;
-
+            $nestedData[] = date('d-m-Y',strtotime( $value->created_at ));
             if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
                 if($value->status == self::CANCEL){
                     $nestedData[] = '<b><strong>Canceled</strong></b>';
@@ -162,7 +157,9 @@ class OrderController extends Controller
             } else {
                 $nestedData[] = '<b><strong>Canceled</strong></b>';
             }
-
+            $nestedData[] = $value->amount;
+            $nestedData[] = $value->price;
+            $nestedData[] = $value->total;
             // $deltail = "data-ot-register-id=".$value->ot_register_id." "."data-id-usercreat=".$value->usercreat;
             $tmp[] = $nestedData;
         }
@@ -177,6 +174,11 @@ class OrderController extends Controller
         echo json_encode($json_data);
     }
 
+    /*
+     * @function
+     * @author huynq
+     * @return json data
+     * */
     public function getHistoryDataTradeMarket(Request $request){
         $helper = new Helper();
         $dateNow = $helper->get_date_now();
@@ -211,10 +213,9 @@ class OrderController extends Controller
         $tmp = array();
         foreach ($data as $key => $value) {
             $nestedData=array();
-            $nestedData[] = $value->created_at;
-            $nestedData[] = '';
+            $nestedData[] = date('d-m-Y',strtotime($value->created_at));
+            $nestedData[] = $value->amount;
             $nestedData[] = $value->price;
-            $nestedData[] = $value->total;
             $nestedData[] = $value->total;
             $tmp[] = $nestedData;
         }
