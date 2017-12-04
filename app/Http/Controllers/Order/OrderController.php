@@ -95,7 +95,10 @@ class OrderController extends Controller
         //Get today min price
         $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
         $price = $oPrice->price;
-        return view('v1.order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalValueOrder'));
+
+        //Get amount BTC
+        $amountBTC = Auth::user()->userCoin->btcCoinAmount;
+        return view('v1.order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalValueOrder', 'amountBTC'));
     }
 
     /*
