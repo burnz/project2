@@ -130,7 +130,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //Auction
     Route::get('order','Order\OrderController@index')->name('order.manage');
     Route::post('order', 'Order\OrderController@index');
-    Route::get('gethistorydataorder', 'Order\OrderController@getHistoryDataOrder');
+    Route::get('gethistorydataorderuser', 'Order\OrderController@getHistoryDataOrder');
     Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
 
     Route::get('todayorder','Backend\Order\ToDayOrderController@show');

@@ -343,7 +343,7 @@
                 "searching": false,
                 "ordering": false,
                 "ajax":{
-                    url :"gethistorydataorder", // json datasource
+                    url :"gethistorydataorderuser", // json datasource
                     type: "get",  // method  , by default get
                     error: function(){  // error handling
                         $(".history-grid-error").html("");

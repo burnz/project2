@@ -128,7 +128,7 @@ class OrderController extends Controller
         //Đếm số bản ghi ở đây
         $totalFiltered = $sql;
         $totalFiltered = $totalFiltered->count();
-        $sql = $sql->orderBy($columns[$requestData['order'][0]['column']],$requestData['order'][0]['dir']);
+        $sql = $sql->orderBy('a.created_at','desc');
         $sql = $sql->skip($requestData['start'])->take($requestData['length']);
         $data = array();
         $data = $sql->get();
