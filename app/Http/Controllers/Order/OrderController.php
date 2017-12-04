@@ -18,6 +18,7 @@ use App\BonusBinary;
 use App\UserPackage;
 use App\LoyaltyUser;
 use App\OrderMin;
+use App\ExchangeRate;
 use Auth;
 use Session;
 use App\Http\Controllers\Controller;
@@ -38,11 +39,23 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
+        //Get today min price
+        $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
+        $price = $oPrice->price;
+
+        $userCoin = Auth::user()->userCoin;
+        $btcAmount = $request->amount * $request->price / ExchangeRate::getBTCUSDRate();
+
         if ( $request->isMethod('post') ){
-            if( $request->amount * $request->price <= 0 || $request->price < 0.3 || $request->price < 0){
-                return $this->responseError("Error");
+            if( $request->amount <= 0 || $request->price <= 0 || $request->price < $price || $btcAmount > $userCoin->btcCoinAmount){
+                throw new \Exception("Error Processing Request");
             }
+
             try {
+                //Subtract btc in btc wallet
+                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
+                $userCoin->save();
+
                 $orderList = new OrderList();
                 $orderList->code = md5(uniqid(Auth::user()->id, true));
                 $orderList->user_id = Auth::user()->id;
@@ -50,7 +63,7 @@ class OrderController extends Controller
                 $orderList->price = $request->price;
                 $orderList->total = $request->amount * $request->price;
                 $orderList->save();
-                $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();
+                $totalOrderInDay = OrderList::whereDate('created_at', date('Y-m-d'))->count();
                 $totalValueOrderInday = OrderList::whereDate('created_at',date('Y-m-d'))->sum('amount');
                 $data = [
                         'totalOrderInDay' => $totalOrderInDay,
@@ -91,10 +104,6 @@ class OrderController extends Controller
             ->whereDate('created_at', '=', date('Y-m-d'))
             ->get();
         $totalValueOrder = isset($oValueOrder->total) ? $oValueOrder->total : 0;
-
-        //Get today min price
-        $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
-        $price = $oPrice->price;
 
         //Get amount BTC
         $amountBTC = Auth::user()->userCoin->btcCoinAmount;
