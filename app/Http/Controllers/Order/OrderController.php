@@ -92,7 +92,7 @@ class OrderController extends Controller
      * @input request
      * @return json data
      * */
-    public function getHistoryDataOrder(Request $request){
+    public function getHistoryDataOrder (Request $request){
         $requestData = $_REQUEST;
         $columns = array(
             0 => 'amount',
