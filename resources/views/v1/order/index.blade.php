@@ -122,7 +122,8 @@
                             <div class="form-group label-floating">
                                 <label class="control-label">You'll receive</label>
                                 <input name="amount" type="text" class="form-control" id="total">
-                                <span class="material-input"></span></div>
+                                <span class="material-input"></span>
+                            </div>
                         </div>
 
                         <div class="input-group form-group">
