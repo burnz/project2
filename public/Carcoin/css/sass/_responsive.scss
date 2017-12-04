@@ -1,0 +1,92 @@
+@media (max-width: 991px){
+	[section="dashboard-status"] {
+		display: block!important;
+	}
+	.navbar-stuck{
+		width: 100%;
+	}
+}
+@media (max-width: 767px){
+	.navbar-wallet:last-child {
+		position: absolute;
+		left: 0;
+		right: 0;
+		background: #fff;
+		width: 100%;
+		border-bottom: 1px solid #ededf3;
+		margin: -8px 0px;
+		text-align: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+	}
+	.navbar-stuck .navbar-wallet:last-child{
+		display: none!important;
+	}
+	[user-wallet]{
+		display: block!important;
+	}   
+	[section="wallet-panel"]{
+		.nav{
+			max-width: none;
+		}
+	}
+}
+
+
+@media (max-width: 480px){
+	[section="wallet-panel"]{
+		.nav{
+			>li{
+				>a{
+					width: 100px;
+				}
+			}
+		}
+	}
+}
+
+// Responsive for IPhone 6 Plus
+@media (max-width: 414px){
+	.main-panel>.content{
+		margin-top: 100px;
+	}
+	.navbar-wallet > li > a > .content {
+		margin-left: 0px;
+	}
+}
+@media (max-width: 413px){
+	.navbar-wallet > li > a > .icon{
+		display: none;
+	}    
+	.navbar-wallet:last-child {
+		font-size: 11px;
+	}
+	[wallet-deposit]{
+		display: block!important;
+	}
+}
+
+// Responsive for IPhone 5
+@media (max-width: 320px){
+	.navbar-wallet > li > a {
+		padding: 5px;
+	}
+	[section="wallet-panel"]{
+		.nav{
+			>li{
+				>a{
+					width: 80px;
+					min-width: 100%;
+					padding: 0px 8px;
+				}
+			}
+		}
+	}
+}
+
