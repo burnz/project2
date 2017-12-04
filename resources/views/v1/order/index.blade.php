@@ -123,11 +123,12 @@
                                 <label class="control-label">You'll pay</label>
                                 <input type="number"
                                        class="form-control"
-                                       name="amount"
-                                       id="amount"
+                                       name="btc_amount"
+                                       id="btc-amount"
                                        autofocus="autofocus"
                                        step="0.01"
                                        min="0"
+                                       max="{{ $amountBTC }}"
                                        required
                                 >
                                 <span class="help-block" style="display: block;" id="valueInUSD"> </span>
@@ -156,7 +157,7 @@
                             </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">You'll receive</label>
-                                <input name="lastname" type="text" class="form-control" id="total">
+                                <input name="amount"  type="text" class="form-control" id="total">
                                 <span class="material-input"></span></div>
                         </div>
                         <button type="button" class="btn btn-fill btn-primary btn-round" id="order">Create Order</button>
