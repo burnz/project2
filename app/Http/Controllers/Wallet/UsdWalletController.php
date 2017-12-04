@@ -1,27 +1,21 @@
 <?php
-
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 namespace App\Http\Controllers\Wallet;
-
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Wallet;
 use App\UserCoin;
 use App\ExchangeRate;
-
 use Auth;
 use function Sodium\compare;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
 use Log;
-
 /**
  * Description of UsdWalletController
  *
@@ -42,7 +36,6 @@ class UsdWalletController extends Controller
     {
         $this->middleware('auth');
     }
-
     /** 
      * @author GiangDT
      * @edit Huynq
@@ -75,10 +68,8 @@ class UsdWalletController extends Controller
         $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
             
         $requestQuery = $request->query();
-
         //Holding Wallet has 4 types: Farst start, binary, loyalty, Transfer to CLP Wallet
         $all_wallet_type = config('carcoin.wallet_type');
-
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
@@ -101,7 +92,6 @@ class UsdWalletController extends Controller
     {
         if($request->ajax()) {
             $userCoin = Auth::user()->userCoin;
-
             $usdAmountErr = '';
             if($request->usdAmount == ''){
                 $usdAmountErr = trans('adminlte_lang::wallet.msg_usd_amount_required');
@@ -115,11 +105,9 @@ class UsdWalletController extends Controller
             {
                 $clpRate = ExchangeRate::getCLPUSDRate();
                 $amountCLP = $request->usdAmount / $clpRate;
-
                 $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
                 $userCoin->clpCoinAmount =  $userCoin->clpCoinAmount + $amountCLP;
                 $userCoin->save();
-
                 $usd_to_clp = [
                     "walletType" => Wallet::USD_WALLET,
                     "type"       => Wallet::USD_CLP_TYPE,
@@ -129,7 +117,6 @@ class UsdWalletController extends Controller
                     "note"      => "Rate " . $clpRate . '$',
                 ];
                 $result = Wallet::create($usd_to_clp);
-
                 $clp_from_usd = [
                     "walletType" => Wallet::CLP_WALLET,
                     "type"       => Wallet::USD_CLP_TYPE,
@@ -140,7 +127,6 @@ class UsdWalletController extends Controller
                 ];
                 // Bulk insert
                 $result = Wallet::create($clp_from_usd);
-
                 $request->session()->flash( 'successMessage', "Buy CLP successfully!" );
                 return response()->json(array('err' => false));
                 
@@ -153,7 +139,6 @@ class UsdWalletController extends Controller
                     ];
                 return response()->json($result);
             }
-
         }
         return response()->json(array('err' => false, 'msg' => null));
     }
@@ -178,4 +163,3 @@ class UsdWalletController extends Controller
         return $this->responseSuccess($data);
     }
 }
-
