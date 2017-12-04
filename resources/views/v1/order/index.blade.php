@@ -116,23 +116,15 @@
                     <form method="#" action="regular.html#">
                         <p class="text-primary">You have {{ number_format($amountBTC, 5) }} BTC</p>
                         <div class="input-group form-group">
-                                                    <span class="input-group-addon">
-                                                <img src="{{asset('v1')}}/img/bitcoin-symbol.svg" style="width: 24px;">
-                                            </span>
+                            <span class="input-group-addon">
+                                <img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px;">
+                            </span>
                             <div class="form-group label-floating">
-                                <label class="control-label">You'll pay</label>
-                                <input type="number"
-                                       class="form-control"
-                                       name="amount"
-                                       id="amount"
-                                       autofocus="autofocus"
-                                       step="0.01"
-                                       min="0"
-                                       required
-                                >
-                                <span class="help-block" style="display: block;" id="valueInUSD"> </span>
+                                <label class="control-label">You'll receive</label>
+                                <input name="amount" type="text" class="form-control" id="total">
                                 <span class="material-input"></span></div>
                         </div>
+
                         <div class="input-group form-group">
                             <span class="input-group-addon">
                                 <img src="{{asset('v1')}}/img/bitcoin-symbol.svg" style="width: 24px;">
@@ -150,15 +142,27 @@
                                 >
                                 <span class="material-input"></span></div>
                         </div>
+
                         <div class="input-group form-group">
                             <span class="input-group-addon">
-                                <img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px;">
+                                <img src="{{asset('v1')}}/img/bitcoin-symbol.svg" style="width: 24px;">
                             </span>
                             <div class="form-group label-floating">
-                                <label class="control-label">You'll receive</label>
-                                <input name="lastname" type="text" class="form-control" id="total">
+                                <label class="control-label">You'll pay</label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="amount"
+                                       autofocus="autofocus"
+                                       step="0.01"
+                                       min="0"
+                                       max="{{ $amountBTC }}"
+                                       required
+                                       disabled
+                                >
+                                <span class="help-block" style="display: block;" id="valueInUSD"> </span>
                                 <span class="material-input"></span></div>
                         </div>
+
                         <button type="button" class="btn btn-fill btn-primary btn-round" id="order">Create Order</button>
                     </form>
                 </div>
@@ -273,6 +277,11 @@
                                     return false;
                                 }
 
+                                if( $('#amount').val() > {{ $amountBTC }}){
+                                    swal ( "Oops" ,  "Not order , max price {{ $amountBTC }} !" ,  "error" );
+                                    return false;
+                                }
+
                                 if( $('#price').val() == ''){
                                     swal ( "Oops" ,  "Not order , Please fill price !" ,  "error" )
                                     return false;
@@ -295,8 +304,8 @@
                             type : "post",
                             data : {
                                 _token : "{{ csrf_token() }}",
-                                amount : $('#amount').val(),
-                                price  : $('#price').val()
+                                amount : $("#total").val(),
+                                price  : $("#price").val()
                             },
                             success : function (result){
                                 swal ( "Done!" ,  "Order success" ,  "success" );
@@ -371,19 +380,19 @@
                 $('#employee-grid tbody').html(html);
             });
 
-            $('#amount').on('keyup change mousewheel', function() {
-                if( +$("#amount").val() > 0 && +$("#price").val() >= {{ $price }} ){
-                    $('#total').val(  ( +$("#amount").val() * globalBTCUSD ) / (+$("#price").val()) );
+            $('#total').on('keyup change mousewheel', function() {
+                if( +$("#total").val() > 0 && +$("#price").val() >= {{ $price }} ){
+                    $('#amount').val(  ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD );
                 }else {
-                    $('#total').val('');
+                    $('#amount').val('');
                 }
             });
 
             $('#price').on('keyup change mousewheel', function() {
-                if( +$("#amount").val()  > 0 && +$("#price").val() >= {{ $price }} ){
-                    $('#total').val( ( +$("#amount").val() * globalBTCUSD ) / (+$("#price").val()) );
+                if( +$("#total").val()  > 0 && +$("#price").val() >= {{ $price }} ){
+                    $('#amount').val(  ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD );
                 }else{
-                    $('#total').val('');
+                    $('#amount').val('');
                 }
 //                $(this).val(parseFloat(Math.round($(this).val() * 100) / 100).toFixed(2))
             });
