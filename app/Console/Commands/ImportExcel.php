@@ -82,7 +82,7 @@ class ImportExcel extends Command
     {
         $start = microtime(true);
         $latestUser = ($temp = DB::table('users')->select('id')->orderBy('id', 'DESC')->first()) == null ? 0 : $temp->id;
-        $exData = Excel::load(storage_path('excel\users.xls'))->get();
+        $exData = Excel::load(storage_path('excel/users.xls'))->get();
         $data = $exData->toArray();
 
         //Có hơn 1 sheet
