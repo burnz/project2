@@ -125,7 +125,7 @@ class ImportExcel extends Command
             
             //Get address
             if($user->name) {
-                $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
+                //$accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
             }
 
             //UserData
@@ -139,9 +139,7 @@ class ImportExcel extends Command
 
             //UserCoin
             $dataUserCoin[] = [
-                'userId' => $user->id,
-                'accountCoinBase' => $accountWallet['accountId'],
-                'walletAddress' => $accountWallet['walletAddress'],
+                'userId' => $user->id
             ];
         }
         
