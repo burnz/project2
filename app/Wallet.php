@@ -11,7 +11,7 @@ class Wallet extends Model
     ];
 
     // Wallet Type
-    //const USD_WALLET = 1;
+    // const USD_WALLET = 1;
 
     const BTC_WALLET = 1;
 
