@@ -118,8 +118,7 @@ class ImportExcel extends Command
             User::where('id', $user->id)
                 ->update($dataUpdate);
 
-            //Update user tree permission
-            User::updateUserGenealogy($user->id);
+            
 
             //Get package id
             $packageId = 0;
@@ -156,6 +155,17 @@ class ImportExcel extends Command
         //Import data for UserCoin
         $this->info('Update user_coins table');
         UserCoin::insert($dataUserCoin);
+
+        //Update user tree permission
+        $users = DB::table('users')->select('id')
+            ->where('id', '>', $latestUser)
+            ->whereNotNull('value_package')
+            ->whereNotNull('referer_name')
+            ->get();
+        foreach ($users as $user){
+            User::updateUserGenealogy($user->id);
+        }
+        
 
         $time_elapsed_secs = microtime(true) - $start;
         echo 'time estimated : ';

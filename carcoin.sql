@@ -439,6 +439,8 @@ CREATE TABLE `users` (
   `lastname` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `phone` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is2fa` tinyint(1) DEFAULT '0',
+  `referer_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value_package` double DEFAULT NULL,
   `refererId` int(10) DEFAULT NULL,
   `google2fa_secret` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '0',
@@ -464,8 +466,8 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', '9j1mwxyMShYTbeKCgqXcvhi2E9P8NnAQlj6Viai5GWm6h2IBgDJVZfppL5WY', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
-INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', 'Z5JdC5ajn3QfWz5TH2BXkx9SV2szgFXLtyM1n7MLrvc3vEjFVmZjMDgW9YcC', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
+INSERT INTO `users` VALUES ('1', 'admin', 'henry@cryptolending.org', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', '9j1mwxyMShYTbeKCgqXcvhi2E9P8NnAQlj6Viai5GWm6h2IBgDJVZfppL5WY', '2017-08-12 05:47:39', '2017-09-15 08:22:03', '1', 'Henry', 'Ford', '012312423asdasd', '0', null, null, null, 'RE7S5LKYXTPCOMXF', '1', '', 'Profile', null, null, null, '41', null, null, null, null, '1', '1');
+INSERT INTO `users` VALUES ('2', 'root', 'giangitman@gmail.com', '$2y$10$vYajYOev0ia64tzJpdmWgu5hVA2aROKElGKrCcWBv6pIQSmm309Fy', 'Z5JdC5ajn3QfWz5TH2BXkx9SV2szgFXLtyM1n7MLrvc3vEjFVmZjMDgW9YcC', '2017-10-05 17:42:21', '2017-10-05 17:42:43', '1', 'root', 'Giang', '0978708981', '0', null, null, null, '2NZOY6TF4MLVJH2V', '1', null, null, null, null, null, '41', null, null, null, '99', '1', '1');
 
 -- ----------------------------
 -- Table structure for users_loyalty
