@@ -64,7 +64,7 @@
                             </a>
                         </li>
                         <li rel="tooltip" data-placement="bottom" title="Profile">
-                            <a href="include/pages/other/profile.php">
+                            <a href="{{url('profile')}}">
                                 <i class="material-icons">person</i>
                                 <p class="hidden-lg hidden-md">Profile</p>
                             </a>
