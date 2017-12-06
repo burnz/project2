@@ -28,7 +28,7 @@ class WalletController extends Controller
                 'q' => $userId
             ));
 
-            $all_wallet_type = config('cryptolanding.wallet_type');
+            $all_wallet_type = config('carcoin.wallet_type');
 
             $wallet_type = [1 => 'USD Wallet', 2 => 'BTC Wallet', 3 => 'CLP Wallet', 4 => 'Holding Wallet'];
 

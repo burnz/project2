@@ -1,0 +1,168 @@
+@media (max-width: 1280px){
+	[section="binary-tree"] {
+		.binary{
+			width: 100px;
+		}
+		.col-md-6, .col-md-12{
+			padding: 0;
+		}
+	}
+}
+@media all and (max-width: 1080px) and (min-width: 1024px){
+	.countdown{
+		.time{
+			width: 50px;
+		}
+	}
+}
+@media (max-width: 991px){
+	.navbar-stuck{
+		width: 100%;
+	}
+	[section="dashboard-status"],[section="create-an-order"] {
+		display: block!important;
+	}
+	[section="binary-tree"] {
+		.binary{
+			width: 90px;
+			.binary-content {
+				padding: 5px 2px;
+			}
+		}
+	}
+}
+@media (max-width: 767px){
+	.navbar-wallet:last-child {
+		position: absolute;
+		left: 0;
+		right: 0;
+		background: #fff;
+		width: 100%;
+		border-bottom: 1px solid #ededf3;
+		margin: -8px 0px;
+		text-align: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -ms-flexbox;
+		display: flex;
+	}
+	.navbar-stuck .navbar-wallet:last-child{
+		display: none!important;
+	}
+	[user-wallet]{
+		display: block!important;
+	}   
+	[section="wallet-panel"]{
+		.nav{
+			max-width: none;
+		}
+	}
+	[section="binary-tree"] {
+		padding-top: 50px;
+		display: none;
+	}
+	[section="binary-tree-mobile"]{
+		display: block;
+	}
+	.table-scroll-y {
+	    max-height: 300px;
+	    overflow: auto;
+	    tbody {
+	        display: table-row-group;
+	        height: auto;
+	        overflow: auto;
+	    }
+	    tr{
+	        display: table-row;
+	    }
+	    thead,tbody tr {
+	        width: -webkit-fill-available;
+	        table-layout: fixed;
+	        /* even columns width , fix width of table too*/
+	    }
+	    thead {
+	        width: calc( 100% - 1em)/* scrollbar is average 1em/16px width, remove it from thead width */
+	    }
+	}
+}
+
+
+@media (max-width: 480px){
+	[section="wallet-panel"]{
+		.nav{
+			>li{
+				>a{
+					width: 100px;
+				}
+			}
+		}
+	}
+	[section="binary-tree-mobile"]{
+		margin-top: 30px;
+		ul.nav{
+			> li{
+				.binary +span{
+					right: 15%;
+				}
+
+			}
+		}
+	}
+}
+
+// Responsive for IPhone 6 Plus
+@media (max-width: 414px){
+	.main-panel>.content{
+		margin-top: 100px;
+	}
+	.navbar-wallet > li > a > .content {
+		margin-left: 0px;
+	}
+	.table-scroll-y thead {
+		display: unset;
+	}
+}
+@media (max-width: 413px){
+	.navbar-wallet > li > a > .icon{
+		display: none;
+	}    
+	.navbar-wallet:last-child {
+		font-size: 11px;
+	}
+	[wallet-deposit]{
+		display: block!important;
+	}
+}
+
+// Responsive for IPhone 5
+@media (max-width: 320px){
+	.navbar-wallet > li > a {
+		padding: 5px;
+	}
+	[section="wallet-panel"]{
+		.nav{
+			>li{
+				>a{
+					width: 80px;
+					min-width: 100%;
+					padding: 0px 8px;
+				}
+			}
+		}
+	}
+	[section="binary-tree-mobile"]{
+		ul.nav{
+			> li{
+				.binary +span{
+					right: 10%;
+				}
+
+			}
+		}
+	}
+}
+

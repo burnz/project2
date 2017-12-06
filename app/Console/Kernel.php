@@ -8,7 +8,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Notifications\UpdateBtcCoin;
 use App\Notifications\AvailableAmountController as AvailableAmount;
 use App\Cronjob\UpdateExchangeRate;
-use App\Cronjob\GetClpWallet;
+use App\Cronjob\TransferCarPresale;
 use App\Cronjob\Bonus;
 use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
@@ -34,6 +34,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        //Transfer CAR in pre-sale
+        try {
+            $schedule->call(function () {
+                TransferCarPresale::transfer();
+            })->dailyAt('00:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
         //Auto add to binary at 23:30 every sunday
         try {
             $schedule->call(function () {
@@ -60,7 +69,7 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
-        
+
         /**
          * @author Huynq 
          * run every 30s update notification

@@ -39,7 +39,7 @@
                                 </td>
                                 <td>
                                     @if($userData->loyaltyId >0 )
-                                    {{ config('cryptolanding.listLoyalty')[$userData->loyaltyId] }}
+                                    {{ config('carcoin.listLoyalty')[$userData->loyaltyId] }}
                                     @endif
                                 </td>
                             </tr>

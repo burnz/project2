@@ -1,0 +1,161 @@
+<?php 
+function setPath() {
+    $locationName = $_SERVER['REQUEST_URI'];
+    $spliceArr = explode("/",$locationName);
+    $pathLength = count($spliceArr) - 2;
+    echo (str_repeat("../",$pathLength) );
+}
+?>
+
+<div class="sidebar" data-active-color="carcoin" data-background-color="carcoin" data-image="<?php setPath() ?>assets/img/illu2.svg">
+            <!--
+        Tip 1: You can change the color of active element of the sidebar using: data-active-color="purple | blue | green | orange | red | rose"
+        Tip 2: you can also add an image using data-image tag
+        Tip 3: you can change the color of the sidebar with data-background-color="white | black"
+    -->
+    <div class="logo">
+        <a href="<?php setPath() ?>index.php" class="simple-text logo-mini">
+            <img src="<?php setPath() ?>assets/img/zcoin-id-final_logo-rev.svg">
+        </a>
+        <a href="<?php setPath() ?>index.php" class="simple-text logo-normal">
+            Car Coin
+        </a>
+    </div>
+    <div class="sidebar-wrapper">
+        <div class="user">
+            <div class="photo">
+                <img src="<?php setPath() ?>assets/img/user/avatar.jpg" />
+            </div>
+            <div class="info">
+                <span>Tania Andrew</span>
+                <span>ID: 123456</span>
+                <span>Loyalty: Diadmond</span>
+            </div>
+        </div>
+        <ul class="nav">
+            <li>
+                <a href="<?php setPath() ?>index.php">
+                    <i class="material-icons">dashboard</i>
+                    <p> Dashboard </p>
+                </a>
+            </li>
+            <li>
+                <a href="<?php setPath() ?>presale.php">
+                    <i class="material-icons">shopping_cart</i>
+                    <p> Presale </p>
+                </a>
+            </li>
+            <li>
+                <a data-toggle="collapse" href="#pagesExamples">
+                    <i class="material-icons">supervisor_account</i>
+                    <p> 
+                        Manager Member 
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse" id="pagesExamples">
+                    <ul class="nav">
+                        <li>
+                            <a href="include/pages/manager-member/genealogy-tree.php">
+                                <span class="sidebar-mini"> GT </span>
+                                <span class="sidebar-normal"> Genealogy Tree </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="include/pages/manager-member/binary-tree.php">
+                                <span class="sidebar-mini"> BT </span>
+                                <span class="sidebar-normal"> Binary Tree </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="include/pages/manager-member/referrals.php">
+                                <span class="sidebar-mini"> R </span>
+                                <span class="sidebar-normal"> Referrals </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="<?php setPath() ?>my-bonus.php">
+                    <i class="material-icons">card_giftcard</i>
+                    <p> My Bonus </p>
+                </a>
+            </li>
+            <li>
+                <a href="<?php setPath() ?>wallet.php">
+                    <i class="material-icons">assignment_ind</i>
+                    <p> Wallet </p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Active Sidebar Class 
+
+    // Get Path
+    var assetsFile = location.pathname.split("/");
+    var assetsPath = '../';
+    assetsPath = assetsPath.repeat(assetsFile.length - 2);
+
+    var sidebarNav = document.querySelectorAll('.sidebar-wrapper .nav > li > a');
+    for (let i = 0; i < sidebarNav.length; i++) {
+
+        let href = sidebarNav[i].getAttribute("href");
+        // debugger;
+        // href == location.pathname.substring(1) || href == 'index.php' || href == 'index.html'
+        if(href == location.pathname.substring(1)){
+
+            sidebarNav[i].parentNode.classList.add("active");
+            sidebarNav[i].setAttribute('aria-expanded', 'true');
+
+            // If Sidebar is Submenu
+            let subMenu = sidebarNav[i].parentNode.parentNode.parentNode;
+            subMenu.getAttribute("class") == 'collapse' 
+            ? 
+            (subMenu.classList.add("in"), subMenu.parentNode.classList.add("active") )
+            :
+            subMenu
+
+            
+        }
+
+        // If Directory > 2
+        // Example: 'include/pages/manager-member/binary-tree.php' 
+        if(assetsFile.length > 2){
+            var subArr = href.split("/");
+            // ['1','2','3'] => Result: ['1','2']
+            var remove_last_subArr = subArr.slice(subArr[0], subArr.length -1);
+                // Result: "../../.."
+                remove_last_subArr = remove_last_subArr.join('/');
+
+            let remove_last_assetsPath = assetsPath.slice(0, assetsPath.length - 1);
+            // "../../.."  != "../../.." 
+            if(remove_last_subArr != remove_last_assetsPath && href != "" && href != "#"){
+                // directory/directory/example.php => example.php
+                sidebarNav[i].setAttribute("href" , subArr.pop());
+            }
+        }
+    }
+
+    // Set Path img
+    // var assetsFile = location.pathname.split("/");
+    // assetsFile.length > 2 ? 
+    // console.log(sidebarNav.getAttribute("href"))
+    // : 
+    // alert('chi co 1 trang')
+    // assetsPath = assetsPath.repeat(assetsFile.length - 2);
+
+    // var set_assetsPath =  document.querySelectorAll("img");
+    // for (let i = 0; i < set_assetsPath.length; i++) {
+    //     let file = set_assetsPath[i].getAttribute("src");
+    //     set_assetsPath[i].setAttribute("src" , assetsPath + file);
+    // }
+</script>
+
+
+
+

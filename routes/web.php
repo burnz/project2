@@ -1,4 +1,8 @@
 <?php
+Route::get('/design', function () {
+    return view('design');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -17,7 +21,7 @@ Route::post('authenticator', 'Auth\LoginController@auth2fa');
 Route::get('users/search',"User\UserController@search");
 Route::group( ['middleware' => ['auth']], function() {
     Route::get('/home', 'HomeController@index')->name('home');
-    
+    Route::get('users/root', 'User\UserController@root')->name('users.root');
     Route::resource('users', 'Backend\User\UserController');
     Route::resource('roles', 'Backend\User\RoleController');
     Route::resource('posts', 'Backend\User\PostController');
@@ -126,7 +130,17 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::resource('profile', 'User\ProfileController');
 
-    
+    //Auction
+    Route::get('order','Order\OrderController@index')->name('order.manage');
+    Route::post('order', 'Order\OrderController@index');
+    Route::get('gethistorydataorderuser', 'Order\OrderController@getHistoryDataOrder');
+    Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
+
+    Route::get('todayorder','Backend\Order\ToDayOrderController@show');
+    Route::get('historyorder','Backend\Order\HistoryOrderController@show');
+    Route::get('gettodaydataorder','Backend\Order\ToDayOrderController@getToDayDataOrder');
+    Route::get('gethistorydataorder','Backend\Order\HistoryOrderController@getHistoryDataOrder');
+    Route::resource('ordermin', 'Backend\Order\OrderMinController');
     //News
     Route::get('info','User\InfoController@clp');
     Route::resource('news','Backend\News\NewsController');
@@ -134,7 +148,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();
     });
-    
+
 
 });
 Route::get('getnotification','GetNotificationController@getNotification');
