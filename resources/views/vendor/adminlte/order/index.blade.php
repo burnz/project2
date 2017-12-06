@@ -2,7 +2,7 @@
 @section('htmlheader')
     @parent
     <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="/presale/assets/css/demo.css" rel="stylesheet" />
+
     <!--  Custom CSS    -->
     <link href="/presale/assets/css/custom.css" rel="stylesheet" />
 @endsection
@@ -50,7 +50,7 @@
                                     <i class="material-icons">gavel</i>
                                 </div>
                                 <div class="card-content">
-                                    <p class="category">Online Auction</p>
+                                    <p class="category">Max Price Now: <max-price>{{ $dataTableRealTime[0]->price }}</max-price></p>
                                     <h4 class="card-title countdow">24:00</h4>
                                 </div>
                                 <div class="card-footer">
@@ -270,6 +270,19 @@
     </div>
 @endsection
 @section('script')
+    <script src="/presale/assets/js/jquery.countdown.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="/presale/assets/js/demo.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            // Javascript method's body can be found in assets/js/demos.js
+            demo.initDashboardPageCharts();
+            demo.initCoutdown();
+
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script>
         $(document).ready(function () {
@@ -407,6 +420,8 @@
                     html += '<tr>' + '<td>' + element.price + '</td>' + '<td>' + element.amount + '</td>' + '<td>' + element.total + '</td>' + '</tr>';
                 });
                 $('#employee-grid tbody').html(html);
+                var max = result.tableCommand
+                $('max-price').html(max[0].price);
             });
 
             $('#total').on('keyup change mousewheel', function() {
@@ -451,6 +466,17 @@
             ShowTime();
             var countdown = setInterval(ShowTime ,1000);
         });
+
+    </script>
+    <script type="text/template" id="main-example-template">
+
+        <div class="time <%= label %>">
+          <span class="count curr top"><%= curr %></span>
+          <span class="count next top"><%= next %></span>
+          <span class="count next bottom"><%= next %></span>
+          <span class="count curr bottom"><%= curr %></span>
+          <span class="label"><%= label.length < 6 ? label : label.substr(0, 3)  %></span>
+        </div>
 
     </script>
 @endsection
