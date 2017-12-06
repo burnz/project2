@@ -54,4 +54,4 @@
             // flash auto hide
             $('#flash-msg .alert').not('.alert-danger, .alert-important').delay(6000).slideUp(500);
         })
-    </script>
+    </script> 
