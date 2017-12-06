@@ -1,0 +1,83 @@
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+	background-color: $brandColorPri;
+}
+
+[section="wallet-panel"]{
+	&:before{
+		content: "";
+		background: rgba(255, 255, 255, 0.95);
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		border-radius: 15px;
+	}
+	.nav{
+		i.material-icons[icon="img"]{
+			>img{
+				filter: grayscale(100%);
+			}
+		}
+		li.active{
+			i.material-icons[icon="img"]{
+				>img{
+					filter: none;
+				}
+			}
+		}
+	}
+}
+#carcoin-buy-package{
+	.card-pricing{
+		.card-description{
+			margin: 20px 0 15px 0;
+			span{
+				display: block;
+			}
+			span:first-child{
+				margin-bottom: 10px;
+			}
+		}
+		.icon{
+			i{
+				border: none;
+				width: 100px;
+				line-height: 100px;
+				height: 100px;
+			}
+			i[pack="tiny"]{
+				font-size: 15px;
+			}
+			i[pack="small"]{
+				font-size: 30px;
+			}
+			i[pack="medium"]{
+				font-size: 45px;
+			}
+			i[pack="large"]{
+				font-size: 60px;
+			}
+		}
+	}
+}
+.user-wallet{
+	margin-right: 30px;
+	.left{
+		display: table-cell;
+		vertical-align: top;
+		padding-right: 10px;
+	}
+	.right{
+		display: table-cell;
+		vertical-align: top;
+		padding-top: 10px;
+		overflow: hidden;
+		color: inherit;
+		zoom: 1;
+		.content{
+			font-size: 20px;
+			font-weight: bolder;
+		}
+	}
+}

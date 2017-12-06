@@ -54,9 +54,8 @@ class PackageController extends Controller
     {
         $currentuserid = Auth::user()->id;
         $user = Auth::user();
-        $currentDate = date("Y-m-d");
-        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
-        if($user && $request->isMethod('post') && ($currentDate > $preSaleEnd)) 
+        
+        if($user && $request->isMethod('post')) 
         {
             Validator::extend('packageCheck', function ($attribute, $value, $parameters) {
                 $packageId = $parameters[0];

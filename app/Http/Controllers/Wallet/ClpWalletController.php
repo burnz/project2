@@ -81,14 +81,6 @@ class ClpWalletController extends Controller {
         $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
         $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
 
-        $currentDate = date('Y-m-d');
-        $preSaleEnd = date('Y-m-d', strtotime(config('app.pre_sale_end')));
-
-        $active = 0;
-        if($currentDate > $preSaleEnd) {
-            $active = 1;
-        }
-
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 
@@ -96,7 +88,7 @@ class ClpWalletController extends Controller {
             'wallet_type'=> $wallet_type,
             'walletAddress' =>  $walletAddress,
             'requestQuery'=> $requestQuery,
-            'active' => $active
+            'active' => 1
         ]);
         
     }

@@ -20,14 +20,14 @@
             </div>
         </div>
         <ul class="nav">
-            <li>
+            <!-- <li>
                 <a href="{{ url('home') }}">
                     <i class="material-icons">dashboard</i>
                     <p> {{ trans('adminlte_lang::default.side_dashboard') }} </p>
                 </a>
-            </li>
+            </li> -->
             <li>
-                <a href="presale.php">
+                <a href="{{ url('presale')}}">
                     <i class="material-icons">shopping_cart</i>
                     <p> Presale </p>
                 </a>
@@ -49,7 +49,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{url('members/binary')}}">
                                 <span class="sidebar-mini"> BT </span>
                                 <span class="sidebar-normal"> Binary Tree </span>
                             </a>
@@ -63,12 +63,12 @@
                     </ul>
                 </div>
             </li>
-            <li>
+            <!-- <li>
                 <a href="my-bonus.php">
                     <i class="material-icons">card_giftcard</i>
                     <p> My Bonus </p>
                 </a>
-            </li>
+            </li> -->
             <li>
                  <a data-toggle="collapse" href="#pagesExamples1">
                     <i class="material-icons">assignment_ind</i>
@@ -85,7 +85,7 @@
                                 <span class="sidebar-normal"> Bitcoin Wallet </span>
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="/wallets/car">
                                 <span class="sidebar-mini"> C </span>
                                 <span class="sidebar-normal"> Carcoin Wallet </span>
@@ -96,7 +96,7 @@
                                 <span class="sidebar-mini"> R </span>
                                 <span class="sidebar-normal"> Reinvest Wallet </span>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </li>

@@ -13,14 +13,14 @@
                     <a href="#">
                         <div class="icon"><img src="/Carcoin/img/bitcoin-symbol.svg"></div>
                         <div class="content"><small>Bitcoin Wallet</small>
-                            <br><big class="bitcoin-color">0.0001</big></div>
+                            <br><big class="bitcoin-color">$<span class="btcusd"></span></big></div>
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <div class="icon"><img src="/Carcoin/img/ic_zcoin-pri.svg"></div>
-                            <div class="content"><small>Carcoin Wallet</small>
-                                <br><big class="carcoin-color">1050</big></div>
+                        <!-- <li>
+                            <a href="#">
+                                <div class="icon"><img src="/Carcoin/img/ic_zcoin-pri.svg"></div>
+                                <div class="content"><small>Carcoin Wallet</small>
+                                    <br><big class="carcoin-color">1050</big></div>
                             </a>
                         </li>
                         <li>
@@ -29,36 +29,17 @@
                                 <div class="content"><small>Reinvest Wallet</small>
                                     <br><big class="reinvest-color">1050</big></div>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
-                        <ul class="navbar-wallet align-self-center">
+                        <!-- <ul class="navbar-wallet align-self-center">
                             <li><b class="bitcoin-color">1 BTC </b><span class="btcusd"></span></li>
                             <li><b class="carcoin-color">1 CAR </b><span class="carusd"></span></li>
                             <li><b class="carcoin-color">1 CAR </b><span class="carbtc"></span></li>
-                        </ul>
+                        </ul> -->
                     </div>
                     <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="material-icons">person</i>
-                                    <p class="hidden-lg hidden-md">
-                                        Profile
-                                        <b class="caret"></b>
-                                    </p>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#">My Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Edit Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Settings</a>
-                                    </li>
-                                </ul>
-                            </li>
+                        <!-- <ul class="nav navbar-nav navbar-right">
+
                             <li>
                                 <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
                                 doLogout();
@@ -73,7 +54,35 @@
                                 <input type="submit" value="logout" style="display: none;">
                             </form>
                         </li>
+                    </ul> -->
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li rel="tooltip" data-placement="bottom" title="Settings">
+                            <a href="include/pages/other/settings.php">
+                                <i class="material-icons">build</i>
+                                <p class="hidden-lg hidden-md">Settings</p>
+                            </a>
+                        </li>
+                        <li rel="tooltip" data-placement="bottom" title="Profile">
+                            <a href="{{url('profile')}}">
+                                <i class="material-icons">person</i>
+                                <p class="hidden-lg hidden-md">Profile</p>
+                            </a>
+                        </li>
+                        <li rel="tooltip" data-placement="bottom" title="Sign out">
+                        <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
+                                doLogout();
+                                document.getElementById('logout-form').submit();">
+                                <i class="material-icons">power_settings_new</i>
+                                <p class="hidden-lg hidden-md">Sign out</p>
+                            </a>
+                        </li>
+                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                            <input type="submit" value="logout" style="display: none;">
+                        </form>
                     </ul>
+
                 </div>
             </div>
         </nav>
@@ -101,7 +110,7 @@
                 dataType: "json",
                 url: '{{ URL::to("exchange") }}',
                 success: function(data){
-                 $('.btcusd').html('= $ ' + formatter.format(data[1].exchrate));
+                 $('.btcusd').html(formatter.format(data[1].exchrate));
                  $('.carusd').html('= $ ' + formatter.format(data[2].exchrate));
                  $('.carbtc').html('= BTC ' + formatterBTC.format(data[0].exchrate));
                  globalBTCUSD = data[1].exchrate;

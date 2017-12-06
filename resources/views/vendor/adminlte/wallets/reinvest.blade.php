@@ -1,4 +1,5 @@
-@extends('adminlte::layouts.backend') @section('content')
+@extends('adminlte::layouts.backend') 
+@section('content')
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -47,7 +48,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
-                                            <div class="card-filter clearfix">
+                                            <!-- <div class="card-filter clearfix">
                                                 <div class="col-md-4">
                                                     <div class="form-group label-floating">
                                                         <label class="control-label">Select Type</label>
@@ -69,7 +70,7 @@
                                                         Clear
                                                     </button>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
