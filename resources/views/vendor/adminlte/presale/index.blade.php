@@ -1,5 +1,5 @@
 @extends('adminlte::layouts.backend') 
-
+ 
 @section('content')
 <div class="content">
     <div class="container-fluid">
