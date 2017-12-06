@@ -1,8 +1,7 @@
-@extends('adminlte::layouts.backend')
+<?php $__env->startSection('contentheader_title'); ?>
+    <?php echo e(trans('adminlte_lang::member.binary')); ?>
 
-@section('contentheader_title')
-    {{ trans('adminlte_lang::member.binary') }}
-@endsection
+<?php $__env->stopSection(); ?>
 <style type="text/css">
     .binary-control {
         padding: 10px 10px !important;
@@ -13,14 +12,14 @@
     .binary-control i{
         font-size: 10px !important;
     }
-    @media screen and (min-width: 600px) {
+    @media  screen and (min-width: 600px) {
         #btn_submit_left, #btn_submit_right {
             width:50%!important;
         }
     }
 </style>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="content">
     <div class="container-fluid">
         <div class="row" section="binary-tree">
@@ -432,12 +431,12 @@
             text-align: center;
             height: 60px;
         }
-        @media only screen and (max-width: 1024px) {
+        @media  only screen and (max-width: 1024px) {
             .tree-node {
                 font-size: 8px;
             }
         }
-        @media only screen and (max-width: 768px) {
+        @media  only screen and (max-width: 768px) {
             .tree-node {
                 font-size: 6px;
                 height: 50px;
@@ -471,12 +470,12 @@
             -ms-transform: rotate(30deg);
         }
     </style> -->
-    <!-- <link rel="stylesheet" href="{{ asset('/css/jstree.css') }}"/>
-    <link rel="stylesheet" href="{{ asset('/css/Treant.css') }}"/>
+    <!-- <link rel="stylesheet" href="<?php echo e(asset('/css/jstree.css')); ?>"/>
+    <link rel="stylesheet" href="<?php echo e(asset('/css/Treant.css')); ?>"/>
 
-    <script src="{{ asset('/js/raphael.js') }}"></script>
-    <script src="{{ asset('/js/Treant.js') }}"></script>
-    <script src="{{ asset('/js/jst.js') }}"></script>
+    <script src="<?php echo e(asset('/js/raphael.js')); ?>"></script>
+    <script src="<?php echo e(asset('/js/Treant.js')); ?>"></script>
+    <script src="<?php echo e(asset('/js/jst.js')); ?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script> -->
     <!-- <script>
         $(document).ready(function(){
@@ -534,11 +533,11 @@
         var tmpl = window.JST["assets/templates/tree-node.html"],
             leafTmpl = window.JST["assets/templates/tree-node-leaf.html"];
 
-        var root = {{ Auth::user()->id }},
-            selectedNodeID = {{ Auth::user()->id }},
-            parentNode = {{ Auth::user()->id }},
-            endLeft = {{ Auth::user()->userData->lastUserIdLeft }},
-            endRight = {{ Auth::user()->userData->lastUserIdRight }},
+        var root = <?php echo e(Auth::user()->id); ?>,
+            selectedNodeID = <?php echo e(Auth::user()->id); ?>,
+            parentNode = <?php echo e(Auth::user()->id); ?>,
+            endLeft = <?php echo e(Auth::user()->userData->lastUserIdLeft); ?>,
+            endRight = <?php echo e(Auth::user()->userData->lastUserIdRight); ?>,
             childLeftId = 0,
             childRightId = 0
         ;
@@ -773,4 +772,5 @@
             });
         }
     </script> -->
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('adminlte::layouts.backend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
