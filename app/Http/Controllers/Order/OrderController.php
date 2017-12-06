@@ -111,7 +111,7 @@ class OrderController extends Controller
 
         //Get amount BTC
         $amountBTC = Auth::user()->userCoin->btcCoinAmount;
-        return view('v1.order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalValueOrder', 'amountBTC'));
+        return view('adminlte::order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalValueOrder', 'amountBTC'));
     }
 
     /*
