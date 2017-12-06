@@ -7,5 +7,6 @@
 /.vagrant
 Homestead.json
 Homestead.yaml
+.DS_Store
 .env
 .env.example

@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
+Day la trang dang ky
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">

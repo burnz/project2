@@ -13,3 +13,102 @@
 .card-filter{
 	padding: 15px 0;
 }
+
+.card-countdown{
+	.card-header{
+		h3{
+			color: #3C4858;
+			letter-spacing: 8px;
+			font-size: 32px;
+			text-align: center;
+			font-weight: 100;
+			margin: 0;
+		}
+	}
+	.card-content{
+		text-align: center;
+		h4{
+			color: #666;
+		}
+	}
+}
+
+.login-page .card-login{
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+	border-radius: 15px;
+}
+
+.card-login{
+	.logo{
+		width: 170px;
+		border: 10px solid #fff;
+		background: #fff;
+		margin: -20px auto;
+		border-radius: 50%;
+	}
+	.card-content {
+		padding: 0px 40px 0px 30px;
+	}
+	.checkbox {
+		margin-top: 6px;
+		label {
+			margin-left: 4px;
+		}
+	}
+	.footer{
+		color: #3C4858;
+	}
+} 
+
+.card-signup{
+	.card-content{
+		.info-horizontal{
+			.icon{
+				margin-top: 20px;
+				margin-right: 20px;
+				margin-bottom: 20px;
+				i{
+					padding: 5px;
+					color: #ccc;
+				}
+			}
+			.icon+.description{
+				.info-title{
+					color: #ccc;
+				}
+			}
+			.icon.active{
+				i{
+					// background: #4caf50;
+					border-radius: 50%;
+					padding: 5px;
+					color: #4caf50;
+				}
+			}
+			.icon.active+.description{
+				.info-title{
+					color: #3C4858;
+				}
+			}
+		}
+	}
+}
+
+.card-profile{
+	.card-content{
+		p.description{
+			span{
+				display: block;
+			}
+		}
+	}
+}
+
+.card{
+	.card-control{
+		float: right;
+		a{
+			// text-decoration: underline;
+		}
+	}
+}

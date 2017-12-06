@@ -1,5 +1,4 @@
-@extends('adminlte::layouts.backend')
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -88,36 +87,39 @@
                                             <div class="table-responsive">
                                                 <table class="table" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_info') }}</th>
+                                                        <th><?php echo e(trans('adminlte_lang::wallet.wallet_no')); ?></th>
+                                                        <th><?php echo e(trans('adminlte_lang::wallet.wallet_date')); ?></th>
+                                                        <th><?php echo e(trans('adminlte_lang::wallet.wallet_type')); ?></th>
+                                                        <th><?php echo e(trans('adminlte_lang::wallet.wallet_in')); ?></th>
+                                                        <th><?php echo e(trans('adminlte_lang::wallet.wallet_out')); ?></th>
+                                                        <th><?php echo e(trans('adminlte_lang::wallet.wallet_info')); ?></th>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($wallets as $key => $wallet)
+                                                        <?php $__currentLoopData = $wallets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $wallet): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <tr>
-                                                                <td>{{ $key+1 }}</td>
-                                                                <td>{{ $wallet->created_at }}</td>
-                                                                <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
+                                                                <td><?php echo e($key+1); ?></td>
+                                                                <td><?php echo e($wallet->created_at); ?></td>
+                                                                <td><?php echo e($wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : ''); ?></td>
                                                                 <td>
-                                                                    @if($wallet->inOut=='in')
-                                                                        +{{ number_format($wallet->amount, 5) }}
-                                                                    @endif
+                                                                    <?php if($wallet->inOut=='in'): ?>
+                                                                        +<?php echo e(number_format($wallet->amount, 5)); ?>
+
+                                                                    <?php endif; ?>
                                                                 </td>
                                                                 <td>
-                                                                    @if($wallet->inOut=='out')
-                                                                        -{{ number_format($wallet->amount, 5) }}
-                                                                    @endif
+                                                                    <?php if($wallet->inOut=='out'): ?>
+                                                                        -<?php echo e(number_format($wallet->amount, 5)); ?>
+
+                                                                    <?php endif; ?>
                                                                 </td>
-                                                                <td>{{ $wallet->note }}</td>
+                                                                <td><?php echo e($wallet->note); ?></td>
                                                             </tr>
-                                                        @endforeach
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </tbody>
                                                 </table>
                                                 <div class="text-center">
-                                                    {{ $wallets->links() }}
+                                                    <?php echo e($wallets->links()); ?>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -132,5 +134,6 @@
         </div>
     </div>
 </div>
-@include('adminlte::wallets.wallet-modal')
-@endsection
+<?php echo $__env->make('adminlte::wallets.wallet-modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('adminlte::layouts.backend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

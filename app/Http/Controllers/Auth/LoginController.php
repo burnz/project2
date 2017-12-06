@@ -68,8 +68,10 @@ class LoginController extends Controller{
             return '/admin/home';
         }
 
-        $this->redirectTo = '/home';
-        return '/home';
+        //$this->redirectTo = '/home';
+        //return '/home';
+        $this->redirectTo='/presale';
+        return '/presale';
     }
 
     protected function attemptLogin(Request $request){

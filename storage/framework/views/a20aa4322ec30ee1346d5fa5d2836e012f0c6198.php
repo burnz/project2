@@ -1,33 +1,33 @@
 <div class="sidebar" data-active-color="carcoin" data-background-color="carcoin" data-image="/Carcoin/img/illu2.svg">
     <div class="logo">
-        <a href="{{ url('home') }}" class="simple-text logo-mini">
+        <a href="<?php echo e(url('home')); ?>" class="simple-text logo-mini">
             <img src="/Carcoin/img/zcoin-id-final_logo-rev.svg">
         </a>
-        <a href="{{ url('home') }}" class="simple-text logo-normal">
+        <a href="<?php echo e(url('home')); ?>" class="simple-text logo-normal">
             Car Coin
         </a>
     </div>
     <div class="sidebar-wrapper">
         <div class="user">
             <div class="photo">
-                <img src="{{ Gravatar::get(Auth()->user()->email) }}" />
+                <img src="<?php echo e(Gravatar::get(Auth()->user()->email)); ?>" />
             </div>
             <div class="info">
-                <span>{{ Auth::user()->name }}</span>
-                <span>ID: {{  Auth::user()->uid }}</span>
-                <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
-                <span>Loyalty: @if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
+                <span><?php echo e(Auth::user()->name); ?></span>
+                <span>ID: <?php echo e(Auth::user()->uid); ?></span>
+                <span>Pack: <?php if(isset(Auth::user()->userData->package->name)): ?><?php echo e(Auth::user()->userData->package->name); ?><?php endif; ?></span>
+                <span>Loyalty: <?php if(Auth::user()->userData->loyaltyId): ?><?php echo e(config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId]); ?><?php endif; ?></span>
             </div>
         </div>
         <ul class="nav">
             <!-- <li>
-                <a href="{{ url('home') }}">
+                <a href="<?php echo e(url('home')); ?>">
                     <i class="material-icons">dashboard</i>
-                    <p> {{ trans('adminlte_lang::default.side_dashboard') }} </p>
+                    <p> <?php echo e(trans('adminlte_lang::default.side_dashboard')); ?> </p>
                 </a>
             </li> -->
             <li>
-                <a href="{{ url('presale')}}">
+                <a href="<?php echo e(url('presale')); ?>">
                     <i class="material-icons">shopping_cart</i>
                     <p> Presale </p>
                 </a>
@@ -49,7 +49,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{url('members/binary')}}">
+                            <a href="<?php echo e(url('members/binary')); ?>">
                                 <span class="sidebar-mini"> BT </span>
                                 <span class="sidebar-normal"> Binary Tree </span>
                             </a>

@@ -10,7 +10,7 @@
     transition: .3s;
     background: #fff;
     /*border-radius: 50%;*/
-    overflow: hidden;
+    // overflow: hidden;
     &:hover{
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
@@ -36,9 +36,11 @@
         font-weight: 600;
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
+        margin: 0;
     }
     .binary-content{
         padding: 10px 2px;
+        color: inherit;
     }
 }
 
@@ -66,4 +68,105 @@
     height: 1px;
     padding: 0;
     background: linear-gradient(60deg, #F94952, #FC7279);
+}
+
+
+
+
+[section="binary-tree-mobile"]{
+    display: none;
+    ul.nav{
+        padding: 0;
+        margin: 20px 0;
+        position: relative;
+        transform: translate3d(0, 0, 0);
+        transition: all 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        > li{
+            list-style-type: none;
+            margin: 30px 0;
+            position: static;
+            >span{
+                display: block;
+                position: relative;
+                width: 100%;
+            }
+            .binary +span{
+                display: block;
+                position: absolute;
+                top: 0;
+                right: 25%;
+                margin-left: 140px;
+                height: calc(100% - 1px);
+                transition: background-color .3s;
+                cursor: pointer;
+                z-index: 1;
+                text-align: center;
+                line-height: 101px;
+                >button{
+                    border: 1px solid rgba(0, 0, 0, 0.05)
+                }
+            }
+            ul.child-node{
+                position: absolute;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: auto;
+                padding: 0;
+                transform: translate3d(100%, 0, 0);
+                transition: all 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+                >li{
+                    list-style-type: none;
+                    .binary +span{
+                        line-height: 80px;
+                        [back-parent-node]{
+                            position: absolute;
+                            top: 80px;
+                            left: 10px;
+                            color: darkgray;
+                            text-decoration: underline;
+                            line-height: 0;
+                        }
+                    }
+                }
+            }
+            ul.child-node.in-view{
+                transform: translate3d(0, 0, 0);
+            }
+
+        }
+        > li:first-child{
+            margin: 20px 0 50px 0;
+        }
+    }
+    ul.nav.off-view{
+        transform: translate3d(-100%, 0, 0);
+    }
+    .binary{
+        .binary-title{
+            position: relative;
+            .badge{
+                position: absolute;
+                top: 8px;
+                
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                padding: 5px 0 0 0;
+                background-color: #fff;
+                color: red;
+                border: 1px solid $brandColorPri;
+            }
+            .badge.left{
+                left: -10px;
+            }
+            .badge.right{
+                right: -10px;
+            }
+
+        }
+        .binary-content{
+            color: #3C4858;
+        }
+    }
 }

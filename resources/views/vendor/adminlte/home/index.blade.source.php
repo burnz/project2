@@ -1,4 +1,4 @@
-@extends('adminlte::layouts.backend')
+@extends('adminlte::layouts.member')
 
 @section('contentheader_title')
 {{ trans('adminlte_lang::home.dashboard') }}
@@ -9,7 +9,7 @@
 <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/css/bootstrap-notify.css">-->
 @endsection
 
-@section('content')
+@section('main-content')
 <div class="row">
     <div class="col-xs-12">
         @include('adminlte::layouts.wallet')
