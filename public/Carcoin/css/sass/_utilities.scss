@@ -1,0 +1,104 @@
+/* Flexbox */
+.d-flex {
+    display: -webkit-box!important;
+    display: -webkit-flex!important;
+    display: -ms-flexbox!important;
+    display: flex!important;
+}
+
+.align-self-center {
+    -webkit-align-self: center!important;
+    -ms-flex-item-align: center!important;
+    -ms-grid-row-align: center!important;
+    align-self: center!important;
+}
+
+.justify-content-center {
+    -webkit-box-pack: center!important;
+    -webkit-justify-content: center!important;
+    -ms-flex-pack: center!important;
+    justify-content: center!important;
+}
+
+
+
+/* Icon */
+i.material-icons.reflect {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+i.material-icons[icon="carcoin-primary"] {
+	background: url(../img/ic_zcoin-pri.svg);
+	vertical-align: bottom;
+    width: 24px;
+    height: 24px;
+}
+
+i.material-icons[icon="img"] {
+    >img {
+        width: 30px;
+        vertical-align: baseline;
+    }
+}
+
+i.material-icons[icon="img"][size="md"] {
+    >img {
+        width: 45px;
+    }
+}
+
+i.material-icons[icon="img"][size="lg"] {
+    >img {
+        width: 60px;
+    }
+}
+
+i.material-icons[icon="img"][size="x-lg"] {
+    >img {
+        width: 75px;
+    }
+}
+
+
+/* Modal */
+.wrapper {
+    z-index: 1049;
+}
+.modal-content .modal-header button {
+    position: absolute;
+    right: 27px;
+    top: 30px;
+    outline: 0;
+}
+
+.modal-title {
+    font-weight: 400;
+}
+
+
+/* Color */
+.bitcoin-color {
+    color: $btcColor;
+}
+
+.carcoin-color {
+    color: $brandColorPri;
+}
+
+.reinvest-color {
+    color: $brandColorSec;
+}
+
+/* Text Color */
+.text-primary{
+    color: $brandColorPri;
+}
+.text-secondary{
+    color: $brandColorSec;
+}
+.text-thirdary{
+    color: $brandColorThi;
+}

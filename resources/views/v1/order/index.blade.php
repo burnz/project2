@@ -383,7 +383,8 @@
 
             $('#total').on('keyup change mousewheel', function() {
                 if( +$("#total").val() > 0 && +$("#price").val() >= {{ $price }} ){
-                    $('#amount').val(  ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD );
+                    var result = ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD;
+                    $('#amount').val( result.toFixed(5) );
                 }else {
                     $('#amount').val('');
                 }
@@ -391,7 +392,8 @@
 
             $('#price').on('keyup change mousewheel', function() {
                 if( +$("#total").val()  > 0 && +$("#price").val() >= {{ $price }} ){
-                    $('#amount').val(  ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD );
+                    var result = ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD;
+                    $('#amount').val( result.toFixed(5) );
                 }else{
                     $('#amount').val('');
                 }

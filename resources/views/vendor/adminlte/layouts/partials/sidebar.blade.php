@@ -1,98 +1,126 @@
-<!-- Left side column. contains the logo and sidebar -->
-<aside class="main-sidebar">
-
-    <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-
-        <!-- Sidebar user panel (optional) -->
-<!--        @if (! Auth::guest())
-            <div class="user-panel">
-                <div class="pull-left image">
-                     <img src="{{ Gravatar::get(Auth()->user()->email) }}" class="img-circle" alt="User Image" /> 
-                </div>
-                <div class="pull-left info">
-                    <p>{{ Auth::user()->name }}</p>
-                     Status 
-                    <a href="#"><i class="fa fa-circle text-success"></i> {{ trans('adminlte_lang::message.online') }}</a>
-                </div>
+<div class="sidebar" data-active-color="carcoin" data-background-color="carcoin" data-image="/Carcoin/img/illu2.svg">
+    <div class="logo">
+        <a href="{{ url('home') }}" class="simple-text logo-mini">
+            <img src="/Carcoin/img/zcoin-id-final_logo-rev.svg">
+        </a>
+        <a href="{{ url('home') }}" class="simple-text logo-normal">
+            Car Coin
+        </a>
+    </div>
+    <div class="sidebar-wrapper">
+        <div class="user">
+            <div class="photo">
+                <img src="{{ Gravatar::get(Auth()->user()->email) }}" />
             </div>
-        @endif-->
-
-        <!-- Sidebar Menu -->
-        <ul class="sidebar-menu" data-widget="tree">
-             <li class="header" ></li> 
-            <!-- Optionally, you can add icons to the links -->
-            <li {{ Request::is('home') ? 'class=active' : '' }}><a href="{{ url('home') }}"><i class='fa fa-home'></i> <span>{{ trans('adminlte_lang::default.side_dashboard') }}</span></a></li>
-            <li class="treeview{{ Request::segment(1) === 'members' ? ' active' : null }}">
-                <a href="#">
-                    <i class='fa fa-address-book'></i> <span>{{ trans('adminlte_lang::default.side_member') }}</span>
-                    <span class="pull-right-container">
-						<i class="fa fa-angle-left pull-right"></i>
-					</span>
+            <div class="info">
+                <span>{{ Auth::user()->name }}</span>
+                <span>ID: {{  Auth::user()->uid }}</span>
+                <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
+                <span>Loyalty: @if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
+            </div>
+        </div>
+        <ul class="nav">
+            <li>
+                <a href="{{ url('home') }}">
+                    <i class="material-icons">dashboard</i>
+                    <p> {{ trans('adminlte_lang::default.side_dashboard') }} </p>
                 </a>
-                <ul class="treeview-menu">
-                    <li class="{{ Request::segment(2) === 'genealogy' ? 'active' : null }}"><a href="{{ url('members/genealogy') }}">{{ trans('adminlte_lang::default.side_member_genealogy') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'binary' ? 'active' : null }}"><a href="{{ url('members/binary') }}">{{ trans('adminlte_lang::default.side_member_binary') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'refferals' ? 'active' : null }}"><a href="{{ url('members/referrals') }}">{{ trans('adminlte_lang::default.side_member_refferals') }}</a></li>
-                </ul>
             </li>
-            @can('view_users')
-                <li class="{{ Request::is('users*') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}">
-                        <i class="glyphicon glyphicon-user"></i> Users
-                    </a>
-                </li>
-                <li class="{{ Request::is('users/root') ? 'active' : '' }}">
-                    <a href="{{ route('users.root') }}">
-                        <i class="glyphicon glyphicon-user"></i> List Root
-                    </a>
-                </li>
-                <li class="{{ Request::is('users/photo_approve') ? 'active' : '' }}">
-                    <a href="{{ route('users.photo_approve') }}">
-                        <i class="glyphicon glyphicon-user"></i> List Approve
-                    </a>
-                </li>
-            @endcan
-            @can('view_roles')
-                <li class="{{ Request::is('roles*') ? 'active' : '' }}">
-                    <a href="{{ route('roles.index') }}">
-                        <i class='glyphicon glyphicon-lock'></i> Roles</a>
-                    </a>
-                </li>
-            @endcan
-            @can('view_packages')
-                <li class="{{ Request::is('packages*') && !Request::is('packages/invest') ? 'active' : '' }}">
-                    <a href="{{ route('packages.index') }}">
-                        <i class="glyphicon glyphicon-user"></i> Packages
-                    </a>
-                </li>
-            @endcan
-            <li class="treeview{{ Request::is('wallets*') ? ' active' : null }}">
-                <a href="#"><i class='fa fa-credit-card'></i> <span>{{ trans('adminlte_lang::default.side_wallet') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li class="{{ Request::segment(2) === 'btc' ? 'active' : null }}"><a href="{{ url('wallets/btc') }}">{{ trans('adminlte_lang::default.side_wallet_btc') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'car' ? 'active' : null }}"><a href="{{ url('wallets/car') }}">{{ trans('adminlte_lang::default.side_wallet_clp') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'reinvest' ? 'active' : null }}"><a href="{{ url('wallets/reinvest') }}">{{ trans('adminlte_lang::default.side_wallet_reinvest') }}</a></li>
-                </ul>
+            <li>
+                <a href="presale.php">
+                    <i class="material-icons">shopping_cart</i>
+                    <p> Presale </p>
+                </a>
             </li>
-            <li class="treeview{{ Request::is('mybonus*') ? ' active' : null }}">
-                <a href="#"><i class='fa fa-money'></i> <span>{{ trans('adminlte_lang::default.side_mybonus') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li class="{{ Request::segment(2) === 'faststart' ? 'active' : null }}"><a href="{{ url('mybonus/faststart') }}">{{ trans('adminlte_lang::default.side_mybonust_fast') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'binary' ? 'active' : null }}"><a href="{{ url('mybonus/binary') }}">{{ trans('adminlte_lang::default.side_mybonus_binary') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'loyalty' ? 'active' : null }}"><a href="{{ url('mybonus/loyalty') }}">{{ trans('adminlte_lang::default.side_mybonus_loyalty') }}</a></li>
-                </ul>
+            <li>
+                <a data-toggle="collapse" href="#pagesExamples">
+                    <i class="material-icons">supervisor_account</i>
+                    <p> 
+                        Manager Member 
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse" id="pagesExamples">
+                    <ul class="nav">
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-mini"> GT </span>
+                                <span class="sidebar-normal"> Genealogy Tree </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-mini"> BT </span>
+                                <span class="sidebar-normal"> Binary Tree </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="sidebar-mini"> R </span>
+                                <span class="sidebar-normal"> Referrals </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
-            @can('view_news')
-            <li class="treeview{{ Request::is('news*') ? ' active' : null }}">
-                <a href="#"><i class='fa fa-newspaper-o'></i> <span>{{ trans('adminlte_lang::default.news') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
-                <ul class="treeview-menu">
-                    <li class="{{ Request::segment(2) === 'manage' ? 'active' : null }}"><a href="{{ url('news/manage') }}">{{ trans('adminlte_lang::default.manage') }}</a></li>
-                    <li class="{{ Request::segment(2) === 'add' ? 'active' : null }}"><a href="{{ url('news/add') }}">{{ trans('adminlte_lang::default.add') }}</a></li>
-                </ul>
+            <li>
+                <a href="my-bonus.php">
+                    <i class="material-icons">card_giftcard</i>
+                    <p> My Bonus </p>
+                </a>
             </li>
-            @endcan
-        </ul><!-- /.sidebar-menu -->
-    </section>
-    <!-- /.sidebar -->
-</aside>
+            <li>
+                 <a data-toggle="collapse" href="#pagesExamples1">
+                    <i class="material-icons">assignment_ind</i>
+                    <p> Wallet 
+                        <b class="caret"></b>
+                    </p>
+
+                </a>
+                <div class="collapse" id="pagesExamples1">
+                    <ul class="nav">
+                        <li>
+                            <a href="/wallets/btc">
+                                <span class="sidebar-mini"> B </span>
+                                <span class="sidebar-normal"> Bitcoin Wallet </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/wallets/car">
+                                <span class="sidebar-mini"> C </span>
+                                <span class="sidebar-normal"> Carcoin Wallet </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/wallets/reinvest">
+                                <span class="sidebar-mini"> R </span>
+                                <span class="sidebar-normal"> Reinvest Wallet </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+// Active Sidebar Class 
+var sidebarNav = document.querySelectorAll('.sidebar-wrapper .nav > li > a');
+for (let i = 0; i < sidebarNav.length; i++) {
+
+    let href = sidebarNav[i].getAttribute("href");
+    if (href == window.location.href || href == window.location.pathname) {
+
+        sidebarNav[i].parentNode.classList.add("active");
+        sidebarNav[i].setAttribute('aria-expanded', 'true');
+
+        // If Sidebar is Submenu
+        let subMenu = sidebarNav[i].parentNode.parentNode.parentNode;
+        subMenu.getAttribute("class") == 'collapse' ?
+            (subMenu.classList.add("in"), subMenu.parentNode.classList.add("active")) :
+            subMenu
+
+
+    }
+}
+</script>

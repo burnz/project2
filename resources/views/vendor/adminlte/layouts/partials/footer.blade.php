@@ -1,4 +1,11 @@
-<!-- Main Footer -->
-<footer class="main-footer" style="text-align: center">
-    <strong>Copyright &copy; 2017 <a href="{{ URL::to("/") }}">CarCoin</a>
+<footer class="footer">
+	<div class="container-fluid">
+		<p class="copyright pull-right">
+			&copy;
+			<script>
+				document.write(new Date().getFullYear())
+			</script>
+			<a href="http://bigin.vn/">BIGIN</a>
+		</p>
+	</div>
 </footer>
