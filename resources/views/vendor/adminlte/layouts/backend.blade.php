@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
-@section('htmlheader') @include('adminlte::layouts.partials.htmlheader') @show
+<head>
+    @section('htmlheader') @include('adminlte::layouts.partials.htmlheader') @show
+</head>
+
 
 <body>
     <div class="wrapper">
