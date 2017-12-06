@@ -41,7 +41,11 @@ class OrderController extends Controller
     {
         //Get today min price
         $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
-        $price = $oPrice->price;
+        if(empty($oPrice)){
+            $price = OrderMin::orderBy('id', 'desc')->first()->price;
+        } else {
+            $price = $oPrice->price;
+        }
 
         $userCoin = Auth::user()->userCoin;
         $btcAmount = $request->amount * $request->price / ExchangeRate::getBTCUSDRate();

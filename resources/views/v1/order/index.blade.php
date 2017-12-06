@@ -114,7 +114,7 @@
                 </div>
                 <div class="card-content text-center">
                     <form method="#" action="regular.html#">
-                        <p class="text-primary">You have {{ number_format($amountBTC, 5) }} BTC</p>
+                        <p class="text-primary">You have {{ number_format($amountBTC, 5) }} BTC / <span class="amountUSD"></span>USD</p>
                         <div class="input-group form-group">
                             <span class="input-group-addon">
                                 <img src="{{asset('v1')}}/img/ic_zcoin-pri.svg" style="width: 24px;">
@@ -397,6 +397,8 @@
                 }
 //                $(this).val(parseFloat(Math.round($(this).val() * 100) / 100).toFixed(2))
             });
+
+            $('.amountUSD').html( ({{ $amountBTC }} * globalBTCUSD.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') )
 
         });
 
