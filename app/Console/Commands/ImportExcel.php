@@ -107,8 +107,9 @@ class ImportExcel extends Command
         $dataUserCoin = [];
         $this->info('Caculate UserData');
         foreach ($users as $user){
-            $refererId = isset(User::where('name',$user->referer_name)->first()->id) ?
-                User::where('name',$user->referer_name)->first()->id : null;
+            $userInfo = User::where('name', $user->referer_name)->first();
+            $refererId = isset($userInfo->id) ? $userInfo->id : null;
+
             $dataUpdate['created_at'] = \Carbon\Carbon::now();
             $dataUpdate['updated_at'] = \Carbon\Carbon::now();
             $dataUpdate['status'] = 1;
@@ -117,11 +118,15 @@ class ImportExcel extends Command
             User::where('id', $user->id)
                 ->update($dataUpdate);
 
+            //Update user tree permission
+            User::updateUserGenealogy($user->id);
+
             //Get package id
-            $pack = Package::where('min_price', '<', $user->value_package)
-                            ->where('max_price', '>', $user->value_package)
-                            ->first();
-            $packageId = isset($pack->pack_id) ? $pack->pack_id : 0;
+            $packageId = 0;
+            if(200 <= $user->value_package && $user->value_package < 1010) $packageId = 1;
+            if(1010 <= $user->value_package && $user->value_package < 10010) $packageId = 2;
+            if(10010 <= $user->value_package && $user->value_package < 50010) $packageId = 3;
+            if(50010 <= $user->value_package) $packageId = 4;
             
             //Get address
             if($user->name) {
@@ -139,7 +144,9 @@ class ImportExcel extends Command
 
             //UserCoin
             $dataUserCoin[] = [
-                'userId' => $user->id
+                'userId' => $user->id,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now()
             ];
         }
         
