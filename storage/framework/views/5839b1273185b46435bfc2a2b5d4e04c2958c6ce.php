@@ -41,7 +41,7 @@
                         <!-- <ul class="nav navbar-nav navbar-right">
 
                             <li>
-                                <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
+                                <a href="<?php echo e(url('/logout')); ?>" id="logout" onclick="event.preventDefault();
                                 doLogout();
                                 document.getElementById('logout-form').submit();">
                                 
@@ -49,8 +49,9 @@
                                 <p class="hidden-lg hidden-md">Logout</p>
 
                             </a>
-                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                {{ csrf_field() }}
+                            <form id="logout-form" action="<?php echo e(url('/logout')); ?>" method="POST" style="display: none;">
+                                <?php echo e(csrf_field()); ?>
+
                                 <input type="submit" value="logout" style="display: none;">
                             </form>
                         </li>
@@ -64,21 +65,22 @@
                             </a>
                         </li>
                         <li rel="tooltip" data-placement="bottom" title="Profile">
-                            <a href="{{url('profile')}}">
+                            <a href="include/pages/other/profile.php">
                                 <i class="material-icons">person</i>
                                 <p class="hidden-lg hidden-md">Profile</p>
                             </a>
                         </li>
                         <li rel="tooltip" data-placement="bottom" title="Sign out">
-                        <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
+                        <a href="<?php echo e(url('/logout')); ?>" id="logout" onclick="event.preventDefault();
                                 doLogout();
                                 document.getElementById('logout-form').submit();">
                                 <i class="material-icons">power_settings_new</i>
                                 <p class="hidden-lg hidden-md">Sign out</p>
                             </a>
                         </li>
-                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
+                        <form id="logout-form" action="<?php echo e(url('/logout')); ?>" method="POST" style="display: none;">
+                            <?php echo e(csrf_field()); ?>
+
                             <input type="submit" value="logout" style="display: none;">
                         </form>
                     </ul>
@@ -108,7 +110,7 @@
            function getRate(){
             $.ajax({
                 dataType: "json",
-                url: '{{ URL::to("exchange") }}',
+                url: '<?php echo e(URL::to("exchange")); ?>',
                 success: function(data){
                  $('.btcusd').html(formatter.format(data[1].exchrate));
                  $('.carusd').html('= $ ' + formatter.format(data[2].exchrate));
@@ -122,7 +124,7 @@
         
         $(function() {
             getRate();
-            setInterval(function(){ getRate() }, {{ config('app.time_interval') }});
+            setInterval(function(){ getRate() }, <?php echo e(config('app.time_interval')); ?>);
         });  
         
     </script>

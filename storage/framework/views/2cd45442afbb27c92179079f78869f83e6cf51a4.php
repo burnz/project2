@@ -1,5 +1,4 @@
-@extends('adminlte::layouts.backend') 
-@section('content')
+ <?php $__env->startSection('content'); ?>
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -14,34 +13,57 @@
                         <div class="nav-center">
                             <ul class="nav nav-pills nav-pills-primary nav-pills-icons" role="tablist">
                                 <li class="active">
-                                    <a href="panels.html#pill3" role="tab" data-toggle="tab">
-                                        <i class="material-icons" icon="img" size="lg">
-                                            <img src="/Carcoin/img/ic_zcoin-sec.svg">
-                                        </i> Reinvest Wallet
+                                    <a href="panels.html#pill2" role="tab" data-toggle="tab">
+                                        <i class="material-icons" icon="img" size="lg"><img
+                                                src="/Carcoin/img/ic_zcoin-pri.svg"></i> Carcoin Wallet
                                     </a>
                                 </li>
                             </ul>
                         </div>
                         <div class="tab-content">
-                            <div class="tab-pane active" id="pill3">
+                            <div class="tab-pane active" id="pill2">
                                 <div class="row">
                                     <div class="col-md-12 d-flex justify-content-center mb-3" user-wallet>
                                         <div class="user-wallet">
                                             <div class="left">
-                                                <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/ic_zcoin-sec.svg"></i>
+                                                <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/ic_zcoin-pri.svg"></i>
                                             </div>
                                             <div class="right">
                                                 <span>Your Balance</span>
-                                                <div class="content reinvest-color">
+                                                <div class="content carcoin-color">
                                                     314,675
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#reinvest-buy-carcoin">
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-sell">
                                                 <span class="btn-label">
-                                                    <i class="material-icons">add_shopping_cart</i>
-                                                </span> Buy Carcoin
+                                                                            <i class="material-icons">shopping_basket</i>
+                                                                        </span> Sell Carcoin
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-buy-package">
+                                                <span class="btn-label">
+                                                                            <i class="material-icons">card_giftcard</i>
+                                                                        </span> Buy Package
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
+                                                <span class="btn-label">
+                                                                            <i class="material-icons">shop</i>
+                                                                        </span> Deposit
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw">
+                                                <span class="btn-label">
+                                                                            <i class="material-icons reflect">shop</i>
+                                                                        </span> Withdraw
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-transfer">
+                                                <span class="btn-label">
+                                                                            <i class="material-icons">swap_horiz</i>
+                                                                        </span> Transfer
                                                 <div class="ripple-container"></div>
                                             </button>
                                         </div>
@@ -54,12 +76,14 @@
                                                         <label class="control-label">Select Type</label>
                                                         <select class="form-control">
                                                             <option disabled="" selected=""></option>
-                                                            <option value="1">Fast start bonus</option>
-                                                            <option value="2">Profit</option>
-                                                            <option value="3">Binary bonus</option>
-                                                            <option value="4">Loyalty bonus</option>
-                                                            <option value="5">Buy CLP</option>
-                                                            <option value="16">Package Withdraw</option>
+                                                            <option value="5">Buy CLP By USD</option>
+                                                            <option value="6">Transfer From Holding Wallet</option>
+                                                            <option value="7">Buy CLP By BTC</option>
+                                                            <option value="8">Sell CLP</option>
+                                                            <option value="10">Withdraw</option>
+                                                            <option value="12">Transfer</option>
+                                                            <option value="14">Deposit</option>
+                                                            <option value="15">Buy Package</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -154,4 +178,5 @@
         </div>
     </div>
 </div>
-@include('adminlte::wallets.wallet-modal') @endsection
+<?php echo $__env->make('adminlte::wallets.wallet-modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> <?php $__env->stopSection(); ?>
+<?php echo $__env->make('adminlte::layouts.backend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

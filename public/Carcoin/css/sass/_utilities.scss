@@ -1,4 +1,5 @@
 /* Flexbox */
+
 .d-flex {
     display: -webkit-box!important;
     display: -webkit-flex!important;
@@ -22,7 +23,9 @@
 
 
 
+
 /* Icon */
+
 i.material-icons.reflect {
     -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
@@ -31,8 +34,8 @@ i.material-icons.reflect {
 }
 
 i.material-icons[icon="carcoin-primary"] {
-	background: url(../img/ic_zcoin-pri.svg);
-	vertical-align: bottom;
+    background: url(../img/ic_zcoin-pri.svg);
+    vertical-align: bottom;
     width: 24px;
     height: 24px;
 }
@@ -63,10 +66,13 @@ i.material-icons[icon="img"][size="x-lg"] {
 }
 
 
+
 /* Modal */
+
 .wrapper {
     z-index: 1049;
 }
+
 .modal-content .modal-header button {
     position: absolute;
     right: 27px;
@@ -79,7 +85,9 @@ i.material-icons[icon="img"][size="x-lg"] {
 }
 
 
+
 /* Color */
+
 .bitcoin-color {
     color: $btcColor;
 }
@@ -92,13 +100,98 @@ i.material-icons[icon="img"][size="x-lg"] {
     color: $brandColorSec;
 }
 
+/* Background Color */
+
+[data-background-color="carcoin-primary-1"] {
+    background: linear-gradient(60deg, #C00710, #ED1C26);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+}
+
+[data-background-color="carcoin-primary-2"] {
+    background: linear-gradient(60deg, #ED1C26, #F94952);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+}
+
+[data-background-color="carcoin-primary-3"] {
+    background: linear-gradient(60deg, #F94952, #FC7279);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+}
+.full-page[filter-color="carcoin-primary-1"]:after {
+    background: -o-linear-gradient(to bottom, #C00710, #ED1C26 100%);
+    background: -moz-linear-gradient(to bottom, #C00710, #ED1C26 100%);
+    background: linear-gradient(to bottom, #C00710, #ED1C26 100%);
+}
+.full-page[filter-color="carcoin-primary-2"]:after {
+    background: -o-linear-gradient(to bottom, #ED1C26, #F94952 100%);
+    background: -moz-linear-gradient(to bottom, #ED1C26, #F94952 100%);
+    background: linear-gradient(to bottom, #ED1C26, #F94952 100%);
+}
+.full-page[filter-color="carcoin-primary-3"]:after {
+    background: -o-linear-gradient(to bottom, #F94952, #FC7279 100%);
+    background: -moz-linear-gradient(to bottom, #F94952, #FC7279 100%);
+    background: linear-gradient(to bottom, #F94952, #FC7279 100%);
+}
+.full-page[filter-color="carcoin-secondary-1"]:after {
+    background: -o-linear-gradient(to top, #1F1F2E, #585870 100%);
+    background: -moz-linear-gradient(to top, #1F1F2E, #585870 100%);
+    background: linear-gradient(to top, #1F1F2E, #585870 100%);
+}
+
 /* Text Color */
-.text-primary{
+
+.text-primary {
     color: $brandColorPri;
 }
-.text-secondary{
+
+.text-secondary {
     color: $brandColorSec;
 }
-.text-thirdary{
+
+.text-thirdary {
     color: $brandColorThi;
+}
+
+
+/* Table */
+
+.table-scroll-y {
+    tbody {
+        display: block;
+        height: 250px;
+        overflow: auto;
+    }
+    thead,tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        /* even columns width , fix width of table too*/
+    }
+    thead {
+        width: calc( 100% - 1em)/* scrollbar is average 1em/16px width, remove it from thead width */
+    }
+}
+
+
+/* Tooltip */
+
+.tooltip-inner {
+    border-radius: 50px;
+}
+
+/* Toggle Button */
+.togglebutton{
+    label{
+        input[type=checkbox]{
+            &:checked+.toggle{
+                background-color: $brandColorPri;
+                &:after{
+                    border-color: $brandColorPri;
+                }
+            }
+        }
+    }
+}
+
+.togglebutton label{
+    color: #666;
 }

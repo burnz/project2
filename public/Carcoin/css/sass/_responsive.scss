@@ -1,9 +1,34 @@
-@media (max-width: 991px){
-	[section="dashboard-status"] {
-		display: block!important;
+@media (max-width: 1280px){
+	[section="binary-tree"] {
+		.binary{
+			width: 100px;
+		}
+		.col-md-6, .col-md-12{
+			padding: 0;
+		}
 	}
+}
+@media all and (max-width: 1080px) and (min-width: 1024px){
+	.countdown{
+		.time{
+			width: 50px;
+		}
+	}
+}
+@media (max-width: 991px){
 	.navbar-stuck{
 		width: 100%;
+	}
+	[section="dashboard-status"],[section="create-an-order"] {
+		display: block!important;
+	}
+	[section="binary-tree"] {
+		.binary{
+			width: 90px;
+			.binary-content {
+				padding: 5px 2px;
+			}
+		}
 	}
 }
 @media (max-width: 767px){
@@ -36,6 +61,33 @@
 			max-width: none;
 		}
 	}
+	[section="binary-tree"] {
+		padding-top: 50px;
+		display: none;
+	}
+	[section="binary-tree-mobile"]{
+		display: block;
+	}
+	.table-scroll-y {
+	    max-height: 300px;
+	    overflow: auto;
+	    tbody {
+	        display: table-row-group;
+	        height: auto;
+	        overflow: auto;
+	    }
+	    tr{
+	        display: table-row;
+	    }
+	    thead,tbody tr {
+	        width: -webkit-fill-available;
+	        table-layout: fixed;
+	        /* even columns width , fix width of table too*/
+	    }
+	    thead {
+	        width: calc( 100% - 1em)/* scrollbar is average 1em/16px width, remove it from thead width */
+	    }
+	}
 }
 
 
@@ -49,6 +101,17 @@
 			}
 		}
 	}
+	[section="binary-tree-mobile"]{
+		margin-top: 30px;
+		ul.nav{
+			> li{
+				.binary +span{
+					right: 15%;
+				}
+
+			}
+		}
+	}
 }
 
 // Responsive for IPhone 6 Plus
@@ -58,6 +121,9 @@
 	}
 	.navbar-wallet > li > a > .content {
 		margin-left: 0px;
+	}
+	.table-scroll-y thead {
+		display: unset;
 	}
 }
 @media (max-width: 413px){
@@ -85,6 +151,16 @@
 					min-width: 100%;
 					padding: 0px 8px;
 				}
+			}
+		}
+	}
+	[section="binary-tree-mobile"]{
+		ul.nav{
+			> li{
+				.binary +span{
+					right: 10%;
+				}
+
 			}
 		}
 	}

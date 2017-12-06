@@ -64,6 +64,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('members/pushIntoTree', 'User\MemberController@pushIntoTree');
     Route::resource('members', 'User\MemberController');
 
+    //RESALE
+    Route::get('presale','Presale\PresaleController@index')->name('presale.index');
+    //END RESALE
     
     //USD WALLET
     Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
