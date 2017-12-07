@@ -20,12 +20,12 @@ class WithDrawConfirm extends Notification
     public function toMail()
     {
         return (new MailMessage)
-            ->from('no-reply@clpcoin.co', 'CLP')
+            ->from('no-reply@mycarcoin.com', 'CAR')
             ->subject('Withdrawal '.($this->coinData['type'] == 'btc' ? 'BTC' : 'CAR').' confirmation')
             ->greeting('Dear '.$this->user->name. ',')
             ->line('A request to withdraw '.$this->coinData['amount'].' '.($this->coinData['type'] == 'btc' ? 'BTC' : 'CAR').' from your CAR account to address '.$this->coinData['address'].' was just made.')
             ->action('Confirm link', $this->linkConfirm)
             ->line('Link confirmation withdrawal will expire in 30 mins.')
-            ->line('Welcome to the CLP Coin.');
+            ->line('Welcome to the CAR Coin.');
     }
 }

@@ -1,4 +1,4 @@
-<head>
+
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title> CarCoin - @yield('htmlheader_title', 'Lending Project') </title>
@@ -46,4 +46,4 @@
 
       gtag('config', 'UA-107989535-1');
     </script>
-</head>
+

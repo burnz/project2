@@ -27,7 +27,7 @@
                 </a>
             </li> -->
             <li>
-                <a href="{{ url('presale')}}">
+                <a href="{{ url('/order')}}">
                     <i class="material-icons">shopping_cart</i>
                     <p> Presale </p>
                 </a>
