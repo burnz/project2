@@ -24,6 +24,7 @@ use Session;
 use App\Http\Controllers\Controller;
 use LRedis;
 use App\OrderList;
+use Log;
 use DB;
 
 class OrderController extends Controller
@@ -88,6 +89,8 @@ class OrderController extends Controller
                 $result = $redis->publish('message', json_encode($data) );
                 return $this->responseSuccess($result);
             } catch (\Exception $exception){
+                Log::info($exception->getMessage());
+                Log::info($exception->getTraceAsString());
                 return $this->responseError(404,'Error Socket');
             }
         }
