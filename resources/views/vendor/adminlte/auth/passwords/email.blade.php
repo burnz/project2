@@ -38,7 +38,9 @@
                                                         </span>
                                                     @endif
                                                 </div>
-                                                @if (Config::get('app.enable_captcha'))
+                                                
+                                            </div>
+                                            @if (Config::get('app.enable_captcha'))
                                                     <div class="form-group">
                                                         {!! app('captcha')->display()!!}
                                                         @if ($errors->has('g-recaptcha-response'))
@@ -48,8 +50,6 @@
                                                         @endif
                                                     </div>
                                                 @endif
-                                            </div>
-
                                         </div>
                                         <div class="footer text-center">
                                             <button type="submit" class="btn btn-fill btn-primary btn-round" btn-sign-in>{{ trans('adminlte_lang::message.sendpassword') }}</button>
@@ -66,4 +66,14 @@
 
         </div>
     </div>
+    @include('adminlte::layouts.partials.scripts_footer')
+    <script>
+        $(function () {
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            });
+        });
+    </script>
 @endsection
