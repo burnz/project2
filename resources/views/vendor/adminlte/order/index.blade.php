@@ -50,14 +50,14 @@
                                     <i class="material-icons">gavel</i>
                                 </div>
                                 <div class="card-content">
-                                    <p class="category">Max Price Now: <max-price>{{ isset($dataTableRealTime[0]) ? $dataTableRealTime[0]->price : 0}}</max-price></p>
-                                    <h4 class="card-title countdow">24:00</h4>
+                                    <p class="category">Max Price Now </p>
+                                    <h4 class="card-title countdow"><max-price>{{ isset($dataTableRealTime[0]) ? $dataTableRealTime[0]->price : 0}}</max-price></h4>
                                 </div>
                                 <div class="card-footer">
                                     <div class="stats">
-                                        <i class="material-icons">update</i> 2017/11/25
+                                        <i class="material-icons">update</i> Just Updated
                                     </div>
-                                    <span class="badge badge-primary">Closed</span>
+                                    <span class="badge badge-primary"></span>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="stats">
-                                        <i class="material-icons">update</i> Closed 6 hours 54 mins ago
+                                        <i class="material-icons">update</i> Just Updated
                                     </div>
                                 </div>
                             </div>
@@ -444,27 +444,6 @@
             });
 
             $('.amountUSD').html( ({{ $amountBTC }}* globalBTCUSD).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') );
-        });
-
-        $(document).ready(function() {
-            function ShowTime() {
-                var now = new Date();
-                var diff = 0;
-                var nowTwo = new Date(now.getTime() + diff*60000);
-                var hour = 23-nowTwo.getHours();
-                var mins = 59-nowTwo.getMinutes();
-                var secs = 59-nowTwo.getSeconds();
-                timeLeft = hour +"h "+ "" +mins+'m '+secs+'s';
-                $(".countdow").html(timeLeft);
-                if ($(".countdow").html() === "0m 1s") {
-                    location.reload(true)
-                };
-            };
-            function StopTime() {
-                clearInterval(countdown);
-            }
-            ShowTime();
-            var countdown = setInterval(ShowTime ,1000);
         });
 
     </script>

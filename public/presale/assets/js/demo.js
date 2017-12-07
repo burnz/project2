@@ -1196,7 +1196,7 @@ demo = {
 
     },
     initCoutdown: function(){
-        var labels = ['days', 'hours', 'minutes', 'seconds'],
+        var labels = ['hours', 'minutes', 'seconds'],
           nextYear = (new Date().getFullYear() + 1) + '/01/01',
           template = _.template($('#main-example-template').html()),
           currDate = '00:00:00:00:00',
@@ -1233,7 +1233,7 @@ demo = {
         });
         // Starts the countdown
         $example.countdown(nextYear, function(event) {
-          var newDate = event.strftime('%d:%H:%M:%S'),
+          var newDate = event.strftime('%H:%M:%S'),
             data;
           if (newDate !== nextDate) {
             currDate = nextDate;
