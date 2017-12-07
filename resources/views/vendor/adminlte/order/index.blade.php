@@ -374,7 +374,7 @@
                 "searching": false,
                 "ordering": false,
                 "ajax":{
-                    url :"gethistorydatatrademarket", // json datasource
+                    url :"/gethistorydatatrademarket", // json datasource
                     type: "get",  // method  , by default get
                     error: function(){  // error handling
                         $(".market-grid-error").html("");
@@ -397,7 +397,7 @@
                 "searching": false,
                 "ordering": false,
                 "ajax":{
-                    url :"gethistorydataorderuser", // json datasource
+                    url :"/gethistorydataorderuser", // json datasource
                     type: "get",  // method  , by default get
                     error: function(){  // error handling
                         $(".history-grid-error").html("");
