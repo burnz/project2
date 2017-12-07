@@ -5,7 +5,7 @@
 			<script>
 				document.write(new Date().getFullYear())
 			</script>
-			<a href="http://bigin.vn/">BIGIN</a>
+			<!-- <a href="http://bigin.vn/">BIGIN</a> -->
 		</p>
 	</div>
 </footer>

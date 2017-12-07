@@ -131,7 +131,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-
+                                                            <div style="clear:fix"></div>
                                                             <div class="col-md-6">
                                                                 <div class="input-group">
                                                                     <span class="input-group-addon">
@@ -183,16 +183,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            @if (Config::get('app.enable_captcha'))
-                                                            <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
-                                                                {!! app('captcha')->display()!!}
-                                                                @if ($errors->has('g-recaptcha-response'))
-                                                                    <span class="help-block">
-                                                                        {{ $errors->first('g-recaptcha-response') }}
-                                                                    </span>
-                                                                @endif
-                                                            </div>
-                                                            @endif
+                                                            
 
                                                         </div>
                                                     </div>
@@ -205,6 +196,18 @@
                                                             </div>
                                                         </div> 
                                                     </div>
+                                                    @if (Config::get('app.enable_captcha'))
+                                                        <div class="col-md-12 p-0">
+                                                            <div class="form-group{{ $errors->has('terms') ? ' has-error' : '' }}">
+                                                            {!! app('captcha')->display()!!}
+                                                            @if ($errors->has('g-recaptcha-response'))
+                                                                <span class="help-block">
+                                                                    {{ $errors->first('g-recaptcha-response') }}
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <div class="footer text-center">
                                                     <button type="submit" class="btn btn-fill btn-primary btn-round" btn-sign-up>{{ trans('adminlte_lang::user.btn_register') }}</button>

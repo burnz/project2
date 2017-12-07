@@ -290,9 +290,9 @@
 	transition: background-color .15s, box-shadow .15s
 }
 .jstree-default .jstree-hovered {
-	/*background: #e7f4f9;*/
-	/*border-radius: 2px;*/
-	/*box-shadow: inset 0 0 1px #ccc*/
+	background: #e7f4f9;
+	border-radius: 2px;
+	box-shadow: inset 0 0 1px #ccc
 }
 .jstree-default .jstree-context {
 	background: #e7f4f9;
@@ -369,20 +369,15 @@
 	background: -webkit-linear-gradient(top, #beebff 0, #a8e4ff 100%);
 	background: linear-gradient(to bottom, #beebff 0, #a8e4ff 100%)
 }
-.jstree-default .jstree-node,
 .jstree-default .jstree-node {
-	/*min-height: 24px;
+	min-height: 24px;
 	line-height: 24px;
 	margin-left: 24px;
-	min-width: 24px*/
-	padding: 12px 8px;
-	vertical-align: middle;
-	line-height: 1.42857143;
-	border-top: 1px solid #ddd;
+	min-width: 24px
 }
 .jstree-default .jstree-anchor {
-	/*line-height: 24px;
-	height: 24px*/
+	line-height: 24px;
+	height: 24px
 }
 .jstree-default .jstree-icon {
 	width: 24px;
@@ -400,6 +395,8 @@
 .jstree-default .jstree-wholerow {
 	height: 24px
 }
+.jstree-default .jstree-node,
+
 .jstree-default .jstree-node {
 	background-position: -292px -4px;
 	background-repeat: repeat-y
@@ -1087,7 +1084,7 @@
 	min-height: 24px;
 }
 .jstree-default .jstree-hovered {
-	/*background-color: #f7f9fa;*/
+	background-color: #f7f9fa;
 }
 .inline-button {
 	margin-right: 5px;
@@ -1103,102 +1100,4 @@
 	border-radius: 4px;
 	vertical-align: middle;
 	cursor: pointer;
-}
-
-
-
-
-
-.jstree-table-column-1 .jstree-table-cell, .jstree-table-column-2 .jstree-table-cell, .jstree-table-column-3 .jstree-table-cell, .jstree-table-column-4 .jstree-table-cell{
-	padding: 12px 8px;
-	vertical-align: middle;
-	border-bottom-width: 1px;
-	font-size: 1.25em;
-	font-weight: 300;
-	border-bottom: 1px solid #ddd!important;
-	position: static; 
-	background-color: transparent; 
-	border: none; 
-	color: #6A037C;
-}
-.jstree-table-header{
-	padding: 12px 8px;
-	vertical-align: middle;
-	border-bottom-width: 1px;
-	font-size: 1.25em;
-	font-weight: 300;
-	border-bottom: 1px solid #ddd!important;
-	position: static; 
-	background-color: transparent; 
-	border: none; 
-	color: #6A037C;
-}
-.jstree-container-ul >li{
-	border-bottom: 1px solid #ddd!important;
-}
-.jstree-container-ul >li:first-child{
-	border-top: none;
-}
-
-.jstree-default .jstree-clicked{
-	box-shadow: none;
-}
-
-.jstree-node.jstree-last.jstree-open{
-	padding: 0;
-}
-.jstree-anchor.jstree-table-col-0{
-	/*padding: 12px 0;*/
-}
-ul.jstree-children > li.jstree-open > .jstree-anchor{
-	padding: 12px 0;
-}
-.jstree-default .jstree-open>.jstree-ocl {
-	background-position: -132px -4px;
-	margin-top: 13px;
-}
-div.jstree-table-cell-root-genealogy-container{
-	line-height: auto!important;
-	min-height: auto!important;
-}
-
-
-.psi{
-	border-radius: 50px;
-	width: 20px;
-	height: 20px;
-	margin: 0 3px 0 0;
-	display: inline-block;
-	cursor: default;
-	text-align: center;
-	line-height: 20px;
-	padding: 0px;
-	color: white;
-	background-color: lightgray;
-	font-weight: bold;
-	font-size: 14px;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-.psi1 {
-	background-color: #2b9690;
-}
-
-.psi2 {
-	background-color: #1f4268;
-}
-
-.psi3 {
-	background-color: #3488c8;
-}
-
-.psi4 {
-	background-color: #c78907;
-}
-
-.psi5 {
-	background-color: #006403;
-}
-
-.psi6 {
-	background-color: #c00000;
 }
