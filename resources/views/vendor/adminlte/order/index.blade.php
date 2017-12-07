@@ -50,7 +50,7 @@
                                     <i class="material-icons">gavel</i>
                                 </div>
                                 <div class="card-content">
-                                    <p class="category">Max Price Now: <max-price>{{ $dataTableRealTime[0]->price }}</max-price></p>
+                                    <p class="category">Max Price Now: <max-price>{{ isset($dataTableRealTime[0]) ? $dataTableRealTime[0]->price : 0}}</max-price></p>
                                     <h4 class="card-title countdow">24:00</h4>
                                 </div>
                                 <div class="card-footer">
