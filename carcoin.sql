@@ -190,64 +190,6 @@ INSERT INTO `exchange_rates` VALUES ('2', 'btc', '4210', 'usd', '2017-10-04 17:3
 INSERT INTO `exchange_rates` VALUES ('3', 'clp', '0.00023809524', 'btc', '2017-10-04 17:34:33', '2017-10-04 17:34:33', null);
 
 -- ----------------------------
--- Table structure for order_lists
--- ----------------------------
-DROP TABLE IF EXISTS `order_lists`;
-CREATE TABLE `order_lists`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `amount` double NOT NULL,
-  `price` double NOT NULL,
-  `total` double NOT NULL,
-  `status` int(11) NOT NULL DEFAULT 1,
-  `btc_rate` double NOT NULL,
-  `btc_value` double NOT NULL,
-  `created_at` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime(0) NOT NULL,
-  `deleted_at` datetime(0) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
-
--- ----------------------------
--- Table structure for price_order_list
--- ----------------------------
-DROP TABLE IF EXISTS `price_order_list`;
-CREATE TABLE `price_order_list`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_date` timestamp NOT NULL,
-  `price` double NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci;
-
-INSERT INTO `price_order_list` VALUES ('1', '2017-12-09 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('2', '2017-12-10 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('3', '2017-12-11 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('4', '2017-12-12 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('5', '2017-12-13 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('6', '2017-12-14 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('7', '2017-12-15 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('8', '2017-12-16 17:48:07', '0.3', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('9', '2017-12-17 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('10', '2017-12-18 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('11', '2017-12-19 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('12', '2017-12-20 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('13', '2017-12-21 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('14', '2017-12-22 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('15', '2017-12-23 17:48:07', '0.6', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('16', '2017-12-24 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('17', '2017-12-25 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('18', '2017-12-26 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('19', '2017-12-27 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('20', '2017-12-28 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('21', '2017-12-29 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('22', '2017-12-30 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-INSERT INTO `price_order_list` VALUES ('23', '2017-12-31 17:48:07', '0.9', '2017-12-09 11:10:37', '2017-12-09 11:10:40');
-
-
--- ----------------------------
 -- Table structure for migrations
 -- ----------------------------
 DROP TABLE IF EXISTS `migrations`;
@@ -575,7 +517,6 @@ CREATE TABLE `user_coins` (
 -- ----------------------------
 -- Records of user_coins
 -- ----------------------------
-
 INSERT INTO `user_coins` VALUES ('1', 'admin', 'admin', '0', '0', '0', '0', null, '0', '2017-08-12 05:47:39','2017-08-12 05:47:39');
 INSERT INTO `user_coins` VALUES ('2', 'root', 'root', '0', '0', '0', '0', null, '0', '2017-08-12 05:47:39','2017-08-12 05:47:39');
 
@@ -613,7 +554,6 @@ CREATE TABLE `user_datas` (
 -- ----------------------------
 -- Records of user_datas
 -- ----------------------------
-
 INSERT INTO `user_datas` VALUES ('1', '0', '0', null, '0', '0', null, '0', '0', null, null, '0', '0', '0', '0', '0', '0', '0', '1', '2017-08-12 05:47:39','2017-08-12 05:47:39');
 INSERT INTO `user_datas` VALUES ('2', '0', '6', null, '0', '1', null, '0', '0', '0', '0', '0', '10', '8', '3', '2', '5', '0', '1', '2017-08-12 05:47:39','2017-08-12 05:47:39');
 

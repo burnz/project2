@@ -1,5 +1,6 @@
 <!-- Scripts -->
 <script src="{{asset('Carcoin/js/jquery-3.2.1.min.js')}}" type="text/javascript"></script>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script src="{{asset('Carcoin/js/bootstrap.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('Carcoin/js/material.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('Carcoin/js/perfect-scrollbar.jquery.min.js')}}" type="text/javascript"></script>
@@ -42,12 +43,14 @@
     <!-- Material Dashboard javascript methods -->
     <script src="http://demos.creative-tim.com/material-dashboard-pro/assets/js/material-dashboard.js?v=1.2.1"></script>
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+    <script src="{{asset('Carcoin/js/jquery.countdown.min.js')}}"></script>
     <script src="{{asset('Carcoin/js/demo.js')}}"></script>
 
-
+    
     <!-- <script src="{{ url (mix('/js/app.js')) }}"></script> -->
+    
+    
 
-    @stack('scripts')
 
     <script>
         $(function () {

@@ -108,6 +108,7 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
+
         Validator::extend('emailCheck', function($attr, $value){
             $count = DB::table('password_resets')
                 ->where('email','=',$value)

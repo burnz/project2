@@ -30,6 +30,51 @@
 			}
 		}
 	}
+	.register-page{
+		.card-signup{
+			.d-flex:first-child{
+				display: block!important;
+			}
+			[sign-up-step]{
+				.info-horizontal{
+					margin-right: 25%;
+					&:before{
+						content: none;
+					}
+					&:after{
+						content: none;
+					}
+					.icon{
+						float: none;
+						margin: 20px;
+						&:before{
+							top: 50%;
+							width: 90%;
+							left: 46px;
+							height: 2px;
+						}
+					}
+					.icon.end{
+						&:before{
+							width: 0;
+						}
+					}
+					.description{
+						text-align: center;
+						.info-title{
+							margin: 0;
+						}
+					}
+				}
+				.info-horizontal:last-child{
+					margin-right: 0;
+				}
+			}
+			.info{
+				float: left;
+			}
+		}
+	}
 }
 @media (max-width: 767px){
 	.navbar-wallet:last-child {
@@ -69,19 +114,19 @@
 		display: block;
 	}
 	.table-scroll-y {
-	    max-height: 300px;
-	    overflow: auto;
-	    tbody {
-	        display: table-row-group;
-	        height: auto;
-	        overflow: auto;
-	    }
-	    tr{
-	        display: table-row;
-	    }
-	    thead,tbody tr {
-	        width: -webkit-fill-available;
-	        table-layout: fixed;
+		max-height: 300px;
+		overflow: auto;
+		tbody {
+			display: table-row-group;
+			height: auto;
+			overflow: auto;
+		}
+		tr{
+			display: table-row;
+		}
+		thead,tbody tr {
+			width: -webkit-fill-available;
+			table-layout: fixed;
 	        /* even columns width , fix width of table too*/
 	    }
 	    thead {

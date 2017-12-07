@@ -125,6 +125,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //Profile router
     Route::any('profile/upload','User\ProfileController@upload');
     Route::get('profile','User\ProfileController@index');
+    Route::get('profile/security','User\SecurityController@psecurity');
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
 
@@ -141,6 +142,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('gettodaydataorder','Backend\Order\ToDayOrderController@getToDayDataOrder');
     Route::get('gethistorydataorder','Backend\Order\HistoryOrderController@getHistoryDataOrder');
     Route::resource('ordermin', 'Backend\Order\OrderMinController');
+
     //News
     Route::get('info','User\InfoController@clp');
     Route::resource('news','Backend\News\NewsController');

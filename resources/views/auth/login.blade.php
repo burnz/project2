@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
 @section('content')
-Day la trang dang ky
+Day la trang dang nhap
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">

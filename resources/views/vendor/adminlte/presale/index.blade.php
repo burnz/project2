@@ -383,4 +383,22 @@
             </div>
         </div>
     </div>
+    <script type="text/template" id="main-example-template">
+        <div class="time <%= label %>">
+            <span class="count curr top"><%= curr %></span>
+            <span class="count next top"><%= next %></span>
+            <span class="count next bottom"><%= next %></span>
+            <span class="count curr bottom"><%= curr %></span>
+            <span class="label"><%= label.length < 6 ? label : label.substr(0, 3)  %></span>
+        </div>
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Javascript method's body can be found in assets/js/demos.js
+            demo.initDashboardPageCharts();
+            demo.initCoutdown();
+        });
+    </script>
+    @section('init_script')
+    @stop
 @stop

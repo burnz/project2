@@ -53,6 +53,7 @@ class ProfileController extends Controller
         );
         return view('adminlte::profile.index', compact('sponsor', 'google2faUrl'));
     }
+
     public function update(Request $request, $id)
     {
         $user = User::find($id);

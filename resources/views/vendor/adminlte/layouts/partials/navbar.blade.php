@@ -10,7 +10,7 @@
             </button>
             <ul class="navbar-wallet align-self-center">
                 <li>
-                    <a href="#">
+                    <a href="javascript:;">
                         <div class="icon"><img src="/Carcoin/img/bitcoin-symbol.svg"></div>
                         <div class="content"><small>Bitcoin Wallet</small>
                             <br><big class="bitcoin-color">$<span class="btcusd"></span></big></div>
@@ -58,7 +58,7 @@
 
                     <ul class="nav navbar-nav navbar-right">
                         <li rel="tooltip" data-placement="bottom" title="Settings">
-                            <a href="include/pages/other/settings.php">
+                            <a href="{{url('profile/security')}}">
                                 <i class="material-icons">build</i>
                                 <p class="hidden-lg hidden-md">Settings</p>
                             </a>
