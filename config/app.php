@@ -129,7 +129,7 @@ return [
     'user_referral_register' => env('USER_REFERRAL_REGISTER', 'root'),
     'fee_withRaw_BTC' => env('FEE_WITHDRAW_BTC', 0.0005),
     'fee_withRaw_CLP' => env('FEE_WITHDRAW_CLP', 2),
-    'enable_captcha' => true,
+    'enable_captcha' => false,
     'f1_bonus' => 0.1,
     'f2_bonus' => 0.02,
     'f3_bonus' => 0.01,
@@ -199,7 +199,7 @@ return [
 		Acacha\AdminLTETemplateLaravel\Providers\AdminLTETemplateServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
+        //Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -252,7 +252,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 		'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
         'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        //'Debugbar' => Barryvdh\Debugbar\Facade::class,
         ],
 
 ];

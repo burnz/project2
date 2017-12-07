@@ -200,7 +200,7 @@ $().ready(function() {
             api.openPopup('twitter');
         },
         template: '<i class="fa fa-twitter"></i> &middot; 45',
-        url: 'http://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html'
+        url: 'https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html'
     });
 
     $('#facebook').sharrre({
@@ -214,7 +214,7 @@ $().ready(function() {
             api.openPopup('facebook');
         },
         template: '<i class="fa fa-facebook-square"></i> &middot; 50',
-        url: 'http://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html'
+        url: 'https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html'
     });
 
 
