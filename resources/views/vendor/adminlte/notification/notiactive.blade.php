@@ -5,30 +5,65 @@
 @endsection
 
 @section('content')
-    <body class="hold-transition login-page">
-    <div id="app">
-        <div class="login-box noti-active">
-            <div class="login-logo">
-                <a href="{{ url('/home') }}"><img src="{{ url('/') }}/img/logo_gold.png"/><b style="margin-left: 5px; vertical-align: middle;">CarCoin</b></a>
-            </div>
-            <div class="signupSteps">
-                <h2>
-                    <span class="fa-stack fa-lg"><i class="fa fa-circle-thin step"></i></span>Register 
-                    <i class="fa fa-long-arrow-right"></i> 
-                    <span class="fa-stack fa-lg"><i class="fa fa-circle step"></i></span>Activate
-                    <i class="fa fa-long-arrow-right"></i>
-                    <span class="fa-stack fa-lg"><i class="fa fa-circle-thin step"></i></span>Complete
-                </h2>
-            </div>
-            <div class="login-box-body">
-                <div class="thanks-header">Thank you for creating your account.</div>
-                @if($private_sale_end)
-                    <div class="thanks-body">Please check your email for confirmation letter.</div>
-                    <div class="thanks-footer">Be sure to check your spam box if it does not arrive within a few minutues.</div>
-                @endif
-                <div class="thanks-login"><a href="/login">Go to login.</a></div>
+<body class="off-canvas-sidebar">
+<div class="wrapper wrapper-full-page">
+    <div class="full-page register-page" filter-color="carcoin-secondary-1">
+        <div class="container">
+            <div class="row d-flex">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="card-signup">
+                        <div class="row d-flex">
+                            <div class="col-md-5 col-md-offset-1 align-self-center">
+                                <div class="card-content" sign-up-step>
+                                    <div class="info info-horizontal">
+                                        <div class="icon"></div>
+                                        <div class="description">
+                                            <h4 class="info-title">Register</h4>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info info-horizontal">
+                                        <div class="icon active">
+                                            <i class="material-icons">done</i>
+                                        </div>
+                                        <div class="description">
+                                            <h4 class="info-title">Active</h4>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="info info-horizontal">
+                                        <div class="icon end"></div>
+                                        <div class="description">
+                                            <h4 class="info-title">Complete</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 align-self-center">
+                                <div class="card">
+                                    <div class="card-header text-center">
+                                        <div class="logo"><img src="{{asset('Carcoin/img/zcoin-id-final_logo-rev.svg')}}"></div>
+                                    </div>
+                                    <form class="form">
+                                        <div class="card-content text-center">
+                                            <div class="mb-5" style="line-height: 1.5em; font-size: 24px; margin: 20px 0 10px;">Thankyou for creating your account</div>
+                                            <p style="font-weight: bolder;">Please check your email for confirmation letter.</p>
+                                            <p>Be sure to check your spam box if it does not arrive within a few minutes</p>
+                                        </div>
+                                        <div class="footer text-center">
+                                            <div class="clearfix"></div>
+                                            <div class="my-3"><a href="{{url('login')}}">Go to Sign in</a></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        @include('adminlte::layouts.partials.footer')
     </div>
-    </body>
+</div>
+</body>
 @endsection

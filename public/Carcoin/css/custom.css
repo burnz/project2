@@ -23,6 +23,16 @@
   -ms-flex-pack: center !important;
   justify-content: center !important; }
 
+.justify-content-between {
+  -webkit-box-pack: justify !important;
+  -webkit-justify-content: space-between !important;
+  -ms-flex-pack: justify !important;
+  justify-content: space-between !important; }
+
+.col-centered {
+  float: none;
+  margin: 0 auto; }
+
 /* Icon */
 i.material-icons.reflect {
   -moz-transform: scaleX(-1);
@@ -1987,27 +1997,79 @@ i.material-icons[icon="img"][size="x-lg"] > img {
 .card-login .footer {
   color: #3C4858; }
 
-.card-signup .card-content .info-horizontal .icon {
-  margin-top: 20px;
-  margin-right: 20px;
-  margin-bottom: 20px; }
-  .card-signup .card-content .info-horizontal .icon i {
-    padding: 5px;
-    color: #ccc; }
-.card-signup .card-content .info-horizontal .icon + .description .info-title {
-  color: #ccc; }
-.card-signup .card-content .info-horizontal .icon.active i {
-  border-radius: 50%;
-  padding: 5px;
-  color: #4caf50; }
-.card-signup .card-content .info-horizontal .icon.active + .description .info-title {
-  color: #3C4858; }
+.card-signup {
+  box-shadow: none !important; }
+  .card-signup .card {
+    padding: 20px 0; }
+    .card-signup .card .logo {
+      width: 170px;
+      border: 10px solid #fff;
+      background: #fff;
+      margin: -80px auto 0 auto;
+      border-radius: 50%; }
+  .card-signup .card-content {
+    padding: 0px 40px 0px 30px; }
+    .card-signup .card-content .info-horizontal:before {
+      display: table;
+      content: " "; }
+    .card-signup .card-content .info-horizontal:after {
+      content: " ";
+      display: block;
+      clear: both; }
+    .card-signup .card-content .info-horizontal .icon {
+      margin: 20px 20px 20px 0;
+      width: 48px;
+      height: 48px;
+      border: 1px solid #00bcd4;
+      border-radius: 50%;
+      position: relative; }
+      .card-signup .card-content .info-horizontal .icon:before {
+        top: 46px;
+        bottom: 0;
+        position: absolute;
+        content: " ";
+        width: 2px;
+        background-color: #00bcd4;
+        left: 50%;
+        margin-left: -1px;
+        height: 90%; }
+      .card-signup .card-content .info-horizontal .icon i {
+        padding: 5px;
+        color: #ccc; }
+    .card-signup .card-content .info-horizontal .icon + .description .info-title {
+      color: #999; }
+    .card-signup .card-content .info-horizontal .icon.active {
+      background: #00bcd4;
+      box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 188, 212, 0.4); }
+      .card-signup .card-content .info-horizontal .icon.active i {
+        color: #fff; }
+    .card-signup .card-content .info-horizontal .icon.end:before {
+      top: 46px;
+      bottom: 0;
+      position: absolute;
+      content: " ";
+      width: 0;
+      left: 50%;
+      margin-left: -1px;
+      height: 90%; }
+    .card-signup .card-content .info-horizontal .icon.active + .description .info-title {
+      color: #fff; }
+    .card-signup .card-content .checkbox {
+      margin: 6px 0 10px 0; }
+      .card-signup .card-content .checkbox label {
+        margin-left: 4px; }
+  .card-signup .footer {
+    color: #3C4858; }
 
 .card-profile .card-content p.description span {
   display: block; }
 
 .card .card-control {
   float: right; }
+  .card .card-control a {
+    text-decoration: underline;
+    font-size: 16px;
+    color: #3C4858; }
 
 .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
   background-color: #ee2229; }
@@ -6623,7 +6685,34 @@ i.material-icons[icon="img"][size="x-lg"] > img {
   [section="binary-tree"] .binary {
     width: 90px; }
     [section="binary-tree"] .binary .binary-content {
-      padding: 5px 2px; } }
+      padding: 5px 2px; }
+
+  .register-page .card-signup .d-flex:first-child {
+    display: block !important; }
+  .register-page .card-signup [sign-up-step] .info-horizontal {
+    margin-right: 25%; }
+    .register-page .card-signup [sign-up-step] .info-horizontal:before {
+      content: none; }
+    .register-page .card-signup [sign-up-step] .info-horizontal:after {
+      content: none; }
+    .register-page .card-signup [sign-up-step] .info-horizontal .icon {
+      float: none;
+      margin: 20px; }
+      .register-page .card-signup [sign-up-step] .info-horizontal .icon:before {
+        top: 50%;
+        width: 90%;
+        left: 46px;
+        height: 2px; }
+    .register-page .card-signup [sign-up-step] .info-horizontal .icon.end:before {
+      width: 0; }
+    .register-page .card-signup [sign-up-step] .info-horizontal .description {
+      text-align: center; }
+      .register-page .card-signup [sign-up-step] .info-horizontal .description .info-title {
+        margin: 0; }
+  .register-page .card-signup [sign-up-step] .info-horizontal:last-child {
+    margin-right: 0; }
+  .register-page .card-signup .info {
+    float: left; } }
 @media (max-width: 767px) {
   .navbar-wallet:last-child {
     position: absolute;

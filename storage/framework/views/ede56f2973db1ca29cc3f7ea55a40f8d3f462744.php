@@ -1,5 +1,5 @@
  
-
+ 
 <?php $__env->startSection('content'); ?>
 <div class="content">
     <div class="container-fluid">
@@ -383,6 +383,24 @@
             </div>
         </div>
     </div>
+    <script type="text/template" id="main-example-template">
+        <div class="time <%= label %>">
+            <span class="count curr top"><%= curr %></span>
+            <span class="count next top"><%= next %></span>
+            <span class="count next bottom"><%= next %></span>
+            <span class="count curr bottom"><%= curr %></span>
+            <span class="label"><%= label.length < 6 ? label : label.substr(0, 3)  %></span>
+        </div>
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Javascript method's body can be found in assets/js/demos.js
+            demo.initDashboardPageCharts();
+            demo.initCoutdown();
+        });
+    </script>
+    <?php $__env->startSection('init_script'); ?>
+    <?php $__env->stopSection(); ?>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('adminlte::layouts.backend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

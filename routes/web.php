@@ -121,11 +121,11 @@ Route::group( ['middleware' => ['auth']], function() {
     //Profile router
     Route::any('profile/upload','User\ProfileController@upload');
     Route::get('profile','User\ProfileController@index');
+    Route::get('profile/security','User\SecurityController@psecurity');
     Route::post('profile/changepassword','User\ProfileController@changePassword');
     Route::get('profile/switchauthen','User\ProfileController@switchTwoFactorAuthen');
 
     Route::resource('profile', 'User\ProfileController');
-
     
     //News
     Route::get('info','User\InfoController@clp');

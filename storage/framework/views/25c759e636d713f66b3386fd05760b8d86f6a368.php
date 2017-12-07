@@ -79,6 +79,8 @@
                                         </div>
                                         <div class="footer text-center">
                                             <button type="submit" class="btn btn-fill btn-primary btn-round" btn-sign-in><?php echo e(trans('adminlte_lang::default.btn_sign_in')); ?></button>
+                                            <div class="clearfix"></div>
+                                            <div class="my-3">Still no account? Please go to <a href="<?php echo e(url('register')); ?>">Sign up</a></div>
                                         </div>
                                     </form>
                                 </div>

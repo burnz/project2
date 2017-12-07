@@ -164,13 +164,13 @@ class LoginController extends Controller{
             return redirect(url('/admin/home'));
         }
 
-        $this->redirectTo = '/home';
-        return redirect(url('/home'));
+        $this->redirectTo = '/presale';
+        return redirect(url('/presale'));
     }
 
     public function auth2fa(Request $request){
         if(Session::get('google2fa')) 
-            return redirect('/home');
+            return redirect('/presale');
         $valid = true;
         if($request->isMethod('post')){
             $key = Session::get('authy:auth:2fa');

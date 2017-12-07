@@ -61,12 +61,46 @@
 } 
 
 .card-signup{
+	.card{
+		padding: 20px 0;
+		.logo{
+			width: 170px;
+			border: 10px solid #fff;
+			background: #fff;
+			margin: -80px auto 0 auto;
+			border-radius: 50%;
+		}
+	}
+	box-shadow: none!important;
 	.card-content{
+		padding: 0px 40px 0px 30px;
 		.info-horizontal{
+			&:before{
+				display: table;
+				content: " ";
+			}
+			&:after{
+				content: " ";
+				display: block;
+				clear: both;
+			}
 			.icon{
-				margin-top: 20px;
-				margin-right: 20px;
-				margin-bottom: 20px;
+				margin: 20px 20px 20px 0;
+				width: 48px;
+				height: 48px;
+				border: 1px solid #00bcd4;
+				border-radius: 50%;position: relative;
+				&:before{
+					top: 46px;
+					bottom: 0;
+					position: absolute;
+					content: " ";
+					width: 2px;
+					background-color: #00bcd4;
+					left: 50%;
+					margin-left: -1px;
+					height: 90%;
+				}
 				i{
 					padding: 5px;
 					color: #ccc;
@@ -74,23 +108,44 @@
 			}
 			.icon+.description{
 				.info-title{
-					color: #ccc;
+					color: #999;
 				}
 			}
 			.icon.active{
+				background: #00bcd4;
+				box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 188, 212, 0.4);
 				i{
-					// background: #4caf50;
-					border-radius: 50%;
-					padding: 5px;
-					color: #4caf50;
+					color: #fff;
+					
+				}
+			}
+			.icon.end{
+				&:before{
+					top: 46px;
+					bottom: 0;
+					position: absolute;
+					content: " ";
+					width: 0;
+					left: 50%;
+					margin-left: -1px;
+					height: 90%;
 				}
 			}
 			.icon.active+.description{
 				.info-title{
-					color: #3C4858;
+					color: #fff;
 				}
 			}
 		}
+		.checkbox {
+			margin: 6px 0 10px 0;
+			label {
+				margin-left: 4px;
+			}
+		}
+	}
+	.footer{
+		color: #3C4858;
 	}
 }
 
@@ -108,7 +163,9 @@
 	.card-control{
 		float: right;
 		a{
-			// text-decoration: underline;
+			text-decoration: underline;
+			font-size: 16px;
+			color: #3C4858;
 		}
 	}
 }

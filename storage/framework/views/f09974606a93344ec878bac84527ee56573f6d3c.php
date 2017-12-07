@@ -19,388 +19,71 @@
     }
 </style>
 
-<?php $__env->startSection('content'); ?>
-<div class="content">
-    <div class="container-fluid">
-        <div class="row" section="binary-tree">
-            <div class="col-md-12">
-                <div class="row">
-                    <!-- Level 1 -->
-                    <div class="col-md-12">
-                        <div class="binary">
-                            <div class="binary-title" data-background-color="carcoin-primary-1">Admin</div>
-                            <div class="binary-content">
-                                BV : <b>0</b>
-                                <br>
-                                L : <b>0</b>
-                                | R : <b>0</b>
-                            </div>
+<?php $__env->startSection('main-content'); ?>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body" style="padding-top:0;">
+                    <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
+                        <?php echo Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']); ?>
+
+                        <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
+                            <?php echo e(Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username'])); ?>
+
                         </div>
-                        <div class="clearfix"></div>
-                        <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
+                        <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
+                            <input type="hidden" name="legpos" id="legpos" value="0">
+                            <?php echo Form::button('Push to Left', ['class' => 'btn btn-xs btn-info', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']); ?>
+
+                            <br>
+                            <?php echo Form::button('Push to Right', ['class' => 'btn btn-xs btn-primary', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']); ?>
+
+
+                        </div>
+                        <?php echo Form::close(); ?>
+
                     </div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                    <div class="clearfix"></div>
-                    <!-- Level 2 -->
-                    <div class="col-md-6 col-sm-6">
-                        <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                        <div class="binary">
-                            <div class="binary-title" data-background-color="carcoin-primary-2">Johny</div>
-                            <div class="binary-content">
-                                BV : <b>0</b>
-                                <br>
-                                L : <b>0</b>
-                                | R : <b>0</b>
+                    <div class="col-xs-5 binary-search" style="padding-top: 15px;position: absolute;right:-14px;">
+                        <!-- <div class="input-group input-group-sm"> -->
+                            <div class="col-lg-6">
+                            <input type="text" class="form-control" id="search-input" placeholder="<?php echo e(trans('adminlte_lang::member.refferals_username')); ?>">
                             </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                        <div class="clearfix"></div>
-                        <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                        <div class="clearfix"></div>
-                        <!-- Level 3 -->
-                        <div class="col-md-6 col-sm-6">
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="binary">
-                                <div class="binary-title" data-background-color="carcoin-primary-3">Mike</div>
-                                <div class="binary-content">
-                                    BV : <b>0</b>
-                                    <br>
-                                    L : <b>0</b>
-                                    | R : <b>0</b>
-                                </div>
+                            <div class="col-lg-6">
+                            <!-- <span class="input-group-btn"> -->
+								<button type="button" id="search-button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> <?php echo e(trans('adminlte_lang::member.btn_search')); ?></button>
+							<!-- </span> -->
                             </div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="clearfix"></div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                            <div class="clearfix"></div>
-                            <!-- Level 4 -->
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Post Malone</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Micheal Blúe</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="binary">
-                                <div class="binary-title" data-background-color="carcoin-primary-3">Justin Bieber</div>
-                                <div class="binary-content">
-                                    BV : <b>0</b>
-                                    <br>
-                                    L : <b>0</b>
-                                    | R : <b>0</b>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="clearfix"></div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                            <div class="clearfix"></div>
-                            <!-- Level 4 -->
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Bruno Mars</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Sam Smith</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- </div> -->
                     </div>
-                    <!-- Level 2 -->
-                    <div class="col-md-6 col-sm-6">
-                        <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                        <div class="binary">
-                            <div class="binary-title" data-background-color="carcoin-primary-2">Admin</div>
-                            <div class="binary-content">
-                                BV : <b>0</b>
-                                <br>
-                                L : <b>0</b>
-                                | R : <b>0</b>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                        <div class="clearfix"></div>
-                        <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                        <div class="clearfix"></div>
-                        <!-- Level 3 -->
-                        <div class="col-md-6 col-sm-6">
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="binary">
-                                <div class="binary-title" data-background-color="carcoin-primary-3">Admin</div>
-                                <div class="binary-content">
-                                    BV : <b>0</b>
-                                    <br>
-                                    L : <b>0</b>
-                                    | R : <b>0</b>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="clearfix"></div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                            <div class="clearfix"></div>
-                            <!-- Level 4 -->
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Admin</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Admin</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6">
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="binary">
-                                <div class="binary-title" data-background-color="carcoin-primary-3">Admin</div>
-                                <div class="binary-content">
-                                    BV : <b>0</b>
-                                    <br>
-                                    L : <b>0</b>
-                                    | R : <b>0</b>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                            <div class="clearfix"></div>
-                            <div class="col-md-6 col-sm-6 col-centered binary-horizontal-arrow"></div>
-                            <div class="clearfix"></div>
-                            <!-- Level 4 -->
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Admin</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="col-md-6 col-sm-6 col-centered binary-vertical-arrow"></div>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-4">Admin</div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    
+                    <div style="margin-top: 15px;text-align:center;">
+                        <center>
+                            <button class="btn btn-app btn-xs binary-control" type="button" id="refresh-tree"
+                                    style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i></button>
+                            
+                        </center>
+                        <center><button class="btn btn-app btn-xs binary-control" type="button" id="go-up"><i
+                                        class="fa fa-play rotate120 "></i></button></center>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" section="binary-tree-mobile">
-            <div class="col-md-12">
-                <div class="card">
-                    <ul class="nav" data-level-0>
-                        <li>
-                            <div class="binary">
-                                <div class="binary-title" data-background-color="carcoin-primary-1">Admin</div>
-                                <div class="binary-content">
-                                    BV : <b>0</b>
-                                    <br>
-                                    L : <b>0</b>
-                                    | R : <b>0</b>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <span>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-2">
-                                        <span class="badge left">L</span>
-                                        Mike
-                                    </div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                                <span>
-                                    <button class="btn btn-round btn-white btn-fill btn-just-icon" toggle-node>
-                                        <i class="material-icons">chevron_right</i>
-                                    </button>
-                                </span>
-                            </span>
-                            <!-- Child Node Level 1 -->
-                            <ul class="child-node" data-level-1>
-                                <li>
-                                    <span>
-                                        <div class="binary">
-                                            <div class="binary-title" data-background-color="carcoin-primary-2">Level 1</div>
-                                            <div class="binary-content">
-                                                BV : <b>0</b>
-                                                <br>
-                                                L : <b>0</b>
-                                                | R : <b>0</b>
-                                            </div>
-                                        </div>
-                                        <span>
-                                            <button class="btn btn-round btn-white btn-fill btn-just-icon" toggle-node>
-                                                <i class="material-icons">chevron_right</i>
-                                            </button>
-                                            <a href="#" back-parent-node>Back</a>
-                                        </span>
-                                    </span>
-                                    <!-- Child Node Level 2 -->
-                                    <ul class="child-node" data-level-2>
-                                        <li>
-                                            <span>
-                                                <div class="binary">
-                                                    <div class="binary-title" data-background-color="carcoin-primary-2">Level 2</div>
-                                                    <div class="binary-content">
-                                                        BV : <b>0</b>
-                                                        <br>
-                                                        L : <b>0</b>
-                                                        | R : <b>0</b>
-                                                    </div>
-                                                </div>
-                                                <span>
-                                                    <button class="btn btn-round btn-white btn-fill btn-just-icon" toggle-node>
-                                                        <i class="material-icons">chevron_right</i>
-                                                    </button>
-                                                    <a href="#" back-parent-node>Back</a>
-                                                </span>
-                                            </span>
-                                            <!-- Child Node Level 3 -->
-                                            <ul class="child-node" data-level-3>
-                                                <li>
-                                                    <span>
-                                                        <div class="binary">
-                                                            <div class="binary-title" data-background-color="carcoin-primary-2">Level 3</div>
-                                                            <div class="binary-content">
-                                                                BV : <b>0</b>
-                                                                <br>
-                                                                L : <b>0</b>
-                                                                | R : <b>0</b>
-                                                            </div>
-                                                        </div>
-                                                        <span>
-                                                            <button class="btn btn-round btn-white btn-fill btn-just-icon" toggle-node>
-                                                                <i class="material-icons">chevron_right</i>
-                                                            </button>
-                                                            <a href="#" back-parent-node>Back</a>
-                                                        </span>
-                                                    </span>
-                                                    <!-- Child Node Level 4 -->
-                                                    <ul class="child-node" data-level-4>
-                                                        <li>
-                                                            <span>
-                                                                <div class="binary">
-                                                                    <div class="binary-title" data-background-color="carcoin-primary-2">Level 4</div>
-                                                                    <div class="binary-content">
-                                                                        BV : <b>0</b>
-                                                                        <br>
-                                                                        L : <b>0</b>
-                                                                        | R : <b>0</b>
-                                                                    </div>
-                                                                </div>
-                                                                <span>
-                                                                    <button class="btn btn-round btn-white btn-fill btn-just-icon" toggle-node>
-                                                                        <i class="material-icons">chevron_right</i>
-                                                                    </button>
-                                                                    <a href="#" back-parent-node>Back</a>
-                                                                </span>
-                                                            </span>
-                                                        </li>
-                                                    </ul>
-                                                    <!-- END Child Node Level 4 -->
-                                                </li>
-                                            </ul>
-                                            <!-- END Child Node Level 3 -->
-                                        </li>
-                                    </ul>
-                                    <!-- END Child Node Level 2 -->
-                                </li>
-                            </ul>
-                            <!-- END Child Node Level 1 -->
-                        </li>
-                        <li>
-                            <span>
-                                <div class="binary">
-                                    <div class="binary-title" data-background-color="carcoin-primary-2">
-                                        <span class="badge right">R</span>
-                                        Mike
-                                    </div>
-                                    <div class="binary-content">
-                                        BV : <b>0</b>
-                                        <br>
-                                        L : <b>0</b>
-                                        | R : <b>0</b>
-                                    </div>
-                                </div>
-                                <!-- <span>
-                                <button class="btn btn-round btn-white btn-fill btn-just-icon" toggle-node>
-                                    <i class="material-icons">chevron_right</i>
-                                </button>
-                            </span> -->
-                            </span>
-                        </li>
-                    </ul>
+                    <div class="chart" id="tree-container"></div>
+
+                    <div class="pull-left">
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-endleft"><i
+                                    class="fa fa-fast-forward rotate90"></i></button>
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-left" style="margin-left: 5px;"><i
+                                    class="fa fa-step-forward rotate90"></i></button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-right" style="margin-right: 5px;"><i
+                                    class="fa fa-step-forward rotate90"></i></button>
+                        <button class="btn btn-app btn-xs binary-control" type="button" id="go-endright"><i
+                                    class="fa fa-fast-forward rotate90"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    <!-- <style>
+    <style>
         .chart {
             height: 400px;
             margin: 5px auto;
@@ -469,15 +152,15 @@
             /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
             -ms-transform: rotate(30deg);
         }
-    </style> -->
-    <!-- <link rel="stylesheet" href="<?php echo e(asset('/css/jstree.css')); ?>"/>
+    </style>
+    <link rel="stylesheet" href="<?php echo e(asset('/css/jstree.css')); ?>"/>
     <link rel="stylesheet" href="<?php echo e(asset('/css/Treant.css')); ?>"/>
 
     <script src="<?php echo e(asset('/js/raphael.js')); ?>"></script>
     <script src="<?php echo e(asset('/js/Treant.js')); ?>"></script>
     <script src="<?php echo e(asset('/js/jst.js')); ?>"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script> -->
-    <!-- <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
+    <script>
         $(document).ready(function(){
             $('#userSelect').on('change', function () {
                 var selectId = parseInt($("#userSelect option:selected").val());
@@ -771,6 +454,6 @@
                 }
             });
         }
-    </script> -->
+    </script>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('adminlte::layouts.backend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('adminlte::layouts.member', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
