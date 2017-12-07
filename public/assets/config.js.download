@@ -1,0 +1,6 @@
+"use strict"
+var subscribeUrl = "#";
+var email = "carcoin@gmail.com";
+var countdown = true;
+var configDate = "2017 12 10 09:00:00";
+var particles = true;
