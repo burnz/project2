@@ -24,10 +24,10 @@ case 'success':
 $color = 'green';
 break;
 case 'error':
-$color = 'red';
+$color = 'green';
 break;
 default:
-$color = 'blue';
+$color = 'green';
 }
 ?>
 @component('mail::button', ['url' => $actionUrl, 'color' => $color])
@@ -45,14 +45,8 @@ $color = 'blue';
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-Regards,<br>{{ config('app.name') }}
+Regards,<br><a href="{{ config('app.url') }}" target="_blank">{{ config('app.name') }}</a>
 @endif
 
 {{-- Subcopy --}}
-@isset($actionText)
-@component('mail::subcopy')
-If you’re having trouble clicking the "{{ $actionText }}" button, copy and paste the URL below
-into your web browser: [{{ $actionUrl }}]({{ $actionUrl }})
-@endcomponent
-@endisset
 @endcomponent

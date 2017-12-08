@@ -27,13 +27,15 @@
         <tr>
             <td align="center">
                 <table class="content" width="100%" cellpadding="0" cellspacing="0">
-                    {{ $header or '' }}
 
                     <!-- Email Body -->
                     <tr>
                         <td class="body" width="100%" cellpadding="0" cellspacing="0">
                             <table class="inner-body" align="center" width="820" cellpadding="0" cellspacing="0">
                                 <!-- Body content -->
+                                <tr>
+                                    <td align="center" style="padding-top: 15px;"><img src="https://mycarcoin.com/Carcoin/img/logo-carcoin.png" width="100px"/></td>
+                                </tr>
                                 <tr>
                                     <td class="content-cell">
                                         {{ Illuminate\Mail\Markdown::parse($slot) }}
@@ -44,8 +46,6 @@
                             </table>
                         </td>
                     </tr>
-
-                    {{ $footer or '' }}
                 </table>
             </td>
         </tr>
