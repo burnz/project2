@@ -161,21 +161,7 @@
                                 <div class="card-content">
                                     <h4 class="card-title">Binary Tree</h4>
                                     <div class="box">
-                                        <div class="box-body" style="padding-top:0;">
-                                            <!-- <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
-                                                {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
-                                                <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
-                                                    {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
-                                                </div>
-                                                <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
-                                                    <input type="hidden" name="legpos" id="legpos" value="0">
-                                                    {!! Form::button('Push to Left', ['class' => 'btn btn-fill btn-xs btn-info btn-round', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
-                                                    <br>
-                                                    {!! Form::button('Push to Right', ['class' => 'btn btn-fill btn-xs btn-primary btn-round', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
-
-                                                </div>
-                                                {!! Form::close() !!}
-                                            </div> -->
+                                        <div class="box-body" style="padding-top:0;">                                    
                                             <div class="col-xs-5 binary-search" style="padding-top: 15px;position: absolute;right:-14px;">
                                                 <!-- <div class="input-group input-group-sm"> -->
                                                     <div class="col-lg-6">
@@ -233,59 +219,6 @@
                             <script src="{{ asset('/js/jst.js') }}"></script>
                             <script src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
                             <script>
-                                $(document).ready(function(){
-                                    $('#userSelect').on('change', function () {
-                                        var selectId = parseInt($("#userSelect option:selected").val());
-                                        if(selectId > 0){
-                                            $('#push_into').removeClass('hide');
-                                        }else{
-                                            $('#push_into').addClass('hide');
-                                            $('#legpos').val('');
-                                        }
-                                    });
-                                    $('#btn_submit_left').on('click', function () {
-                                        if($("#userSelect option:selected").length == 0){
-                                            swal("Please select one username");
-                                            return false;
-                                        }else{
-                                            swal({
-                                              title: "Are you sure?",
-                                              text: $("#userSelect option:selected").html() + " will be push to the Left!",
-                                              type: "warning",
-                                              showCancelButton: true,
-                                              confirmButtonClass: "btn-danger",
-                                              confirmButtonText: "Yes, do it kkkk!",
-                                              closeOnConfirm: false,
-                                              closeOnCancel: false,
-                                            }).then(
-                                                function(){
-                                                    $('#legpos').val(1);
-                                                    $('#pushIntoTreeForm').submit();
-                                            });
-
-                                        }
-                                    });
-                                    $('#btn_submit_right').on('click', function () {
-                                        if($("#userSelect option:selected").length == 0){
-                                            swal("Please select one username");
-                                            return false;
-                                        }else{
-                                            swal({
-                                              title: "Are you sure?",
-                                              text: $("#userSelect option:selected").html() + " will be push to the Right!",
-                                              type: "warning",
-                                              showCancelButton: true,
-                                              confirmButtonClass: "btn-danger",
-                                              confirmButtonText: "Yes, do it!",
-                                              //closeOnConfirm: false
-                                          }).then(
-                                            function(isConfirm){
-                                                $('#legpos').val(2);
-                                                $('#pushIntoTreeForm').submit();
-                                            });
-                                        }
-                                    });
-                                });
                                 var tmpl = window.JST["assets/templates/tree-node.html"],
                                 leafTmpl = window.JST["assets/templates/tree-node-leaf.html"];
 
