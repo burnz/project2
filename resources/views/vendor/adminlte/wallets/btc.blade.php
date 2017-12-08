@@ -32,7 +32,7 @@
                                             <div class="right">
                                                 <span>Your Balance</span>
                                                 <div class="content bitcoin-color">
-                                                    314,675
+                                                {{ number_format($walletAmount['amountBTC'], 5) }}
                                                 </div>
                                             </div>
                                         </div>

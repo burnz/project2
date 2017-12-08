@@ -23,13 +23,13 @@
                                     <br><big class="carcoin-color"><span class="carcoin_bl">{{ number_format($walletAmount['amountCLP'], 5) }}</span></big></div>
                             </a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="#">
                                 <div class="icon"><img src="/Carcoin/img/ic_zcoin-sec.svg"></div>
                                 <div class="content"><small>Reinvest Wallet</small>
                                     <br><big class="reinvest-color"><span class="reinvest_bl">{{ number_format($walletAmount['amountReinvest'], 5) }}</span></big></div>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                         <ul class="navbar-wallet align-self-center">
                             <li><b class="bitcoin-color">1 BTC </b><span class="btcusd"></span></li>

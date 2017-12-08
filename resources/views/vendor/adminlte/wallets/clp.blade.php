@@ -31,36 +31,36 @@
                                             <div class="right">
                                                 <span>Your Balance</span>
                                                 <div class="content carcoin-color">
-                                                    314,675
+                                                {{ number_format($walletAmount['amountCLP'], 5) }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-sell">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-sell">
                                                 <span class="btn-label">
                                                                             <i class="material-icons">shopping_basket</i>
                                                                         </span> Sell Carcoin
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-buy-package">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-buy-package">
                                                 <span class="btn-label">
                                                                             <i class="material-icons">card_giftcard</i>
                                                                         </span> Buy Package
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-deposit">
                                                 <span class="btn-label">
                                                                             <i class="material-icons">shop</i>
                                                                         </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-withdraw">
                                                 <span class="btn-label">
                                                                             <i class="material-icons reflect">shop</i>
                                                                         </span> Withdraw
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-transfer">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-transfer">
                                                 <span class="btn-label">
                                                                             <i class="material-icons">swap_horiz</i>
                                                                         </span> Transfer
