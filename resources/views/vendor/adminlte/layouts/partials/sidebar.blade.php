@@ -85,13 +85,13 @@
                                 <span class="sidebar-normal"> Bitcoin Wallet </span>
                             </a>
                         </li>
-                        <!-- <li>
+                        <li>
                             <a href="/wallets/car">
                                 <span class="sidebar-mini"> C </span>
                                 <span class="sidebar-normal"> Carcoin Wallet </span>
                             </a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="/wallets/reinvest">
                                 <span class="sidebar-mini"> R </span>
                                 <span class="sidebar-normal"> Reinvest Wallet </span>

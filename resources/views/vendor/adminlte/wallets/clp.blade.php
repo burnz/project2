@@ -31,139 +31,48 @@
                                             <div class="right">
                                                 <span>Your Balance</span>
                                                 <div class="content carcoin-color">
-                                                    314,675
+                                                {{ number_format($walletAmount['amountCLP'], 5) }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-sell">
-                                                <span class="btn-label">
-                                                                            <i class="material-icons">shopping_basket</i>
-                                                                        </span> Sell Carcoin
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-buy-package">
-                                                <span class="btn-label">
-                                                                            <i class="material-icons">card_giftcard</i>
-                                                                        </span> Buy Package
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
-                                                <span class="btn-label">
-                                                                            <i class="material-icons">shop</i>
-                                                                        </span> Deposit
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw">
-                                                <span class="btn-label">
-                                                                            <i class="material-icons reflect">shop</i>
-                                                                        </span> Withdraw
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-transfer">
-                                                <span class="btn-label">
-                                                                            <i class="material-icons">swap_horiz</i>
-                                                                        </span> Transfer
-                                                <div class="ripple-container"></div>
-                                            </button>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
-                                            <!-- <div class="card-filter clearfix">
-                                                <div class="col-md-4">
-                                                    <div class="form-group label-floating">
-                                                        <label class="control-label">Select Type</label>
-                                                        <select class="form-control">
-                                                            <option disabled="" selected=""></option>
-                                                            <option value="5">Buy CLP By USD</option>
-                                                            <option value="6">Transfer From Holding Wallet</option>
-                                                            <option value="7">Buy CLP By BTC</option>
-                                                            <option value="8">Sell CLP</option>
-                                                            <option value="10">Withdraw</option>
-                                                            <option value="12">Transfer</option>
-                                                            <option value="14">Deposit</option>
-                                                            <option value="15">Buy Package</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <button type="button" class="btn btn-primary btn-round">Filter
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-primary btn-round">
-                                                        Clear
-                                                    </button>
-                                                </div>
-                                            </div> -->
+                                            
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
                                                 <table class="table" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
-                                                        <th>No</th>
-                                                        <th>Date/Time</th>
-                                                        <th>Type</th>
-                                                        <th>In</th>
-                                                        <th>Out</th>
-                                                        <th>Info</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_info') }}</th>
                                                     </thead>
                                                     <tbody>
+                                                    @foreach ($wallets as $key => $wallet)
                                                         <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.399</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
+                                                            <td>{{ $key+1 }}</td>
+                                                            <td>{{ $wallet->created_at }}</td>
+                                                            <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
+                                                            <td>
+                                                                @if($wallet->inOut=='in')
+                                                                    +{{ number_format($wallet->amount, 2) }}
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                @if($wallet->inOut=='out')
+                                                                    -{{ number_format($wallet->amount, 2) }}
+                                                                @endif
+                                                            </td>
+                                                            <td>{{ $wallet->note }}</td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.368</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.366</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.325</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.315</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.312</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.312</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
+                                                    @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
