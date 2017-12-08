@@ -317,29 +317,29 @@
                             beforeSend:function () {
 
                                 if( $('#amount').val() == ''){
-                                    swal ( "Oops" ,  "Not order , Please fill amount BTC !" ,  "error" );
+                                    swal ( "Oops" ,  "Cannot order , Please fill amount BTC !" ,  "error" );
                                     return false;
                                 }
 
                                 if( $('#amount').val() > {{ $amountBTC }}){
-                                    swal ( "Oops" ,  "Not order , max price {{ $amountBTC }} !" ,  "error" );
+                                    swal ( "Oops" ,  "Cannot order , max price {{ $amountBTC }} !" ,  "error" );
                                     return false;
                                 }
 
                                 if( $('#price').val() == ''){
-                                    swal ( "Oops" ,  "Not order , Please fill price !" ,  "error" )
+                                    swal ( "Oops" ,  "Cannot order , Please fill price !" ,  "error" )
                                     return false;
                                 }
 
                                 if( parseFloat($('#price').val()) < {{ $price }} ){
-                                    swal ( "Oops" ,  "Not order , min price {{ $price }} !" ,  "error" )
+                                    swal ( "Oops" ,  "Cannot order , min price {{ $price }} !" ,  "error" )
                                     return false;
                                 }
 
                                 if( $('#total').val() == 0 ||
                                     ( +$("#amount").val() * globalBTCUSD ) / (+$("#price").val()) <= 0
                                 ){
-                                    swal ( "Oops" ,  "Not order , Total Value must greater than 0  !" ,  "error" )
+                                    swal ( "Oops" ,  "Cannot order , Total Value must greater than 0  !" ,  "error" )
                                     return false;
                                 };
 
@@ -356,7 +356,7 @@
                                 dataTableHistory.ajax.reload();
                             },
                             error: function(xhr) { // if error occured
-                                swal ( "Oops" ,  "Not order , Please come back later !" ,  "error" )
+                                swal ( "Oops" ,  "Cannot order , Please come back later !" ,  "error" )
                             },
                             complete: function() {
                                 //end loading
