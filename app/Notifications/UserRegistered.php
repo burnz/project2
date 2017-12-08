@@ -27,9 +27,9 @@ class UserRegistered extends Notification
             ->subject('Welcome to the CAR Coin')
             // ->cc($dataSendMail['mail_to'], $this->user->name)
             ->greeting('Dear '.$this->user->name. ',')
-            ->line('Welcome to the CAR Coin.')
+            ->line('Thank you for registering on the CARCoin.')
+            ->line('Below you will find your activation link:')
             ->action('Active Account', $this->link_active)
-            ->line('Link active account will expire in 1 days.')
-            ->line('If you did not request register account, no further action is required. Please contact us if you did not submit this request.');
+            ->line('This link will expire in 1 days.');
     }
 }
