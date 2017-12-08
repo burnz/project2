@@ -43,7 +43,7 @@ class OrderController extends Controller
         //Get today min price
         $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
         if(empty($oPrice)){
-            $price = OrderMin::orderBy('id', 'desc')->first()->price;
+            $price = OrderMin::orderBy('id', 'asc')->first()->price;
         } else {
             $price = $oPrice->price;
         }
