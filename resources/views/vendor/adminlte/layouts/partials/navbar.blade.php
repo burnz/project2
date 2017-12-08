@@ -37,50 +37,47 @@
                             <li><b class="carcoin-color">1 CAR </b><span class="carbtc"></span></li>
                         </ul>
                     </div>
-                    <div class="collapse navbar-collapse">
-                        <!-- <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
-                                doLogout();
-                                document.getElementById('logout-form').submit();">
-                                
-                                <i class="material-icons">power_settings_new</i>
-                                <p class="hidden-lg hidden-md">Logout</p>
+                    <div class="collapse navbar-collapse ">
 
-                                </a>
-                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                    <input type="submit" value="logout" style="display: none;">
-                                </form>
-                            </li>
-                        </ul> -->
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li rel="tooltip" data-placement="bottom" title="Settings">
-                            <a href="{{url('profile/security')}}">
-                                <i class="material-icons">build</i>
-                                <p class="hidden-lg hidden-md">Settings</p>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="material-icons">settings</i>
+                                <p class="hidden-lg hidden-md">
+                                    Profile
+                                    <b class="caret"></b>
+                                </p>
                             </a>
+                            <ul class="dropdown-menu">
+                            <li>
+                                <a class="d-flex" href="{{url('profile/security')}}">
+                                    <i class="material-icons justify-content-center mr-3">build</i>
+                                    <p class="align-self-center m-0">Settings</p>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="d-flex" href="{{url('profile')}}">
+                                    <i class="material-icons justify-content-center mr-3">person</i>
+                                    <p class="align-self-center m-0">Profile</p>
+                                </a>
+                            </li>
+                            <li>
+                            <a class="d-flex" href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
+                                    doLogout();
+                                    document.getElementById('logout-form').submit();">
+                                    <i class="material-icons justify-content-center mr-3">power_settings_new</i>
+                                    <p class="align-self-center m-0">Sign out</p>
+                                </a>
+                            </li>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                                <input type="submit" value="logout" style="display: none;">
+                            </form>
+                            </ul>
                         </li>
-                        <li rel="tooltip" data-placement="bottom" title="Profile">
-                            <a href="{{url('profile')}}">
-                                <i class="material-icons">person</i>
-                                <p class="hidden-lg hidden-md">Profile</p>
-                            </a>
-                        </li>
-                        <li rel="tooltip" data-placement="bottom" title="Sign out">
-                        <a href="{{ url('/logout') }}" id="logout" onclick="event.preventDefault();
-                                doLogout();
-                                document.getElementById('logout-form').submit();">
-                                <i class="material-icons">power_settings_new</i>
-                                <p class="hidden-lg hidden-md">Sign out</p>
-                            </a>
-                        </li>
-                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                            <input type="submit" value="logout" style="display: none;">
-                        </form>
                     </ul>
+
 
                 </div>
             </div>
