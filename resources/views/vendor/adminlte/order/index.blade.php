@@ -271,7 +271,7 @@
 @endsection
 @section('script')
     <script src="/presale/assets/js/jquery.countdown.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
     <script src="/presale/assets/js/demo.js"></script>
 
     <script type="text/javascript">
@@ -298,6 +298,8 @@
                 var value = $(this).val();
                 var result = value * globalBTCUSD;
                 $("#valueInUSD").html('USD ' + result.toFixed(2));
+
+                
             });
 
             $('#order').click(function (event) {
@@ -431,17 +433,28 @@
                 }else {
                     $('#amount').val('');
                 }
+
+                var amount=$('#amount');
+                amount.trigger('change');
+
             });
 
             $('#price').on('keyup change mousewheel', function() {
+
+
                 if( +$("#total").val()  > 0 && +$("#price").val() >= {{ $price }} ){
                     var result = ( +$("#total").val() * (+$("#price").val()) ) / globalBTCUSD;
                     $('#amount').val( result.toFixed(5) );
                 }else{
                     $('#amount').val('');
                 }
+
+                var amount=$('#amount');
+                amount.trigger('change');
+                
 //                $(this).val(parseFloat(Math.round($(this).val() * 100) / 100).toFixed(2))
             });
+
 
             $('.amountUSD').html( ({{ $amountBTC }}* globalBTCUSD).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') );
         });

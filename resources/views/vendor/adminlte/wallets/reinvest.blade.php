@@ -33,12 +33,12 @@
                                             <div class="right">
                                                 <span>Your Balance</span>
                                                 <div class="content reinvest-color">
-                                                    314,675
+                                                {{ number_format($walletAmount['amountReinvest'], 5) }}
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#reinvest-buy-carcoin">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#reinvest-buy-carcoin">
                                                 <span class="btn-label">
                                                     <i class="material-icons">add_shopping_cart</i>
                                                 </span> Buy Carcoin
@@ -76,70 +76,37 @@
                                             <div class="table-responsive">
                                                 <table class="table" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
-                                                        <th>No</th>
-                                                        <th>Date/Time</th>
-                                                        <th>Type</th>
-                                                        <th>In</th>
-                                                        <th>Out</th>
-                                                        <th>Info</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_release_date') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
+                                                        <th>{{ trans('adminlte_lang::wallet.wallet_info') }}</th>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.399</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.368</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.366</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.325</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.315</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.312</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>2017/12/30 10:07</td>
-                                                            <td>0.312</td>
-                                                            <td>54.213</td>
-                                                            <td>354.215</td>
-                                                            <td>This is Info</td>
-                                                        </tr>
+                                                    @foreach ($wallets as $key => $wallet)
+                                                    <tr>
+                                                        <td>{{ $key+1 }}</td>
+                                                        <td>{{ $wallet->created_at }}</td> 
+                                                        <td>{{ date('Y-m-d', strtotime("+6 months", strtotime($wallet->updated_at))) }}</td> 
+                                                        <td>
+                                                            {{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}
+                                                        </td>
+                                                        <td>
+                                                            @if($wallet->inOut=='in')
+                                                                +{{ number_format($wallet->amount, 2) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if($wallet->inOut=='out')
+                                                                -{{ number_format($wallet->amount, 2) }}
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $wallet->note }}</td>
+                                                        
+                                                    </tr>
+                                                    @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
