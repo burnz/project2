@@ -22,8 +22,17 @@
                                     </div>
                                     <form action="{{ route('password.email') }}" method="post">
                                     <h4 class="text-center">{{trans('adminlte_lang::message.passwordreset')}}</h4>
+                                    
                                         {!! csrf_field() !!}
                                         <div class="card-content">
+                                        @if (session('status'))
+                                            <div class="alert alert-info">
+                                                <span class="text-center">{{ session('status') }}</span>
+                                            </div>
+                                            
+                                        @endif
+
+                                        
                                             <div class="input-group">
                                                 <span class="input-group-addon">
                                                     <i class="material-icons">email_circle</i>

@@ -21,6 +21,7 @@
         @endif
         <div class="login-box-body">
             <p class="login-box-msg">{{trans('adminlte_lang::message.passwordreset')}}</p>
+            
             <form role="form" method="POST" action="{{ route('password.email') }}">
                 {{ csrf_field() }}
                 <div class="form-group input-group-sm {{ $errors->has('email') ? ' has-error' : '' }}">

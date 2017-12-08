@@ -78,7 +78,7 @@
     <!-- Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
     <script src="{{asset('Carcoin/js/jquery.tagsinput.js')}}"></script>
     <!-- Material Dashboard javascript methods -->
-    <script src="http://demos.creative-tim.com/material-dashboard-pro/assets/js/material-dashboard.js?v=1.2.1"></script>
+    <script src="{{asset('Carcoin/js/material-dashboard.js')}}"></script>
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{asset('Carcoin/js/demo.js')}}"></script>
 

@@ -19,7 +19,6 @@
         }
     }
     .chart {
-        height: 400px;
         margin: 5px auto;
         width: auto;
     }
