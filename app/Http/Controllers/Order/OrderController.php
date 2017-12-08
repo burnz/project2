@@ -66,6 +66,8 @@ class OrderController extends Controller
                 $orderList->user_id = Auth::user()->id;
                 $orderList->amount = $request->amount;
                 $orderList->price = $request->price;
+                $orderList->btc_rate = ExchangeRate::getBTCUSDRate();
+                $orderList->btc_value = $btcAmount;
                 $orderList->total = $request->amount * $request->price;
                 $orderList->save();
                 $totalOrderInDay = OrderList::whereDate('created_at', date('Y-m-d'))->count();
