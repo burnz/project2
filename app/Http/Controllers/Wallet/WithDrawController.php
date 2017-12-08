@@ -589,7 +589,7 @@ class WithDrawController extends Controller
 					$withdrawConfirm = WithdrawConfirm::create($field);
 					$encrypt    = [hash("sha256", md5(md5($withdrawConfirm->id))), $withdrawConfirm->id, 'clp', $request->withdrawAmount];
 					$linkConfirm =  URL::to('/confirmWithdraw')."?d=".base64_encode(json_encode($encrypt));
-					$coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'clp'];
+					$coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'car'];
 					$user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
 
 					$request->session()->flash( 'successMessage', 'The withdrawal confirmation have sent to your mail box!' );
