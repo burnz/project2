@@ -203,9 +203,9 @@
                             <div class="table-responsive table-scroll-y">
                                 <table class="table" id="employee-grid">
                                     <thead class="text-thirdary">
-                                    <th>Price (BTC)</th>
+                                    <th>Price (USD)</th>
                                     <th>Volume (CAR)</th>
-                                    <th>Total (BTC)</th>
+                                    <th>Value (USD)</th>
                                     </thead>
                                     @foreach($dataTableRealTime as $data)
                                         <tr>
@@ -234,8 +234,8 @@
                                     <thead class="text-primary">
                                     <th>Date/Time</th>
                                     <th>Volume (CAR)</th>
-                                    <th>Price (BTC)</th>
-                                    <th>Total (BTC)</th>
+                                    <th>Price (USD)</th>
+                                    <th>Value (USD)</th>
                                     </thead>
                                 </table>
                             </div>
@@ -257,8 +257,8 @@
                                     <th>Time</th>
                                     <th>Status</th>
                                     <th>Volume (CAR)</th>
-                                    <th>Price (BTC)</th>
-                                    <th>Total (BTC)</th>
+                                    <th>Price (USD)</th>
+                                    <th>Value (USD)</th>
                                     </thead>
                                 </table>
                             </div>
