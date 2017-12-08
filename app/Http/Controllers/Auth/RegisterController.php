@@ -21,6 +21,7 @@ use App\UserCoin;
 use App\CLPWallet;
 use URL;
 use Session;
+use Mail;
 
 /**
  * Class RegisterController
@@ -341,4 +342,7 @@ class RegisterController extends Controller
             return redirect("register");
         }
     }
+
+
+
 }

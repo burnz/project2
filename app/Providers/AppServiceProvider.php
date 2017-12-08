@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 use Validator;
+use View;
+use Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,17 @@ class AppServiceProvider extends ServiceProvider
             }
                 return false;
         });
+
+        view()->composer('*', function ($view){
+            if(Auth::user())
+            {
+                $amountBTC=Auth::user()->userCoin->btcCoinAmount;
+                $amountCLP=Auth::user()->userCoin->clpCoinAmount;
+                $amountReinvest=Auth::user()->userCoin->reinvestAmount;
+                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest]);
+            }
+        });
+
     }
 
     /**
