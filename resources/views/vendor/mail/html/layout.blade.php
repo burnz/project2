@@ -34,7 +34,7 @@
                             <table class="inner-body" align="center" width="820" cellpadding="0" cellspacing="0">
                                 <!-- Body content -->
                                 <tr>
-                                    <td align="center"><img src="{{ config('app.url') }}/Carcoin/img/logo-carcoin.png" width="100px"/></td>
+                                    <td align="center" style="padding-top: 15px;"><img src="https://mycarcoin.com/Carcoin/img/logo-carcoin.png" width="100px"/></td>
                                 </tr>
                                 <tr>
                                     <td class="content-cell">
