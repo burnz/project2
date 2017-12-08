@@ -91,12 +91,12 @@
                                 <span class="sidebar-normal"> Carcoin Wallet </span>
                             </a>
                         </li>
-                        <!--<li>
+                        <li>
                             <a href="/wallets/reinvest">
                                 <span class="sidebar-mini"> R </span>
                                 <span class="sidebar-normal"> Reinvest Wallet </span>
                             </a>
-                        </li> -->
+                        </li>
                     </ul>
                 </div>
             </li>
