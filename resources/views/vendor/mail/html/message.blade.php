@@ -14,9 +14,4 @@
     @endisset
 
     {{-- Footer --}}
-    @slot('footer')
-        @component('mail::footer')
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
-        @endcomponent
-    @endslot
 @endcomponent
