@@ -271,7 +271,7 @@
 @endsection
 @section('script')
     <script src="/presale/assets/js/jquery.countdown.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
     <script src="/presale/assets/js/demo.js"></script>
 
     <script type="text/javascript">

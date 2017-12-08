@@ -1,6 +1,6 @@
 <!-- Scripts -->
 <script src="{{asset('Carcoin/js/jquery-3.2.1.min.js')}}" type="text/javascript"></script>
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+<script type="text/javascript" src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
     <script src="{{asset('Carcoin/js/bootstrap.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('Carcoin/js/material.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('Carcoin/js/perfect-scrollbar.jquery.min.js')}}" type="text/javascript"></script>

@@ -231,7 +231,7 @@
                             <script src="{{ asset('/js/raphael.js') }}"></script>
                             <script src="{{ asset('/js/Treant.js') }}"></script>
                             <script src="{{ asset('/js/jst.js') }}"></script>
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
+                            <script src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
                             <script>
                                 $(document).ready(function(){
                                     $('#userSelect').on('change', function () {
