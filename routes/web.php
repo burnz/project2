@@ -177,3 +177,4 @@ Route::get('notification/useractived',"NotificationController@userActived");
 Route::get('notiactive',"NotificationController@userNotiActive");
 Route::any('confirmWithdraw',"Wallet\WithDrawController@confirmWithdraw");
 
+

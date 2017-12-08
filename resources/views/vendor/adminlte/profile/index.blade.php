@@ -150,14 +150,14 @@
                 <div class="col-md-4">
                     <div class="card card-profile">
                         <div class="card-avatar">
-                            <a href="user.html#pablo">
-                                <img class="img" src="{{asset('Carcoin/img/user/avatar.jpg')}}" />
+                            <a href="javascript:;">
+                                <img class="img" src="{{ Gravatar::get(Auth()->user()->email) }}" />
                             </a>
                         </div>
                         <div class="card-content">
-                            <h4 class="card-title">Tania Andrew</h4>
+                            <h4 class="card-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h4>
                             <p class="description">
-                                <span>ID: 123456</span>
+                                <span>ID: {{ Auth::user()->uid }}</span>
                                 <span>Loyalty: Diadmond</span>
                             </p>
                         </div>

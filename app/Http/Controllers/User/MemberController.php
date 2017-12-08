@@ -326,7 +326,10 @@ class MemberController extends Controller
         
         $users = UserData::with('user')->where('refererId', '=',$currentuserid)->where('status', 1)->orderBy('userId', 'desc')
                ->paginate();
-        
+        // echo'<pre>';
+        //     print_r($users);
+        // echo'</pre>';
+        // exit;
         return view('adminlte::members.refferals')->with('users', $users);
     }
     public function pushIntoTree(Request $request){

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Auth;
 use Session;
+use View;
 
 class Controller extends BaseController
 {
@@ -17,6 +18,7 @@ class Controller extends BaseController
     var $ct = 1;
     
     public function __construct(){
+
         $this->middleware(function ($request, $next) {
             if (Auth::user() && Auth::user()->is2fa) {
                 if (Session::get('google2fa') == null || Session::get('google2fa') == false) {

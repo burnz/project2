@@ -163,7 +163,7 @@
                                     <h4 class="card-title">Binary Tree</h4>
                                     <div class="box">
                                         <div class="box-body" style="padding-top:0;">
-                                            <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
+                                            <!-- <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
                                                 {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
                                                 <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
                                                     {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
@@ -176,7 +176,7 @@
 
                                                 </div>
                                                 {!! Form::close() !!}
-                                            </div>
+                                            </div> -->
                                             <div class="col-xs-5 binary-search" style="padding-top: 15px;position: absolute;right:-14px;">
                                                 <!-- <div class="input-group input-group-sm"> -->
                                                     <div class="col-lg-6">
@@ -255,13 +255,14 @@
                                               type: "warning",
                                               showCancelButton: true,
                                               confirmButtonClass: "btn-danger",
-                                              confirmButtonText: "Yes, do it!",
-                                              closeOnConfirm: false
-                                          },
-                                          function(){
-                                            $('#legpos').val(1);
-                                            $('#pushIntoTreeForm').submit();
-                                        });
+                                              confirmButtonText: "Yes, do it kkkk!",
+                                              closeOnConfirm: false,
+                                              closeOnCancel: false,
+                                            }).then(
+                                                function(){
+                                                    $('#legpos').val(1);
+                                                    $('#pushIntoTreeForm').submit();
+                                            });
 
                                         }
                                     });
@@ -277,12 +278,12 @@
                                               showCancelButton: true,
                                               confirmButtonClass: "btn-danger",
                                               confirmButtonText: "Yes, do it!",
-                                              closeOnConfirm: false
-                                          },
-                                          function(){
-                                            $('#legpos').val(2);
-                                            $('#pushIntoTreeForm').submit();
-                                        });
+                                              //closeOnConfirm: false
+                                          }).then(
+                                            function(isConfirm){
+                                                $('#legpos').val(2);
+                                                $('#pushIntoTreeForm').submit();
+                                            });
                                         }
                                     });
                                 });

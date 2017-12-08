@@ -7,56 +7,140 @@
 @section('content')
 <div class="content">
     <div class="container-fluid">
-        <div class="row d-flex" section="dashboard-status">
-            <h3 class="m-0"></h3>
-            <div class="" style="width:100%">
-
-
+        <div class="col-md-12 align-self-center">
             <div class="card">
-                    <!-- <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
-                        <i class="material-icons">assignment</i>
-                    </div> -->
-                    <div class="card-content">
-                        <h3 class="card-title">Referrals</h3>
-                        <div class="table-responsive">
-                        <table class="table dataTable">
-                            <tr>
-                                <th>{{ trans('adminlte_lang::member.refferals_no') }}</th>
-                                <th>{{ trans('adminlte_lang::member.refferals_id') }}</th>
-                                <th>{{ trans('adminlte_lang::member.refferals_username') }}</th>
-                                <th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
-                                <th>{{ trans('adminlte_lang::member.refferals_package') }}</th>
-                                <th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
-                                <th>{{ trans('adminlte_lang::member.refferals_loyalty') }}</th>
-                            </tr>
-                            <tbody>
-                                @php
-                                $i = 1
-                                @endphp
-                                @foreach ($users as $userData)
-                                <tr>
-                                    <td>{{ $i++ }}</td>
-                                    <td>{{ $userData->user->uid }}</td>
-                                    <td>{{ $userData->user->name }}</td>
-                                    <td>{{ $userData->user->name }}</td>
-                                    <td class="text-uppercase">{{ $userData->package->name }}</td>
-                                    <td>
-                                        <a href="{{ URL::to('members/referrals/'.$userData->user->uid.'/detail') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_view') }}</a>
-                                    </td>
-                                    <td>
-                                        @if($userData->loyaltyId >0 )
-                                        {{ config('cryptolanding.listLoyalty')[$userData->loyaltyId] }}
-                                        @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
+                    <i class="material-icons">assignment</i>
+                </div>
+                <div class="card-content">
+                    <h4 class="card-title">Referrals</h4>
+                    <div class=""><!--table-responsive table-scroll-y-->
+                        <div id="employee-grid_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                            <div class="row">
+                                <div class="col-sm-6"></div>
+                                <div class="col-sm-6"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="" style="display:none">
+                                    {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
+                                        <input type="text" name="userSelect" id="userSelect"/>
+                                        <input type="hidden" name="legpos" id="legpos" value="0">
+                                    {!! Form::close() !!}
+                                    </div>
+                                    <table class="table dataTable no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
+                                        <thead class="text-thirdary">
+                                        <tr>
+                                            <th>{{ trans('adminlte_lang::member.refferals_no') }}</th>
+                                            <th>{{ trans('adminlte_lang::member.refferals_id') }}</th>
+                                            <th>{{ trans('adminlte_lang::member.refferals_username') }}</th>
+                                            <th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
+                                            <th>{{ trans('adminlte_lang::member.refferals_package') }}</th>
+                                            <th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
+                                            <th>{{ trans('adminlte_lang::member.refferals_loyalty') }}</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                            $i = 1
+                                            @endphp
+                                            @foreach ($users as $userData)
+                                            <tr>
+                                                <td>{{ $i++ }}</td>
+                                                <td>{{ $userData->user->uid }}</td>
+                                                <td>{{ $userData->user->name }}</td>
+                                                <td>{{ $userData->user->name }}</td>
+                                                <td class="text-uppercase">{{ $userData->package->name }}</td>
+                                                <td>
+                                                    <a href="{{ URL::to('members/referrals/'.$userData->user->uid.'/detail') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_view') }}</a>
+                                                </td>
+                                                <td>
+                                                    @if($userData->loyaltyId >0 )
+                                                    {{ config('cryptolanding.listLoyalty')[$userData->loyaltyId] }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($userData->isBinary==0)
+                                                        <button type="button" class="btn btn-fill btn-xs btn-info btn-round btn_submit_left" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Left</button>
+                                                        <button type="button" class="btn btn-fill btn-xs btn-primary btn-round btn_submit_right" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Right</button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 </div>
 
 @endsection
+@section('script')
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        $('#referrals-grid').DataTable({
+            "ordering": false,
+            "searching":false,
+            "bLengthChange": false,
+        });
+    });
+
+    $('.btn_submit_left').on('click', function () {
+        var uid=$(this).attr('data-select');
+        if(!uid){
+            swal("Whoops. Something went wrong!");
+            return false;
+        }else{
+            swal({
+                title: "Are you sure?",
+                text: $(".btn_submit_left").attr('data-name') + " will be push to the Left!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, do it!",
+                closeOnConfirm: false,
+                closeOnCancel: false,
+            }).then(
+                function(){
+                    $('#legpos').val(1);
+                    $('#userSelect').val(uid);
+                    $('#pushIntoTreeForm').submit();
+            });
+
+        }
+    });
+
+    $('.btn_submit_right').on('click', function () {
+        var uid=$(this).attr('data-select');
+        if(!uid){
+            swal("Whoops. Something when wrong!");
+            return false;
+        }else{
+            swal({
+                title: "Are you sure?",
+                text: $(".btn_submit_left").attr('data-name') + " will be push to the Left!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, do it!",
+                closeOnConfirm: false,
+                closeOnCancel: false,
+            }).then(
+                function(){
+                    $('#legpos').val(2);
+                    $('#userSelect').val(uid);
+                    $('#pushIntoTreeForm').submit();
+            });
+
+        }
+    });
+
+</script>
+@stop

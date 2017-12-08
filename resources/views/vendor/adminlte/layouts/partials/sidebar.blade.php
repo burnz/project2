@@ -1,9 +1,9 @@
 <div class="sidebar" data-active-color="carcoin" data-background-color="carcoin" data-image="/Carcoin/img/illu2.svg">
     <div class="logo">
-        <a href="{{ url('home') }}" class="simple-text logo-mini">
+        <a href="javascript:;" class="simple-text logo-mini">
             <img src="/Carcoin/img/zcoin-id-final_logo-rev.svg">
         </a>
-        <a href="{{ url('home') }}" class="simple-text logo-normal">
+        <a href="javascript:;" class="simple-text logo-normal">
             Car Coin
         </a>
     </div>
@@ -43,7 +43,7 @@
                 <div class="collapse" id="pagesExamples">
                     <ul class="nav">
                         <li>
-                            <a href="#">
+                            <a href="{{url('members/genealogy')}}">
                                 <span class="sidebar-mini"> GT </span>
                                 <span class="sidebar-normal"> Genealogy Tree </span>
                             </a>
@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="{{url('members/referrals')}}">
                                 <span class="sidebar-mini"> R </span>
                                 <span class="sidebar-normal"> Referrals </span>
                             </a>
