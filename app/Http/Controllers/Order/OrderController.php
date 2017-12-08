@@ -57,10 +57,6 @@ class OrderController extends Controller
             }
 
             try {
-                //Subtract btc in btc wallet
-                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
-                $userCoin->save();
-
                 $orderList = new OrderList();
                 $orderList->code = md5(uniqid(Auth::user()->id, true));
                 $orderList->user_id = Auth::user()->id;
@@ -89,11 +85,16 @@ class OrderController extends Controller
                 $data['tableCommand'] = $dataTableRealTime;
                 $redis = LRedis::connection();
                 $result = $redis->publish('message', json_encode($data) );
+
+                //Subtract btc in btc wallet
+                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
+                $userCoin->save();
+
                 return $this->responseSuccess($result);
             } catch (\Exception $exception){
                 Log::info($exception->getMessage());
                 Log::info($exception->getTraceAsString());
-                return $this->responseError(404,'Error Socket');
+                throw new \Exception("Error Processing Request");
             }
         }
         $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();
