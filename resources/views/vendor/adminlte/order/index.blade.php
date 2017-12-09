@@ -258,7 +258,7 @@
                                     <th>Status</th>
                                     <th>Volume (CAR)</th>
                                     <th>Price (USD)</th>
-                                    <th>Value (USD)</th>
+                                    <th>Value (BTC)</th>
                                     </thead>
                                 </table>
                             </div>

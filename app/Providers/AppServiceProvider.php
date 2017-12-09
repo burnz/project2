@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
 use Validator;
+use App\ExchangeRate;
 use View;
 use Auth;
 
@@ -30,7 +31,10 @@ class AppServiceProvider extends ServiceProvider
                 $amountBTC=Auth::user()->userCoin->btcCoinAmount;
                 $amountCLP=Auth::user()->userCoin->clpCoinAmount;
                 $amountReinvest=Auth::user()->userCoin->reinvestAmount;
-                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest]);
+
+                $btcUSDRate = ExchangeRate::getBTCUSDRate();
+
+                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest, 'btcUSDRate' => $btcUSDRate]);
             }
         });
 
