@@ -204,7 +204,7 @@ class ImportExcel extends Command
     * Generate new address
     *
     */
-    private function GenerateAddress( $type, $name = null ) {
+    private function GenerateAddress($name = null ) {
         $data = [];
        
         try {
