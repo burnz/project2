@@ -48,26 +48,37 @@ class OrderController extends Controller
             $price = $oPrice->price;
         }
 
-        $userCoin = Auth::user()->userCoin;
-        $btcAmount = $request->amount * $request->price / ExchangeRate::getBTCUSDRate();
-
         if ( $request->isMethod('post') ){
+            $userCoin = Auth::user()->userCoin;
+            $btcAmount = $request->amount * $request->price / ExchangeRate::getBTCUSDRate();
+
             if( $request->amount <= 0 || $request->price <= 0 || $request->price < $price || $btcAmount > $userCoin->btcCoinAmount){
                 throw new \Exception("Error Processing Request");
             }
 
             try {
-                //Subtract btc in btc wallet
-                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
-                $userCoin->save();
-
                 $orderList = new OrderList();
                 $orderList->code = md5(uniqid(Auth::user()->id, true));
                 $orderList->user_id = Auth::user()->id;
                 $orderList->amount = $request->amount;
                 $orderList->price = $request->price;
+                $orderList->btc_rate = ExchangeRate::getBTCUSDRate();
+                $orderList->btc_value = $btcAmount;
                 $orderList->total = $request->amount * $request->price;
                 $orderList->save();
+
+                $currentHour = date('H');
+                if($currentHour >= 21) {
+                    $startTime = date('Y-m-d 21:00:00');
+                    //$endTime = date('Y-m-d 23:59:59');
+                } else {
+                    $yesterday = Carbon::yesterday()->toDateString();
+                    $startTime = strtotime($yesterday . '+21 hours');
+
+                    $startTime = date('Y-m-d H:i:s', $startTime);
+                    //$endTime = date('Y-m-d 21:00:00');
+                }
+
                 $totalOrderInDay = OrderList::whereDate('created_at', date('Y-m-d'))->count();
                 $totalValueOrderInday = OrderList::whereDate('created_at',date('Y-m-d'))->sum('amount');
                 $data = [
@@ -77,7 +88,7 @@ class OrderController extends Controller
                 $dataTableRealTime = DB::table("order_lists")
                     ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
                     ->whereNull("deleted_at")
-                    ->whereDate('created_at', '=', date('Y-m-d'))
+                    ->where('created_at', '>', $startTime)
                     ->groupBy('price')
                     ->orderBy('price','desc')
                     ->limit(20)
@@ -87,11 +98,16 @@ class OrderController extends Controller
                 $data['tableCommand'] = $dataTableRealTime;
                 $redis = LRedis::connection();
                 $result = $redis->publish('message', json_encode($data) );
+
+                //Subtract btc in btc wallet
+                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
+                $userCoin->save();
+
                 return $this->responseSuccess($result);
             } catch (\Exception $exception){
                 Log::info($exception->getMessage());
                 Log::info($exception->getTraceAsString());
-                return $this->responseError(404,'Error Socket');
+                throw new \Exception("Error Processing Request");
             }
         }
         $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();

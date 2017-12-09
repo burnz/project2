@@ -1,6 +1,6 @@
 <!-- Bitcoin Wallet -->
 <!-- <script src="{{ URL::to("js/qrcode.min.js") }}"></script> -->
-
+@if(isset($walletAddress))
 <div class="modal fade" id="bitcoin-deposit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -33,7 +33,7 @@
         </div>
     </div>
 </div>
-
+@endif
 {!! Form::open(array('url' => 'wallets/btcwithdraw', 'id' => 'form-withdraw-btc')) !!}
 <div class="modal fade" id="bitcoin-withdraw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
