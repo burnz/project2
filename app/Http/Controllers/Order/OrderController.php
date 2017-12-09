@@ -143,7 +143,7 @@ class OrderController extends Controller
         $columns = array(
             0 => 'amount',
             1 => 'price',
-            2 => 'total',
+            2 => 'btc_value',
             3 => 'created_at'
         );
         $count = DB::table("order_lists as a")
@@ -153,7 +153,7 @@ class OrderController extends Controller
         $totalData = $count;
         $totalFiltered = $totalData;
         $sql = DB::table("order_lists as a")
-            ->select('a.code','a.amount','a.price','a.total','a.status','a.created_at')
+            ->select('a.code','a.amount','a.price','a.btc_value','a.status','a.created_at')
             //bản thân cần tìm gì ở đây
             ->where('user_id',Auth::user()->id)
             ->whereNull("deleted_at");
@@ -182,7 +182,7 @@ class OrderController extends Controller
             }
             $nestedData[] = $value->amount;
             $nestedData[] = $value->price;
-            $nestedData[] = $value->total;
+            $nestedData[] = number_format($value->btc_value, 5);
             // $deltail = "data-ot-register-id=".$value->ot_register_id." "."data-id-usercreat=".$value->usercreat;
             $tmp[] = $nestedData;
         }
