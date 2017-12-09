@@ -18,7 +18,7 @@ return [
     'refferals_fullname'           	=> 'Full name',
     'refferals_package'           	=> 'Member',
     'refferals_more'           	=> 'Detail',
-    'refferals_loyalty'            => 'Loyalty',
+    'refferals_loyalty'            => 'Rank',
 
 
 ];
