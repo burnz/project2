@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
                 $btcUSDRate = ExchangeRate::getBTCUSDRate();
 
-                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest);
+                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest]);
                 $view->with('btcUSDRate', $btcUSDRate);
             }
         });
