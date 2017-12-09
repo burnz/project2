@@ -352,7 +352,7 @@
                             },
                             success : function (result){
                                 swal ( "Done!" ,  "Order success" ,  "success" );
-                                $('.btcAmount').html(result.btcAmountLeft);
+                                $('.btcAmount').html(result.result);
                                 dataTableHistory.ajax.reload();
                             },
                             error: function(xhr) { // if error occured
