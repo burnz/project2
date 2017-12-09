@@ -179,7 +179,8 @@ class OrderController extends Controller
             ->select('a.code','a.amount','a.price','a.btc_value','a.status','a.created_at')
             //bản thân cần tìm gì ở đây
             ->where('user_id',Auth::user()->id)
-            ->whereNull("deleted_at");
+            ->whereNull("deleted_at")
+            ->orderBy('a.created_at', 'desc');
         //Đếm số bản ghi ở đây
         $totalFiltered = $sql;
         $totalFiltered = $totalFiltered->count();
