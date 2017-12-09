@@ -34,6 +34,7 @@
     </div>
 </div>
 
+{!! Form::open(array('url' => 'wallets/btcwithdraw', 'id' => 'form-withdraw-btc')) !!}
 <div class="modal fade" id="bitcoin-withdraw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -47,34 +48,39 @@
                         <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">BTC Amount</label>
-                                <input type="text" class="form-control" value>
+                                <input type="number" class="form-control btcwithdraw" value id="withdraw-btc-amount" name="withdrawAmount">
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">assignment_ind</i> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">Bitcoin Address</label>
-                                <input type="text" class="form-control" value>
+                                <input type="text" class="form-control" value id="withdraw-address" name="walletAddress">
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">vpn_key</i> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">2FA Code E.g. 123456</label>
-                                <input type="text" class="form-control" value>
+                                <input type="number" class="form-control" value id="withdraw-otp" name="withdrawOPT">
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group pull-right">
-                            <label>Fee: <b>0.0004</b></label>
+                            <label>{{ trans("adminlte_lang::wallet.fee") }}: <b>{{ config("app.fee_withRaw_BTC")}}</b></label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round">Submit</button>
+                <button type="button" class="btn btn-primary btn-round" id="btn-withdraw-btc">{{trans('adminlte_lang::default.submit')}}</button>
                 <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+{!! Form::close() !!}
+
 
 <div class="modal fade" id="bitcoin-buy-carcoin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">

@@ -173,5 +173,42 @@
                 setTooltip('Copied!');
                 hideTooltip();
             });
+
+
+            //withdraw action
+            $('#btn-withdraw-btc').on('click', function () {
+                var btcAmount = $('#withdraw-btc-amount').val();
+                var address = $('#withdraw-address').val();
+                var btcOTP = $('#withdraw-otp').val();
+                if($.trim(btcAmount) == ''){
+                    $("#withdraw-btc-amount").parents("div.form-group").addClass('has-error');
+                    $("#withdraw-btc-amount").parents("div.form-group").find('.help-block').text('The Amount field is required');
+                }else{
+                    $("#withdraw-btc-amount").parents("div.form-group").removeClass('has-error');
+                    $("#withdraw-btc-amount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(address) == ''){
+                    $("#withdraw-address").parents("div.form-group").addClass('has-error');
+                    $("#withdraw-address").parents("div.form-group").find('.help-block').text('The Username field is required');
+                }else{
+                    $("#withdraw-address").parents("div.form-group").removeClass('has-error');
+                    $("#withdraw-address").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(btcOTP) == ''){
+                    $("#withdraw-otp").parents("div.form-group").addClass('has-error');
+                    $("#withdraw-otp").parents("div.form-group").find('.help-block').text('The OTP field is required');
+                }else{
+                    $("#withdraw-otp").parents("div.form-group").removeClass('has-error');
+                    $("#withdraw-otp").parents("div.form-group").find('.help-block').text('');
+                }
+
+                if($.trim(btcAmount) != '' && $.trim(address) != '' && $.trim(btcOTP) != ''){
+                    $('#btn-withdraw-btc').attr('disabled', true);
+                    $('#form-withdraw-btc').submit();
+                }
+            });
+
+            //end withdraw action
 </script>
 @stop

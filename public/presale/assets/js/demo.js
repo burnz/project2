@@ -1165,13 +1165,20 @@ demo = {
 
     },
     initCoutdown: function(){
+        var tomorrow  = moment(new Date()).add(1,'days');
+        tomorrow.set({h: 09, m: 0, s:0});
         var labels = ['hours', 'minutes', 'seconds'],
-          nextYear = (new Date().getFullYear() + 1) + '/01/01',
+          nextYear = tomorrow.format('YYYY/MM/DD H:mm:ss'),
+        // var labels = ['hours', 'minutes', 'seconds'],
+        //   nextYear = (new Date().getFullYear() + 1) + '/01/01',
           template = _.template($('#main-example-template').html()),
           currDate = '00:00:00:00:00',
           nextDate = '00:00:00:00:00',
           parser = /([0-9]{2})/gi,
           $example = $('#countdown');
+
+
+
         // Parse countdown string to an object
         function strfobj(str) {
           var parsed = str.match(parser),

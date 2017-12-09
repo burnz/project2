@@ -46,7 +46,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return;
+        return redirect('/order');;
         $data = [];
         //Tong doanh so and ben trai and ben phai
         $data['newF1InWeek']      = $this->getF1CurrentWeek();
@@ -136,7 +136,7 @@ class HomeController extends Controller
             $disabled = false;
         }
         
-        return view('adminlte::home.index')->with(compact('data','disabled'));
+        //return view('adminlte::home.index')->with(compact('data','disabled'));
     }
 
     /*

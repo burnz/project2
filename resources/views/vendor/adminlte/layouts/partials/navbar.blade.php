@@ -33,8 +33,8 @@
                         </ul>
                         <ul class="navbar-wallet align-self-center">
                             <li><b class="bitcoin-color">1 BTC </b><span class="btcusd"></span></li>
-                            <li><b class="carcoin-color">1 CAR </b><span class="carusd"></span></li>
-                            <li><b class="carcoin-color">1 CAR </b><span class="carbtc"></span></li>
+                            <!-- <li><b class="carcoin-color">1 CAR </b><span class="carusd"></span></li>
+                            <li><b class="carcoin-color">1 CAR </b><span class="carbtc"></span></li> -->
                         </ul>
                     </div>
                     <div class="collapse navbar-collapse ">
