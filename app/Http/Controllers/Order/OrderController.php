@@ -52,6 +52,10 @@ class OrderController extends Controller
             $userCoin = Auth::user()->userCoin;
             $btcAmount = $request->amount * $request->price / ExchangeRate::getBTCUSDRate();
 
+            if(!is_numeric($request->amount) || !is_numeric($request->price)) {
+                throw new \Exception("Error Processing Request");
+            }
+
             if( $request->amount <= 0 || $request->price <= 0 || $request->price < $price || $btcAmount > $userCoin->btcCoinAmount){
                 throw new \Exception("Error Processing Request");
             }
