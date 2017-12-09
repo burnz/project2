@@ -37,7 +37,7 @@ class TransferCarPresale
         try {
             $lstOrder = OrderList::where('created_at', '>', $yesterday)
                             ->where('created_at', '<', $today)
-                            ->where('status', 0)
+                            ->where('status', 1)
                             ->orderBy('price', 'desc')
                             ->get();
 
@@ -46,12 +46,12 @@ class TransferCarPresale
             foreach($lstOrder as $order)
             {
                 //if order success continue
-                if($order->status == 1 || $order->status == 2) continue;
+                if($order->status == 2 || $order->status == 0) continue;
 
                 //If sold out change all order status pending => cancel
                 if($maxCoinSupply == 0)
                 {
-                    $order->status = 2;
+                    $order->status = 0;
                     $order->save();
 
                     //Return BTC
@@ -67,7 +67,7 @@ class TransferCarPresale
                     $userCoin->save();
 
                     //Chang status order from pending => success
-                    $order->status = 1;
+                    $order->status = 2;
                     $order->save();
                     $maxCoinSupply = $maxCoinSupply - $order->amount;
                 } else
@@ -78,7 +78,7 @@ class TransferCarPresale
                     $userCoin->save();
 
                     //Chang status order from pending => success, update amount order
-                    $order->status = 1;
+                    $order->status = 2;
                     $order->amount = $maxCoinSupply;
                     $order->save();
 
@@ -92,7 +92,7 @@ class TransferCarPresale
                             'total' = $totalValue,
                             'btc_rate' = $order->btc_rate,
                             'btc_value' = $btcValue,
-                            'status' => 2,
+                            'status' => 0,
                             'created_at' => $order->created_at,
                             'updated_at' => $order->updated_at
                         ];
