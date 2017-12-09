@@ -57,32 +57,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="card-content p-0">
-                                            <!-- <div class="card-filter clearfix">
-                                                <div class="col-md-4">
-                                                    <div class="form-group label-floating">
-                                                        <label class="control-label">Select Type</label>
-                                                        <select class="form-control">
-                                                            <option disabled="" selected=""></option>
-                                                            <option value="5">Buy CLP By USD</option>
-                                                            <option value="6">Transfer From Holding Wallet</option>
-                                                            <option value="7">Buy CLP By BTC</option>
-                                                            <option value="8">Sell CLP</option>
-                                                            <option value="10">Withdraw</option>
-                                                            <option value="12">Transfer</option>
-                                                            <option value="14">Deposit</option>
-                                                            <option value="15">Buy Package</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <button type="button" class="btn btn-primary btn-round">Filter
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-primary btn-round">
-                                                        Clear
-                                                    </button>
-                                                </div>
-                                            </div> -->
+                                        <div class="card-content p-0">                                            
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
