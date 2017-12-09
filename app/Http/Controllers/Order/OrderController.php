@@ -79,11 +79,13 @@ class OrderController extends Controller
                     //$endTime = date('Y-m-d 21:00:00');
                 }
 
-                $totalOrderInDay = OrderList::whereDate('created_at', date('Y-m-d'))->count();
-                $totalValueOrderInday = OrderList::whereDate('created_at',date('Y-m-d'))->sum('amount');
+                $totalOrderInDay = OrderList::where('created_at', '>', $startTime)->count();
+                $totalValueOrderInday = OrderList::where('created_at', '>', $startTime)->sum('amount');
+                $totalUSDValueInday = OrderList::where('created_at', '>', $startTime)->sum('total');
                 $data = [
                         'totalOrderInDay' => $totalOrderInDay,
-                        'totalValueOrderInday' => $totalValueOrderInday
+                        'totalValueOrderInday' => $totalValueOrderInday,
+                        'totalUSDValue' => $totalUSDValueInday
                     ];
                 $dataTableRealTime = DB::table("order_lists")
                     ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
@@ -113,27 +115,41 @@ class OrderController extends Controller
                 throw new \Exception("Error Processing Request");
             }
         }
-        $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();
-        $totalValueOrderInday = OrderList::whereDate('created_at',date('Y-m-d'))->sum('amount');
+
+        $currentHour = date('H');
+        if($currentHour >= 21) {
+            $startTime = date('Y-m-d 21:00:00');
+            //$endTime = date('Y-m-d 23:59:59');
+        } else {
+            $yesterday = Carbon::yesterday()->toDateString();
+            $startTime = strtotime($yesterday . '+21 hours');
+
+            $startTime = date('Y-m-d H:i:s', $startTime);
+            //$endTime = date('Y-m-d 21:00:00');
+        }
+
+        $totalOrderInDay = OrderList::where('created_at', '>', $startTime)->count();
+        $totalValueOrderInday = OrderList::where('created_at', '>', $startTime)->sum('amount');
+        $totalUSDValueInday = OrderList::where('created_at', '>', $startTime)->sum('total');
         $dataTableRealTime = DB::table("order_lists")
             ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
             ->whereNull("deleted_at")
-            ->whereDate('created_at', '=', date('Y-m-d'))
+            ->where('created_at', '>', $startTime)
             ->groupBy('price')
             ->orderByRaw('price Desc')
             ->limit(20)
             ->get()
             ->toArray();
         //Get total value order
-        $oValueOrder = DB::table("order_lists")
-            ->select(DB::raw('SUM(total) as total'))
-            ->whereDate('created_at', '=', date('Y-m-d'))
-            ->get();
-        $totalValueOrder = isset($oValueOrder->total) ? $oValueOrder->total : 0;
+        // $oValueOrder = DB::table("order_lists")
+        //     ->select(DB::raw('SUM(total) as total'))
+        //     ->whereDate('created_at', '=', date('Y-m-d'))
+        //     ->get();
+        // $totalValueOrder = isset($oValueOrder->total) ? $oValueOrder->total : 0;
 
         //Get amount BTC
         $amountBTC = Auth::user()->userCoin->btcCoinAmount;
-        return view('adminlte::order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalValueOrder', 'amountBTC'));
+        return view('adminlte::order.index',compact('totalOrderInDay','totalValueOrderInday','dataTableRealTime', 'price', 'totalUSDValueInday', 'amountBTC'));
     }
 
     /*

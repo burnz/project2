@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="card-content">
                                     <p class="category">Order Total</p>
-                                    <h4 class="card-title">$ {{ $totalValueOrder }}</h4>
+                                    <h4 class="card-title">$ <span class="totalUSDValueInday">{{ number_format($totalUSDValueInday, 2) }}</span></h4>
                                 </div>
                                 <div class="card-footer">
                                     <div class="stats">
@@ -84,7 +84,8 @@
                                     <i class="material-icons">av_timer</i>
                                 </div>
                                 <div class="card-content">
-                                    <p class="category">Auction Order Volume</p>
+                                    <p class="category">Auction
+                                        <br>Orders</p>
                                     <h4 class="card-title totalOrderInDay" >{{ number_format($totalOrderInDay) }}</h4>
                                 </div>
                                 <div class="card-footer">
@@ -100,8 +101,7 @@
                                     <i class="material-icons">access_time</i>
                                 </div>
                                 <div class="card-content">
-                                    <p class="category">Auction
-                                        <br>Orders</p>
+                                    <p class="category">Auction Order Volume</p>
                                     <h4 class="card-title totalValueOrderInDay">{{ number_format($totalValueOrderInday) }}</h4>
                                 </div>
                                 <div class="card-footer">
@@ -417,6 +417,7 @@
                 var result = JSON.parse(data);
                 $(".totalOrderInDay").html(result.totalOrderInDay);
                 $(".totalValueOrderInDay").html(result.totalValueOrderInday);
+                $(".totalUSDValueInday").html(result.totalUSDValue);
                 var html = '';
                 result.tableCommand.forEach(function (element) {
                     html += '<tr>' + '<td>' + element.price + '</td>' + '<td>' + element.amount + '</td>' + '<td>' + element.total + '</td>' + '</tr>';
