@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="card-content">
                                     <p class="category">Auction Order Volume</p>
-                                    <h4 class="card-title"><img src="/presale/assets/img/ic_zcoin-pri.svg" style="width: 24px">{{ number_format($totalOrderInDay) }}</h4>
+                                    <h4 class="card-title totalOrderInDay" >{{ number_format($totalOrderInDay) }}</h4>
                                 </div>
                                 <div class="card-footer">
                                     <div class="stats">
