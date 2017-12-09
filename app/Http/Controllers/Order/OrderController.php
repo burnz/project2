@@ -192,8 +192,8 @@ class OrderController extends Controller
 
         foreach ($data as $key => $value) {
             $nestedData=array();
-            $nestedData[] = date('d-m-Y',strtotime( $value->created_at ));
-            if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
+            $nestedData[] = date('d-m-Y', strtotime( $value->created_at ));
+            //if (Carbon::now()->format('Y-m-d') === Carbon::parse($value->created_at)->format('Y-m-d')){
                 if($value->status == self::CANCEL){
                     $nestedData[] = '<b><strong>Canceled</strong></b>';
                 } elseif($value->status == self::SUCCESS){
@@ -201,9 +201,9 @@ class OrderController extends Controller
                 } else {
                     $nestedData[] = '<b style="color: orange"><strong>Processing</strong></b>';
                 }
-            } else {
-                $nestedData[] = '<b><strong>Canceled</strong></b>';
-            }
+            // } else {
+            //     $nestedData[] = '<b><strong>Canceled</strong></b>';
+            // }
             $nestedData[] = $value->amount;
             $nestedData[] = $value->price;
             $nestedData[] = number_format($value->btc_value, 5);
