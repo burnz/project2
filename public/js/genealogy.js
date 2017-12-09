@@ -20,7 +20,7 @@ $(function () {
 								text: user.uid +' '+ user.u,
 								data: {
 									username: user.id +' '+ user.u,
-                                    packageId: buildPackHtml(user.packageId),
+                                    packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                     totalMembers: user.totalMembers,
                                     leg: user.leg,
                                     loyaltyId: buildLoyaltyHtml(user.loyaltyId),
@@ -60,9 +60,9 @@ $(function () {
 			columns: [
 				{width: '50%', header: "ID/Username"},
 				{width: '5%', value: "totalMembers", header: "Total member"},
-				{width: '5%', value: "packageId", header: "Active Package"},
+				{width: '5%', value: "packageId", header: "Lending Package"},
 				{width: '5%', value: "leg", header: "Left/Right"},
-				{width: '5%', value: "loyaltyId", header: "Loyalty"}
+				{width: '5%', value: "loyaltyId", header: "Rank"}
 			],
 			width: "100%",
 			fixedHeader: false,
