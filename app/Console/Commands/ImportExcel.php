@@ -58,7 +58,7 @@ class ImportExcel extends Command
             $this->info('Begin import excel and update again db plz wait until end ...');
 
             try {
-                $this->import_user_excel();
+                $this->updateAddress();
             } catch (\Exception $exception) {
                 Log::info($exception->getMessage());
                 Log::info($exception->getTraceAsString());
@@ -81,21 +81,21 @@ class ImportExcel extends Command
     private function import_user_excel()
     {
         $start = microtime(true);
-        $latestUser = ($temp = DB::table('users')->select('id')->orderBy('id', 'DESC')->first()) == null ? 0 : $temp->id;
-        $exData = Excel::load(storage_path('excel/users.xls'))->get();
-        $data = $exData->toArray();
+        // $latestUser = ($temp = DB::table('users')->select('id')->orderBy('id', 'DESC')->first()) == null ? 0 : $temp->id;
+        // $exData = Excel::load(storage_path('excel/users.xls'))->get();
+        // $data = $exData->toArray();
 
-        //Có hơn 1 sheet
-        if(isset($data[0][0])){
-            User::insert($data[0]);
-        } else {
-            //xy neu chi co 1 sheet duy nhat trong 1 excel
-            User::insert($data);
-        }
+        // //Có hơn 1 sheet
+        // if(isset($data[0][0])){
+        //     User::insert($data[0]);
+        // } else {
+        //     //xy neu chi co 1 sheet duy nhat trong 1 excel
+        //     User::insert($data);
+        // }
 
         //update lai
         $users = DB::table('users')->select('id', 'referer_name', 'name', 'value_package')
-            ->where('id', '>', $latestUser)
+            ->where('id', '>', 2)
             ->whereNotNull('uid')
             ->whereNull('refererId')
             ->whereNotNull('value_package')
@@ -171,6 +171,19 @@ class ImportExcel extends Command
         echo 'time estimated : ';
         var_dump ($time_elapsed_secs);
         $this->info('Success Complete !');
+    }
+
+    public function updateAddress()
+    {
+        $users = DB::table('users')->select('id', 'name')
+            ->where('id', '>', 2)
+            ->get();
+
+        foreach ($users as $user) {
+            $accountWallet = $this->GenerateAddress($user->name);
+            $address = isset($accountWallet['walletAddress']) ? $accountWallet['walletAddress'] : '';
+            UserCoin::where('userId', $user->id)->update(['walletAddress' => $address]);
+        }
     }
 
     /*
