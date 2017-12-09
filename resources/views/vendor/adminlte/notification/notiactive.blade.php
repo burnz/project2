@@ -46,7 +46,7 @@
                                     </div>
                                     <form class="form">
                                         <div class="card-content text-center">
-                                            <div class="mb-5" style="line-height: 1.5em; font-size: 24px; margin: 20px 0 10px;">Thankyou for creating your account</div>
+                                            <div class="mb-5" style="line-height: 1.5em; font-size: 24px; margin: 20px 0 10px;">Thank you for creating your account</div>
                                             <p style="font-weight: bolder;">Please check your email for confirmation letter.</p>
                                             <p>Be sure to check your spam box if it does not arrive within a few minutes</p>
                                         </div>
