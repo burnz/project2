@@ -57,7 +57,17 @@ class LoginController extends Controller{
     }
 
     public function username(){
-        return config('auth.providers.users.field', 'email');
+        $login = request()->input('login');
+        // check login field
+        $login_type = filter_var( $login, FILTER_VALIDATE_EMAIL ) ? 'email' : 'name';
+        // merge our login field into the request with either email or username as key
+        request()->merge([ $login_type => $login ]);
+        if( $login_type == 'name'){
+            return config('auth.providers.users.field', 'name');
+        } else {
+            return config('auth.providers.users.field', 'email');
+        }
+
     }
 
     protected function redirectTo()
@@ -75,7 +85,7 @@ class LoginController extends Controller{
     }
 
     protected function attemptLogin(Request $request){
-        if($this->username() === 'email'){
+        if($this->username() === 'email' || $this->username() === 'name'){
             return $this->attemptLoginAtAuthenticatesUsers($request);
         }
         if(!$this->attemptLoginAtAuthenticatesUsers($request)){
@@ -125,13 +135,31 @@ class LoginController extends Controller{
     }
 
     protected function validateLogin(Request $request){
-        $this->validate($request, [
-            $this->username() => 'required|exists:users,' . $this->username() . ',active,1',
-            'password' => 'required|string',
-            'g-recaptcha-response' => config('app.enable_captcha') ? 'required|captcha' : '',
-        ], [
-            $this->username() . '.exists' => 'The selected email is invalid or the account is not active.'
-        ]);
+        // get our login input
+        $login = $request->input('login');
+        // check login field
+        $login_type = filter_var( $login, FILTER_VALIDATE_EMAIL ) ? 'email' : 'username';
+        // merge our login field into the request with either email or username as key
+        $request->merge([ $login_type => $login ]);
+
+        if ( $login_type == 'email' ) {
+            $this->validate($request, [
+                $this->username() => 'required|exists:users,' . $this->username() . ',active,1',
+                'password' => 'required|string',
+                'g-recaptcha-response' => config('app.enable_captcha') ? 'required|captcha' : '',
+            ], [
+                $this->username() . '.exists' => 'The selected email is invalid or the account is not active.'
+            ]);
+        } else {
+            $this->validate($request, [
+                $this->username() => 'required|exists:users,' . $this->username() . ',active,1',
+                'password' => 'required|string',
+                'g-recaptcha-response' => config('app.enable_captcha') ? 'required|captcha' : '',
+            ], [
+                $this->username() . '.exists' => 'The selected name is invalid or the account is not active.'
+            ]);
+        }
+
     }
 
     protected function attempLoginUsingUsernameAsAnEmail(Request $request){
