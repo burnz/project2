@@ -147,8 +147,8 @@
                                             </span>
                                     <div class="form-group label-floating">
                                         <label class="control-label">You'll receive</label>
-                                        <input name="amount" type="text" class="form-control" id="total">
-                                        <span class="material-input"></span>
+                                        <input name="amount" type="number" min="1" step="1" class="form-control" id="total">
+                                        <span class="material-input total-error" style="color: red"></span>
                                     </div>
                                 </div>
                                 <div class="input-group form-group">
@@ -166,7 +166,7 @@
                                                 step="0.01"
                                                 required
                                         >
-                                        <span class="material-input"></span>
+                                        <span class="material-input price-error" style="color: red"></span>
                                     </div>
                                 </div>
                                 <div class="input-group form-group">
@@ -303,6 +303,21 @@
 
             $('#order').click(function (event) {
                 event.preventDefault();
+                var total = document.getElementById("total");
+                var price = document.getElementById("price");
+                if(!total.checkValidity()) {
+                    $('.total-error').html(total.validationMessage);
+                    return ;
+                } else {
+                    $('.total-error').html('');
+                }
+
+                if(!price.checkValidity()) {
+                    $('.price-error').html(price.validationMessage);
+                    return ;
+                } else {
+                    $('.price-error').html('');
+                }
 
                 swal({
                     title: 'Are you sure?',

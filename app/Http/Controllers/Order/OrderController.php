@@ -85,7 +85,7 @@ class OrderController extends Controller
                 $data = [
                         'totalOrderInDay' => $totalOrderInDay,
                         'totalValueOrderInday' => $totalValueOrderInday,
-                        'totalUSDValue' => $totalUSDValueInday
+                        'totalUSDValue' => number_format($totalUSDValueInday, 2)
                     ];
                 $dataTableRealTime = DB::table("order_lists")
                     ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
