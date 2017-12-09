@@ -46,6 +46,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        return;
         $data = [];
         //Tong doanh so and ben trai and ben phai
         $data['newF1InWeek']      = $this->getF1CurrentWeek();
