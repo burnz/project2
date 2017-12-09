@@ -97,13 +97,16 @@ class OrderController extends Controller
 
                 $data['tableCommand'] = $dataTableRealTime;
                 $redis = LRedis::connection();
-                $result = $redis->publish('message', json_encode($data) );
+                $redis->publish('message', json_encode($data) );
+
+                //Return btc amount left
+                $btcAmountLeft = number_format(($userCoin->btcCoinAmount - $btcAmount),  5);
 
                 //Subtract btc in btc wallet
                 $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
                 $userCoin->save();
 
-                return $this->responseSuccess($result);
+                return $this->responseSuccess($btcAmountLeft);
             } catch (\Exception $exception){
                 Log::info($exception->getMessage());
                 Log::info($exception->getTraceAsString());

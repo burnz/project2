@@ -140,7 +140,7 @@
                         </div>
                         <div class="card-content text-center">
                             <form method="#" action="regular.html#">
-                                <p class="text-thirdary">You have {{ number_format($amountBTC, 5) }} BTC / <span class="amountUSD"></span>USD</p>
+                                <p class="text-thirdary">You have <span class="btcAmount">{{ number_format($amountBTC, 5) }}</span> BTC / <span class="amountUSD"></span>USD</p>
                                 <div class="input-group form-group">
                                             <span class="input-group-addon">
                                                 <img src="/presale/assets/img/ic_zcoin-pri.svg" style="width: 24px;">
@@ -352,6 +352,7 @@
                             },
                             success : function (result){
                                 swal ( "Done!" ,  "Order success" ,  "success" );
+                                $('.btcAmount').html(result.btcAmountLeft);
                                 dataTableHistory.ajax.reload();
                             },
                             error: function(xhr) { // if error occured
