@@ -37,14 +37,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#reinvest-buy-carcoin">
-                                                <span class="btn-label">
-                                                    <i class="material-icons">add_shopping_cart</i>
-                                                </span> Buy Carcoin
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
