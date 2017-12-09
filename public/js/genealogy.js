@@ -39,7 +39,7 @@ $(function () {
 							text: user.uid +' '+ user.u,
 							data: {
 								username: user.id +' '+ user.u,
-                                packageId: buildPackHtml(user.packageId),
+                                packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                 totalMembers: user.totalMembers,
                                 leg: user.leg,
                                 loyaltyId: buildLoyaltyHtml(user.loyaltyId),
@@ -71,7 +71,7 @@ $(function () {
 	});
 
 	function buildPackHtml(packageId) {
-
+		
 		var innerHtml = '';
 		var finalHtml = ''
 		if(packageId == 0) {
