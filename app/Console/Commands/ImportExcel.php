@@ -138,7 +138,7 @@ class ImportExcel extends Command
                 'refererId' => $dataUpdate['refererId'],
                 'packageId' => $packageId,
                 'packageDate'=> \Carbon\Carbon::now(),
-                'status' => 1
+                'status' => $packageId > 0 ? 1 : 0
             ];
 
             //UserCoin
