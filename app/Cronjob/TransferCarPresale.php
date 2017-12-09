@@ -26,21 +26,17 @@ class TransferCarPresale
     * This cronjob function will every days to caculate and return interest to user's wallet 
     */
     public static function transfer(){
-        set_time_limit(0);
         $yesterday = Carbon::yesterday();
         $today = Carbon::today();
 
         if($today > config('app.pre_sale_end')) return ;
-        if($today < '2017-12-10') return ;
 
-        $yesterday = Carbon::yesterday()->toDateString();
-        $yesterday21h = $yesterday . ' 21:00:00';
-        $today = Carbon::today()->toDateString();
-        $today20h59 = $today . ' 20:59:00';
-        
+        set_time_limit(0);
+        $yesterday = Carbon::yesterday();
+        $today = Carbon::today();
         try {
-            $lstOrder = OrderList::where('created_at', '>=', $yesterday21h)
-                            ->where('created_at', '<=', $today20h59)
+            $lstOrder = OrderList::where('created_at', '>', $yesterday)
+                            ->where('created_at', '<', $today)
                             ->where('status', 0)
                             ->orderBy('price', 'desc')
                             ->get();

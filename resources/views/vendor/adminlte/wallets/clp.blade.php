@@ -31,11 +31,23 @@
                                             <div class="right">
                                                 <span>Your Balance</span>
                                                 <div class="content carcoin-color">
-                                                {{ number_format($walletAmount['amountCLP'], 2) }}
+                                                {{ number_format($walletAmount['amountCLP'], 5) }}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="align-self-center">                                           
+                                        <div class="align-self-center">
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-sell">
+                                                <span class="btn-label">
+                                                                            <i class="material-icons">shopping_basket</i>
+                                                                        </span> Sell Carcoin
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                            <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-buy-package">
+                                                <span class="btn-label">
+                                                                            <i class="material-icons">card_giftcard</i>
+                                                                        </span> Buy Package
+                                                <div class="ripple-container"></div>
+                                            </button>
                                             <button class="btn btn-thirdary btn-round" disabled data-toggle="modal" data-target="#carcoin-deposit">
                                                 <span class="btn-label">
                                                                             <i class="material-icons">shop</i>
@@ -96,6 +108,62 @@
                                                         <th>Info</th>
                                                     </thead>
                                                     <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.399</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.368</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.366</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.325</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.315</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.312</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>2017/12/30 10:07</td>
+                                                            <td>0.312</td>
+                                                            <td>54.213</td>
+                                                            <td>354.215</td>
+                                                            <td>This is Info</td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>

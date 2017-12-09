@@ -43,7 +43,7 @@ class OrderController extends Controller
         //Get today min price
         $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
         if(empty($oPrice)){
-            $price = OrderMin::orderBy('id', 'asc')->first()->price;
+            $price = OrderMin::orderBy('id', 'desc')->first()->price;
         } else {
             $price = $oPrice->price;
         }
@@ -57,13 +57,15 @@ class OrderController extends Controller
             }
 
             try {
+                //Subtract btc in btc wallet
+                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
+                $userCoin->save();
+
                 $orderList = new OrderList();
                 $orderList->code = md5(uniqid(Auth::user()->id, true));
                 $orderList->user_id = Auth::user()->id;
                 $orderList->amount = $request->amount;
                 $orderList->price = $request->price;
-                $orderList->btc_rate = ExchangeRate::getBTCUSDRate();
-                $orderList->btc_value = $btcAmount;
                 $orderList->total = $request->amount * $request->price;
                 $orderList->save();
                 $totalOrderInDay = OrderList::whereDate('created_at', date('Y-m-d'))->count();
@@ -85,16 +87,11 @@ class OrderController extends Controller
                 $data['tableCommand'] = $dataTableRealTime;
                 $redis = LRedis::connection();
                 $result = $redis->publish('message', json_encode($data) );
-
-                //Subtract btc in btc wallet
-                $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount - $btcAmount);
-                $userCoin->save();
-
                 return $this->responseSuccess($result);
             } catch (\Exception $exception){
                 Log::info($exception->getMessage());
                 Log::info($exception->getTraceAsString());
-                throw new \Exception("Error Processing Request");
+                return $this->responseError(404,'Error Socket');
             }
         }
         $totalOrderInDay = OrderList::whereDate('created_at',date('Y-m-d'))->count();

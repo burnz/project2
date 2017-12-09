@@ -70,8 +70,8 @@ class LoginController extends Controller{
 
         //$this->redirectTo = '/home';
         //return '/home';
-        $this->redirectTo='/order';
-        return '/order';
+        $this->redirectTo='/presale';
+        return '/presale';
     }
 
     protected function attemptLogin(Request $request){

@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://mycarcoin.com'),
+    'url' => env('APP_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'America/New_York',
+    'timezone' => 'Europe/Copenhagen',
 
     /*
     |--------------------------------------------------------------------------
@@ -138,7 +138,7 @@ return [
     'time_interval'=> 30000,
     'count_down_time_login' => 15,
     'amount_add_wallet'=> 10,
-    'pre_sale_end'=> env('PRE_SALE_END', '2017-12-31'),
+    'pre_sale_end'=> env('PRE_SALE_END', '2017-12-28'),
     'clp_price' => env('CLP_PRICE', 1),
     'virtual_account' => env('LIST_VIRTUAL_ACCOUNT'),
     /*

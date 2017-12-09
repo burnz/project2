@@ -70,6 +70,37 @@ $(function () {
 		}
 	});
 
+	function buildPackHtml(packageId) {
+		
+		var innerHtml = '';
+		var finalHtml = ''
+		if(packageId == 0) {
+			innerHtml = '<b class="psi" title="Tiny">T</b><b class="psi" title="Small">S</b><b class="psi" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+		}
+		else if(packageId == 1) {
+			innerHtml = '<b class="psi psi1" title="Tiny">T</b><b class="psi" title="Small">S</b><b class="psi" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+		}
+		else if(packageId == 2) {
+			innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+		}
+		else if(packageId == 3) {
+			innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+		}
+		else if(packageId == 4) {
+			innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi psi4" title="Large">L</b><b class="psi" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+		}
+		else if(packageId == 5) {
+			innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi psi4" title="Large">L</b><b class="psi psi5" title="Huge">H</b><b class="psi" title="Angel">A</b>';
+		}
+		else {
+			innerHtml = '<b class="psi  psi1" title="Tiny">T</b><b class="psi psi2" title="Small">S</b><b class="psi psi3" title="Medium">M</b><b class="psi psi4" title="Large">L</b><b class="psi psi5" title="Huge">H</b><b class="psi psi6" title="Angel">A</b>';
+		}
+
+		finalHtml = '<div class="psg">' + innerHtml + '</div>';
+
+		return finalHtml;
+	}
+
 	function buildLoyaltyHtml(loyaltyId) {
 
 		var innerHtml = '';

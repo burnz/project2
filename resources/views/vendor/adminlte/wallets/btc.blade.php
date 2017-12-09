@@ -134,3 +134,42 @@
 </div>
 @include('adminlte::wallets.wallet-modal')
 @endsection
+
+@section('script')
+<script src="{{ URL::to("js/qrcode.min.js") }}"></script>
+<script src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
+<script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+                    width: 180,
+                    height: 180,
+                    text: '{{ $walletAddress }}',
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+    $('.btnwallet-address').tooltip({
+                trigger: 'click',
+                placement: 'bottom'
+            });
+            
+            function setTooltip(message) {
+                $('.btnwallet-address')
+                  .attr('data-original-title', message)
+                  .tooltip('show');
+            }
+            
+            function hideTooltip() {
+                setTimeout(function() {
+                  $('button').tooltip('hide');
+                }, 1000);
+              }
+            
+            var clipboard = new Clipboard('.btnwallet-address');
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                setTooltip('Copied!');
+                hideTooltip();
+            });
+</script>
+@stop
