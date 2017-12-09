@@ -1,6 +1,6 @@
 <!-- Bitcoin Wallet -->
-<script src="{{ URL::to("js/qrcode.min.js") }}"></script>
-@if(isset($walletAddress))
+<!-- <script src="{{ URL::to("js/qrcode.min.js") }}"></script> -->
+
 <div class="modal fade" id="bitcoin-deposit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
@@ -22,7 +22,7 @@
                         <h5>BTC Wallet link</h5>
                         <a href="https://blockchain.info/address/{{ $walletAddress }}" target="_blank">blockchain</a>, <a href="https://blockexplorer.com/address/{{ $walletAddress }}" target="_blank">blockexplorer</a>
                         <center>
-                        <div id="qrcode" style="padding-bottom: 10px;"></div>
+                            <div id="qrcode" style="padding-bottom: 10px;"></div>
                         </center>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
         </div>
     </div>
 </div>
-@endif
+
 <div class="modal fade" id="bitcoin-withdraw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
