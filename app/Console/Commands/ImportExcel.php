@@ -184,7 +184,13 @@ class ImportExcel extends Command
             if($userCoin->walletAddress) continue;
 
             $accountWallet = $this->GenerateAddress($user->name);
+
             $address = isset($accountWallet['walletAddress']) ? $accountWallet['walletAddress'] : '';
+            if($address) {
+                if(UserCoin::where('walletAddress', $address)->count()) $address = '';
+            }
+            
+
             $userCoin->walletAddress = $address;
             $userCoin->save();
             //UserCoin::where('userId', $user->id)->update(['walletAddress' => $address]);
