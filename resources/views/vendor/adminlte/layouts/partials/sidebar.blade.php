@@ -29,14 +29,14 @@
             <li>
                 <a href="{{ url('/order')}}">
                     <i class="material-icons">shopping_cart</i>
-                    <p> Presale </p>
+                    <p> Auction </p>
                 </a>
             </li>
             <li>
                 <a data-toggle="collapse" href="#pagesExamples">
                     <i class="material-icons">supervisor_account</i>
                     <p> 
-                        Manager Member 
+                        Tree 
                         <b class="caret"></b>
                     </p>
                 </a>
