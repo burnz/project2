@@ -180,10 +180,16 @@ class ImportExcel extends Command
             ->get();
 
         foreach ($users as $user) {
+            $userCoin = UserCoin::where('userId', $user->id);
+            if($userCoin->walletAddress) continue;
+            
             $accountWallet = $this->GenerateAddress($user->name);
             $address = isset($accountWallet['walletAddress']) ? $accountWallet['walletAddress'] : '';
-            UserCoin::where('userId', $user->id)->update(['walletAddress' => $address]);
+            $userCoin->walletAddress = $address;
+            $userCoin->save();
+            //UserCoin::where('userId', $user->id)->update(['walletAddress' => $address]);
         }
+        $this->info('Success update !');
     }
 
     /*
