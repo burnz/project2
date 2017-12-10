@@ -1,19 +1,18 @@
 @extends('adminlte::layouts.errors')
+@section('title')
+{{ trans('adminlte_lang::message.pagenotfound') }}
+@stop
+@section('content')
 
-@section('htmlheader_title')
-    {{ trans('adminlte_lang::message.pagenotfound') }}
-@endsection
-
-@section('main-content')
-
-    <div class="error-page">
-        <h2 class="headline text-yellow"> 403</h2>
-        <div class="error-content">
-            <h3><i class="fa fa-warning text-yellow"></i> Oops! {{ trans('adminlte_lang::message.somethingwrong') }}.</h3>
-            <p>
-                {{ trans('adminlte_lang::message.notfindpage') }}
-                {{ trans('adminlte_lang::message.mainwhile') }} <a href='{{ url('/home') }}'>{{ trans('adminlte_lang::message.returndashboard') }}</a>
-            </p>
-        </div><!-- /.error-content -->
-    </div><!-- /.error-page -->
+    <div class="main">
+        <h3>
+            403
+        </h3>
+        <h1> Oops! {{ trans('adminlte_lang::message.somethingwrong') }}</h1>
+        <p>
+            {{ trans('adminlte_lang::message.notfindpage') }}   
+            <br/> 
+            <span>{{ trans('adminlte_lang::message.mainwhile') }} <a href='{{ url("/") }}'>{{ trans('adminlte_lang::message.returndashboard') }}</a></span>
+        </p> 
+    </div>
 @endsection
