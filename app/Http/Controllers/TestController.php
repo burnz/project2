@@ -21,6 +21,8 @@ use App\CLPWallet;
 use App\CLPWalletAPI;
 use App\Helper\Helper;
 use App\Cronjob\GetClpWallet;
+use App\Cronjob\TransferCarPresale;
+use Carbon\Carbon;
 /**
  * Description of TestController
  *
@@ -92,18 +94,60 @@ class TestController {
 
     function test() {
 
-        $users = User::where('id', '>', 1)->get();
-        foreach($users as $user) {
-            User::updateUserGenealogy($user->id);
+        //Update address for NULL user
+        $nullUsers = UserCoin::whereNull('walletAddress')->get();
+
+        dd($nullUsers);
+
+        foreach($nullUsers as $userCoin)
+        {
+            $user = User::find($userCoin->userId);
+            if($user->name){
+                $walletAddress = $this->GenerateAddress($user->name);
+                $userCoin->walletAddress = $walletAddress['walletAddress'];
+                $userCoin->save();
+            }
         }
-        echo "done"; exit;
+       
+        dd("Update userWallet success");
+    }
 
-        dd(config('app.second_private_end'));
-       $newGetClp = new CLPWalletAPI();
-       $result = $newGetClp->addInvestor('0x04A3dCB3DE5fA5A54c78e2CeDa533E56399582B8','11');
+    private function GenerateAddress( $name = null ) {
+        $data = [];
+       
+        // tạo acc ví cho tk
+        $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
+        $client = Client::create($configuration);
 
-       dd($result);
-       GetClpWallet::getClpWallet();
+        //Account detail
+        $account = $client->getAccount(config('app.coinbase_account'));
+
+        // Generate new address and get this adress
+        $address = new Address([
+            'name' => $name
+        ]);
+
+        //Generate new address
+        $client->createAccountAddress($account, $address);
+
+        //Get all address
+        $listAddresses = $client->getAccountAddresses($account);
+
+        $address = '';
+        $id = '';
+        foreach($listAddresses as $add) {
+            if($add->getName() == $name) {
+                $address = $add->getAddress();
+                $id = $add->getId();
+                break;
+            }
+        }
+
+        $data = [ "accountId" => $id,
+            "walletAddress" => $address ];
+
+        return $data;
+            
     }
 
 }
