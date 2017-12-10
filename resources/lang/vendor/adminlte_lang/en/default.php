@@ -34,7 +34,7 @@ return [
     'manage'					=> 'Manage',
     'add'						=> 'Add',
 	'welcome' 					=> 'Welcome',
-	'loyalty'					=> 'Loyalty',
+	'loyalty'					=> 'Rank',
 	'submit'					=> 'Submit'
     
 ];
