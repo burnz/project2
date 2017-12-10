@@ -89,9 +89,9 @@ class TransferCarPresale
                             'user_id' => $order->user_id,
                             'amount' => ($order->amount - $maxCoinSupply),
                             'price' => $order->price,
-                            'total' = $totalValue,
-                            'btc_rate' = $order->btc_rate,
-                            'btc_value' = $btcValue,
+                            'total' => $totalValue,
+                            'btc_rate' => $order->btc_rate,
+                            'btc_value' => $btcValue,
                             'status' => 0,
                             'created_at' => $order->created_at,
                             'updated_at' => $order->updated_at
