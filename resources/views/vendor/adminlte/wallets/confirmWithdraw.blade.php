@@ -83,10 +83,10 @@
     </body>
     
 @endsection
-@section('script')
+@include('adminlte::layouts.partials.scripts_footer')
 <script>
     $(document).ready(function(){
-        $('#withdraw_cancel').on('click', function () {
+        $('#withdraw_cancel').click(function () {
             if (confirm("Are you sure?")) {
                 $('#withdraw_status').val("1");
                 $('#withdraw_confirm').submit();
@@ -95,7 +95,7 @@
             return false;
         });
 
-        $('#confirm_submit').on('click', function(){
+        $('#confirm_submit').click(function(){
             if (confirm("Are you sure?")) {
                 $('#confirm_submit').attr('disabled', true);
                 $('#withdraw_confirm').submit();
@@ -105,4 +105,3 @@
         });
     });
 </script>
-@stop
