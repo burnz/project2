@@ -112,7 +112,7 @@ class ResetPasswordController extends Controller
         Validator::extend('emailCheck', function($attr, $value){
             $count = DB::table('password_resets')
                 ->where('email','=',$value)
-                ->where('created_at','>',Carbon::now()->subDay(3))
+                ->where('created_at','>',Carbon::now()->subMinute(30))
                 ->count();
             if($count>0)return true;
             return false;
@@ -122,7 +122,7 @@ class ResetPasswordController extends Controller
         ]);
         $count = DB::table('password_resets')
             ->where('email','=',$request->query('email'))
-            ->where('created_at','>',Carbon::now()->subDay(3))
+            ->where('created_at','>',Carbon::now()->subMinute(30))
             ->count();
         if($count==0){
             $request->session()->flash('error', 'Link reset password expired!');
