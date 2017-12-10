@@ -143,7 +143,7 @@ class WithDrawController extends Controller
 									if($withdrawConfirm->type == 'btc')
 									{
 										self::sendCoinBTC($request, $id);
-									}elseif($withdrawConfirm->type == 'clp')
+									}elseif($withdrawConfirm->type == 'car')
 									{
 										if($totalToday <= 3000)
 										{
@@ -654,12 +654,12 @@ class WithDrawController extends Controller
 
             $currentTotal = $withdrawValue + $totalMoneyOut;
             
-            if($currentTotal > 10000)
-            {
-                //cannot transfer & withdraw more than $10000
-				$request->session()->flash( 'errorMessage', 'You cannot transfer & withdraw more than $10,000 a day' );
-				return redirect()->route('wallet.btc');
-            }
+    //         if($currentTotal > 10000)
+    //         {
+    //             //cannot transfer & withdraw more than $10000
+				// $request->session()->flash( 'errorMessage', 'You cannot transfer & withdraw more than $10,000 a day' );
+				// return redirect()->route('wallet.btc');
+    //         }
 
 			if($request->walletAddress == ''){
 				$walletAddressErr = 'Bitcoin Address is required';
@@ -685,7 +685,7 @@ class WithDrawController extends Controller
 					$coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'btc'];
 					$user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
 
-					$request->session()->flash( 'successMessage', 'The withdrawal confirmation email was sent to your mail box' );
+					$request->session()->flash( 'successMessage', 'You have requested a withdrawal, please check your email for further instruction' );
 
 					return redirect()->route('wallet.btc');
 				}
