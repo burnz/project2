@@ -1,33 +1,29 @@
-@extends('adminlte::layouts.backend')
+@extends('adminlte::layouts.auth')
 
 @section('htmlheader_title')
     Withdraw Confirm
 @endsection
 
 @section('content')
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title text-center" style="position: relative;">
-                            Withdraw {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CAR') }} Confirm
-                        </h3>
-                    </div>
-                    <div class="card-content">
-                        <div class="nav-center">
-                            <ul class="nav nav-pills nav-pills-primary nav-pills-icons" role="tablist">
-                                <li class="active">
-                                    <a href="javascript::" role="tab" data-toggle="tab">
-                                        <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/zcoin-id-final_logo-rev.svg"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="pill2">
-                                <div class="row">
-                                    <div class="col-md-6 col-md-offset-3">
+    <body class="hold-transition login-page off-canvas-sidebar">
+        <div id="app" class="wrapper wrapper-full-page">
+            <div class="full-page login-page" filter-color="carcoin-secondary-1">
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-md-offset-3 col-sm-offset-3">
+                                <div class="card card-login">
+                                    <div class="card-header text-center">
+                                        <div class="logo">
+                                            <a href="{{ url('/home') }}">
+                                                <img src="{{asset('Carcoin/img/zcoin-id-final_logo-rev.svg')}}">
+                                            </a>
+                                        </div>
+                                        <h3 class="card-title text-center" style="position: relative;margin-top: 20px;">
+                                            Withdraw {{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CAR') }} Confirm
+                                        </h3>
+                                    </div>
+                                    <div class="card-content">
                                         @if (session('error'))
                                             <div class="alert alert-danger text-center">
                                                 {{ session('error') }}
@@ -55,7 +51,7 @@
 
                                                 <div class="row">
                                                     <div class="form-group">
-                                                        <div class="col-md-6 col-md-offset-3">
+                                                        <div class="col-md-6 col-md-offset-3 text-center">
                                                             <button type="submit" class="btn btn-primary" id="confirm_submit">
                                                                 Confirm
                                                             </button>
@@ -76,7 +72,6 @@
                                                 @endif
                                             </div>
                                         @endif
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -85,7 +80,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </body>
+    
 @endsection
 @section('script')
 <script>
