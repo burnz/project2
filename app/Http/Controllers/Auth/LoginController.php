@@ -192,13 +192,13 @@ class LoginController extends Controller{
             return redirect(url('/admin/home'));
         }
 
-        $this->redirectTo = '/presale';
-        return redirect(url('/presale'));
+        $this->redirectTo = '/order';
+        return redirect(url('/order'));
     }
 
     public function auth2fa(Request $request){
         if(Session::get('google2fa')) 
-            return redirect('/presale');
+            return redirect('/order');
         $valid = true;
         if($request->isMethod('post')){
             $key = Session::get('authy:auth:2fa');
