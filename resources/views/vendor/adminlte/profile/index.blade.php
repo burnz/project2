@@ -158,7 +158,7 @@
                             <h4 class="card-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h4>
                             <p class="description">
                                 <span>ID: {{ Auth::user()->uid }}</span>
-                                <span>Loyalty: Diadmond</span>
+                                <span>Rank: </span>
                             </p>
                         </div>
                     </div>
