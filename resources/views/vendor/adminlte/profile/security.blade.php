@@ -228,8 +228,8 @@
                         type : "get",
                         success : function (result){
                             if(result.success){
-                                document.getElementById('logout-form').submit();//logout user
-                                //location.href = '{{ url()->current() }}';
+                                //document.getElementById('logout-form').submit();//logout user
+                                location.href = '{{ url()->current() }}';
                             }else{
                                 alert(result.msg);
                             }
