@@ -78,38 +78,12 @@
                                                                         </span> Withdraw
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <!-- <button class="btn btn-thirdary btn-round" data-toggle="modal"
-                                                    data-target="#bitcoin-buy-carcoin">
-                                                                        <span class="btn-label">
-                                                                            <i class="material-icons">add_shopping_cart</i>
-                                                                        </span> Buy Carcoin
-                                                <div class="ripple-container"></div>
-                                            </button> -->
+                                           
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
-                                            <!-- <div class="card-filter clearfix">
-                                                <div class="col-md-4">
-                                                    <div class="form-group label-floating">
-                                                        <label class="control-label">Select Type</label>
-                                                        <select class="form-control">
-                                                            <option disabled="" selected=""></option>
-                                                            <option value="2">Buy Carcoin</option>
-                                                            <option value="3">Sell Carcoin</option>
-                                                            <option value="4">Withdraw</option>
-                                                            <option value="5">Deposit</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <button type="button" class="btn btn-primary btn-round">Filter
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-primary btn-round">
-                                                        Clear
-                                                    </button>
-                                                </div>
-                                            </div> -->
+                                    
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
