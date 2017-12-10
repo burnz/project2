@@ -23,6 +23,33 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="pill1">
                                 <div class="row">
+                                    <div class="col-md-offset-3 col-md-6 justify-content-center text-center">
+                                        @if ( session()->has("errorMessage") )
+                                            <div class="alert alert-warning">
+                                                <h4>Warning!</h4>
+                                                <p>{!! session("errorMessage") !!}</p>
+                                            </div>
+                                            {{ session()->forget('errorMessage') }}
+                                        @elseif ( session()->has("successMessage") )
+                                            <div class="alert alert-success">
+                                                <h4>Success</h4>
+                                                <p>{!! session("successMessage") !!}</p>
+                                            </div>
+                                            {{ session()->forget('successMessage') }}
+                                        @else
+                                            <div></div>
+                                        @endif
+
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
                                     <div class="col-md-12 d-flex justify-content-center mb-3" user-wallet>
                                         <div class="user-wallet">
                                             <div class="left">
