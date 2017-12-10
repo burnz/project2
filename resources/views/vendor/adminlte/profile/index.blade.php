@@ -148,18 +148,47 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card card-profile">
-                        <div class="card-avatar">
-                            <a href="javascript:;">
-                                <img class="img" src="{{ Gravatar::get(Auth()->user()->email) }}" />
-                            </a>
+                    <div class="row">
+                        <div class="card card-profile">
+                            <div class="card-avatar">
+                                <a href="javascript:;">
+                                    <img class="img" src="{{ Gravatar::get(Auth()->user()->email) }}" />
+                                </a>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h4>
+                                <p class="description">
+                                    <span>ID: {{ Auth::user()->uid }}</span>
+                                    <span>Rank: </span>
+                                </p>
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <h4 class="card-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h4>
-                            <p class="description">
-                                <span>ID: {{ Auth::user()->uid }}</span>
-                                <span>Rank: </span>
-                            </p>
+                    </div>
+                    <!-- <div class="row">
+                        <div class="card card-profile">
+                            <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
+                                <i class="material-icons">perm_identity</i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Sponsor</h4>
+                                <p class="description">
+                                    <span>ID: {{ Auth::user()->uid }}</span>
+                                    <span>Rank: </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="card card-profile">
+                            <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
+                                <i class="material-icons">insert_link</i>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">Your referral link</h4>
+                                <p class="description">
+                                    <span>https://mycarcoin.com/ref/{{ Auth::user()->name }}</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
