@@ -99,9 +99,12 @@ Route::group( ['middleware' => ['auth']], function() {
 
 
     Route::get('mybonus/faststart', 'MyBonusController@faststart');
-    Route::get('mybonus/binary', 'MyBonusController@binary');
+    Route::get('mybonus/infinity', 'MyBonusController@binary');
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
+
+
+    Route::get('packages/buy','PackageController@buyPackage');
 
     Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);

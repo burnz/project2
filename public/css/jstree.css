@@ -375,6 +375,7 @@
 	line-height: 24px;
 	margin-left: 24px;
 	min-width: 24px*/
+	margin-left: 24px;
 	padding: 12px 8px;
 	vertical-align: middle;
 	line-height: 1.42857143;
@@ -1145,7 +1146,7 @@
 }
 
 .jstree-node.jstree-last.jstree-open{
-	padding: 0;
+	padding: 0 0 0 12px;
 }
 .jstree-anchor.jstree-table-col-0{
 	/*padding: 12px 0;*/
@@ -1203,5 +1204,5 @@ div.jstree-table-cell-root-genealogy-container{
 	background-color: #c00000;
 }
 .jstree-node.jstree-open{
-	padding: 0;
+	padding: 0 0 0 12px;
 }

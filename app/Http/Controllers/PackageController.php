@@ -50,6 +50,23 @@ class PackageController extends Controller
     /**
     * Buy package action( upgrade package)
     */
+
+    public function buyPackage()
+    {
+        $package=Package::all();
+        $exchange=ExchangeRate::where(['from_currency','=','clp'],['to_currency','=','usd'])->first();
+        $rate_clp_usd=isset($exchange->exchrate)? $exchange->exchrate:1;
+        if(count($package)>0)
+        {
+            foreach($exchange as $pkey=>$pval)
+            {
+                
+            }
+        }
+        $data=[];
+        return view('adminlte::package.buy')->with(compact('data','package','exchange'));
+    }
+
     public function invest(Request $request)
     {
         $currentuserid = Auth::user()->id;
@@ -57,6 +74,7 @@ class PackageController extends Controller
         
         if($user && $request->isMethod('post')) 
         {
+            
             Validator::extend('packageCheck', function ($attribute, $value, $parameters) {
                 $packageId = $parameters[0];
                 //Get packageid 
@@ -109,6 +127,7 @@ class PackageController extends Controller
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ " . $packageSelected->capital_release ." days")),
                 'weekYear' => $weekYear,
             ]);
+
             $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(), 2);
             $userCoin = $userData->userCoin;
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;

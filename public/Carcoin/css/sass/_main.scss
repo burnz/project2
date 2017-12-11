@@ -6,6 +6,10 @@ $brandColorThi: #6A037C;
 /* Coin Color */
 $btcColor: #ffb629;
 
+@mixin transsition-box-shadow{
+	transition:	box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .sidebar .nav{
 	margin: 20px 0;
 }

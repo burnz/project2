@@ -26,7 +26,7 @@ class UserPackage extends Model
     public static function getHistoryPackage(){
         $package = new UserPackage;
         $tableName = $package->getTable();
-        $data = $package->select("$tableName.id","$tableName.buy_date","$tableName.release_date","packages.name")
+        $data = $package->select("$tableName.id","$tableName.buy_date","$tableName.release_date","$tableName.amount_increase","packages.name")
                 ->where("userId",Auth::user()->id)
                 ->join("packages","packages.id","=","$tableName.packageId")
                 ->get();

@@ -46,7 +46,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return redirect('/order');;
         $data = [];
         //Tong doanh so and ben trai and ben phai
         $data['newF1InWeek']      = $this->getF1CurrentWeek();
@@ -113,30 +112,9 @@ class HomeController extends Controller
         //Get lịch sử package
         $data['history_package'] = UserPackage::getHistoryPackage();
         // check turn on/off button withdraw
-        $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
-                    ->orderBy('id', 'DESC')->first();
-        if(isset($tempHistoryPackage)){
-            //check status withdraw
-            if( $tempHistoryPackage->withdraw == 1 ){
-                $disabled = true;
-            } else {
-                $datetime1 = new DateTime(date("Y-m-d"));
-                //get release date của package cuối cùng <-> max id
-                $datetime2 = new DateTime(date("Y-m-d", strtotime($tempHistoryPackage->release_date)));
-                //$interval = $datetime1->diff($datetime2);
-                //compare
-                if( $datetime2 > $datetime1 ){
-                    $disabled = true;
-                }else{
-                    $disabled = false;
-                }
-            }
-            
-        }else{
-            $disabled = false;
-        }
         
-        //return view('adminlte::home.index')->with(compact('data','disabled'));
+        
+        return view('adminlte::home.index')->with(compact('data'));
     }
 
     /*
