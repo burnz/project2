@@ -54,43 +54,98 @@ class PackageController extends Controller
     public function buyPackage()
     {
         $package=Package::all();
-        $exchange=ExchangeRate::where(['from_currency','=','clp'],['to_currency','=','usd'])->first();
-        $rate_clp_usd=isset($exchange->exchrate)? $exchange->exchrate:1;
+        $userPack=UserPackage::getHistoryPackage();
+        $exchange=ExchangeRate::where([['from_currency','=','clp'],['to_currency','=','usd']])->first();
+        $rate_clp_usd=isset($exchange->exchrate)?$exchange->exchrate:1;
+        $dataPack=[];
         if(count($package)>0)
         {
-            foreach($exchange as $pkey=>$pval)
+            foreach($package as $pkey=>$pval)
             {
-                
+                $pval->min_price_clp=round($pval->min_price/$rate_clp_usd,4);
+                $pval->max_price_clp=round($pval->max_price/$rate_clp_usd,4);
+                array_push($dataPack, $pval);
             }
         }
-        $data=[];
-        return view('adminlte::package.buy')->with(compact('data','package','exchange'));
+        return view('adminlte::package.buy')->with(compact('dataPack','package','exchange','userPack'));
     }
 
     public function invest(Request $request)
     {
+        // echo'<pre>';
+        //     var_dump($request->packageId,$request->packageAmount,$request->walletId);
+        // echo'</pre>';
+        // exit;
+
+
+
         $currentuserid = Auth::user()->id;
         $user = Auth::user();
         
         if($user && $request->isMethod('post')) 
         {
-            
+            $msgReturn='';
             Validator::extend('packageCheck', function ($attribute, $value, $parameters) {
+                global $msgReturn;
                 $packageId = $parameters[0];
                 //Get packageid 
                 $package = Package::find($packageId);
-                if($package->min_price <= $value && $value <= $package->max_price)
+                $exchange=ExchangeRate::where([['from_currency','=','clp'],['to_currency','=','usd']])->first();
+
+                $rate_clp_usd=isset($exchange->exchrate)?$exchange->exchrate:1;
+                $min_price=round($package->min_price/$rate_clp_usd,4);
+                $max_price=round($package->max_price/$rate_clp_usd,4);
+
+                
+
+                if($min_price <= $value && $value <= $max_price)
                 {
-                    return true;
+
+
+                    $walletId=\Request::input('walletId');
+                    $userCoin=UserCoin::where('userId','=',Auth::user()->id)->first();
+
+                    if($walletId==2)//carcoin wallet
+                    {
+                        if($value<=$userCoin->clpCoinAmount)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            $msgReturn='Wallet amount does not enough to buy package';
+                            echo $msgReturn;exit;
+                            return false;
+                        }
+                    }
+                    if($walletId==3)//reinvest wallet
+                    {
+                        if($value<=$userCoin->reinvestAmount)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            $msgReturn='Wallet amount does not enough to buy package';
+                            return false;
+                        }
+                    }
                 }
+            
+
+                $msgReturn='Invest amount and package selected does not match';
                 return false;
             });
+
             $this->validate($request, [
-                'amount_lending'    => 'required|packageCheck:' . $request->packageId,
+                'packageAmount'    => 'required|packageCheck:' . $request->packageId,
                 'packageId' => 'required|not_in:0',
-                'terms'    => 'required',
-            ],['amount_lending.package_check' => 'Lending amount and package selected does not match']);
-            $amount_increase = $request->amount_lending;
+                'walletId'=>  'required|not_in:0'
+            ],['packageAmount.package_check' => $msgReturn]);
+
+            return 'here';
+
+            $amount_increase = $request->packageAmount;
             $packageOldId = 0;
             $userData = $user->userData;
             $packageOldId = $userData->packageId;
@@ -158,8 +213,8 @@ class PackageController extends Controller
                                 false
                             );
             }
-            return redirect()->route('wallet.clp')
-                            ->with('flash_message','Buy package successfully.');
+            //return redirect()->route('wallet.clp')
+                            //->with('flash_message','Buy package successfully.');
         }
     }
     public function show($id)

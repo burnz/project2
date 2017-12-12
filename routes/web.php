@@ -106,7 +106,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('packages/buy','PackageController@buyPackage');
 
-    Route::get('packages/invest', 'PackageController@invest');
+    //Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
     Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
     Route::resource('packages', 'PackageController');
