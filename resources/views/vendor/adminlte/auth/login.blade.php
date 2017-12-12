@@ -28,8 +28,8 @@
                                                     <i class="material-icons">account_circle</i>
                                                 </span>
                                                 <div class="form-group label-floating has-feedback {{ $errors->has('name') ? 'has-error' : '' }} {{ $errors->has('email') ? 'has-error' : '' }}">
-                                                    <label class="control-label">Email/Username</label>
-                                                    <input type="text" name="login" class="form-control"  value="{{ old('email') }}" placeholder="">
+                                                    <label class="control-label">Email</label>
+                                                    <input type="text" name="email" class="form-control"  value="{{ old('email') }}" placeholder="">
                                                     @if ($errors->has('name'))
                                                         <span class="help-block">
                                                             <strong>{{ $errors->first('name') }}</strong>
