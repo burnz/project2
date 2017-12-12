@@ -20,6 +20,10 @@ class OrderList extends Model
     protected $fillable = [
         "id",
         "user_id",
+        "code",
+        "btc_rate",
+        "btc_value",
+        "status",
         "amount",
         "price",
         "total",
