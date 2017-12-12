@@ -286,12 +286,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script>
         $(document).ready(function () {
-            $('#employee-grid').DataTable({
-                "ordering": false,
-                "searching":false,
-                "bLengthChange": false,
-                paging: false
-            });
+            // $('#employee-grid').DataTable({
+            //     "ordering": false,
+            //     "searching":false,
+            //     "bLengthChange": false,
+            //     paging: false
+            // });
 
             $('#amount').on('keyup change mousewheel', function () {
                 var value = $(this).val();

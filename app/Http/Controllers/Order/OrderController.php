@@ -92,11 +92,10 @@ class OrderController extends Controller
                         'totalUSDValue' => number_format($totalUSDValueInday, 2)
                     ];
                 $dataTableRealTime = DB::table("order_lists")
-                    ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
+                    ->select('price', 'amount', 'total')
                     ->whereNull("deleted_at")
                     ->where('created_at', '>', $startTime)
-                    ->groupBy('price')
-                    ->orderBy('price','desc')
+                    ->orderByRaw('price Desc, amount Desc')
                     ->limit(20)
                     ->get()
                     ->toArray();
@@ -136,11 +135,10 @@ class OrderController extends Controller
         $totalValueOrderInday = OrderList::where('created_at', '>', $startTime)->sum('amount');
         $totalUSDValueInday = OrderList::where('created_at', '>', $startTime)->sum('total');
         $dataTableRealTime = DB::table("order_lists")
-            ->select('price', DB::raw('SUM(amount) as amount'),DB::raw('SUM(total) as total'))
+            ->select('price', 'amount','total')
             ->whereNull("deleted_at")
             ->where('created_at', '>', $startTime)
-            ->groupBy('price')
-            ->orderByRaw('price Desc')
+            ->orderByRaw('price Desc, amount Desc')
             ->limit(20)
             ->get()
             ->toArray();
@@ -238,7 +236,7 @@ class OrderController extends Controller
             3 => 'created_at'
         );
 
-        $count = DB::select( DB::raw("SELECT count(*) as count FROM ( SELECT COUNT(id) FROM order_lists as a WHERE a.deleted_at IS NULL AND a.status = 2 AND date(a.created_at) < :dateNow GROUP BY date(a.created_at), a.price ) AS x"),  ["dateNow" => $dateNow] );
+        $count = DB::select( DB::raw("SELECT count(*) as count FROM ( SELECT COUNT(id) FROM order_lists as a WHERE a.deleted_at IS NULL AND a.status = 2  GROUP BY date(a.created_at), a.price ) AS x"));
         $totalData = $count[0]->count;
         $totalFiltered = $totalData;
         //Đếm số bản ghi ở đây
@@ -250,11 +248,11 @@ class OrderController extends Controller
         if(isset($requestData['order'])){
             $orderby = $columns[$requestData['order'][0]['column']];
             $asc = $requestData['order'][0]['dir'];
-            $data = DB::select( DB::raw("SELECT sum( a.amount ) as amount, a.price, sum( a.total ) as total, date(a.created_at ) AS created_at FROM `order_lists` AS a WHERE a.deleted_at IS NULL AND a.status = 2 AND date(a.created_at) < :dateNow GROUP BY date(a.created_at),a.price ORDER BY :orderby :asc LIMIT :length OFFSET :start ") ,
-                ["dateNow" => $dateNow, "orderby" => $orderby, "asc" => $asc,"length" => $length, "start" => $start]);
+            $data = DB::select( DB::raw("SELECT sum( a.amount ) as amount, a.price, sum( a.total ) as total, date(a.created_at ) AS created_at FROM `order_lists` AS a WHERE a.deleted_at IS NULL AND a.status = 2  GROUP BY date(a.created_at),a.price ORDER BY :orderby :asc LIMIT :length OFFSET :start ") ,
+                ["orderby" => $orderby, "asc" => $asc,"length" => $length, "start" => $start]);
         }else{
-            $data = DB::select( DB::raw("SELECT sum( a.amount ) as amount, a.price, sum( a.total ) as total, date(a.created_at ) AS created_at FROM `order_lists` AS a WHERE a.deleted_at IS NULL AND a.status = 2 AND date(a.created_at) < :dateNow GROUP BY date(a.created_at),a.price ORDER BY created_at DESC ,price DESC LIMIT :length OFFSET :start "),
-                ['dateNow'=>$dateNow, 'length'=>$length ,'start'=> $start]);
+            $data = DB::select( DB::raw("SELECT sum( a.amount ) as amount, a.price, sum( a.total ) as total, date(a.created_at ) AS created_at FROM `order_lists` AS a WHERE a.deleted_at IS NULL AND a.status = 2  GROUP BY date(a.created_at),a.price ORDER BY created_at DESC ,price DESC LIMIT :length OFFSET :start "),
+                ['length'=>$length ,'start'=> $start]);
         }
 
         $tmp = array();
