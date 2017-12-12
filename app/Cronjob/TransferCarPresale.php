@@ -26,7 +26,6 @@ class TransferCarPresale
     * This cronjob function will every days to caculate and return interest to user's wallet 
     */
     public static function transfer(){
-        $yesterday = Carbon::yesterday();
         $today = Carbon::today();
 
         if($today > config('app.pre_sale_end')) return ;
@@ -61,8 +60,10 @@ class TransferCarPresale
                     $order->save();
 
                     //Return BTC
+                    $userCoin = UserCoin::where('userId', $order->user_id)->first();
                     $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $order->btc_value);
                     $userCoin->save();
+                    continue;
                 }
 
                 if($order->amount <= $maxCoinSupply)
@@ -82,6 +83,10 @@ class TransferCarPresale
                     $userCoin = UserCoin::where('userId', $order->user_id)->first();
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $maxCoinSupply);
                     $userCoin->save();
+                    
+                    //Create new order with cancel status
+                    $totalValue = ($order->amount - $maxCoinSupply) * $order->price;
+                    $btcValue = ($order->amount - $maxCoinSupply) / $order->amount * $order->btc_value;
 
                     //Chang status order from pending => success, update amount order
                     $order->status = 2;
@@ -89,10 +94,9 @@ class TransferCarPresale
                     $order->save();
 
                     //Create new order with cancel status
-                    $totalValue = ($order->amount - $maxCoinSupply) * $order->price;
-                    $btcValue = ($order->amount - $maxCoinSupply) / $order->amount * $order->btc_value;
                     $cancelOrder = [
                             'user_id' => $order->user_id,
+                            'code' => md5(uniqid($order->user_id, true)),
                             'amount' => ($order->amount - $maxCoinSupply),
                             'price' => $order->price,
                             'total' => $totalValue,
