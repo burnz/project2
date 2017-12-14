@@ -18,7 +18,7 @@ class Controller extends BaseController
     var $ct = 1;
     
     public function __construct(){
-        $this->middleware(['auth']);
+        //$this->middleware(['auth']);
     }
     
     /** 

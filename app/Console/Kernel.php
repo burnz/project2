@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 TransferCarPresale::transfer();
-            })->dailyAt('22:00');
+            })->dailyAt('21:00');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
