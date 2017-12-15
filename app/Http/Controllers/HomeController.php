@@ -63,7 +63,6 @@ class HomeController extends Controller
             foreach($totalBonus as $bonus) {
                 if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
                     || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
-                    || $bonus->type == Wallet::FAST_START_TYPE
                     || $bonus->type == Wallet::BONUS_TYPE
                     ) {
                     $amount += $bonus->amount;
@@ -88,7 +87,6 @@ class HomeController extends Controller
             {
                 if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
                     || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
-                    || $bonus->type == Wallet::FAST_START_TYPE
                     || $bonus->type == Wallet::BONUS_TYPE
                     ) {
                     $tdAmount += $bonus->amount;
@@ -124,7 +122,6 @@ class HomeController extends Controller
         $data['right']=0;
         if(!empty($allNode))
         {
-            
             $totalLeft=$this->getNodeData($allNode->genealogy_left);
             $totalRight=$this->getNodeData($allNode->genealogy_right);
             $data['left']=$totalLeft;
