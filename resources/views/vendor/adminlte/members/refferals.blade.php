@@ -131,7 +131,7 @@
         }else{
             swal({
                 title: "Are you sure?",
-                text: $(".btn_submit_left").attr('data-name') + " will be push to the Left!",
+                text: $(".btn_submit_left").attr('data-name') + " will be push to the Right!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
