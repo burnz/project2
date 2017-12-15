@@ -66,16 +66,16 @@
                                         <div class="align-self-center">
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal"
                                                     data-target="#bitcoin-deposit">
-                                                                        <span class="btn-label">
-                                                                            <i class="material-icons">shop</i>
-                                                                        </span> Deposit
+                                                    <span class="btn-label">
+                                                        <i class="material-icons">shop</i>
+                                                    </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal"
                                                     data-target="#bitcoin-withdraw">
-                                                                        <span class="btn-label">
-                                                                            <i class="material-icons reflect">shop</i>
-                                                                        </span> Withdraw
+                                                    <span class="btn-label">
+                                                        <i class="material-icons reflect">shop</i>
+                                                    </span> Withdraw
                                                 <div class="ripple-container"></div>
                                             </button>
                                            
@@ -141,7 +141,6 @@
 <script src="{{asset('Carcoin/js/jquery.qrcode.min.js')}}"></script>
 <script src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
 <script type="text/javascript">
-        console.log($("#qrcode").html());
     var qrcode = $("#qrcode").qrcode({
                     width: 180,
                     height: 180,

@@ -6,12 +6,13 @@
 @section('content')
     <style type="text/css">
         .bootstrap-select{
-            width: auto !important;
+            margin-top: 18px !important;
+            margin-bottom: 0px;
         }
-        .btn-group.open>.dropdown-toggle.btn.btn-primary, .btn-group-vertical.open>.dropdown-toggle.btn.btn-primary, .btn-primary
+        /*.btn-group.open>.dropdown-toggle.btn.btn-primary, .btn-group-vertical.open>.dropdown-toggle.btn.btn-primary, .btn-primary
         {
             background-color: #9c27b0 !important;
-        }
+        }*/
         .card-action>.amount{
             width: auto !important;
             margin:0 15px 0 15px !important;
@@ -19,6 +20,45 @@
         .termAgree{
             color: #ee2229;
             display: none;
+        }
+        table.dataTable>thead>tr>th, table.dataTable>tbody>tr>th, table.dataTable>tfoot>tr>th, table.dataTable>thead>tr>td, table.dataTable>tbody>tr>td, table.dataTable>tfoot>tr>td {
+            padding: 12px 8px !important;
+            outline: 0;
+        }
+        .table>thead>tr>th {
+            vertical-align: bottom;
+            border-bottom: 1px solid #ddd !important;
+        }
+        .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+            background-color: #ee2229;
+            border-color: #9c27b0;
+            color: #FFFFFF;
+            box-shadow: 0 14px 26px -12px rgba(238, 34, 41, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(238, 34, 41, 0.2);
+        }
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_desc:after,
+        table.dataTable thead .sorting_asc_disabled:after,
+        table.dataTable thead .sorting_desc_disabled:after {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            display: block;
+            font-family: 'Glyphicons Halflings';
+            opacity: 0.5
+        }
+
+        table.dataTable thead .sorting:after {
+            opacity: 0.2;
+            content: "\e150"
+        }
+
+        table.dataTable thead .sorting_asc:after {
+            content: "\e155"
+        }
+
+        table.dataTable thead .sorting_desc:after {
+            content: "\e156"
         }
     </style>
 	<div class="content">
@@ -33,6 +73,19 @@
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                        </div>
+                    </div>
+                @endif
+                @if(Session::has('flash_success'))
+                    <div class="col-md-12">
+                        <div class="alert alert-success">
+                            {{Session::get('flash_success')}}
+                        </div>
+                    </div>
+                @elseif(Session::has('flash_error'))
+                    <div class="col-md-12">
+                        <div class="alert alert-error">
+                            {{Session::get('flash_error')}}
                         </div>
                     </div>
                 @endif
@@ -64,7 +117,7 @@
                                                                     <h3 style="text-transform: uppercase;">{{$pval->name}}</h3>
                                                                     <div class="radio" big="md">
                                                                         <label>
-                                                                            <input data-min="{{$pval->min_price_clp}}" data-max="{{$pval->max_price_clp}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':'' ?> value="{{$pval->pack_id}}" > 
+                                                                            <input data-min="{{$pval->min_price}}" data-max="{{$pval->max_price}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':'' ?> value="{{$pval->pack_id}}" > 
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -113,24 +166,27 @@
                                         </div>
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="btnBuyPackage">Buy Package</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Buy Package</button>
+                                    <button type="button" class="btn btn-primary btn-round btn-outline-primary" data-dismiss="modal">Close</button>
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <!--end modal-->
 
-                            <select name="wallet_type" id="wallet_type" class="selectpicker" data-style="btn btn-primary btn-round" title="Sellect Wallet" data-size="2">
-                                <option value="2">CARCOIN WALLET</option>
-                                <option value="3">REINVEST WALLET</option>
-                            </select>
-                            <button type="button" id="btnBuyPackageS1" class="btn btn-success btn-round">Buy Packages</button>
+                            <div class="col-xs-2">
+                                    <select class="selectpicker" name="wallet_type" id="wallet_type" data-style="select-with-transition" title="Sellect Wallet" data-size="2">
+                                    <option value="2">CARCOIN WALLET</option>
+                                    <option value="3">REINVEST WALLET</option>
+                                </select>
+                            </div>
+                            
+                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Buy Packages</button>
 
                         </div>
                         <div class="col-md-12 my-4">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table" id="tbPackages">
                                     <thead class="text-thirdary">
                                         <th>Date</th>
                                         <th>Package</th>
@@ -226,7 +282,7 @@
                 let amount=pricing.children().find('input[type="number"]').val();
                 if(amount<minAmount || amount>maxAmount)
                 {
-                    pricing.children().find('.errorAmount').text(''+minAmount+'CAR - '+maxAmount+'CAR');
+                    pricing.children().find('.errorAmount').text(''+minAmount+'$ - '+maxAmount+'$');
                     pricing.children().find('.label-floating').addClass('has-error');
                     pricing.children().find('input[type="number"]').focus();
                     return false;
@@ -273,5 +329,11 @@
             });
 
 		});
+
+        $('#tbPackages').DataTable({
+            "ordering": false,
+            "searching":false,
+            "bLengthChange": false,
+        });
 	</script>
 @stop

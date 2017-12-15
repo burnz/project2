@@ -23,6 +23,8 @@ use App\Helper\Helper;
 use App\Cronjob\GetClpWallet;
 use App\Cronjob\TransferCarPresale;
 use Carbon\Carbon;
+
+use App\Cronjob\Bonus;
 /**
  * Description of TestController
  *
@@ -41,7 +43,7 @@ class TestController {
     //put your code here
     function testInterest($param = null) {
         //Get Notification
-        User::bonusDayCron();
+        Bonus::bonusDayCron();
         echo "Return bonus day for user successfully!";
     }
 

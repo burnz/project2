@@ -72,12 +72,6 @@ class PackageController extends Controller
 
     public function invest(Request $request)
     {
-        // echo'<pre>';
-        //     var_dump($request->packageId,$request->packageAmount,$request->walletId);
-        // echo'</pre>';
-        // exit;
-
-
 
         $currentuserid = Auth::user()->id;
         $user = Auth::user();
@@ -89,62 +83,48 @@ class PackageController extends Controller
                 global $msgReturn;
                 $packageId = $parameters[0];
                 //Get packageid 
+                //min_price|max_price|amount-->$
                 $package = Package::find($packageId);
-                $exchange=ExchangeRate::where([['from_currency','=','clp'],['to_currency','=','usd']])->first();
-
-                $rate_clp_usd=isset($exchange->exchrate)?$exchange->exchrate:1;
-                $min_price=round($package->min_price/$rate_clp_usd,4);
-                $max_price=round($package->max_price/$rate_clp_usd,4);
-
-                
-
-                if($min_price <= $value && $value <= $max_price)
+                if($package->min_price <= $value && $value <= $package->max_price)
                 {
-
-
-                    $walletId=\Request::input('walletId');
-                    $userCoin=UserCoin::where('userId','=',Auth::user()->id)->first();
-
-                    if($walletId==2)//carcoin wallet
-                    {
-                        if($value<=$userCoin->clpCoinAmount)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            $msgReturn='Wallet amount does not enough to buy package';
-                            echo $msgReturn;exit;
-                            return false;
-                        }
-                    }
-                    if($walletId==3)//reinvest wallet
-                    {
-                        if($value<=$userCoin->reinvestAmount)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            $msgReturn='Wallet amount does not enough to buy package';
-                            return false;
-                        }
-                    }
+                    return true;
                 }
-            
-
-                $msgReturn='Invest amount and package selected does not match';
                 return false;
             });
 
+            Validator::extend('amountCheck',function($attribute,$value,$parameters){
+                    $userCoin=UserCoin::where('userId','=',Auth::user()->id)->first();
+                    $walletId=$parameters[0];
+                    //change value to carcoin
+                    $value=round($value/ExchangeRate::getCLPUSDRate(),2);
+                    switch ($walletId) {
+                        case 2:
+                                if($value<=$userCoin->clpCoinAmount)
+                                {
+                                    return true;
+                                }
+                            break;
+                        case 3:
+                                if($value<=$userCoin->reinvestAmount)
+                                {
+                                    return true;
+                                }
+                            break;
+                        default:
+                                return false;
+                            break;
+                    }
+                    return false;
+            });
+
+            $errors=['packageAmount.package_check'=>'Invest amount and package selected does not match','packageAmount.amount_check'=>'Wallet amount does not enough to buy package'];
             $this->validate($request, [
-                'packageAmount'    => 'required|packageCheck:' . $request->packageId,
+                'packageAmount'    => 'required|packageCheck:' . $request->packageId.'|amountCheck:'.$request->walletId,
                 'packageId' => 'required|not_in:0',
                 'walletId'=>  'required|not_in:0'
-            ],['packageAmount.package_check' => $msgReturn]);
+            ],$errors);
 
-            return 'here';
-
+            //add data to user data
             $amount_increase = $request->packageAmount;
             $packageOldId = 0;
             $userData = $user->userData;
@@ -155,6 +135,9 @@ class PackageController extends Controller
                 $userData->status = 1;
                 $userData->save();
             }
+            //end add data to user data
+
+
             //Insert to cron logs for binary, profit
             if($packageOldId == 0) {
                 if(CronProfitLogs::where('userId', $currentuserid)->count() < 1) 
@@ -168,6 +151,8 @@ class PackageController extends Controller
                 if(TotalWeekSales::where('userId', $currentuserid)->count() < 1) 
                     TotalWeekSales::create(['userId' => $currentuserid]);
             }
+
+            //add data to user package
             //Get weekYear
             $weeked = date('W');
             $year = date('Y');
@@ -182,6 +167,8 @@ class PackageController extends Controller
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ " . $packageSelected->capital_release ." days")),
                 'weekYear' => $weekYear,
             ]);
+            //end add data to user package
+
 
             $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(), 2);
             $userCoin = $userData->userCoin;
@@ -196,13 +183,17 @@ class PackageController extends Controller
                 'note'   => 'USD value ' . $amount_increase 
             ];
             Wallet::create($fieldUsd);
+
             // Calculate fast start bonus
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
+
             // Case: User already in tree and then upgrade package => re-caculate loyalty
             if($userData->binaryUserId && $userData->packageId > 0)
                 User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
+
             // Case: User already in tree and then upgrade package => re-caculate binary bonus
             if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])) {
+
                 $leftRight = $userData->leftRight == 'left' ? 1 : 2;
                 User::bonusBinary($userData->userId, 
                                 $userData->refererId, 
@@ -213,9 +204,12 @@ class PackageController extends Controller
                                 false
                             );
             }
-            //return redirect()->route('wallet.clp')
-                            //->with('flash_message','Buy package successfully.');
+
+            return redirect('packages/buy')
+            ->with('flash_success','Buy package successfully.');         
         }
+        return redirect('packages/buy')
+        ->with('flash_error','Whoops. Something went wrong.');
     }
     public function show($id)
     {

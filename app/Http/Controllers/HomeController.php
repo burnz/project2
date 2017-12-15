@@ -20,8 +20,8 @@ use Auth;
 use Log;
 use DB;
 use DateTime;
-
-
+use App\ExchangeRate;
+use App\UserTreePermission;
 /**
  * Class HomeController
  * @package App\Http\Controllers
@@ -66,55 +66,67 @@ class HomeController extends Controller
                             ->where('walletType', Wallet::CLP_WALLET)
                             ->where('inOut', Wallet::IN)
                             ->get();
-        $amount = 0;
 
-        foreach($totalBonus as $bonus) {
-            if($bonus->type == Wallet::FAST_START_TYPE 
-                || $bonus->type == Wallet::BINARY_TYPE 
-                || $bonus->type == Wallet::LTOYALTY_TYPE) {
-                $amount += $bonus->amount;
+
+        $amount = 0;
+        if(count($totalBonus)>0)
+        {
+            foreach($totalBonus as $bonus) {
+                if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
+                    || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
+                    || $bonus->type == Wallet::FAST_START_TYPE
+                    ) {
+                    $amount += $bonus->amount;
+                }
             }
         }
+        $data['total_bonus'] = round($amount *ExchangeRate::getCLPUSDRate(),2);
 
-        $data['total_bonus'] = $amount * 1 / 0.6;
+
+
+        //Calculate today earning
+        $tdAmount=0;
+        $todayEarning = Wallet::where('userId', Auth::user()->id)
+                            ->where('walletType', Wallet::CLP_WALLET)
+                            ->where('inOut', Wallet::IN)
+                            ->where('created_at','>=',date('Y-m-d').' 00:00:00')
+                            ->get();
+        if(count($todayEarning)>0)
+        {
+            foreach($todayEarning as $bonus)
+            {
+                if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
+                    || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
+                    || $bonus->type == Wallet::FAST_START_TYPE
+                    ) {
+                    $tdAmount += $bonus->amount;
+                }
+            }
+        }
+        $data['today_earning']=round($tdAmount*ExchangeRate::getCLPUSDRate(),2);
+
 
         //Get F1 lef, right Volume
         $loyaltyUser =  LoyaltyUser::where('userId', Auth::user()->id)->first();
-        $data['f1_left_vol']     = isset($loyaltyUser->f1Left) ? $loyaltyUser->f1Left : 0;
-        $data['f1_right_vol']     = isset($loyaltyUser->f1Right) ? $loyaltyUser->f1Right : 0;
-
-        //Count loyalty
-        
-
-        $staticsLoyalty = $this->userStaticsLoyalty();
-        $loyaltyLeft = $staticsLoyalty['loyaltyLeft'];
-        $loyaltyRight = $staticsLoyalty['loyaltyRight'];
-
-        $data['f1_left_silver_count']     = $loyaltyLeft['isSilver'];
-        $data['f1_right_silver_count']     = $loyaltyRight['isSilver'];
-        $data['f1_left_gold_count']     = $loyaltyLeft['isGold'];
-        $data['f1_right_gold_count']     = $loyaltyRight['isGold'];
-        $data['f1_left_pear_count']     = $loyaltyLeft['isPear'];
-        $data['f1_right_pear_count']     = $loyaltyRight['isPear'];
-        $data['f1_left_emerald_count']     = $loyaltyLeft['isEmerald'];
-        $data['f1_right_emerald_count']     = $loyaltyRight['isEmerald'];
-        $data['f1_left_diamond_count']     = $loyaltyLeft['isDiamond'];
-        $data['f1_right_diamond_count']     = $loyaltyRight['isDiamond'];
-        //Doanh so F1 moi
-        $newF1InWeek = $this->newF1InWeek();
-        //$data['newF1InWeek'] = $newF1InWeek['total'];
-        $data['leftNew']     = $newF1InWeek['leftNew'];
-        $data['rightNew']    = $newF1InWeek['rightNew'];
-        $data['leftTotal']    = isset($userData->totalSaleLeft) ? $userData->totalSaleLeft : 0;
-        $data['rightTotal']   = isset($userData->totalSaleRight) ? $userData->totalSaleRight : 0;
-        //Get số lương coin trong tài khoản
-        $data['coin'] = $this->getInfoCoin();
+        $data['left_vol']     = isset($loyaltyUser->f1Left) ? $loyaltyUser->f1Left : 0;
+        $data['right_vol']     = isset($loyaltyUser->f1Right) ? $loyaltyUser->f1Right : 0;
         //Get lịch sử package
         $data['history_package'] = UserPackage::getHistoryPackage();
         // check turn on/off button withdraw
         
+
+        //get today interest
+        $todayInterest=Wallet::where([['userId','=',$userData->userId],['created_at','>=',date('Y-m-d').' 00:00:00'],['type','=',2],['inOut','=','in']])->sum('amount');
+        //end get today interest
+
+        return view('adminlte::home.index')->with(compact('data','todayInterest'));
+    }
+
+
+    private function getLeftTotalPackage()
+    {
+        $list=UserTreePermission::where('userId','=',Auth::user()->id)->get();
         
-        return view('adminlte::home.index')->with(compact('data'));
     }
 
     /*

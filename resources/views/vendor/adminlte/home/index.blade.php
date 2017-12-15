@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="card-content text-center">
                                     <p class="mt-4 mb-0">Today Interest</p>
-                                    <p class="h2 mt-3">$0.548</p>
+                                    <p class="h2 mt-3">${{$todayInterest}}</p>
                                 </div>
                             </div>
                         </div>
@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="card-content text-center">
                                     <p class="mt-4 mb-0">Today Earning</p>
-                                    <p class="h2 mt-3">$1,118</p>
+                                    <p class="h2 mt-3">${{$data['today_earning']}}</p>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="card-content text-center">
                                     <p class="mt-4 mb-0">Total Earning</p>
-                                    <p class="h2 mt-3">$7,428</p>
+                                    <p class="h2 mt-3">${{$data['total_bonus']}}</p>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,9 @@
                                         <th>Date</th>
                                         <th>Package</th>
                                         <!-- <th>Lending</th> -->
-                                        <th>Amount</th>
+                                        <th>Lending Amount</th>
+                                        <th>Release Date</th>
+                                        <th>Action</th>
                                     </thead>
                                     <tbody style="height: 179px;">
                                     	@if(count($data['history_package'])>0)
@@ -132,6 +134,8 @@
 		                                            <td>{{date_format(date_create($pval->buy_date),'d-m-Y')}}</td>
 		                                            <td>{{$pval->name}}</td>
 		                                            <td>{{$pval->amount_increase}}</td>
+                                                    <td>{{date_format(date_create($pval->release_date),'d-m-Y')}}</td>
+                                                    <td>&nbsp;</td>
 		                                        </tr>
                                     		@endforeach
                                     	@endif

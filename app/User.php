@@ -96,9 +96,13 @@ class User extends Authenticatable
 				$userData->totalBonus = $userData->totalBonus + $packageBonus;
 				$userData->save();
 
+				
+
+
 				$userCoin = $userData->userCoin;
 				if($userCoin && $packageBonus > 0)
 				{
+
 					//Get info of user
 					$user = Auth::user();
 
@@ -107,15 +111,16 @@ class User extends Authenticatable
 					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 					$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
 					$userCoin->save();
-
+					
 					$fieldUsd = [
 						'walletType' => Wallet::CLP_WALLET,
 						'type' => Wallet::FAST_START_TYPE,
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
-						'amount' => $usdAmount,
-						'note'   => $user->name . ' bought package'
+						'amount' => $usdCoinAmount,
+						'note'   => $user->name . ' bought package',
 					];
+					
 					Wallet::create($fieldUsd);
 
 					$fieldInvest = [

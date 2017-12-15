@@ -80,7 +80,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
 
-    //Route::get('wallets/clptranfer',"Wallet\ClpWalletController@clptranfer");
+    Route::get('wallets/car/transfer',"Wallet\ClpWalletController@clptranfer");
 
     //Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     //Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
@@ -89,7 +89,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::get('wallets/car/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
-    //Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
+    Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
     
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');
@@ -104,7 +104,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('mybonus', 'MyBonusController');
 
 
-    Route::get('packages/buy','PackageController@buyPackage');
+    Route::get('packages/buy','PackageController@buyPackage')->name('package.buy');
 
     //Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
@@ -151,7 +151,7 @@ Route::post('getnotification','GetNotificationController@getNotification');
 //Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 //Route::get('test-binary', 'TestController@testBinary');
-//Route::get('test-interest',"TestController@testInterest");
+Route::get('test-interest',"TestController@testInterest");
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 Route::get('test',"TestController@test");
 

@@ -24,7 +24,7 @@
                                 <div class="col-sm-12">
                                     <div class="" style="display:none">
                                     {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
-                                        <input type="text" name="userSelect" id="userSelect"/>
+                                        <input type="text" value="" name="userSelect" id="userSelect"/>
                                         <input type="hidden" name="legpos" id="legpos" value="0">
                                     {!! Form::close() !!}
                                     </div>
@@ -61,7 +61,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if($userData->isBinary==0 && Auth::user()->userData->isBinary > 0)
+                                                    @if($userData->isBinary==0)
                                                         <button type="button" class="btn btn-fill btn-xs btn-info btn-round btn_submit_left" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Left</button>
                                                         <button type="button" class="btn btn-fill btn-xs btn-primary btn-round btn_submit_right" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Right</button>
                                                     @else
@@ -114,6 +114,7 @@
                 function(){
                     $('#legpos').val(1);
                     $('#userSelect').val(uid);
+                    
                     $('#pushIntoTreeForm').submit();
             });
 

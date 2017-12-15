@@ -66,6 +66,7 @@ class MemberController extends Controller
                             'rankId'     => $this->getLoyalty($user->id),
                             'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                             'dmc' => 3,
+                            'totalAmount'=>UserPackage::getTotalAmount(Auth::user()->id),
                             'generation'     => $this->getQualify($user->userData->packageId),
                         ];
                     }
@@ -90,6 +91,7 @@ class MemberController extends Controller
                                 'rankId' => $this->getLoyalty($userData->userId),
                                 'leg' => $userData->leftRight == 'left' ? 'L' : ($userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
+                                'totalAmount'=>UserPackage::getTotalAmount($userData->userId),
                                 'generation'     => $this->getQualify($userData->packageId),
                             ];
                         }
@@ -224,6 +226,7 @@ class MemberController extends Controller
                 $lstUserSelect[$userData->userId] = $userData->user->name;
             }
         }
+
         return view('adminlte::members.binary')->with('lstUserSelect', $lstUserSelect);
     }
 
@@ -326,15 +329,12 @@ class MemberController extends Controller
         
         $users = UserData::with('user')->where('refererId', '=',$currentuserid)->where('status', 1)->orderBy('userId', 'desc')
                ->paginate();
-        // echo'<pre>';
-        //     print_r($users);
-        // echo'</pre>';
-        // exit;
         return view('adminlte::members.refferals')->with('users', $users);
     }
     public function pushIntoTree(Request $request){
+
         //if($request->ajax()){
-        if($request->isMethod('post') && Auth::user()->userData->isBinary > 0 && Auth::user()->userData->packageId > 0){
+        if($request->isMethod('post')  && Auth::user()->userData->packageId > 0){
             if($request->userSelect > 0 && isset($request['legpos']) && in_array($request['legpos'], array(1,2))){
 
                 //Get user that is added to tree

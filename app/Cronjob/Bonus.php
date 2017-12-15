@@ -20,6 +20,7 @@ use App\UserTreePermission;
 use App\BonusBinaryInterest;
 use DB;
 use Log;
+use App\Package;
 
 /**
  * Description of UpdateStatusBTCTransaction
@@ -45,6 +46,8 @@ class Bonus
 		try {
 			$lstUser = User::where('active', '=', 1)->get();
 
+
+
 			foreach($lstUser as $user){
 				//Get cron status
 				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
@@ -55,6 +58,7 @@ class Bonus
 				$packages = UserPackage::where('userId', $user->id)
 							->where('withdraw', '<', 1)
 							->get();
+
 				if($packages)
 				{
 					//Calculate total week interest for each users
@@ -66,7 +70,7 @@ class Bonus
 					{
 						$bonus = rand(config('carcoin.min_interest'), config('carcoin.max_interest'));
 
-						$usdAmount = $pack->amount_increase * $bonus;
+						$usdAmount = ($pack->amount_increase * $bonus)/100;
 						$clpAmount = $usdAmount / ExchangeRate::getCLPUSDRate();
 
 						//Them bang nua interest_weekly
@@ -76,7 +80,7 @@ class Bonus
 						$userCoin->save();
 
 						//Get package information
-						$packInfo = Pakages::where('pack_id', $pack->packageId)->first();
+						$packInfo = Package::where('pack_id', $pack->packageId)->first();
 
 						$fieldUsd = [
 							'walletType' => Wallet::CLP_WALLET,//usd
@@ -84,7 +88,7 @@ class Bonus
 							'inOut' => Wallet::IN,
 							'userId' => $user->id,
 							'amount' => $clpAmount,
-							'note' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
+							'note' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price
 						];
 
 						Wallet::create($fieldUsd);
@@ -92,7 +96,7 @@ class Bonus
 						$fieldTotal = [
 							'userId' => $user->id,
 							'total_interest' => $clpAmount,
-							'weekYear' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
+							'weekYear' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price
 						];
 
 						//Calculate total week interest for each users
@@ -113,7 +117,7 @@ class Bonus
 							$totalInterest += $bonusPack;
 
 							//Get package information
-							$packInfo = Pakages::where('pack_id', $pack->packageId)->first();
+							$packInfo = Package::where('pack_id', $pack->packageId)->first();
 
 							$fieldBonus = [
 								'walletType' => Wallet::CLP_WALLET,//usd
@@ -121,7 +125,7 @@ class Bonus
 								'inOut' => Wallet::IN,
 								'userId' => $user->id,
 								'amount' => $clpAmount,
-								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' $packInfo->max_price
+								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price
 							];
 
 							Wallet::create($fieldBonus);
@@ -310,7 +314,7 @@ class Bonus
 	/**
 	* This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
 	*/
-	public static function bonusMatchingWeekCron()
+	public static function bonusMatchingWeekCron()//infinity interest
 	{
 		set_time_limit(0);
 		/* Get previous weekYear */
@@ -429,9 +433,9 @@ class Bonus
 		DB::table('cron_matching_logs')->update(['status' => 0]);
 	}
 
-	public static function calLeftRightVolume($userId)
+	public static function calLeftRightVolume($userId)//
 	{
-		$userTree = UserTreePermission::find($userId);
+		$userTree = UserTreePermission::find($userId);//luu thanh vien trai phai cay nhi phan
 
 		$memberLeft = $userTree->binary_left;
 		$memberRight = $userTree->binary_right;

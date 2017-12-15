@@ -34,6 +34,12 @@ class UserPackage extends Model
         return $data;
     }
     
+    public static function getTotalAmount($uid)
+    {
+        $package=\DB::table('user_packages')->where('userId','=',$uid)->sum('amount_increase');
+        return $package;
+    }
+
     public function package(){
         return $this->hasOne(Package::class, 'id', 'packageId');
     }
