@@ -61,7 +61,7 @@
             <span class="info-box-icon bg-green-gradient"><i class="fa fa-arrow-right"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">CLP DEPOSIT</span>
+                <span class="info-box-text">CAR DEPOSIT</span>
                 <span class="info-box-number">{{$temp->total->totalClpDeposit}}</span>
             </div>
             <!-- /.info-box-content -->
@@ -75,7 +75,7 @@
             <span class="info-box-icon bg-blue-gradient"><i class="fa fa-exchange"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text">CLP WITHDRAW</span>
+                <span class="info-box-text">CAR WITHDRAW</span>
                 <span class="info-box-number">{{$temp->total->totalClpWithDraw}}</span>
             </div>
             <!-- /.info-box-content -->
@@ -90,7 +90,7 @@
             <span class="info-box-icon bg-red-gradient"><i class="fa fa-globe"></i></span>
 
             <div class="info-box-content">
-                <span class="info-box-text"> TOTAL SELL CLP</span>
+                <span class="info-box-text"> TOTAL SELL CAR</span>
                 <span class="info-box-number">{{$temp->total->totalTotalSellClp}}</span>
             </div>
             <!-- /.info-box-content -->

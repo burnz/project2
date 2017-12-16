@@ -39,7 +39,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>BTC</th>
-                                <th>CLP</th>
+                                <th>CAR</th>
                                 <th>HHNP</th>
                                 <th>Role</th>
                                 <th>Created At</th>

@@ -7,7 +7,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ trans('adminlte_lang::message.landingdescription') }} ">
-    <meta property="og:title" content="CLP - Homepage" />
+    <meta property="og:title" content="CAR - Homepage" />
     <meta property="og:description" content="{{ trans('adminlte_lang::message.landingdescription') }}" />
 
     <title>{{ trans('adminlte_lang::message.landingdescriptionpratt') }}</title>
@@ -32,7 +32,7 @@ Landing page based on Pratt: http://blacktie.co/demo/pratt/
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><b>CLP Coin</b></a>
+                <a class="navbar-brand" href="#"><b>CAR Coin</b></a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
