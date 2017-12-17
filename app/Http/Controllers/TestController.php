@@ -96,7 +96,7 @@ class TestController {
     function test() {
 
         //Return btc to user
-        $orderList = OrderList::where('created_at', '<', '2017-12-11 21:00:00')->where('status', 1)->get();
+        $orderList = OrderList::where('price', '=', '0.6')->where('status', 1)->get();
         dd($orderList);
         foreach($orderList as $order) {
             $order->status = 0;
