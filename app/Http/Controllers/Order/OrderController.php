@@ -104,7 +104,7 @@ class OrderController extends Controller
                     ->select('price', 'amount', 'total')
                     ->whereNull("deleted_at")
                     ->where('created_at', '>', $startTime)
-                    ->orderByRaw('price Desc, amount Desc')
+                    ->orderByRaw('price Desc, amount Desc, created_at Asc')
                     ->limit(20)
                     ->get()
                     ->toArray();
@@ -146,8 +146,9 @@ class OrderController extends Controller
         $dataTableRealTime = DB::table("order_lists")
             ->select('price', 'amount','total')
             ->whereNull("deleted_at")
+            ->where("status", 1)
             ->where('created_at', '>', $startTime)
-            ->orderByRaw('price Desc, amount Desc')
+            ->orderByRaw('price Desc, amount Desc, created_at Asc')
             ->limit(20)
             ->get()
             ->toArray();
