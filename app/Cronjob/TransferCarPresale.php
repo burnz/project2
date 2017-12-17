@@ -44,6 +44,7 @@ class TransferCarPresale
                             ->where('created_at', '<', $endTime)
                             ->where('status', 1)
                             ->orderBy('price', 'desc')
+                            ->orderBy('created_at', 'asc')
                             ->get();
 
             $maxCoinSupply = 200000;
