@@ -96,36 +96,36 @@ class TestController {
     function test() {
 
         //Return btc to user
-        $orderList = OrderList::where('price', '=', '0.6')->where('status', 1)->get();
-        dd($orderList);
-        foreach($orderList as $order) {
-            $order->status = 0;
-            $order->save();
+        // $orderList = OrderList::where('price', '=', '0.6')->where('status', 1)->get();
+        // dd($orderList);
+        // foreach($orderList as $order) {
+        //     $order->status = 0;
+        //     $order->save();
 
-            //Return BTC
-            $userCoin = UserCoin::where('userId', $order->user_id)->first();
-            $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $order->btc_value);
-            $userCoin->save();
-        }
-
-        dd("XXXXX");
-
-        // //Update address for NULL user
-        // $nullUsers = UserCoin::whereNull('walletAddress')->get();
-
-        // dd($nullUsers);
-
-        // foreach($nullUsers as $userCoin)
-        // {
-        //     $user = User::find($userCoin->userId);
-        //     if($user->name){
-        //         $walletAddress = $this->GenerateAddress($user->name);
-        //         $userCoin->walletAddress = $walletAddress['walletAddress'];
-        //         $userCoin->save();
-        //     }
+        //     //Return BTC
+        //     $userCoin = UserCoin::where('userId', $order->user_id)->first();
+        //     $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $order->btc_value);
+        //     $userCoin->save();
         // }
+
+        // dd("XXXXX");
+
+        //Update address for NULL user
+        $nullUsers = UserCoin::whereNull('walletAddress')->get();
+
+        dd($nullUsers);
+
+        foreach($nullUsers as $userCoin)
+        {
+            $user = User::find($userCoin->userId);
+            if($user->name){
+                $walletAddress = $this->GenerateAddress($user->name);
+                $userCoin->walletAddress = $walletAddress['walletAddress'];
+                $userCoin->save();
+            }
+        }
        
-        // dd("Update userWallet success");
+        dd("Update userWallet success");
     }
 
     private function GenerateAddress( $name = null ) {
