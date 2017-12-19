@@ -48,6 +48,7 @@ class ClpWalletController extends Controller {
             $query->where('type', $request->type);
         }
         $wallets = $query->where('walletType', Wallet::CLP_WALLET)->orderBy('id', 'desc')->paginate();
+
         if(isset($request->type) && $request->type > 0){
              $pagination = $wallets->appends ( array (
                  'type' => $request->type

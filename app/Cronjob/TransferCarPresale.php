@@ -13,6 +13,7 @@ use App\UserCoin;
 use App\OrderList;
 use App\ExchangeRate;
 use DB;
+use App\Wallet;
 use Carbon\Carbon;
 
 /**
@@ -73,7 +74,25 @@ class TransferCarPresale
                     $userCoin = UserCoin::where('userId', $order->user_id)->first();
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $order->amount);
                     $userCoin->save();
-
+                    //+5% cho giới thiêu
+                    $sponsorID = User::find($order->user_id)->refererId;
+                    if($sponsorID){
+                        $bonusSponsor = $order->amount * 5 / 100;
+                        //+user coin
+                        $userCoin = UserCoin::where('userId', $sponsorID)->first();
+                        $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $bonusSponsor;
+                        $userCoin->save();
+                        //lưu log
+                        $fieldCLP = [
+                            'walletType' => Wallet::CLP_WALLET,//usd
+                            'type' => 0,
+                            'inOut' => Wallet::IN,
+                            'userId' => $sponsorID,
+                            'amount' => $bonusSponsor,
+                            'note'   => '5% from ' . User::find($order->user_id)->name . '\'s auction'
+                        ];
+                        Wallet::create($fieldCLP);
+                    }
                     //Chang status order from pending => success
                     $order->status = 2;
                     $order->save();
@@ -84,7 +103,27 @@ class TransferCarPresale
                     $userCoin = UserCoin::where('userId', $order->user_id)->first();
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $maxCoinSupply);
                     $userCoin->save();
-                    
+
+                    //+5% cho giới thiêu
+                    $sponsorID = User::find($order->user_id)->refererId;
+                    if($sponsorID){
+                        $bonusSponsor = $order->amount * 5 / 100;
+                        //+user coin
+                        $userCoin = UserCoin::where('userId', $sponsorID)->first();
+                        $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $bonusSponsor;
+                        $userCoin->save();
+                        //lưu log
+                        $fieldCLP = [
+                            'walletType' => Wallet::CLP_WALLET,//usd
+                            'type' => 0,
+                            'inOut' => Wallet::IN,
+                            'userId' => $sponsorID,
+                            'amount' => $bonusSponsor,
+                            'note'   => '5% from ' . User::find($order->user_id)->name . '\'s auction'
+                        ];
+                        Wallet::create($fieldCLP);
+                    }
+
                     //Create new order with cancel status
                     $totalValue = ($order->amount - $maxCoinSupply) * $order->price;
                     $btcValue = ($order->amount - $maxCoinSupply) / $order->amount * $order->btc_value;

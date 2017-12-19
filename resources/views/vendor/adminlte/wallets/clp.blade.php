@@ -63,16 +63,40 @@
                                             <div class="table-responsive">
                                                 <table class="table" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
-                                                        <th>No</th>
                                                         <th>Date/Time</th>
                                                         <th>Type</th>
                                                         <th>In</th>
                                                         <th>Out</th>
                                                         <th>Info</th>
                                                     </thead>
-                                                    <tbody>                                                        
+                                                    <tbody>
+                                                        @foreach($wallets as $wallet)
+                                                            <tr>
+                                                                <td>
+                                                                    {{ $wallet->created_at }}
+                                                                </td>
+                                                                <td></td>
+                                                                @if($wallet->inOut == 'in')
+                                                                    <td>
+                                                                        {{ $wallet->amount }}
+                                                                    </td>
+                                                                    <td></td>
+                                                                @else
+                                                                    <td></td>
+                                                                    <td>
+                                                                        {{ $wallet->amount }}
+                                                                    </td>
+                                                                @endif
+                                                                <td>
+                                                                    {{ $wallet->note }}
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
+                                                <div class="text-center">
+                                                    {{ $wallets->links() }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
