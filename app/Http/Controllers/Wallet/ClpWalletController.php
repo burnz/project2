@@ -75,12 +75,12 @@ class ClpWalletController extends Controller {
             if($key == 10) $wallet_type[$key] = trans($val);
             if($key == 12) $wallet_type[$key] = trans($val);
             if($key == 14) $wallet_type[$key] = trans($val);
-            if($key == 15) $wallet_type[$key] = trans($val);
+            //if($key == 15) $wallet_type[$key] = trans($val);
         }
 
         $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
         $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
-
+        
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 

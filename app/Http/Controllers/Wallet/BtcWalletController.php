@@ -217,6 +217,7 @@ class BtcWalletController extends Controller
             if ( $btcAmountErr == '' && $clpAmountErr == '') {
 
                  //Amount CLP
+                $clpRate = ExchangeRate::getCLPBTCRate();
                 $amountCLP = $request->btcAmount / ExchangeRate::getCLPBTCRate();
                 
                 $userCoin->btcCoinAmount = $userCoin->btcCoinAmount - $request->btcAmount;

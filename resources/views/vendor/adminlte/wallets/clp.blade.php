@@ -28,6 +28,33 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="pill2">
                                 <div class="row">
+                                    <div class="col-md-offset-3 col-md-6 justify-content-center text-center">
+                                        @if ( session()->has("errorMessage") )
+                                            <div class="alert alert-warning">
+                                                <h4>Warning!</h4>
+                                                <p>{!! session("errorMessage") !!}</p>
+                                            </div>
+                                            {{ session()->forget('errorMessage') }}
+                                        @elseif ( session()->has("successMessage") )
+                                            <div class="alert alert-success">
+                                                <h4>Success</h4>
+                                                <p>{!! session("successMessage") !!}</p>
+                                            </div>
+                                            {{ session()->forget('successMessage') }}
+                                        @else
+                                            <div></div>
+                                        @endif
+
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
                                     <div class="col-md-12 d-flex justify-content-center mb-3" user-wallet>
                                         <div class="user-wallet">
                                             <div class="left">
@@ -40,7 +67,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="align-self-center">                                            
+                                        <div class="align-self-center">  
+
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-sell">
+                                                <span class="btn-label">
+                                                                <i class="material-icons">shopping_basket</i>
+                                                            </span> Sell Carcoin
+                                                <div class="ripple-container"></div>
+                                            </button>   
+
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
                                                 <span class="btn-label">
                                                     <i class="material-icons">shop</i>
@@ -62,11 +97,23 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <div class="card-content p-0">                                            
+                                        <div class="card-content p-0">    
+                                            <div class="card-filter clearfix">
+                                                <div class="col-md-4">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Select Type</label>
+                                                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control', 'id' => 'wallet_type']) }}
+                                                    <span class="material-input"></span></div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-primary btn-round" id="btn_filter">Filter</button>
+                                                    <button type="button" class="btn btn-outline-primary btn-round" id="btn_filter_clear">Clear</button>
+                                                </div>
+                                            </div>                                        
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
-                                                <table class="table" cellspacing="0" width="100%" style="width:100%">
+                                                <table class="table" id="tbCLP" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
                                                         <th>No</th>
                                                         <th>Date/Time</th>
@@ -75,7 +122,25 @@
                                                         <th>Out</th>
                                                         <th>Info</th>
                                                     </thead>
-                                                    <tbody>                                                        
+                                                    <tbody>
+                                                        @foreach ($wallets as $key => $wallet)
+                                                            <tr>
+                                                                <td>{{ $key+1 }}</td>
+                                                                <td>{{ $wallet->created_at }}</td>
+                                                                <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
+                                                                <td>
+                                                                    @if($wallet->inOut=='in')
+                                                                        +{{ number_format($wallet->amount, 2) }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if($wallet->inOut=='out')
+                                                                        -{{ number_format($wallet->amount, 2) }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ $wallet->note }}</td>
+                                                            </tr>
+                                                        @endforeach              
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -215,6 +280,41 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="clptranfer" class="btn btn-primary btn-round">Submit</button>
+                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="carcoin-sell" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
+                <h4 class="modal-title" id="myModalLabel4">Sell Carcoin - <b class="carcoin-color" style="vertical-align: bottom;"><img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;">{{ number_format($walletAmount['amountCLP'], 5) }}</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
+                            <div class="form-group label-floating">
+                                <label class="control-label">Carcoin Amount</label>
+                                <input type="number" class="form-control switch-CLP-to-BTC-sellclp" id="sellCLPAmount" name="clpAmount">
+                            </div>
+                        </div>
+                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
+                            <div class="form-group label-floating">
+                                <label class="control-label">BTC Amount</label>
+                                <input type="number" class="form-control switch-BTC-to-CLP-sellclp" id="sellBTCAmount" name="btcAmount">
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">
+                            <label>Rate: <b>{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</b></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-round" id="sell-clp">{{trans('adminlte_lang::default.submit')}}</button>
                 <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -491,7 +591,87 @@
                 }
             });
 
+            //sell carcoin
+            $('#sell-clp').on('click', function () {
+                var clpAmount = $('#sellCLPAmount').val();
+                var btcAmount = $('#sellBTCAmount').val();
+                if($.trim(clpAmount) == ''){
+                    $("#sellCLPAmount").parents("div.form-group").addClass('has-error');
+                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
+                }else{
+                    $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
+                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcAmount) == ''){
+                    $("#sellBTCAmount").parents("div.form-group").addClass('has-error');
+                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text("BTC Amount is required");
+                }else{
+                    $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
+                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(clpAmount) != '' && $.trim(btcAmount) != ''){
+                    $.ajax({
+                        method : 'POST',
+                        url: "{{ url('wallets/sellclp') }}",
+                        data: {clpAmount: clpAmount, btcAmount: btcAmount,_token:"{{csrf_token()}}"}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.clpAmountErr !== '') {
+                                    $("#sellCLPAmount").parents("div.form-group").addClass('has-error');
+                                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
+                                }else {
+                                    $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
 
+                                    $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
+            });
+    
+            $(".switch-BTC-to-CLP-sellclp").on('keyup mousewheel', function () {
+                var value = $(this).val();
+                var result = value / (globalCLPBTC * 0.95) ;
+                $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(2)).trigger("change");
+            });
+
+            $(".switch-CLP-to-BTC-sellclp").on('keyup mousewheel', function () {
+                var value = $(this).val();
+                var result = value * globalCLPBTC * 0.95;
+                $(".switch-BTC-to-CLP-sellclp").val(result.toFixed(5)).trigger("change");
+            });
+
+            $('#tbCLP').DataTable({
+                "ordering": false,
+                "searching":false,
+                "bLengthChange": false,
+            });
+            //filter
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if (wallet_type > 0) {
+                    location.href = '{{ url()->current() }}?type=' + wallet_type;
+                } else {
+                    alert('Please choose a type!');
+                    return false;
+                }
+            });
+
+            $('#btn_filter_clear').on('click', function () {
+                location.href = '{{ url()->current() }}';
+            });
         });
     </script>
 @endsection

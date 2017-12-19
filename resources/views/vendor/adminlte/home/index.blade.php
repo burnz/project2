@@ -93,7 +93,7 @@
                                             <div class="icon" rel="tooltip" data-placement="left" title="Left">
                                                 L
                                             </div>
-                                            <p class="h2 mt-5">$69</p>
+                                            <p class="h2 mt-5">${{$ttSale['left']}}</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-lg-6">
@@ -101,7 +101,7 @@
                                             <div class="icon" rel="tooltip" data-placement="right" title="Right">
                                                 R
                                             </div>
-                                            <p class="h2 mt-5">$748</p>
+                                            <p class="h2 mt-5">${{$ttSale['right']}}</p>
                                         </div>
                                     </div>
                                 </div>

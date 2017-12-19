@@ -81,6 +81,7 @@ class User extends Authenticatable
 			
 			if(isset($userData) && $userData->packageId > 0)
 			{
+				
 				if($userData->packageId == 1)
 					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_1_pay');
 
@@ -117,7 +118,7 @@ class User extends Authenticatable
 						'type' => Wallet::FAST_START_TYPE,
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
-						'amount' => $usdCoinAmount,
+						'amount' => $clpAmount,
 						'note'   => $user->name . ' bought package',
 					];
 					

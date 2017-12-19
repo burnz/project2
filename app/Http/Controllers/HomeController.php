@@ -86,7 +86,7 @@ class HomeController extends Controller
 
         //Calculate today earning
         $tdAmount=0;
-        $todayEarning = Wallet::where('userId', Auth::user()->id)
+        $todayEarning = Wallet::where('userId', $userData->userId)
                             ->where('walletType', Wallet::CLP_WALLET)
                             ->where('inOut', Wallet::IN)
                             ->where('created_at','>=',date('Y-m-d').' 00:00:00')
@@ -107,9 +107,9 @@ class HomeController extends Controller
 
 
         //Get F1 lef, right Volume
-        $loyaltyUser =  LoyaltyUser::where('userId', Auth::user()->id)->first();
-        $data['left_vol']     = isset($loyaltyUser->f1Left) ? $loyaltyUser->f1Left : 0;
-        $data['right_vol']     = isset($loyaltyUser->f1Right) ? $loyaltyUser->f1Right : 0;
+        $totalSale = app('App\Http\Controllers\User\MemberController')->getWeeklySale($userData->userId);
+        $ttSale=$this->getTotalSale();
+
         //Get lịch sử package
         $data['history_package'] = UserPackage::getHistoryPackage();
         // check turn on/off button withdraw
@@ -119,7 +119,54 @@ class HomeController extends Controller
         $todayInterest=Wallet::where([['userId','=',$userData->userId],['created_at','>=',date('Y-m-d').' 00:00:00'],['type','=',2],['inOut','=','in']])->sum('amount');
         //end get today interest
 
-        return view('adminlte::home.index')->with(compact('data','todayInterest'));
+        $this->getTotalSale();
+
+        return view('adminlte::home.index')->with(compact('data','todayInterest','totalSale','ttSale'));
+    }
+
+
+    private function getTotalSale()
+    {
+        $allNode=UserTreePermission::where('userId','=',Auth::user()->id)->first();
+        $data['left']=0;
+        $data['right']=0;
+        if(!empty($allNode))
+        {
+            $fNodeL=isset(explode(',',$allNode->genealogy_left)[1])?explode(',',$allNode->genealogy_left)[1]:0;
+            $fNodeR=isset(explode(',',$allNode->genealogy_right)[1])?explode(',',$allNode->genealogy_right)[1]:0;
+
+            $totalLeft=floatval($this->getNodeData($fNodeL));
+            $totalRight=floatval($this->getNodeData($fNodeR));
+            $data['left']=$totalLeft;
+            $data['right']=$totalRight;
+            // echo'<pre>';
+            //     print_r($totalLeft);
+            //     echo'</br/>';
+            //     print_r($totalRight);
+            // echo'</pre>';
+            // exit;
+        }
+        return $data;
+    }
+
+    private function getNodeData($usid)
+    {
+        $total=0;
+        if($usid!='')
+        {
+            $userDatas = UserData::where('refererId', $usid)->get();
+            $total+=UserPackage::getTotalAmount($usid);
+            if(count($userDatas)>0)
+            {
+                foreach($userDatas as $userData)
+                {
+                    $total+=floatVal(UserPackage::getTotalAmount($userData->userId));
+                    $this->getNodeData($userData->userId);
+                }
+            }
+
+        }
+        return $total;
     }
 
 

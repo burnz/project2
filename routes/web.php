@@ -76,7 +76,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@showBTCWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
-    //Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@buyCLP");
+    Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@buyCLP");
 
     Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
 
@@ -90,6 +90,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::get('wallets/car/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
+    Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');

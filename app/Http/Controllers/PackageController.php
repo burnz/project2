@@ -182,11 +182,12 @@ class PackageController extends Controller
                 'amount' => $amountCLPDecrease,
                 'note'   => 'USD value ' . $amount_increase 
             ];
-            Wallet::create($fieldUsd);
+            
 
+            Wallet::create($fieldUsd);
             // Calculate fast start bonus
             User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
-
+            
             // Case: User already in tree and then upgrade package => re-caculate loyalty
             if($userData->binaryUserId && $userData->packageId > 0)
                 User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);

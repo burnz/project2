@@ -38,20 +38,27 @@
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#reinvest-buy-carcoin">
-                                                <span class="btn-label">
-                                                                <i class="material-icons">add_shopping_cart</i>
-                                                            </span> Buy Carcoin
-                                                <div class="ripple-container"></div>
-                                            </button>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
+                                            <div class="card-filter clearfix">
+                                                <div class="col-md-4">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Select Type</label>
+                                                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control', 'id' => 'wallet_type']) }}
+                                                    <span class="material-input"></span></div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-primary btn-round" id="btn_filter">Filter</button>
+                                                    <button type="button" class="btn btn-outline-primary btn-round" id="btn_filter_clear">Clear</button>
+                                                </div>
+                                            </div>
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
-                                                <table class="table" cellspacing="0" width="100%" style="width:100%">
+                                                <table class="table" id="tbRIV" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
@@ -135,7 +142,24 @@
 @section('script')
     <script type="text/javascript">
         jQuery(document).ready(function(){
-            
+            $('#tbRIV').DataTable({
+                "ordering": false,
+                "searching":false,
+                "bLengthChange": false,
+            });
+            //filter
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if(wallet_type > 0){
+                    location.href = '{{ url()->current() }}?type='+wallet_type;
+                }else{
+                    alert('Please choose a type!');
+                    return false;
+                }
+            });
+            $('#btn_filter_clear').on('click', function () {
+                location.href = '{{ url()->current() }}';
+            });
         });
     </script>
 @stop

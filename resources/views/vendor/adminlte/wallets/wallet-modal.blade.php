@@ -82,75 +82,11 @@
 {!! Form::close() !!}
 
 
-<div class="modal fade" id="bitcoin-buy-carcoin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
-                <h4 class="modal-title" id="myModalLabel3">Buy Carcoin - <b class="bitcoin-color" style="vertical-align: bottom;"><img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;">314,675</b></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">BTC Amount</label>
-                                <input type="text" class="form-control" value>
-                            </div>
-                        </div>
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">Carcoin Amount</label>
-                                <input type="text" class="form-control" value>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round">Submit</button>
-                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Carcoin Wallet -->
-<div class="modal fade" id="carcoin-sell" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
-                <h4 class="modal-title" id="myModalLabel4">Sell Carcoin - <b class="carcoin-color" style="vertical-align: bottom;"><img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;">0.00000</b></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">Carcoin Amount</label>
-                                <input type="text" class="form-control" value>
-                            </div>
-                        </div>
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">BTC Amount</label>
-                                <input type="text" class="form-control" value>
-                            </div>
-                        </div>
-                        <div class="form-group pull-right">
-                            <label>Fee: <b>0.0004</b></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round">Submit</button>
-                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 <div class="modal fade" id="carcoin-buy-package" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
