@@ -94,6 +94,9 @@
                                                         @endforeach
                                                     </tbody>
                                                 </table>
+                                                <div class="text-center">
+                                                    {{ $wallets->links() }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

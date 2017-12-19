@@ -89,7 +89,7 @@ class TransferCarPresale
                             'inOut' => Wallet::IN,
                             'userId' => $sponsorID,
                             'amount' => $bonusSponsor,
-                            'note'   => '5% from presale another'
+                            'note'   => '5% auction of ' . User::find($order->user_id)->name
                         ];
                         Wallet::create($fieldCLP);
                     }
@@ -119,7 +119,7 @@ class TransferCarPresale
                             'inOut' => Wallet::IN,
                             'userId' => $sponsorID,
                             'amount' => $bonusSponsor,
-                            'note'   => '5% from presale another'
+                            'note'   => '5% auction of ' . User::find($order->user_id)->name
                         ];
                         Wallet::create($fieldCLP);
                     }
