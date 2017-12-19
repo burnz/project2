@@ -107,7 +107,7 @@ class TransferCarPresale
                     //+5% cho giới thiêu
                     $sponsorID = User::find($order->user_id)->refererId;
                     if($sponsorID){
-                        $bonusSponsor = $order->amount * 5 / 100;
+                        $bonusSponsor = $maxCoinSupply * 5 / 100;
                         //+user coin
                         $userCoin = UserCoin::where('userId', $sponsorID)->first();
                         $userCoin->clpCoinAmount = $userCoin->clpCoinAmount + $bonusSponsor;
