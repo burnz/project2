@@ -85,11 +85,11 @@ class TransferCarPresale
                         //lưu log
                         $fieldCLP = [
                             'walletType' => Wallet::CLP_WALLET,//usd
-                            'type' => '',
+                            'type' => 0,
                             'inOut' => Wallet::IN,
                             'userId' => $sponsorID,
                             'amount' => $bonusSponsor,
-                            'note'   => '5% auction of ' . User::find($order->user_id)->name
+                            'note'   => '5% from ' . User::find($order->user_id)->name . '\'s auction'
                         ];
                         Wallet::create($fieldCLP);
                     }
@@ -115,11 +115,11 @@ class TransferCarPresale
                         //lưu log
                         $fieldCLP = [
                             'walletType' => Wallet::CLP_WALLET,//usd
-                            'type' => '',
+                            'type' => 0,
                             'inOut' => Wallet::IN,
                             'userId' => $sponsorID,
                             'amount' => $bonusSponsor,
-                            'note'   => '5% auction of ' . User::find($order->user_id)->name
+                            'note'   => '5% from ' . User::find($order->user_id)->name . '\'s auction'
                         ];
                         Wallet::create($fieldCLP);
                     }
