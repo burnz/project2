@@ -18,15 +18,7 @@ class Controller extends BaseController
     var $ct = 1;
     
     public function __construct(){
-
-        $this->middleware(function ($request, $next) {
-            if (Auth::user() && Auth::user()->is2fa) {
-                if (Session::get('google2fa') == null || Session::get('google2fa') == false) {
-                    return redirect('authenticator');
-                }
-            }
-            return $next($request);
-        });
+        //$this->middleware(['auth']);
     }
     
     /** 

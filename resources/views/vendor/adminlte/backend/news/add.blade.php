@@ -32,7 +32,7 @@
     <div class="form-group @if ($errors->has('category')) has-error @endif">
         {!! Form::label('title', 'Category') !!}
         {!! Form::select('category',  array(
-            '3' => trans('adminlte_lang::news.clp_news')
+            '3' => 'CAR News'
         ), '1', ['class' => 'form-control']) !!}
         @if ($errors->has('category')) <p class="help-block">{{ $errors->first('category') }}</p> @endif
     </div>

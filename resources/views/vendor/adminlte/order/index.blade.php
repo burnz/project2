@@ -5,9 +5,24 @@
 
     <!--  Custom CSS    -->
     <link href="/presale/assets/css/custom.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js"></script>
+    <script>
+
+
+        $(document).ready(function() {
+
+            lightbox.start($('.example-image-link'));
+
+        });
+    </script>
 @endsection
 @section('content')
+
     <div class="content">
+        <div id="popup" style="display: none">
+            <a href="{{ asset('img/popup/popup-noel-2017.jpg') }}" data-lightbox="image-1" data-title="Merry Chirstmas and Happy New Year" class="example-image-link" >Image #1</a>
+        </div>
         <div class="container-fluid">
             <div class="row d-flex" section="dashboard-status">
                 <div class="col-md-8 align-self-center">
@@ -276,22 +291,20 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-
             // Javascript method's body can be found in assets/js/demos.js
             demo.initDashboardPageCharts();
             demo.initCoutdown();
-
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script>
         $(document).ready(function () {
-            $('#employee-grid').DataTable({
-                "ordering": false,
-                "searching":false,
-                "bLengthChange": false,
-                paging: false
-            });
+            // $('#employee-grid').DataTable({
+            //     "ordering": false,
+            //     "searching":false,
+            //     "bLengthChange": false,
+            //     paging: false
+            // });
 
             $('#amount').on('keyup change mousewheel', function () {
                 var value = $(this).val();

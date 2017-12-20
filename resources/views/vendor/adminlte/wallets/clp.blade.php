@@ -115,7 +115,6 @@
                                             <div class="table-responsive">
                                                 <table class="table" id="tbCLP" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
-                                                        <th>No</th>
                                                         <th>Date/Time</th>
                                                         <th>Type</th>
                                                         <th>In</th>
@@ -123,26 +122,33 @@
                                                         <th>Info</th>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($wallets as $key => $wallet)
+                                                        @foreach($wallets as $wallet)
                                                             <tr>
-                                                                <td>{{ $key+1 }}</td>
-                                                                <td>{{ $wallet->created_at }}</td>
-                                                                <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
                                                                 <td>
-                                                                    @if($wallet->inOut=='in')
-                                                                        +{{ number_format($wallet->amount, 2) }}
-                                                                    @endif
+                                                                    {{ $wallet->created_at }}
                                                                 </td>
+                                                                <td></td>
+                                                                @if($wallet->inOut == 'in')
+                                                                    <td>
+                                                                        {{ $wallet->amount }}
+                                                                    </td>
+                                                                    <td></td>
+                                                                @else
+                                                                    <td></td>
+                                                                    <td>
+                                                                        {{ $wallet->amount }}
+                                                                    </td>
+                                                                @endif
                                                                 <td>
-                                                                    @if($wallet->inOut=='out')
-                                                                        -{{ number_format($wallet->amount, 2) }}
-                                                                    @endif
+                                                                    {{ $wallet->note }}
                                                                 </td>
-                                                                <td>{{ $wallet->note }}</td>
                                                             </tr>
-                                                        @endforeach              
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
+                                                <div class="text-center">
+                                                    {{ $wallets->links() }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

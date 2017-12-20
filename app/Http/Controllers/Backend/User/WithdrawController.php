@@ -49,7 +49,7 @@ class WithdrawController extends Controller
 
                 if($withdrawConfirm->type == 'btc'){
                     self::sendBTC($request);
-                }elseif($withdrawConfirm->type == 'clp'){
+                }elseif($withdrawConfirm->type == 'car'){
                     self::sendCLP($request);
                 }
 
@@ -85,7 +85,7 @@ class WithdrawController extends Controller
                 if($withdrawConfirm->type == 'btc')
                 {
                     $userCoin->btcCoinAmount += config('app.fee_withRaw_BTC') + $withdrawConfirm->withdrawAmount;
-                }elseif($withdrawConfirm->type == 'clp')
+                }elseif($withdrawConfirm->type == 'car')
                 {
                     $userCoin->clpCoinAmount += config('app.fee_withRaw_CLP') + $withdrawConfirm->withdrawAmount;
                 }

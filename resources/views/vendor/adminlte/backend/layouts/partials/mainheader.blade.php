@@ -1,30 +1,12 @@
 <!-- Main Header -->
 <header class="main-header">
 
-    <!-- Logo -->
-    <a href="{{ url('/home') }}" class="logo">
-        <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><img src="{{ url('/') }}/img/logo_gold.png"/></span>
-        <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><img src="{{ url('/') }}/img/logo_gold.png"/><b>CLP</b></span>
-    </a>
-
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">{{ trans('adminlte_lang::message.togglenav') }}</span>
         </a>
-        &nbsp;
-        &nbsp;
-        {{--<span class="" style="font-size: 18px;line-height: 50px;text-align: center;color: white">--}}
-            {{--<b>--}}
-                {{--<span>1 <i style="color: #FA890F">BTC</i> = $<span class="btcusd"></span></span>&nbsp;|&nbsp;--}}
-                {{--<span>1 <i style="color: #FA890F">CLP</i> = $<span class="clpusd"></span></span>&nbsp;|&nbsp;--}}
-                {{--<span>1 <i style="color: #FA890F">CLP</i> = <i class="fa fa-btc" aria-hidden="true"></i><span class="clpbtc"></span></span>--}}
-            {{--</b>--}}
-        {{--</span>--}}
-
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
