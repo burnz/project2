@@ -32,14 +32,10 @@ class Wallet extends Model
     const BINARY_TYPE = 3;
     // Ltoyalty bonus
     const LTOYALTY_TYPE = 4;
-    // Tranfer Usd to Clp
-    const USD_CLP_TYPE = 5;
     // Tranfer holding to Clp
     const REINVEST_CLP_TYPE = 6;
     // Buy CLP by BTC
     const BTC_CLP_TYPE = 7;
-    // Sell Clp to Btc
-    const CLP_BTC_TYPE = 8;
     // WithDraw BTC
     const WITH_DRAW_BTC_TYPE = 9;
     // Withdraw CLP

@@ -172,16 +172,15 @@ class User extends Authenticatable
 
 		if($user)
 		{
-			if($isUpgrade == true) 
-			{
-				// If $userRoot already in binary tree
-				$userPackage = UserPackage::where('userId', $userId)
+			$userPackage = UserPackage::where('userId', $userId)
 								->where('packageId', $packageId)
 								->orderBy('packageId', 'desc')
 								->first();
+			$usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
 
-				$usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
-
+			if($isUpgrade == true) 
+			{
+				// If $userRoot already in binary tree
 				if ($legpos == 1){
 					//Total sale on left
 					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
@@ -193,9 +192,6 @@ class User extends Authenticatable
 			elseif($userRoot->totalMembers == 0) 
 			{
 				// If $userRoot don't have own tree
-				$userPackage = Package::where('pack_id', $packageId)->first();
-				$usdCoinAmount = isset($userPackage->price) ? $userPackage->price : 0;
-
 				if ($legpos == 1){
 					//Update genelogy on left
 					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
@@ -251,7 +247,7 @@ class User extends Authenticatable
 			// $user->userId = $binaryUserId
 			if($user->packageId > 0) self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
 			
-			if($user->binaryUserId > 0 && $user->packageId > 0) {    
+			if($user->binaryUserId > 0 && $user->packageId > 0) {
 				User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade, $continue);
 			}
 		}

@@ -46,8 +46,6 @@ class Bonus
 		try {
 			$lstUser = User::where('active', '=', 1)->get();
 
-
-
 			foreach($lstUser as $user){
 				//Get cron status
 				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
@@ -346,7 +344,7 @@ class Bonus
 			$cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
 			if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
-			$volInfo = self::calLeftRightVolume($binary->userId);
+			$volInfo = self::_calLeftRightVolume($binary->userId);
 
 			$leftOver = $volInfo['toalLeft'] + $binary->leftOpen;
 			$rightOver = $volInfo['totalRight'] + $binary->leftOpen;
@@ -433,7 +431,7 @@ class Bonus
 		DB::table('cron_matching_logs')->update(['status' => 0]);
 	}
 
-	public static function calLeftRightVolume($userId)//
+	private static function _calLeftRightVolume($userId)//
 	{
 		$userTree = UserTreePermission::find($userId);//luu thanh vien trai phai cay nhi phan
 
@@ -470,54 +468,6 @@ class Bonus
 		return ['toalLeft' => $totalLeftVol, 'totalRight' => $totalRightVol];
 	}
 
-
-
-	// public static function calTotalBonus(&$totalBonus, $firstWeekYear, $referralId, $loyaltyId, $deepLevel = 1)
-	// {
-	// 	//Cal total member F1
-	// 	$f1Users = UserData::where('refererId', $referralId)->get();
-	// 	//Total binany bonus F1
-	// 	foreach($f1Users as $userId) {
-	// 		$bonusBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->where('userId', $userId)->get();
-	// 		$totalBonus += $bonusBinary->bonus;
-	// 	}
-
-	// 	$deepLevel++;
-	// 	//IsSilver
-	// 	if($loyaltyId == 1 && $deepLevel <= 2) {
-	// 		foreach($f1Users as $userId) {
-	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-	// 		}
-	// 	}
-
-	// 	//IsGold
-	// 	if($loyaltyId == 2 && $deepLevel <= 4){
-	// 		foreach($f1Users as $userId) {
-	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-	// 		}
-	// 	}
-
-	// 	//IsPear
-	// 	if($loyaltyId == 3 && $deepLevel <= 6){
-	// 		foreach($f1Users as $userId) {
-	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-	// 		}
-	// 	}
-
-	// 	//IsEmerald
-	// 	if($loyaltyId == 4 && $deepLevel <= 8){
-	// 		foreach($f1Users as $userId) {
-	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-	// 		}
-	// 	}
-
-	// 	//IsDiamond
-	// 	if($loyaltyId == 5 && $deepLevel <= 10) {
-	// 		foreach($f1Users as $userId) {
-	// 			self::calTotalBonus($totalBonus, $userId, $loyaltyId, $deepLevel);
-	// 		}
-	// 	}
-	// }
 
 	/**
 	* This cronjob function will run every 00:01 first day of month to caculate and return bonus to user's wallet 

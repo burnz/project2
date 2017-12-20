@@ -81,69 +81,6 @@ class UsdWalletController extends Controller
         return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
     }
     
-    
-    /**
-     * @author Huy NQ
-     * @param type $usd
-     * @param type $clp
-     * @param type $request
-     */
-    public function buyCLP(Request $request)
-    {
-        if($request->ajax()) {
-            $userCoin = Auth::user()->userCoin;
-            $usdAmountErr = '';
-            if($request->usdAmount == ''){
-                $usdAmountErr = trans('adminlte_lang::wallet.msg_usd_amount_required');
-            }elseif (!is_numeric($request->usdAmount)){
-                $usdAmountErr = trans('adminlte_lang::wallet.amount_number');
-            }elseif ($userCoin->usdAmount < $request->usdAmount){
-                $usdAmountErr = trans('adminlte_lang::wallet.error_not_enough');
-            }
-     
-            if($usdAmountErr == '')
-            {
-                $clpRate = ExchangeRate::getCLPUSDRate();
-                $amountCLP = $request->usdAmount / $clpRate;
-                $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
-                $userCoin->clpCoinAmount =  $userCoin->clpCoinAmount + $amountCLP;
-                $userCoin->save();
-                $usd_to_clp = [
-                    "walletType" => Wallet::USD_WALLET,
-                    "type"       => Wallet::USD_CLP_TYPE,
-                    "inOut"      => Wallet::OUT,
-                    "userId"     => Auth::user()->id,
-                    "amount"     => $request->usdAmount,
-                    "note"      => "Rate " . $clpRate . '$',
-                ];
-                $result = Wallet::create($usd_to_clp);
-                $clp_from_usd = [
-                    "walletType" => Wallet::CLP_WALLET,
-                    "type"       => Wallet::USD_CLP_TYPE,
-                    "inOut"      => Wallet::IN,
-                    "userId"     => Auth::user()->id,
-                    "amount"     => $amountCLP,
-                    "note"      => "Rate " . $clpRate . '$',
-                ];
-                // Bulk insert
-                $result = Wallet::create($clp_from_usd);
-                $request->session()->flash( 'successMessage', "Buy CLP successfully!" );
-                return response()->json(array('err' => false));
-                
-            } else {
-                $result = [
-                        'err' => true,
-                        'msg' =>[
-                                'usdAmountErr' => $usdAmountErr,
-                            ]
-                    ];
-                return response()->json($result);
-            }
-        }
-        return response()->json(array('err' => false, 'msg' => null));
-    }
-    
-    
     public function getDataWallet() {
         //get số liệu 
         $dataCurrencyPair = $this->getRateUSDBTC();
