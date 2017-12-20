@@ -68,14 +68,6 @@
                                             </div>
                                         </div>
                                         <div class="align-self-center">  
-
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-sell">
-                                                <span class="btn-label">
-                                                                <i class="material-icons">shopping_basket</i>
-                                                            </span> Sell Carcoin
-                                                <div class="ripple-container"></div>
-                                            </button>   
-
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
                                                 <span class="btn-label">
                                                     <i class="material-icons">shop</i>
