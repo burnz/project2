@@ -93,7 +93,7 @@
                                             <div class="icon" rel="tooltip" data-placement="left" title="Left">
                                                 L
                                             </div>
-                                            <p class="h2 mt-5">${{$ttSale['left']}}</p>
+                                            <p class="h2 mt-5">${{number_format($ttSale['left'],0)}}</p>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-lg-6">
@@ -101,7 +101,7 @@
                                             <div class="icon" rel="tooltip" data-placement="right" title="Right">
                                                 R
                                             </div>
-                                            <p class="h2 mt-5">${{$ttSale['right']}}</p>
+                                            <p class="h2 mt-5">${{number_format($ttSale['right'],0)}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -118,14 +118,14 @@
                         <div class="card-content">
                             <h4 class="card-title">History Lending</h4>
                             <div class="table-responsive table-scroll-y">
-                                <table class="table">
+                                <table class="table" id="tbHLending">
                                     <thead class="text-thirdary">
                                         <th>Date</th>
                                         <th>Package</th>
                                         <!-- <th>Lending</th> -->
                                         <th>Lending Amount</th>
                                         <th>Release Date</th>
-                                        <th>Action</th>
+                                        <th>Status</th>
                                     </thead>
                                     <tbody style="height: 179px;">
                                     	@if(count($data['history_package'])>0)
@@ -135,7 +135,13 @@
 		                                            <td>{{$pval->name}}</td>
 		                                            <td>{{$pval->amount_increase}}</td>
                                                     <td>{{date_format(date_create($pval->release_date),'d-m-Y')}}</td>
-                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        @if($pval->withdraw==1)
+                                                            <button class="btn btn-simple btn-google m-0 p-0">Withdrawn</button>
+                                                        @else
+                                                            <button class="btn btn-simple btn-linkedin m-0 p-0">Waiting</button>
+                                                        @endif
+                                                    </td>
 		                                        </tr>
                                     		@endforeach
                                     	@endif
@@ -178,6 +184,12 @@
                 hideTooltip();
             });
             //end section ref_link
+            
+            $('#tbHLending').DataTable({
+                ordering: false,
+                searching:false,
+                bLengthChange: false,
+            });
 
 		});
 	</script>

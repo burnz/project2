@@ -60,6 +60,33 @@
         table.dataTable thead .sorting_desc:after {
             content: "\e156"
         }
+        .card-pricing .icon h3{
+            line-height: 1;
+            height: auto;
+            font-size: 15px;
+        }
+        .modal-content .modal-body{
+            padding-top:0 !important;
+        }
+        .card .card-title{
+            font-size:20px;
+        }
+        .label {
+            display: inline;
+            padding: .2em .6em .3em !important;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em !important;
+            color:#fff !important;
+        }
+        .label-danger {
+            background-color: #d9534f;
+        }
     </style>
 	<div class="content">
         <div class="container-fluid">
@@ -97,16 +124,18 @@
                               <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                                     <h4 class="modal-title" id="myModalLabel">Buy Packages
                                         <b id="carcoin-info" class="carcoin-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-pri.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountCLP'], 5) }}</b>
                                         <b id="reinvest-info" class="reinvest-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-sec.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountReinvest'], 5) }}</b>
+
+                                        <p class="pull-right">Pick the best package for you</p>
                                     </h4>
                                   </div>
                                   <div class="modal-body">
-                                        <div class="card-header">
+                                        <!-- <div class="card-header">
                                             <h3 class="card-title text-center">Pick the best package for you</h3>
-                                        </div>
+                                        </div> -->
                                         <div class="card-content clearfix">
                                             @if(count($dataPack)>0)
                                                 @foreach($dataPack as $pkey=>$pval)
@@ -137,7 +166,7 @@
                                                                         </span>
                                                                         <div class="form-group label-floating">
                                                                             <label class="control-label">Your Amount</label>
-                                                                            <input name="lastname" type="number" class="form-control" min="200" max="1000" step="10">
+                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10">
                                                                             <span class="material-input"></span>
                                                                             <p class="help-block errorAmount"></p>
                                                                         </div>
@@ -198,11 +227,22 @@
                                         @if(count($userPack)>0)
                                             @foreach($userPack as $upKey=>$upVal)
                                                 <tr>
-                                                    <td>{{date_format(date_create($upVal->buy_date),'d-m-Y')}}</td>
+                                                    <td>{{date_format(date_create($upVal->buy_date),'m-d-Y H:i:s')}}</td>
                                                     <td>{{$upVal->name}}</td>
                                                     <td>{{$upVal->amount_increase}}</td>
-                                                    <td>{{date_format(date_create($upVal->release_date),'m-d-Y')}}</td>
-                                                    <td>&nbsp;</td>
+                                                    <td>{{date_format(date_create($upVal->release_date),'m-d-Y H:i:s')}}</td>
+                                                    <td>
+                                                        @if($upVal->withdraw==1)
+                                                            <button class="btn btn-simple btn-google m-0 p-0">Withdrawn</button>
+                                                        @else
+                                                            @if($datetimeNow->diff(new DateTime($upVal->release_date))->format('%R%a')>0)
+                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Waiting</button>
+                                                            @else
+                                                                <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
+                                                            @endif
+                                                        @endif
+                                                        
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -335,5 +375,33 @@
             "searching":false,
             "bLengthChange": false,
         });
+
+        //withdraw package
+        $('.btnWD').click(function(){
+            var $this=$(this);
+            var pid=$(this).attr('data-id'); 
+            $.ajax({
+                type:'post',
+                url:'{{url("packages/withdraw")}}',
+                data:{id:pid,_token:'{{csrf_token()}}',type: 'withdraw'},
+                success:function(result){
+                    if (result.success){
+                        $this.parent().append('<button class="btn btn-simple btn-google m-0 p-0">Withdrawn<div class="ripple-container"></div></button>');
+                        $this.remove();
+
+                        $(".carcoin_bl").html(formatter.format(result.result).replace("$", ""));
+                        swal("Withdraw Package","Package has been withdrawn success","success").then(function(){
+                            window.location.reload();
+                        });
+                    } 
+                    else
+                    {
+                        swal('Oops...',result.message,'error');
+                    }
+                }
+            });
+        });
+        //end
+
 	</script>
 @stop

@@ -152,7 +152,7 @@ Route::post('getnotification','GetNotificationController@getNotification');
 //Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 //Route::get('test-binary', 'TestController@testBinary');
-Route::get('test-interest',"TestController@testInterest");
+Route::get('test-infinity',"TestController@testInterest");
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 Route::get('test',"TestController@test");
 
