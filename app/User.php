@@ -161,6 +161,7 @@ class User extends Authenticatable
 		}
 	}
 
+
 	/**
 	* Loop to root to re-assign lastLeft, lastRight user in tree and caculate binary sales for each node. 
 	*/
@@ -172,14 +173,20 @@ class User extends Authenticatable
 
 		if($user)
 		{
-			$userPackage = UserPackage::where('userId', $userId)
-								->where('packageId', $packageId)
-								->orderBy('packageId', 'desc')
-								->first();
-			$usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
+			// $userPackage = UserPackage::where('userId', $userId)
+			// 					->where('packageId', $packageId)
+			// 					->orderBy('packageId', 'desc')
+			// 					->first();
+
+			
 
 			if($isUpgrade == true) 
 			{
+				$userPackage = UserPackage::where('userId', $userId)
+								->where('packageId', $packageId)
+								->orderBy('packageId', 'desc')
+								->first();
+				$usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
 				// If $userRoot already in binary tree
 				if ($legpos == 1){
 					//Total sale on left
@@ -191,6 +198,11 @@ class User extends Authenticatable
 			} 
 			elseif($userRoot->totalMembers == 0) 
 			{
+				
+				$userPackage = UserPackage::where('userId', $userId)
+								->sum('amount_increase');
+				$usdCoinAmount = $userPackage;			
+
 				// If $userRoot don't have own tree
 				if ($legpos == 1){
 					//Update genelogy on left
@@ -220,8 +232,9 @@ class User extends Authenticatable
 
 				$user->totalMembers = $user->totalMembers + 1;
 				
-			} 
-			
+			}
+
+	
 
 			$user->save();
 
@@ -262,10 +275,19 @@ class User extends Authenticatable
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
 		$week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
+
+		// echo'<pre>';
+		// 	//print_r($week);
+		// 	print_r($usdCoinAmount);
+		// echo'</pre>';
+		// exit;
+
+
 		if($week && $week->id > 0) { //If already have record just update amount increase 
 			if($legpos == 1){
 				$week->leftNew = $week->leftNew + $usdCoinAmount;
 			}else{
+
 				$week->rightNew = $week->rightNew + $usdCoinAmount;
 			}
 			$week->save();

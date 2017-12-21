@@ -66,7 +66,7 @@ class Bonus
 					//Pakages
 					foreach($packages as $pack)
 					{
-						$bonus = rand(config('carcoin.min_interest'), config('carcoin.max_interest'));
+						$bonus = rand(config('carcoin.min_interest')*100, config('carcoin.max_interest')*100)/100;
 
 						$usdAmount = ($pack->amount_increase * $bonus)/100;
 						$clpAmount = $usdAmount / ExchangeRate::getCLPUSDRate();
@@ -140,6 +140,7 @@ class Bonus
 				}
 			}
 
+
 			//Update status from 1 => 0 after run all user
 			DB::table('cron_profit_day_logs')->update(['status' => 0]);
 
@@ -164,7 +165,8 @@ class Bonus
 
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
-		$firstWeek = $weeked - 1;
+		$firstWeek = $weeked - 1; //if run cronjob in 00:00:00 sunday
+		//$firstWeek = $weeked;
 		$firstYear = $year;
 		$firstWeekYear = $firstYear.$firstWeek;
 
@@ -228,6 +230,7 @@ class Bonus
 			$leftOpen = $leftOver - $level;
 			$rightOpen = $rightOver - $level;
 
+
 			$bonus = $level * $percentBonus;
 			
 
@@ -253,7 +256,7 @@ class Bonus
 					'type' =>  Wallet::BINARY_TYPE,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
-					'amount' => $usdAmount,
+					'amount' => $clpAmount,
 				];
 
 				Wallet::create($fieldUsd);
@@ -282,6 +285,11 @@ class Bonus
 			if(isset($week) && $week->id > 0) {
 				$week->leftOpen = $leftOpen;
 				$week->rightOpen = $rightOpen;
+
+				//update leftNew
+				$week->leftNew=0;//reset leftNew
+				$week->rightNew=0;//reset rightNew
+				//update RightNew
 
 				$week->save();
 			} else {

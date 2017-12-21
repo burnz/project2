@@ -47,20 +47,9 @@ class HomeController extends Controller
     public function index()
     {
         $data = [];
-        //Tong doanh so and ben trai and ben phai
-        $data['newF1InWeek']      = $this->getF1CurrentWeek();
-        $data['totalF1Sale']   = $this->getF1TotalSale();
         
         //Goi Packgade id
         $userData = UserData::where('userId', Auth::user()->id)->get()->first();
-        $data['package'] = isset($userData->packageId) ? $userData->packageId : 0;
-
-        if( count( Package::where('id',$data['package'])->get() ) == 0 ){
-            $data['value'] = 0;
-        }else{
-            $data['value'] = Package::where('id',$data['package'])->get()[0]->price;
-        }
-
         //Caculate total bonus from start
         $totalBonus = Wallet::where('userId', Auth::user()->id)
                             ->where('walletType', Wallet::CLP_WALLET)
@@ -75,6 +64,7 @@ class HomeController extends Controller
                 if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
                     || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
                     || $bonus->type == Wallet::FAST_START_TYPE
+                    || $bonus->type == Wallet::BONUS_TYPE
                     ) {
                     $amount += $bonus->amount;
                 }
@@ -98,6 +88,7 @@ class HomeController extends Controller
                 if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
                     || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
                     || $bonus->type == Wallet::FAST_START_TYPE
+                    || $bonus->type == Wallet::BONUS_TYPE
                     ) {
                     $tdAmount += $bonus->amount;
                 }
@@ -107,7 +98,6 @@ class HomeController extends Controller
 
 
         //Get F1 lef, right Volume
-        $totalSale = app('App\Http\Controllers\User\MemberController')->getWeeklySale($userData->userId);
         $ttSale=$this->getTotalSale();
 
         //Get lịch sử package
@@ -116,11 +106,10 @@ class HomeController extends Controller
         
 
         //get today interest
-        $todayInterest=Wallet::where([['userId','=',$userData->userId],['created_at','>=',date('Y-m-d').' 00:00:00'],['type','=',2],['inOut','=','in']])->sum('amount');
+        $todayInterest=Wallet::where([['userId','=',$userData->userId],['created_at','>=',date('Y-m-d').' 00:00:00'],['inOut','=',WALLET::IN]])->whereIn('type',[Wallet::INTEREST_TYPE,Wallet::BONUS_TYPE])->sum('amount');
         //end get today interest
 
         $this->getTotalSale();
-
         return view('adminlte::home.index')->with(compact('data','todayInterest','totalSale','ttSale'));
     }
 
@@ -128,43 +117,37 @@ class HomeController extends Controller
     private function getTotalSale()
     {
         $allNode=UserTreePermission::where('userId','=',Auth::user()->id)->first();
+        $totalLeft=0;
+        $totalRight=0;
         $data['left']=0;
         $data['right']=0;
         if(!empty($allNode))
         {
-            $fNodeL=isset(explode(',',$allNode->genealogy_left)[1])?explode(',',$allNode->genealogy_left)[1]:0;
-            $fNodeR=isset(explode(',',$allNode->genealogy_right)[1])?explode(',',$allNode->genealogy_right)[1]:0;
-
-            $totalLeft=floatval($this->getNodeData($fNodeL));
-            $totalRight=floatval($this->getNodeData($fNodeR));
+            
+            $totalLeft=$this->getNodeData($allNode->genealogy_left);
+            $totalRight=$this->getNodeData($allNode->genealogy_right);
             $data['left']=$totalLeft;
             $data['right']=$totalRight;
-            // echo'<pre>';
-            //     print_r($totalLeft);
-            //     echo'</br/>';
-            //     print_r($totalRight);
-            // echo'</pre>';
-            // exit;
         }
         return $data;
     }
 
-    private function getNodeData($usid)
+    private function getNodeData($data)
     {
         $total=0;
-        if($usid!='')
+        if($data!='')
         {
-            $userDatas = UserData::where('refererId', $usid)->get();
-            $total+=UserPackage::getTotalAmount($usid);
-            if(count($userDatas)>0)
+            $dataNode=explode(',',$data);
+            if(!empty($dataNode))
             {
-                foreach($userDatas as $userData)
+                foreach($dataNode as $nKey=>$nVal)
                 {
-                    $total+=floatVal(UserPackage::getTotalAmount($userData->userId));
-                    $this->getNodeData($userData->userId);
+                    if($nVal!='')
+                    {
+                        $total+=UserPackage::getTotalAmount($nVal);
+                    }
                 }
             }
-
         }
         return $total;
     }

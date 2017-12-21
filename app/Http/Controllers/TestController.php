@@ -44,7 +44,7 @@ class TestController {
     //put your code here
     function testInterest($param = null) {
         //Get Notification
-        Bonus::bonusDayCron();
+        Bonus::bonusBinaryWeekCron();
         echo "Return bonus day for user successfully!";
     }
 

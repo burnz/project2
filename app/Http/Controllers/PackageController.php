@@ -55,6 +55,7 @@ class PackageController extends Controller
     {
         $package=Package::all();
         $userPack=UserPackage::getHistoryPackage();
+        $datetimeNow = new DateTime(date("Y-m-d"));
         $exchange=ExchangeRate::where([['from_currency','=','clp'],['to_currency','=','usd']])->first();
         $rate_clp_usd=isset($exchange->exchrate)?$exchange->exchrate:1;
         $dataPack=[];
@@ -67,7 +68,7 @@ class PackageController extends Controller
                 array_push($dataPack, $pval);
             }
         }
-        return view('adminlte::package.buy')->with(compact('dataPack','package','exchange','userPack'));
+        return view('adminlte::package.buy')->with(compact('dataPack','package','exchange','userPack','datetimeNow'));
     }
 
     public function invest(Request $request)
@@ -194,11 +195,11 @@ class PackageController extends Controller
 
             // Case: User already in tree and then upgrade package => re-caculate binary bonus
             if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])) {
-
+                
                 $leftRight = $userData->leftRight == 'left' ? 1 : 2;
                 User::bonusBinary($userData->userId, 
                                 $userData->refererId, 
-                                $userData->packageId, 
+                                $request->packageId, 
                                 $userData->binaryUserId, 
                                 $leftRight,
                                 true,
@@ -264,8 +265,11 @@ class PackageController extends Controller
      */
     public function withDraw(Request $request) {
         if($request->ajax()){
+
+
+
             $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
-                    ->orderBy('id', 'DESC')->first();
+                    ->where('id',$request->id)->first();
             if(!isset($tempHistoryPackage)){
                 $message = trans("adminlte_lang::home.not_buy_package");
                 return $this->responseError($errorCode = true,$message);
@@ -280,31 +284,24 @@ class PackageController extends Controller
             //get release date của package cuối cùng <-> max id
             $datetime2 = new DateTime($tempHistoryPackage->release_date);
             $interval = $datetime1->diff($datetime2);
+
             //compare
             if( $interval->format('%R%a') > 0 ){
                 $message = trans("adminlte_lang::home.not_enought_time");
                 return $this->responseError($errorCode = true,$message);
             }else{
-                $listHistoryPackage = UserPackage::where("id","<=",$tempHistoryPackage->id)
-                        ->where("userId",Auth::user()->id)
-                        ->where("withdraw",0)
-                        ->get();
-                $sum = 0;
-                foreach ($listHistoryPackage as $key => $value) {
-                    $sum +=$value->amount_increase;
-                    UserPackage::where("id",$value->id)
-                        ->update(["withdraw"=> 1 ]);
-                }
-                $money = Auth()->user()->userCoin->usdAmount + $sum;
+                UserPackage::where("id",$tempHistoryPackage->id)->update(["withdraw"=> 1 ]);
+                $amountCLP=round($tempHistoryPackage->amount_increase / ExchangeRate::getCLPUSDRate(), 2);
+                $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
                 $update = UserCoin::where("userId",Auth::user()->id)
-                        ->update(["usdAmount" => $money]);
+                        ->update(["clpCoinAmount" => $money]);
                 $fieldUsd = [
-                    'walletType' => Wallet::USD_WALLET,//usd
+                    'walletType' => Wallet::CLP_WALLET,//usd
                     'type' => Wallet::WITHDRAW_PACK_TYPE,
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
-                    'amount' => $sum,
-                    'note'   => ''
+                    'amount' => $amountCLP,
+                    'note'   => 'Withdraw $'.$tempHistoryPackage->amount_increase.' = '.$amountCLP.' Carcoin from package '.$tempHistoryPackage->packageId
                 ];
                 Wallet::create($fieldUsd);
                 //Update packageId = 0 after withdraw

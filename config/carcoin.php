@@ -6,8 +6,8 @@ return [
 	'bonus_maxout' => 30000, //Binary bonus cannot over $35000
 
 	//Interest range
-	'min_interest' => '20',
-	'max_interest' => '24',
+	'min_interest' => 0.66,
+	'max_interest' => 0.8,
 
 	//Bonus when member have new F1
 	'bonus_range_1_pay' => 0.07,
@@ -16,10 +16,10 @@ return [
 	'bonus_range_4_pay' => 0.1,
 	
 	//Binary level
-	'bi_sale_cond_lv_1' => 10000,
-	'bi_sale_cond_lv_2' => 100000,
-	'bi_sale_cond_lv_3' => 1000000,
-	'bi_sale_cond_lv_4' => 2000000,
+	'bi_sale_cond_lv_1' => 1000,
+	'bi_sale_cond_lv_2' => 10000,
+	'bi_sale_cond_lv_3' => 100000,
+	'bi_sale_cond_lv_4' => 200000,
 	
 	//Bonus for each binary level
 	'bi_lv_1_bonus' => 0.04,
