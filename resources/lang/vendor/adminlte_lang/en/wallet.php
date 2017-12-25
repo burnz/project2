@@ -45,9 +45,11 @@ return [
     'error_db'                  => 'Error conection DATABASE',
 
     //Wallet type
-    'fast_start_type'           => 'Fast start bonus',
+    'fast_start_type'           => 'Referral Bonus',
     'interest'                  => 'Profit',
-    'binary'                    => 'Binary bonus',
+    'binary'                    => 'Infinity Bonus',
+    'binary_interest'           => 'Infinity Interest Bonus',
+    'global_bonus'              => 'Global Bonus',
     'loyalty'                   => 'Loyalty bonus',
     'usd_clp_type'              => 'Buy CAR By USD',
     'usd_clp_type_on_usd'       => 'Buy CAR',

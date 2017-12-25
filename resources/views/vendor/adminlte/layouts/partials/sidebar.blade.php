@@ -6,6 +6,7 @@
         <a href="javascript:;" class="simple-text logo-normal">
             Car Coin
         </a>
+
     </div>
     <div class="sidebar-wrapper">
         <div class="user">
@@ -16,7 +17,7 @@
                 <span>{{ Auth::user()->name }}</span>
                 <span>ID: {{  Auth::user()->uid }}</span>
                 <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
-                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
+                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
             </div>
         </div>
         <ul class="nav">
@@ -108,6 +109,12 @@
                             <a href="/mybonus/infinity">
                                 <span class="sidebar-mini"> I </span>
                                 <span class="sidebar-normal"> Infinity Bonus </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mybonus/infinity-interest">
+                                <span class="sidebar-mini"> I </span>
+                                <span class="sidebar-normal"> Infinity Interest </span>
                             </a>
                         </li>
                     </ul>

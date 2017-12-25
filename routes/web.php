@@ -99,7 +99,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
 
 
-    Route::get('mybonus/faststart', 'MyBonusController@faststart');
+    Route::get('mybonus/infinity-interest', 'MyBonusController@infinifyInterest');
     Route::get('mybonus/infinity', 'MyBonusController@binary');
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
@@ -151,8 +151,11 @@ Route::post('getnotification','GetNotificationController@getNotification');
 //Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
 //Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
-//Route::get('test-binary', 'TestController@testBinary');
-Route::get('test-infinity',"TestController@testInterest");
+
+Route::get('test-interest',"TestController@testInterest");
+Route::get('test-infinity','TestController@testInfinityBonus');
+Route::get('test-infinity-interest', 'TestController@testInfinityInterest');
+Route::get('test-global-bonus','TestController@testGlobalBonus');
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 Route::get('test',"TestController@test");
 

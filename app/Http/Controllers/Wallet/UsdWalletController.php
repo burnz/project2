@@ -63,6 +63,7 @@ class UsdWalletController extends Controller
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
+
         $wallets = $query->where('walletType', Wallet::REINVEST_WALLET)->orderBy('id', 'desc')->paginate();
         //Add thêm tỷ giá vào $wallets
         $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
@@ -73,10 +74,13 @@ class UsdWalletController extends Controller
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
-            if($key == 1) $wallet_type[$key] = trans($val);
+            if($key==1) $wallet_type[$key]= trans($val);
             if($key == 3) $wallet_type[$key] = trans($val);
-            if($key == 4) $wallet_type[$key] = trans($val);
-            if($key == 6) $wallet_type[$key] = trans('adminlte_lang::wallet.holding_clp_type');
+            if($key==15) $wallet_type[$key]=trans($val);
+            if($key == 18) $wallet_type[$key] = trans($val);
+            if($key == 19) $wallet_type[$key] = trans($val);
+            if($key==20) $wallet_type[$key] =trans($val);
+            
         }
         return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
     }

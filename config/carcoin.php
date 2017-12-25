@@ -34,10 +34,10 @@ return [
 	'bi_inter_cond_lv_4' => 50000,
 
 	//Bonus for each binary interest level
-	'bi_lv_1_inter_bonus' => 0.14,
-	'bi_lv_2_inter_bonus' => 0.16,
-	'bi_lv_3_inter_bonus' => 0.18,
-	'bi_lv_4_inter_bonus' => 0.2,
+	'bi_lv_1_inter_bonus' => 0.08,
+	'bi_lv_2_inter_bonus' => 0.1,
+	'bi_lv_3_inter_bonus' => 0.12,
+	'bi_lv_4_inter_bonus' => 0.14,
 
 
 	'binary_matching_bonus' => 0.05,
@@ -73,7 +73,11 @@ return [
         14 => 'adminlte_lang::wallet.deposit_clp_type',
         15 => 'adminlte_lang::wallet.buy_pack',
         16 => 'adminlte_lang::wallet.tl_withdraw_pack',
+        //17 => 'adminlte_lang::wallet.binary_interest',
+        18 => 'adminlte_lang::wallet.binary_interest',
+        //19 => 'adminlte_lang::wallet.binary_interest',
+        19 => 'adminlte_lang::wallet.global_bonus',
     ),
 
-    'listLoyalty' => array(1 => "Broker", 2 => "Supervisor", 3 => "Manager", 4 => "Executive", 5 => "President"),
+    'listLoyalty' => array(1 => "Sapphire", 2 => "Emerald", 3 => "Diamond", 4 => "Blue Diamond", 5 => "Black Diamond"),
     ];

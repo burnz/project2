@@ -175,8 +175,9 @@ class PackageController extends Controller
             $userCoin = $userData->userCoin;
             $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
             $userCoin->save();
+            $walletType=$request->walletId==2?Wallet::CLP_WALLET : Wallet::REINVEST_WALLET;
             $fieldUsd = [
-                'walletType' => Wallet::CLP_WALLET,//usd
+                'walletType' => $walletType,//usd
                 'type' => Wallet::BUY_PACK_TYPE,//bonus f1
                 'inOut' => Wallet::OUT,
                 'userId' => Auth::user()->id,

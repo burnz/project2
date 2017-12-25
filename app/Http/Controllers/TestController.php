@@ -44,8 +44,23 @@ class TestController {
     //put your code here
     function testInterest($param = null) {
         //Get Notification
-        Bonus::bonusBinaryWeekCron();
+        Bonus::bonusDayCron();
         echo "Return bonus day for user successfully!";
+    }
+    function testInfinityBonus()
+    {
+        Bonus::bonusBinaryWeekCron();
+        return 'Return bonus infinity week for user successfully';
+    }
+    function testInfinityInterest()
+    {
+        Bonus::bonusMatchingWeekCron();
+        return 'Return bonus Infinity Interest week for user successfully';
+    }
+    function testGlobalBonus()
+    {
+        Bonus::globalBonus();
+        return 'Return gobal bonus month for user successfully';
     }
 
     function testBinary($param = null) {
