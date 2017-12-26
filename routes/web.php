@@ -148,8 +148,8 @@ Route::post('getnotification','GetNotificationController@getNotification');
 
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
-//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 
 Route::get('test-interest',"TestController@testInterest");
