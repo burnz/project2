@@ -47,6 +47,7 @@ class PackageController extends Controller
             ->with('flash_message',
                 'Packages '. $package->name.' added!');
     }
+
     /**
     * Buy package action( upgrade package)
     */
@@ -93,6 +94,12 @@ class PackageController extends Controller
                 return false;
             });
 
+            Validator::extend('amountDivided',function($attribute,$value,$parameters){
+                if(floatval($value%10)==0)
+                    return true;
+                return false;
+            });
+
             Validator::extend('amountCheck',function($attribute,$value,$parameters){
                     $userCoin=UserCoin::where('userId','=',Auth::user()->id)->first();
                     $walletId=$parameters[0];
@@ -118,9 +125,9 @@ class PackageController extends Controller
                     return false;
             });
 
-            $errors=['packageAmount.package_check'=>'Invest amount and package selected does not match','packageAmount.amount_check'=>'Wallet amount does not enough to buy package'];
+            $errors=['packageAmount.package_check'=>'Invest amount and package selected does not match','packageAmount.amount_check'=>'Wallet amount does not enough to buy package','packageAmount.amount_divided'=>'Amount must be divided by 10'];
             $this->validate($request, [
-                'packageAmount'    => 'required|packageCheck:' . $request->packageId.'|amountCheck:'.$request->walletId,
+                'packageAmount'    => 'required|packageCheck:' . $request->packageId.'|amountCheck:'.$request->walletId.'|amountDivided',
                 'packageId' => 'required|not_in:0',
                 'walletId'=>  'required|not_in:0'
             ],$errors);
@@ -163,7 +170,7 @@ class PackageController extends Controller
             UserPackage::create([
                 'userId' => $currentuserid,
                 'packageId' => $request->packageId,
-                'amount_increase' => $amount_increase,
+                'amount_increase' => round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ " . $packageSelected->capital_release ." days")),
                 'weekYear' => $weekYear,

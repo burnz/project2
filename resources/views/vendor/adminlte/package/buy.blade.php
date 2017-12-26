@@ -229,7 +229,7 @@
                                                 <tr>
                                                     <td>{{date_format(date_create($upVal->buy_date),'m-d-Y H:i:s')}}</td>
                                                     <td>{{$upVal->name}}</td>
-                                                    <td>{{$upVal->amount_increase}}</td>
+                                                    <td>${{number_format($upVal->amount_increase,0)}}</td>
                                                     <td>{{date_format(date_create($upVal->release_date),'m-d-Y H:i:s')}}</td>
                                                     <td>
                                                         @if($upVal->withdraw==1)

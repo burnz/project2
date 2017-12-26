@@ -46,7 +46,7 @@ return [
 
     //Wallet type
     'fast_start_type'           => 'Referral Bonus',
-    'interest'                  => 'Profit',
+    'interest'                  => 'Interest Bonus',
     'binary'                    => 'Infinity Bonus',
     'binary_interest'           => 'Infinity Interest Bonus',
     'global_bonus'              => 'Global Bonus',

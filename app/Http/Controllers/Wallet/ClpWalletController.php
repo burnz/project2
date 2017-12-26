@@ -69,6 +69,7 @@ class ClpWalletController extends Controller {
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
+            if($key == 2) $wallet_type[$key] = trans($val);
             if($key == 5) $wallet_type[$key] = trans($val);
             if($key == 6) $wallet_type[$key] = trans($val);
             if($key == 7) $wallet_type[$key] = trans($val);
@@ -76,7 +77,7 @@ class ClpWalletController extends Controller {
             if($key == 10) $wallet_type[$key] = trans($val);
             if($key == 12) $wallet_type[$key] = trans($val);
             if($key == 14) $wallet_type[$key] = trans($val);
-            //if($key == 15) $wallet_type[$key] = trans($val);
+            if($key == 15) $wallet_type[$key] = trans($val);
         }
 
         $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();

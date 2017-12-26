@@ -116,21 +116,21 @@
                                                     <tbody>
                                                         @foreach($wallets as $wallet)
                                                             <tr>
+
                                                                 <td>
                                                                     {{ $wallet->created_at }}
                                                                 </td>
-                                                                <td></td>
-                                                                @if($wallet->inOut == 'in')
-                                                                    <td>
-                                                                        {{ $wallet->amount }}
-                                                                    </td>
-                                                                    <td></td>
-                                                                @else
-                                                                    <td></td>
-                                                                    <td>
-                                                                        {{ $wallet->amount }}
-                                                                    </td>
-                                                                @endif
+                                                                <td>{{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}</td>
+                                                                <td>
+                                                                    @if($wallet->inOut=='in')
+                                                                        +{{ number_format($wallet->amount, 2) }}
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if($wallet->inOut=='out')
+                                                                        -{{ number_format($wallet->amount, 2) }}
+                                                                    @endif
+                                                                </td>
                                                                 <td>
                                                                     {{ $wallet->note }}
                                                                 </td>
