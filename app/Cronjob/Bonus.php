@@ -50,15 +50,13 @@ class Bonus
 				//if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 				$userData = $user->userData;
+								
 				//Get all pack in user_packages
 				$packages = UserPackage::where('userId', $user->id)
 							->where('withdraw', '<', 1)
 							->get();
 
-
-
-
-				if($packages)
+				if(count($packages)>0)
 				{
 					//Calculate total week interest for each users
 					$weekTotal = TotalWeekSales::where('userId', $user->id)->first();
@@ -71,6 +69,8 @@ class Bonus
 
 						$usdAmount = ($pack->amount_increase * $bonus)/100;
 						$clpAmount = $usdAmount / ExchangeRate::getCLPUSDRate();
+
+
 
 						//Them bang nua interest_weekly
 
@@ -99,7 +99,7 @@ class Bonus
 						];
 
 						//Calculate total week interest for each users
-						$totalInterest += $usdAmount;
+						$totalInterest += $clpAmount;
 						
 
 						if($pack->packageId > 1)
@@ -113,18 +113,18 @@ class Bonus
 							$userCoin->save();
 
 							//Calculate total week interest for each users
-							$totalInterest += $bonusPack;
+							$totalInterest += $clpAmount;
 
 							//Get package information
 							$packInfo = Package::where('pack_id', $pack->packageId)->first();
 
 							$fieldBonus = [
 								'walletType' => Wallet::CLP_WALLET,//usd
-								'type' => Wallet::BONUS_TYPE,//bonus day
+								'type' => Wallet::INTEREST_TYPE,//bonus day
 								'inOut' => Wallet::IN,
 								'userId' => $user->id,
 								'amount' => $clpAmount,
-								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price
+								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price.' - Daily Interest Bonus'
 							];
 
 							Wallet::create($fieldBonus);
@@ -149,6 +149,7 @@ class Bonus
 
 				if($binaryInterest)
 				{
+
 					$binaryInterest->leftNew+=$volInfo['totalLeft'];
 					$binaryInterest->rightNew+=$volInfo['totalRight'];
 					$binaryInterest->save();
@@ -198,8 +199,8 @@ class Bonus
 
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
-		$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-		//$firstWeek = $weeked;
+		//$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+		$firstWeek = $weeked;
 		$firstYear = $year;
 		$firstWeekYear = $firstYear.$firstWeek;
 
@@ -507,37 +508,39 @@ class Bonus
 
 	private static function _calLeftRightVolume($userId)//
 	{
-		$userTree = UserTreePermission::find($userId);//luu thanh vien trai phai cay nhi phan
-
-		$memberLeft = $userTree->binary_left;
-		$memberRight = $userTree->binary_right;
-
-		$listMemberLeft = explode(',', $memberLeft);
-		$listMemberRight = explode(',', $memberRight);
-
+		$userTree = UserTreePermission::where('userId','=',$userId)->first();
 		$totalLeftVol = $totalRightVol = 0;
-
-		$chunkLeft = array_chunk($listMemberLeft, 50);
-		foreach($chunkLeft as $chunk)
+		if($userTree)
 		{
-			$weekSale = TotalWeekSales::whereIn('userId', $chunk)
-									->selectRaw('sum(total_interest) as totalVol')
-									->get()
-									->first();
+			$memberLeft = $userTree->binary_left;
+			$memberRight = $userTree->binary_right;
 
-			$totalLeftVol += $weekSale->totalVol;
+			$listMemberLeft = explode(',', $memberLeft);
+			$listMemberRight = explode(',', $memberRight);
+
+			$chunkLeft = array_chunk($listMemberLeft, 50);
+			foreach($chunkLeft as $chunk)
+			{
+				$weekSale = TotalWeekSales::whereIn('userId', $chunk)
+										->selectRaw('sum(total_interest) as totalVol')
+										->get()
+										->first();
+
+				$totalLeftVol += $weekSale->totalVol;
+			}
+
+			$chunkRight = array_chunk($listMemberRight, 50);
+			foreach($chunkRight as $chunk)
+			{
+				$weekSale = TotalWeekSales::whereIn('userId', $chunk)
+										->selectRaw('sum(total_interest) as totalVol')
+										->get()
+										->first();
+
+				$totalRightVol += $weekSale->totalVol;
+			}
 		}
-
-		$chunkRight = array_chunk($listMemberRight, 50);
-		foreach($chunkRight as $chunk)
-		{
-			$weekSale = TotalWeekSales::whereIn('userId', $chunk)
-									->selectRaw('sum(total_interest) as totalVol')
-									->get()
-									->first();
-
-			$totalRightVol += $weekSale->totalVol;
-		}
+		
 
 		return ['totalLeft' => $totalLeftVol, 'totalRight' => $totalRightVol];
 	}

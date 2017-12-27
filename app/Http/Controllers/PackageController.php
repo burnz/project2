@@ -170,7 +170,7 @@ class PackageController extends Controller
             UserPackage::create([
                 'userId' => $currentuserid,
                 'packageId' => $request->packageId,
-                'amount_increase' => round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
+                'amount_increase' => $amount_increase,
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ " . $packageSelected->capital_release ." days")),
                 'weekYear' => $weekYear,

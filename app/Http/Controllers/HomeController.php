@@ -77,10 +77,11 @@ class HomeController extends Controller
         //Calculate today earning
         $tdAmount=0;
         $todayEarning = Wallet::where('userId', $userData->userId)
-                            ->where('walletType', Wallet::CLP_WALLET)
+                            ->whereIn('walletType',[Wallet::CLP_WALLET, Wallet::REINVEST_WALLET])
                             ->where('inOut', Wallet::IN)
                             ->where('created_at','>=',date('Y-m-d').' 00:00:00')
                             ->get();
+
         if(count($todayEarning)>0)
         {
             foreach($todayEarning as $bonus)
@@ -94,7 +95,7 @@ class HomeController extends Controller
                 }
             }
         }
-        $data['today_earning']=round($tdAmount*ExchangeRate::getCLPUSDRate(),2);
+        $data['today_earning']=$tdAmount;
 
 
         //Get F1 lef, right Volume
