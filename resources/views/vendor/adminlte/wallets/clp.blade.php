@@ -104,10 +104,11 @@
                                             </div>                                        
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
-                                            <div class="table-responsive">
-                                                <table class="table" id="tbCLP" cellspacing="0" width="100%" style="width:100%">
+
+                                            <div class="material-datatables">
+                                                <table class="table table-striped table-no-bordered table-hover" id="tbCLP" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
-                                                        <th>Date/Time</th>
+                                                        <th style="width: 10%;">Date/Time</th>
                                                         <th>Type</th>
                                                         <th>In</th>
                                                         <th>Out</th>
@@ -655,6 +656,7 @@
                 "ordering": false,
                 "searching":false,
                 "bLengthChange": false,
+                "responsive": true
             });
             //filter
             $('#btn_filter').on('click', function () {

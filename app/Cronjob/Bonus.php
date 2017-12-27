@@ -46,14 +46,15 @@ class Bonus
 			$lstUser = User::where('active', '=', 1)->get();
 			foreach($lstUser as $user){
 				//Get cron status
-				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
-				if(isset($cronStatus) && $cronStatus->status == 1) continue;
+				//$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
+				//if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 				$userData = $user->userData;
 				//Get all pack in user_packages
 				$packages = UserPackage::where('userId', $user->id)
 							->where('withdraw', '<', 1)
 							->get();
+
 
 
 
@@ -135,8 +136,8 @@ class Bonus
 					$weekTotal->save();
 
 					//Update cron status from 0 => 1
-					$cronStatus->status = 1;
-					$cronStatus->save();
+					//$cronStatus->status = 1;
+					//$cronStatus->save();
 				}
 
 

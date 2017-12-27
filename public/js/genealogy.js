@@ -25,7 +25,7 @@ $(function () {
                                     //packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                     totalMembers: user.totalMembers,
                                     leg: user.leg,
-                                    rankId: getRank(user.rankId),
+                                    loyaltyId: getRank(user.rankId),
 								},
 								id: user.id,
 								children: user.dmc?true:false,
@@ -44,7 +44,7 @@ $(function () {
                                 totalAmount: '$'+user.totalAmount,
                                 totalMembers: user.totalMembers,
                                 leg: user.leg,
-                                rankId: getRank(user.rankId),
+                                loyaltyId: getRank(user.rankId),
 							},
 							id: user.id,
 							children: user.dmc?true:false,
@@ -77,7 +77,7 @@ $(function () {
 
 		var rankName = ''
 		if(rankId == 0) {
-			rankName = '';
+			rankName = '-';
 		}
 		else if(rankId == 1) {
 			rankName = 'SAPPHIRE';
