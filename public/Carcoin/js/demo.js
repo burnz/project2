@@ -35,9 +35,67 @@ $(document).ready(function() {
         $('.navbar-wallet:last-child').css('top', parseFloat(navbarHeight +1));
     }
 
+        function responsiveNavbar(){
+        let child = document.querySelectorAll('.navbar-header .navbar-wallet[icon] > li'),
+            last_child = document.querySelector('.navbar-header .navbar-wallet[icon] > li.dropdown'),
+            parent = document.querySelector('.navbar-header .navbar-wallet[icon]'),
+            wrapper = document.querySelector('.navbar.navbar-absolute'),
+            size;
+
+
+
+        if(wrapper.offsetWidth >= 768){
+            var dropdown = document.querySelector('.navbar-header .navbar-wallet[icon] li.dropdown'),
+                dropdown_child = document.querySelectorAll('.navbar-header .navbar-wallet[icon] .dropdown-menu > li');
+
+            for (var i = 0; i < child.length; i++) {
+                if(child[i].classList.contains('dropdown')){
+                    break;
+                }
+
+                if (dropdown.classList.contains('hidden') != true){
+                    for (var i = 0; i < dropdown_child.length; i++) {
+                        parent.insertBefore(dropdown_child[i], parent.lastChild.previousElementSibling);
+
+                    }
+                }
+            }
+            dropdown.classList.add('hidden');
+            return;
+        }
+
+
+        if(wrapper.offsetWidth <= 767 && wrapper.offsetWidth >= 481){
+            size = 2; 
+        }
+        if(wrapper.offsetWidth <= 480){
+            size = 1; 
+        }
+
+        if (child.length > size){
+            for (var i = size; i < child.length; i++) {
+                child[i].classList.add('hidden');
+
+                if(child[i].classList.contains('dropdown')){
+                    child[i].classList.remove('hidden');
+                    break;
+                }
+
+                dropdown = child[child.length - 1].querySelector('.dropdown-menu');
+                if(dropdown != null) {
+                    dropdown.appendChild(child[i])
+                    child[i].classList.remove('hidden');
+                }
+            }
+        }
+    }
+
+    responsiveNavbar();
+
     $(window).resize(function() {
         resizeNavbar();
         resizeElementEqualToElement();
+        responsiveNavbar();
     });
 
     //Active label Datepicker

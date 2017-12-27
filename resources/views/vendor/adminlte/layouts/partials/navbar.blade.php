@@ -8,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <ul class="navbar-wallet align-self-center">
+            <ul class="navbar-wallet align-self-center" icon>
                 <li>
                     <a href="javascript:;">
                         <div class="icon"><img src="/Carcoin/img/bitcoin-symbol.svg"></div>
@@ -30,7 +30,15 @@
                                     <br><big class="reinvest-color"><span class="reinvest_bl">{{ number_format($walletAmount['amountReinvest'], 5) }}</span></big></div>
                                 </a>
                             </li>
+                            <li class="dropdown hidden">
+                                <div class="dropdown-toggle text-white text-center p-0" data-toggle="dropdown" href="#">
+                                    <i class="material-icons">arrow_drop_down_circle</i>
+                                </div>
+                                <ul class="dropdown-menu">
+                                </ul>
+                            </li>
                         </ul>
+
                         <ul class="navbar-wallet align-self-center">
                             <li><b class="bitcoin-color">1 BTC </b><span class="btcusd"></span></li>
                             <li><b class="carcoin-color">1 CAR </b><span class="carusd"></span></li>

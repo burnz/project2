@@ -183,7 +183,7 @@ class PackageController extends Controller
             if($request->walletId==2)
                 $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
             if($request->walletId==3)
-                $userCoin->reinvestAmount = $userCoin->reinvestAmount - $amount_increase;
+                $userCoin->reinvestAmount = $userCoin->reinvestAmount - $amountCLPDecrease;
 
             $userCoin->save();
             $walletType=$request->walletId==2?Wallet::CLP_WALLET : Wallet::REINVEST_WALLET;
