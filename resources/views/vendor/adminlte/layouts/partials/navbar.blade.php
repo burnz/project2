@@ -33,8 +33,8 @@
                         </ul>
                         <ul class="navbar-wallet align-self-center">
                             <li><b class="bitcoin-color">1 BTC </b><span class="btcusd"></span></li>
-                            <!-- <li><b class="carcoin-color">1 CAR </b><span class="carusd"></span></li>
-                            <li><b class="carcoin-color">1 CAR </b><span class="carbtc"></span></li> -->
+                            <li><b class="carcoin-color">1 CAR </b><span class="carusd"></span></li>
+                            <li><b class="carcoin-color">1 CAR </b><span class="carbtc"></span></li>
                         </ul>
                     </div>
                     <div class="collapse navbar-collapse ">
@@ -108,7 +108,7 @@
                 success: function(data){
                  $('.btcusd').html(' = $'+formatter.format(data[1].exchrate));
                  $('.carusd').html('= $ ' + formatter.format(data[2].exchrate));
-                 $('.carbtc').html('= BTC ' + formatterBTC.format(data[0].exchrate));
+                 $('.carbtc').html('= ' + formatterBTC.format(data[0].exchrate)+' BTC');
                  globalBTCUSD = data[1].exchrate;
                  globalCARUSD = data[2].exchrate;
                  globalCARBTC = data[0].exchrate;
