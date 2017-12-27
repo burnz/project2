@@ -159,7 +159,7 @@
                                 <h4 class="card-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h4>
                                 <p class="description">
                                     <span>ID: {{ Auth::user()->uid }}</span>
-                                    <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
+                                    <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }} @else - @endif</span>
                                 </p>
                             </div>
                         </div>

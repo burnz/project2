@@ -17,7 +17,7 @@
                 <span>{{ Auth::user()->name }}</span>
                 <span>ID: {{  Auth::user()->uid }}</span>
                 <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
-                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
+                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }} @else - @endif</span>
             </div>
         </div>
         <ul class="nav">
