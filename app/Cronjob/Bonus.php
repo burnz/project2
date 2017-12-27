@@ -18,6 +18,7 @@ use App\CronBinaryLogs;
 use App\TotalWeekSales;
 use App\UserTreePermission;
 use App\BonusBinaryInterest;
+use App\LoyaltyUser;
 use DB;
 use Log;
 use App\Package;
@@ -613,6 +614,36 @@ class Bonus
 				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
 				$userCoin->save();
+
+				//update loyalty
+				$userLoyalty = LoyaltyUser::where('userId', $user->id)->first();
+				if($userLoyalty)
+				{
+					$userLoyalty->isSilver=0;
+					$userLoyalty->isGold=0;
+					$userLoyalty->isPear=0;
+					$userLoyalty->isEmerald=0;
+					$userLoyalty->isDiamond=0;
+					if($rank==1)
+					{
+						$userLoyalty->isSilver=1;
+					}
+					if($rank==2){
+						$userLoyalty->isGold=1;
+					}
+					if($rank==3){
+						$userLoyalty->isPear=1;
+					}
+					if($rank==4){
+						$userLoyalty->isEmerald=1;
+					}
+					if($rank==5){
+						$userLoyalty->isDiamond=1;
+					}
+
+					$userLoyalty->save();
+				}
+				//
 
 				//update rank
 				$userData->loyaltyId=$rank;

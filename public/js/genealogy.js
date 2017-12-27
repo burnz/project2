@@ -11,7 +11,7 @@ $(function () {
 					},
 					timeout : 15000
 				}).done(function(data) {
-					console.log(data);
+					//console.log(data);
 					if (data instanceof Array) {
 						var children = [];
 						for (var i = 0; i < data.length; i++) {
