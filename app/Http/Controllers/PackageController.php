@@ -104,9 +104,9 @@ class PackageController extends Controller
                     $userCoin=UserCoin::where('userId','=',Auth::user()->id)->first();
                     $walletId=$parameters[0];
                     //change value to carcoin
-                    $value=round($value/ExchangeRate::getCLPUSDRate(),2);
                     switch ($walletId) {
                         case 2:
+                                $value=round($value/ExchangeRate::getCLPUSDRate(),2);
                                 if($value<=$userCoin->clpCoinAmount)
                                 {
                                     return true;
@@ -180,7 +180,11 @@ class PackageController extends Controller
 
             $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(), 2);
             $userCoin = $userData->userCoin;
-            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
+            if($request->walletId==2)
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
+            if($request->walletId==3)
+                $userCoin->reinvestAmount = $userCoin->reinvestAmount - $amount_increase;
+
             $userCoin->save();
             $walletType=$request->walletId==2?Wallet::CLP_WALLET : Wallet::REINVEST_WALLET;
             $fieldUsd = [
