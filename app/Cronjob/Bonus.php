@@ -146,8 +146,15 @@ class Bonus
 				//update bonus binary interest
 				
 				$volInfo = self::_calLeftRightVolume($user->id);
-				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->first();
 
+				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->first();
+				// if($user->id==3681)
+				// {
+				// 	echo'<pre>';
+				// 		print_r($binaryInterest);
+				// 	echo'</pre>';
+				// 	echo'<br/>';
+				// }
 				if($binaryInterest)
 				{
 
@@ -189,7 +196,7 @@ class Bonus
 	/**
 	* This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
 	*/
-	public static function bonusBinaryWeekCron()
+	public static function bonusBinaryWeekCron()//infinity
 	{
 		set_time_limit(0);
 		/* Get previous weekYear */
@@ -292,6 +299,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $clpAmount,
+					'note'	=>'Paid 60% [Infinity Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.clp_bonus_pay')
 				];
 
 				Wallet::create($fieldUsd);
@@ -302,6 +310,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $reinvestAmount,
+					'note'	=>'Paid 40% [Infinity Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.reinvest_bonus_pay')
 				];
 
 				Wallet::create($fieldInvest);
@@ -450,6 +459,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $clpAmount,
+					'note'	=>'Paid 60% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.clp_bonus_pay')
 				];
 
 				Wallet::create($fieldUsd);
@@ -460,6 +470,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $reinvestAmount,
+					'note'	=>'Paid 40% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.reinvest_bonus_pay')
 				];
 
 				Wallet::create($fieldInvest);
@@ -546,6 +557,29 @@ class Bonus
 		return ['totalLeft' => $totalLeftVol, 'totalRight' => $totalRightVol];
 	}
 
+	public static function getRank($rankId) {
+		 $rankName = '';
+		if($rankId == 0) {
+			$rankName = '-';
+		}
+		else if($rankId == 1) {
+			$rankName = 'SAPPHIRE';
+		}
+		else if($rankId == 2) {
+			$rankName = 'EMERALD';
+		}
+		else if($rankId == 3) {
+			$rankName = 'DIAMOND';
+		}
+		else if($rankId == 4) {
+			$rankName = 'BLUE DIAMOND';
+		}
+		else if($rankId == 5) {
+			$rankName = 'BLACK DIAMOND';
+		}
+
+		return $rankName;
+	}
 
 	public static function globalBonus()
 	{
@@ -655,6 +689,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $user->id,
 					'amount' => $clpAmount,
+					'note'=>'Paid 60% [Global Bonus] for '.(new \DateTime())->format('m-Y').' - Rank: '.self::getRank($rank).'- $'.$bonus * config('carcoin.clp_bonus_pay')
 				];
 
 				Wallet::create($fieldUsd);
@@ -665,6 +700,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $user->id,
 					'amount' => $reinvestAmount,
+					'note'=>'Paid 40% [Global Bonus] for '.(new \DateTime())->format('m-Y').' - Rank: '.self::getRank($rank).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
 				];
 
 				Wallet::create($fieldInvest);
@@ -793,7 +829,8 @@ class Bonus
 					'type' =>  Wallet::BINARY_TYPE,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
-					'amount' => $usdAmount,
+					'amount' => $clpAmount,
+					
 				];
 
 				Wallet::create($fieldUsd);
@@ -804,6 +841,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $reinvestAmount,
+					
 				];
 
 				Wallet::create($fieldInvest);

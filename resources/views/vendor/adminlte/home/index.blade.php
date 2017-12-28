@@ -4,6 +4,11 @@
 @endsection
 
 @section('content')
+    <style type="text/css">
+        .card-marketing{
+        padding:8px !important;
+    }
+    </style>
 	<div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -16,7 +21,7 @@
                                 </div>
                                 <div class="card-content text-center">
                                     <p class="mt-4 mb-0">Today Interest</p>
-                                    <p class="h2 mt-3">${{$todayInterest}}</p>
+                                    <p class="h5 mt-3">${{number_format($todayInterest,3)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -28,7 +33,7 @@
                                 </div>
                                 <div class="card-content text-center">
                                     <p class="mt-4 mb-0">Today Earning</p>
-                                    <p class="h2 mt-3">${{$data['today_earning']}}</p>
+                                    <p class="h5 mt-3">${{number_format($data['today_earning'],3)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +45,7 @@
                                 </div>
                                 <div class="card-content text-center">
                                     <p class="mt-4 mb-0">Total Earning</p>
-                                    <p class="h2 mt-3">${{$data['total_bonus']}}</p>
+                                    <p class="h5 mt-3">${{number_format($data['total_bonus'],3)}}</p>
                                 </div>
                             </div>
                         </div>
