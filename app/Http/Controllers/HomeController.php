@@ -52,7 +52,7 @@ class HomeController extends Controller
         $userData = UserData::where('userId', Auth::user()->id)->get()->first();
         //Caculate total bonus from start
         $totalBonus = Wallet::where('userId', Auth::user()->id)
-                            ->where('walletType', Wallet::CLP_WALLET)
+                            ->whereIn('walletType', [Wallet::CLP_WALLET, Wallet::REINVEST_WALLET])
                             ->where('inOut', Wallet::IN)
                             ->get();
 
@@ -95,7 +95,7 @@ class HomeController extends Controller
                 }
             }
         }
-        $data['today_earning']=$tdAmount;
+        $data['today_earning']=round($tdAmount *ExchangeRate::getCLPUSDRate(),2);
 
 
         //Get F1 lef, right Volume
