@@ -69,15 +69,17 @@ class ClpWalletController extends Controller {
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
-            if($key == 2) $wallet_type[$key] = trans($val);
-            if($key == 5) $wallet_type[$key] = trans($val);
-            if($key == 6) $wallet_type[$key] = trans($val);
-            if($key == 7) $wallet_type[$key] = trans($val);
-            if($key == 8) $wallet_type[$key] = trans($val);
-            if($key == 10) $wallet_type[$key] = trans($val);
-            if($key == 12) $wallet_type[$key] = trans($val);
-            if($key == 14) $wallet_type[$key] = trans($val);
-            if($key == 15) $wallet_type[$key] = trans($val);
+            if($key == 1) $wallet_type[$key] = trans($val);//referral
+            if($key == 2) $wallet_type[$key] = trans($val);//interest
+            if($key == 3) $wallet_type[$key] = trans($val);//infinity
+            if($key == 7) $wallet_type[$key] = trans($val);//buy car by btc
+            if($key == 10) $wallet_type[$key] = trans($val);//withdraw
+            if($key == 12) $wallet_type[$key] = trans($val);//transfer
+            if($key == 14) $wallet_type[$key] = trans($val);//deposit
+            if($key == 15) $wallet_type[$key] = trans($val);//buy package
+            if($key == 18) $wallet_type[$key] = trans($val);//infinity interest
+            if($key == 19) $wallet_type[$key] = trans($val);//global bonus
+
         }
 
         $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
