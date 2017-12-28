@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\User;
 use Validator;
 
@@ -28,6 +29,7 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
+    protected $redirectTo = '/login';
     /**
      * Reset the given user's password.
      *
@@ -141,5 +143,14 @@ class ResetPasswordController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    /*over write*/
+    protected function resetPassword($user, $password)
+    {
+        $user->forceFill([
+            'password' => bcrypt($password),
+            'remember_token' => Str::random(60),
+        ])->save();
     }
 }
