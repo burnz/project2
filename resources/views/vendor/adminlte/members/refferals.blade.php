@@ -61,7 +61,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if($userData->isBinary==0 && $userData->packageId > 0)
+                                                    @if($userData->isBinary==0 && Auth::user()->userData->isBinary > 0)
                                                         <button type="button" class="btn btn-fill btn-xs btn-info btn-round btn_submit_left" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Left</button>
                                                         <button type="button" class="btn btn-fill btn-xs btn-primary btn-round btn_submit_right" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Right</button>
                                                     @else
