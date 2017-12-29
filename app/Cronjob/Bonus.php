@@ -135,33 +135,22 @@ class Bonus
 					$weekTotal->total_interest = $totalInterest;//tinh tong->
 					$weekTotal->weekYear = $weekYear;
 					$weekTotal->save();
-
 					//Update cron status from 0 => 1
 					//$cronStatus->status = 1;
 					//$cronStatus->save();
 				}
-
-
-
-				//update bonus binary interest
-				
+			}
+			//update bonus binary interest
+			foreach($lstUser as $user)
+			{
 				$volInfo = self::_calLeftRightVolume($user->id);
-
 				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
-
-				// echo'<pre>';
-				// 	echo $user->id.'<br/>';
-				// 	print_r($volInfo);
-				// 	echo'<br/>';
-				// 	print_r($binaryInterest);
-				// echo'</pre>';
-				// exit;
-
-				if(count($binaryInterest)>0)
+				
+				if($binaryInterest)
 				{
 
-					$binaryInterest->leftNew+=$volInfo['totalLeft'];
-					$binaryInterest->rightNew+=$volInfo['totalRight'];
+					$binaryInterest->leftNew += $volInfo['totalLeft'];
+					$binaryInterest->rightNew +=$volInfo['totalRight'];
 					$binaryInterest->save();
 				}
 				else
@@ -178,13 +167,7 @@ class Bonus
 					];
 					BonusBinaryInterest::create($fields);
 				}
-				//echo $user->id;
-				//echo'<br/>';
-
-
 			}
-
-
 			//Update status from 1 => 0 after run all user
 			DB::table('cron_profit_day_logs')->update(['status' => 0]);
 
@@ -209,8 +192,8 @@ class Bonus
 
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
-		//$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-		$firstWeek = $weeked;
+		$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+		//$firstWeek = $weeked;
 		$firstYear = $year;
 		$firstWeekYear = $firstYear.$firstWeek;
 
@@ -366,56 +349,39 @@ class Bonus
 	/**
 	* This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
 	*/
-	public static function bonusMatchingWeekCron()//infinity interest
+	public static function bonusMatchingWeekCron()
 	{
-
 		set_time_limit(0);
 		/* Get previous weekYear */
 		/* =======BEGIN ===== */
 		$weeked = date('W');
 		$year = date('Y');
 		$weekYear = $year.$weeked;
-		$nextWeek = date( 'W', strtotime( 'next week' ) );
-		$nextYear =date('Y',strtotime('next week'));
-		$nextWeekYear=$nextYear.$nextWeek;
-
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
-
-
-		//echo $nextYear.$nextWeek;exit;
-
-		//$firstWeek = $weeked - 1;
-		$firstWeek = $weeked;
+		$firstWeek = $weeked - 1;
 		$firstYear = $year;
 		$firstWeekYear = $firstYear.$firstWeek;
-
-		// if($firstWeek == 0){
-		// 	$firstWeek = 52;
-		// 	$firstYear = $year - 1;
-		// 	$firstWeekYear = $firstYear.$firstWeek;
-		// }
-
-		// if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
-
+		if($firstWeek == 0){
+			$firstWeek = 52;
+			$firstYear = $year - 1;
+			$firstWeekYear = $firstYear.$firstWeek;
+		}
+		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
 		/* =======END ===== */
-
 		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
 		foreach($listBinaryInterest as $binary)
 		{
 			//Get cron status
 			//$cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
 			//if(isset($cronStatus) && $cronStatus->status == 1) continue;
-
 			//$volInfo = self::_calLeftRightVolume($binary->userId);
-
 			$leftOver = $binary->leftNew + $binary->leftOpen;
-			$rightOver = $binary->rightNew + $binary->rightOpen;
+			$rightOver = $binary->rightNew + $binary->leftOpen;
 			
 			//Caculate level to get binary commision
 			$level = 0;
 			$percentBonus = 0;
 			$packageId = $binary->userData->packageId;
-
 			if($leftOver >= config('carcoin.bi_inter_cond_lv_1') && 
 				$rightOver >= config('carcoin.bi_inter_cond_lv_1') && 
 				$packageId >= 1 )
@@ -423,7 +389,6 @@ class Bonus
 				$level = config('carcoin.bi_inter_cond_lv_1');
 				$percentBonus = config('carcoin.bi_lv_1_inter_bonus');
 			}
-
 			if($leftOver >= config('carcoin.bi_inter_cond_lv_2') && 
 				$rightOver >= config('carcoin.bi_inter_cond_lv_2') && 
 				$packageId >= 2)
@@ -431,7 +396,6 @@ class Bonus
 				$level = config('carcoin.bi_inter_cond_lv_2');
 				$percentBonus = config('carcoin.bi_lv_2_inter_bonus');
 			}
-
 			if($leftOver >= config('carcoin.bi_inter_cond_lv_3') && 
 				$rightOver >= config('carcoin.bi_inter_cond_lv_3') && 
 				$packageId >= 3)
@@ -439,7 +403,6 @@ class Bonus
 				$level = config('carcoin.bi_inter_cond_lv_3');
 				$percentBonus = config('carcoin.bi_lv_3_inter_bonus');
 			}
-
 			if($leftOver > config('carcoin.bi_inter_cond_lv_4') && 
 				$rightOver > config('carcoin.bi_inter_cond_lv_4') && 
 				$packageId == 4)
@@ -447,21 +410,24 @@ class Bonus
 				$level = config('carcoin.bi_inter_cond_lv_4');
 				$percentBonus = config('carcoin.bi_lv_4_inter_bonus');
 			}
-
 			$leftOpen = $leftOver - $level;
 			$rightOpen = $rightOver - $level;
-
 			$bonus = $level * $percentBonus;
+
+			//Bonus canot over maxout $30,000
+			if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
+
+			$binary->bonus = $bonus;
+			$binary->save();
+			
 			if($bonus > 0)
 			{
 				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
 				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
-
 				$userCoin = $binary->userCoin;
 				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
 				$userCoin->save();
-
 				$fieldUsd = [
 					'walletType' => Wallet::CLP_WALLET,//
 					'type' =>  Wallet::MATCHING_TYPE,//bonus week
@@ -470,9 +436,7 @@ class Bonus
 					'amount' => $clpAmount,
 					'note'	=>'Paid 60% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.clp_bonus_pay')
 				];
-
 				Wallet::create($fieldUsd);
-
 				$fieldInvest = [
 					'walletType' => Wallet::REINVEST_WALLET,//reinvest
 					'type' => Wallet::MATCHING_TYPE,//bonus week
@@ -481,59 +445,35 @@ class Bonus
 					'amount' => $reinvestAmount,
 					'note'	=>'Paid 40% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.reinvest_bonus_pay')
 				];
-
 				Wallet::create($fieldInvest);
 			}
-
 
 			$weeked = date('W');
 			$year = date('Y');
 			$weekYear = $year.$weeked;
-			if($weeked < 10) $weekYear = $year.'0'.$weeked;
-			$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
-			if(isset($week) && $week->id > 0) {
 
-				//$week->leftOpen = $leftOpen;
-				//$week->rightOpen = $rightOpen;
+			if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
+			$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+			// Yes => update L-Open, R-Open
+			if(isset($week) && $week->id > 0) {
+				$week->leftOpen = $leftOpen;
+				$week->rightOpen = $rightOpen;
 
 				//update leftNew
-				//$week->leftNew=0;//reset leftNew
-				//$week->rightNew=0;//reset rightNew
-				$week->bonus=$bonus;
-				$week->save();
+				$week->leftNew=0;//reset leftNew
+				$week->rightNew=0;//reset rightNew
 				//update RightNew
 
-				//create new bonus binary for next week
-				$nextWeekBinaryInterest=BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $nextWeekYear)->first();
-				echo count($nextWeekBinaryInterest);
-				if($nextWeekBinaryInterest)//isset next week
-				{
-					$nextWeekBinaryInterest->leftOpen=$leftOpen;//
-					$nextWeekBinaryInterest->rightOpen=$rightOpen;
-					$nextWeekBinaryInterest->save();
-				}else{
-
-					$field = [
-					'userId' => $binary->userId,
-					'leftNew' => 0,
-					'rightNew' => 0,
-					'bonus'=>0,
-					'leftOpen' => $leftOpen,
-					'rightOpen' => $rightOpen,
-					'weekYear' => $nextWeekYear,
-				];
-				BonusBinaryInterest::create($field);
-				}
-				//
-
-				
+				$week->save();
 			} else {
 				// No => create new
 				$field = [
 					'userId' => $binary->userId,
+					'weeked' => $weeked,
+					'year' => $year,
 					'leftNew' => 0,
 					'rightNew' => 0,
-					'bonus'=>0,
 					'leftOpen' => $leftOpen,
 					'rightOpen' => $rightOpen,
 					'weekYear' => $weekYear,
@@ -541,16 +481,200 @@ class Bonus
 
 				BonusBinaryInterest::create($field);
 			}
-
-
 			//Update cron status from 0 => 1
 			//$cronStatus->status = 1;
 			//$cronStatus->save();
 		}
-
 		//Update status from 1 => 0 after run all user
 		DB::table('cron_matching_logs')->update(['status' => 0]);
 	}
+
+
+	// public static function bonusMatchingWeekCron()
+	// {
+
+	// 	set_time_limit(0);
+
+	// 	$weeked = date('W');
+	// 	$year = date('Y');
+	// 	$weekYear = $year.$weeked;
+	// 	$thisWeekYear=$year.$weeked;
+	// 	$nextWeek = date( 'W', strtotime( 'next week' ) );
+	// 	$nextYear =date('Y',strtotime('next week'));
+	// 	$preWeek= date('W', strtotime('previous week'));
+	// 	$preYear=date('Y',strtotime('previous week'));
+
+	// 	$nextWeekYear=$nextYear.$nextWeek;
+	// 	$preWeekYear=$preYear.$preWeek;
+	// 	if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
+	// 	$firstWeek = $weeked - 1;
+	// 	//$firstWeek = $weeked;
+	// 	$firstYear = $year;
+	// 	$firstWeekYear = $firstYear.$firstWeek;
+
+	// 	if($firstWeek == 0){
+	// 		$firstWeek = 52;
+	// 		$firstYear = $year - 1;
+	// 		$firstWeekYear = $firstYear.$firstWeek;
+	// 	}
+
+	// 	if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
+	// 	$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
+
+	// 	foreach($listBinaryInterest as $binary)
+	// 	{
+
+	// 		$binaryInterest=BonusBinaryInterest::where('weekYear','=',$thisWeekYear)->where('userId','=',$binary->userId)->first();
+	// 		$oldLeftOpen=$oldRightOpen=0;
+	// 		if($binaryInterest)
+	// 		{
+	// 			$oldLeftOpen=$binaryInterest->leftOpen;//get 
+	// 			$oldRightOpen=$binaryInterest->rightOpen;
+	// 		}
+	// 		$leftOver = $binary->leftNew + $oldLeftOpen;
+	// 		$rightOver = $binary->rightNew + $oldRightOpen;
+			
+	// 		$level = 0;
+	// 		$percentBonus = 0;
+	// 		$packageId = $binary->userData->packageId;
+
+	// 		if($leftOver >= config('carcoin.bi_inter_cond_lv_1') && 
+	// 			$rightOver >= config('carcoin.bi_inter_cond_lv_1') && 
+	// 			$packageId >= 1 )
+	// 		{
+	// 			$level = config('carcoin.bi_inter_cond_lv_1');
+	// 			$percentBonus = config('carcoin.bi_lv_1_inter_bonus');
+	// 		}
+
+	// 		if($leftOver >= config('carcoin.bi_inter_cond_lv_2') && 
+	// 			$rightOver >= config('carcoin.bi_inter_cond_lv_2') && 
+	// 			$packageId >= 2)
+	// 		{
+	// 			$level = config('carcoin.bi_inter_cond_lv_2');
+	// 			$percentBonus = config('carcoin.bi_lv_2_inter_bonus');
+	// 		}
+
+	// 		if($leftOver >= config('carcoin.bi_inter_cond_lv_3') && 
+	// 			$rightOver >= config('carcoin.bi_inter_cond_lv_3') && 
+	// 			$packageId >= 3)
+	// 		{
+	// 			$level = config('carcoin.bi_inter_cond_lv_3');
+	// 			$percentBonus = config('carcoin.bi_lv_3_inter_bonus');
+	// 		}
+
+	// 		if($leftOver > config('carcoin.bi_inter_cond_lv_4') && 
+	// 			$rightOver > config('carcoin.bi_inter_cond_lv_4') && 
+	// 			$packageId == 4)
+	// 		{
+	// 			$level = config('carcoin.bi_inter_cond_lv_4');
+	// 			$percentBonus = config('carcoin.bi_lv_4_inter_bonus');
+	// 		}
+
+	// 		$leftOpen = $leftOver - $level;
+	// 		$rightOpen = $rightOver - $level;
+
+	// 		$bonus = $level * $percentBonus;
+	// 		if($bonus > 0)
+	// 		{
+	// 			$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+	// 			$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+
+	// 			$userCoin = $binary->userCoin;
+	// 			$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+	// 			$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+	// 			$userCoin->save();
+
+	// 			$fieldUsd = [
+	// 				'walletType' => Wallet::CLP_WALLET,//
+	// 				'type' =>  Wallet::MATCHING_TYPE,//bonus week
+	// 				'inOut' => Wallet::IN,
+	// 				'userId' => $binary->userId,
+	// 				'amount' => $clpAmount,
+	// 				'note'	=>'Paid 60% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.clp_bonus_pay')
+	// 			];
+
+	// 			Wallet::create($fieldUsd);
+
+	// 			$fieldInvest = [
+	// 				'walletType' => Wallet::REINVEST_WALLET,//reinvest
+	// 				'type' => Wallet::MATCHING_TYPE,//bonus week
+	// 				'inOut' => Wallet::IN,
+	// 				'userId' => $binary->userId,
+	// 				'amount' => $reinvestAmount,
+	// 				'note'	=>'Paid 40% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.reinvest_bonus_pay')
+	// 			];
+
+	// 			Wallet::create($fieldInvest);
+	// 		}
+
+
+	// 		$weeked = date('W');
+	// 		$year = date('Y');
+	// 		$weekYear = $year.$weeked;
+	// 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
+	// 		$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+	// 		if(isset($week) && $week->id > 0) {
+
+	// 			//$week->leftOpen = $leftOpen;
+	// 			//$week->rightOpen = $rightOpen;
+
+	// 			//update leftNew
+	// 			//$week->leftNew=0;//reset leftNew
+	// 			//$week->rightNew=0;//reset rightNew
+	// 			$week->bonus=$bonus;
+	// 			$week->save();
+	// 			//update RightNew
+
+	// 			//create new bonus binary for next week
+	// 			$nextWeekBinaryInterest=BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $nextWeekYear)->first();
+	// 			echo count($nextWeekBinaryInterest);
+	// 			if($nextWeekBinaryInterest)//isset next week
+	// 			{
+	// 				$nextWeekBinaryInterest->leftOpen=$leftOpen;//
+	// 				$nextWeekBinaryInterest->rightOpen=$rightOpen;
+	// 				$nextWeekBinaryInterest->save();
+	// 			}else{
+
+	// 				$field = [
+	// 				'userId' => $binary->userId,
+	// 				'leftNew' => 0,
+	// 				'rightNew' => 0,
+	// 				'bonus'=>0,
+	// 				'leftOpen' => $leftOpen,
+	// 				'rightOpen' => $rightOpen,
+	// 				'weekYear' => $nextWeekYear,
+	// 			];
+	// 			BonusBinaryInterest::create($field);
+	// 			}
+	// 			//
+
+				
+	// 		} else {
+	// 			// No => create new
+	// 			$field = [
+	// 				'userId' => $binary->userId,
+	// 				'leftNew' => 0,
+	// 				'rightNew' => 0,
+	// 				'bonus'=>0,
+	// 				'leftOpen' => $leftOpen,
+	// 				'rightOpen' => $rightOpen,
+	// 				'weekYear' => $weekYear,
+	// 			];
+
+	// 			BonusBinaryInterest::create($field);
+	// 		}
+
+
+	// 		//Update cron status from 0 => 1
+	// 		//$cronStatus->status = 1;
+	// 		//$cronStatus->save();
+	// 	}
+
+	// 	//Update status from 1 => 0 after run all user
+	// 	DB::table('cron_matching_logs')->update(['status' => 0]);
+	// }
 
 	private static function _calLeftRightVolume($userId)//
 	{
