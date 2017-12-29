@@ -323,7 +323,7 @@
 
                 if(amount<minAmount || amount>maxAmount)
                 {
-                    pricing.children().find('.errorAmount').text(''+minAmount+'$ - '+maxAmount+'$');
+                    pricing.children().find('.errorAmount').text('$'+minAmount+' - $'+maxAmount);
                     pricing.children().find('.label-floating').addClass('has-error');
                     pricing.children().find('input[type="number"]').focus();
                     return false;
