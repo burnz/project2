@@ -100,7 +100,7 @@ class Bonus
 						];
 
 						//Calculate total week interest for each users
-						$totalInterest += $clpAmount;
+						$totalInterest += $usdAmount;
 						
 
 						if($pack->packageId > 1)
@@ -114,7 +114,7 @@ class Bonus
 							$userCoin->save();
 
 							//Calculate total week interest for each users
-							$totalInterest += $clpAmount;
+							$totalInterest += $bonusPack;
 
 							//Get package information
 							$packInfo = Package::where('pack_id', $pack->packageId)->first();
@@ -147,15 +147,17 @@ class Bonus
 				
 				$volInfo = self::_calLeftRightVolume($user->id);
 
-				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->first();
-				// if($user->id==3681)
-				// {
-				// 	echo'<pre>';
-				// 		print_r($binaryInterest);
-				// 	echo'</pre>';
+				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
+
+				// echo'<pre>';
+				// 	echo $user->id.'<br/>';
+				// 	print_r($volInfo);
 				// 	echo'<br/>';
-				// }
-				if($binaryInterest)
+				// 	print_r($binaryInterest);
+				// echo'</pre>';
+				// exit;
+
+				if(count($binaryInterest)>0)
 				{
 
 					$binaryInterest->leftNew+=$volInfo['totalLeft'];
@@ -226,8 +228,8 @@ class Bonus
 		foreach ($lstBinary as $binary) 
 		{
 			//Get cron status
-			$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
-			if(isset($cronStatus) && $cronStatus->status == 1) continue;
+			//$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+			//if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 			$leftOver = $binary->leftOpen + $binary->leftNew;
 			$rightOver = $binary->rightOpen + $binary->rightNew;
@@ -353,8 +355,8 @@ class Bonus
 			}
 
 			//Update cron status from 0 => 1
-			$cronStatus->status = 1;
-			$cronStatus->save();
+			//$cronStatus->status = 1;
+			//$cronStatus->save();
 		}
 
 		//Update status from 1 => 0 after run all user
@@ -366,27 +368,34 @@ class Bonus
 	*/
 	public static function bonusMatchingWeekCron()//infinity interest
 	{
+
 		set_time_limit(0);
 		/* Get previous weekYear */
 		/* =======BEGIN ===== */
 		$weeked = date('W');
 		$year = date('Y');
 		$weekYear = $year.$weeked;
+		$nextWeek = date( 'W', strtotime( 'next week' ) );
+		$nextYear =date('Y',strtotime('next week'));
+		$nextWeekYear=$nextYear.$nextWeek;
 
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
+
+		//echo $nextYear.$nextWeek;exit;
 
 		//$firstWeek = $weeked - 1;
 		$firstWeek = $weeked;
 		$firstYear = $year;
 		$firstWeekYear = $firstYear.$firstWeek;
 
-		if($firstWeek == 0){
-			$firstWeek = 52;
-			$firstYear = $year - 1;
-			$firstWeekYear = $firstYear.$firstWeek;
-		}
+		// if($firstWeek == 0){
+		// 	$firstWeek = 52;
+		// 	$firstYear = $year - 1;
+		// 	$firstWeekYear = $firstYear.$firstWeek;
+		// }
 
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		// if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
 
 		/* =======END ===== */
 
@@ -483,16 +492,41 @@ class Bonus
 			if($weeked < 10) $weekYear = $year.'0'.$weeked;
 			$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
 			if(isset($week) && $week->id > 0) {
-				$week->leftOpen = $leftOpen;
-				$week->rightOpen = $rightOpen;
+
+				//$week->leftOpen = $leftOpen;
+				//$week->rightOpen = $rightOpen;
 
 				//update leftNew
-				$week->leftNew=0;//reset leftNew
-				$week->rightNew=0;//reset rightNew
+				//$week->leftNew=0;//reset leftNew
+				//$week->rightNew=0;//reset rightNew
 				$week->bonus=$bonus;
+				$week->save();
 				//update RightNew
 
-				$week->save();
+				//create new bonus binary for next week
+				$nextWeekBinaryInterest=BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $nextWeekYear)->first();
+				echo count($nextWeekBinaryInterest);
+				if($nextWeekBinaryInterest)//isset next week
+				{
+					$nextWeekBinaryInterest->leftOpen=$leftOpen;//
+					$nextWeekBinaryInterest->rightOpen=$rightOpen;
+					$nextWeekBinaryInterest->save();
+				}else{
+
+					$field = [
+					'userId' => $binary->userId,
+					'leftNew' => 0,
+					'rightNew' => 0,
+					'bonus'=>0,
+					'leftOpen' => $leftOpen,
+					'rightOpen' => $rightOpen,
+					'weekYear' => $nextWeekYear,
+				];
+				BonusBinaryInterest::create($field);
+				}
+				//
+
+				
 			} else {
 				// No => create new
 				$field = [
