@@ -173,18 +173,11 @@ class User extends Authenticatable
 
 		if($user)
 		{
-			// $userPackage = UserPackage::where('userId', $userId)
-			// 					->where('packageId', $packageId)
-			// 					->orderBy('packageId', 'desc')
-			// 					->first();
-
-			
-
 			if($isUpgrade == true) 
 			{
 				$userPackage = UserPackage::where('userId', $userId)
 								->where('packageId', $packageId)
-								->orderBy('packageId', 'desc')
+								->orderBy('id', 'desc')
 								->first();
 				$usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
 				// If $userRoot already in binary tree
@@ -234,8 +227,6 @@ class User extends Authenticatable
 				
 			}
 
-	
-
 			$user->save();
 
 			//Update binary list user
@@ -275,13 +266,6 @@ class User extends Authenticatable
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
 		$week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
-
-		// echo'<pre>';
-		// 	//print_r($week);
-		// 	print_r($usdCoinAmount);
-		// echo'</pre>';
-		// exit;
-
 
 		if($week && $week->id > 0) { //If already have record just update amount increase 
 			if($legpos == 1){
