@@ -128,8 +128,8 @@ class MemberController extends Controller
                 if ($user && (($lstBinaryUser && in_array($request['id'], $lstBinaryUser)) || Auth::user()->id == $request['id'])) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
-                    //$weeklySale = self::getWeeklySale($user->id);
-                    $weeklySale=$this->getTotalSale($user->id);
+                    $weeklySale = self::getWeeklySale($user->id);
+                    //$weeklySale=$this->getTotalSale($user->id);
                     $fields = [
                         'lvl' => 0,
                         'id' => $user->id,
@@ -167,8 +167,8 @@ class MemberController extends Controller
                 if ($user && (($lstBinaryUser && in_array($user->id, $lstBinaryUser)) || Auth::user()->id == $user->id)) {
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
-                    //$weeklySale = self::getWeeklySale($user->id);
-                    $weeklySale=$this->getTotalSale($user->id);
+                    $weeklySale = self::getWeeklySale($user->id);
+                    //$weeklySale=$this->getTotalSale($user->id);
                     $fields = [
                         'lvl' => 0,
                         'id' => $user->id,
@@ -197,8 +197,8 @@ class MemberController extends Controller
                 $user = Auth::user();
                 $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                 $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
-                //$weeklySale = self::getWeeklySale($user->id);
-                $weeklySale=$this->getTotalSale($user->id);
+                $weeklySale = self::getWeeklySale($user->id);
+                //$weeklySale=$this->getTotalSale($user->id);
                 $fields = [
                     'lvl'     => 0,
                     'id'     => $user->id,
@@ -236,20 +236,20 @@ class MemberController extends Controller
 
     // Get BV - personal week sale
     function getBV($userId){
-        //$weeked = date('W');
-        //$year = date('Y');
-        //$weekYear = $year.$weeked;
-        //if($weeked < 10)$weekYear = $year.'0'.$weeked;
-        $package = UserPackage::where('userId', $userId)->sum('amount_increase');
-                            //->where('weekYear', '=', $weekYear)
-                            //->groupBy(['userId'])
-                            //->selectRaw('sum(amount_increase) as totalValue')
-                            //->get()
-                            //->first();
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+        $package = UserPackage::where('userId', $userId)
+                            ->where('weekYear', '=', $weekYear)
+                            ->groupBy(['userId'])
+                            ->selectRaw('sum(amount_increase) as totalValue')
+                            ->get()
+                            ->first();
         $BV = 0;
         if($package) 
         {
-            $BV = $package;
+            $BV = $package->totalValue;
         }
 
         return $BV;
