@@ -210,7 +210,7 @@
                                 </select>
                             </div>
                             
-                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Buy Packages</button>
+                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round" disabled="">Buy Packages</button>
 
                         </div>
                         <div class="col-md-12 my-4">
