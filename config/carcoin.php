@@ -61,13 +61,10 @@ return [
         2 => 'adminlte_lang::wallet.interest',
         3 => 'adminlte_lang::wallet.binary',
         4 => 'adminlte_lang::wallet.loyalty',
-        5 => 'adminlte_lang::wallet.usd_clp_type',
         6 => 'adminlte_lang::wallet.reinvest_clp_type', //holding wallet to clp wallet
-        7 => 'adminlte_lang::wallet.btc_clp_type',
         8 => 'adminlte_lang::wallet.clp_btc_type',
         9 => 'adminlte_lang::wallet.withdraw_btc_type',
         10 => 'adminlte_lang::wallet.withdraw_clp_type',
-        11 => 'adminlte_lang::wallet.transfer_btc_type',
         12 => 'adminlte_lang::wallet.transfer_clp_type', //REMOVE
         13 => 'adminlte_lang::wallet.deposit_btc_type',
         14 => 'adminlte_lang::wallet.deposit_clp_type',

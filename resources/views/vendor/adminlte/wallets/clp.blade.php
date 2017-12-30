@@ -211,7 +211,7 @@
                         </div>
                         <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">assignment_ind</i> </span>
                             <div class="form-group label-floating">
-                                <label class="control-label">Ethereum address E.g. 0xbHB5XMLmzFVj8ALj6mfBsbifRoD4miY36v</label>
+                                <label class="control-label">Ethereum address E.g. 0x8f2b05ec6786358e14ace5d4c01d7ee7bf27</label>
                                 <input type="text" class="form-control" id="walletAddress" name="walletAddress">
                                 <p class="help-block"></p>
                             </div>

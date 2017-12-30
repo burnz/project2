@@ -2473,7 +2473,7 @@
 					//node.childNodes[1].childNodes[0].style.backgroundImage = 'url("'+obj.icon+'")';
 					//node.childNodes[1].childNodes[0].style.backgroundPosition = 'center center';
 					node.childNodes[1].childNodes[0].style.color = '#3c8dbc';
-					node.childNodes[1].childNodes[0].className += ' fa fa-user';
+					node.childNodes[1].childNodes[0].className += '';
 				}
 			}
 

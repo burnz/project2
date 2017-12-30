@@ -78,12 +78,6 @@
                                                     </span> Withdraw
                                                 <div class="ripple-container"></div>
                                             </button>
-                                           <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#bitcoin-buy-carcoin">
-                                                <span class="btn-label">
-                                                                <i class="material-icons">add_shopping_cart</i>
-                                                            </span> Buy Carcoin
-                                                <div class="ripple-container"></div>
-                                            </button>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -152,40 +146,6 @@
 
 @include('adminlte::wallets.wallet-modal')
 @endsection
-<div class="modal fade" id="bitcoin-buy-carcoin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
-                <h4 class="modal-title" id="myModalLabel3">Buy Carcoin - <b class="bitcoin-color" style="vertical-align: bottom;"><img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;">{{$walletAmount['amountBTC']}}</b></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">BTC Amount</label>
-                                <input type="number" class="form-control switch-BTC-to-CLP" id="btcAmount" name="btcAmount">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">Carcoin Amount</label>
-                                <input type="number" class="form-control switch-CLP-to-BTC" id="clpAmount" name="clpAmount">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round" id="buy-clp">Submit</button>
-                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section('script')
 <script src="{{asset('Carcoin/js/jquery.qrcode.min.js')}}"></script>
