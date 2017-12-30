@@ -23,6 +23,7 @@
         width: auto;
     }
     .Treant > .node {
+        min-height:100px !important;
     }
     .Treant > p {
         font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -60,7 +61,7 @@
 }
 .tree-node:hover {
     cursor: pointer;
-    background-color: #f5f5f5;
+    background-color: #fff !important;
 }
 .tree-node img {
     margin: 5px 10px 0 5px;
@@ -98,10 +99,10 @@
 .node-lvl-3{
     background: linear-gradient(90deg, #FC7279, #FF9A9F);
 }
-.node{
+.wp-node-loyalty{
     display: block;
-    width: 12%;
-    min-height: 114px;
+    width: 100%;
+    min-height: 100px;
     border: 1px solid #DDDDDD;
     border-radius: 15px;
     text-align: center;
@@ -111,9 +112,12 @@
     background: #fff;
     overflow: hidden;
 }
-.node:hover{
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.node
+{
+    width:12%;
 }
+
+
 .node-name{
     min-height: 40px;
     padding: 8px 0;
@@ -142,6 +146,77 @@
 }
 .btn.btn-just-icon > i.fa{
     font-size: 16px;
+}
+
+.node:hover .node-info{
+    display: block;
+}
+.node-info{
+    display: none;
+    position: absolute;
+    height: 100px;
+    background: #fff;
+    border-radius: 15px;
+    width: 100%;
+    border: 1px solid #ddd;
+    right: -140px;
+    top: 0px;
+    z-index: 999999999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: .3s;
+    border-top-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+.tooltip-arrow {
+    top: 5%;
+    left: -10px;
+    margin-top: -5px;
+    border-width: 10px 10px 20px 0;
+    border-right-color: #6C7A89 !important;
+    position: absolute;
+    border-style: solid;
+    border-color: transparent;
+}
+.tree-node p
+{
+    margin:0 !important;
+}
+.node-if-header{
+    padding-top: 5px;
+}
+.tooltip-content-title
+{
+    color: #fff;
+    padding: 0 10px 4px 10px;
+    background: #6C7A89;
+    border-top-right-radius: 15px;
+}
+.tooltip-content-body{
+    padding: 2px 10px;
+}
+.lb-tt-tt{
+    line-height: 0;
+    width: 20px;
+}
+.left-posi{
+    left: -140px;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 15px !important;
+    border-top-left-radius: 15px !important;
+}
+.left-posi .tooltip-arrow{
+    border-left-color: #6C7A89 !important;
+    border-width: 10px 0 20px 10px;
+    left: 128px;
+}
+.left-posi .tooltip-content-title
+{
+    border-top-right-radius: 0 !important;
+    border-top-left-radius: 15px !important;
+}
+.disable-tt{
+    display: none !important;
 }
 </style>
 
@@ -224,6 +299,7 @@
                                     </div>
                                 </div>
                             </body>
+
                             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
                             <link rel="stylesheet" href="{{ asset('/css/jstree.css') }}"/>
                             <link rel="stylesheet" href="{{ asset('/css/Treant.css') }}"/>
@@ -395,6 +471,7 @@ var drawTree = function (data) {
         nodeStructure: data,
     }
     new Treant(chart_config, function () {
+        //$('.node').wrap('<div class="wp-tree-node"></div>');
         $('.tree-node').on('click', function (e) {
             var id = $(this).attr('id');
             if (id) {
@@ -500,7 +577,10 @@ var getTree = function (id, cb) {
                     level: node.level,
                     loyaltyId: node.loyaltyId,
                     lMembers: node.lMembers,
-                    rMembers: node.rMembers
+                    rMembers: node.rMembers,
+                    lSale: node.left,
+                    rSale: node.right,
+                    posi: node.posi
                 };
                 if (node.lvl == 3) {
                     node.innerHTML = leafTmpl(node.text);

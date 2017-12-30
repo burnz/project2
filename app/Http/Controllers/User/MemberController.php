@@ -145,6 +145,7 @@ class MemberController extends Controller
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
+                        'posi'=>$user->userData->leftRight
                     ];
                     $children = self::getBinaryChildren($user->id);
                     if ($children) {
@@ -184,6 +185,7 @@ class MemberController extends Controller
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
+                        'posi'=>$user->userData->leftRight
                     ];
                     $children = self::getBinaryChildren($user->id);
                     if ($children) {
@@ -214,6 +216,7 @@ class MemberController extends Controller
                     'pkg'     => 2000,
                     'lMembers'     => $user->userData->leftMembers,
                     'rMembers'     => $user->userData->rightMembers,
+                    'posi'=> $user->userData->leftRight
                 ];
                 $children = self::getBinaryChildren($user->id);
                 if($children){
@@ -358,6 +361,7 @@ class MemberController extends Controller
                         'pkg'     => 2000,
                         'lMembers' => $user->leftMembers,
                         'rMembers' => $user->rightMembers,
+                        'posi'=>$user->leftRight
                     ];
                     $children = self::getBinaryChildren($user->user->id, $level);
                     if ($children) {
