@@ -6,8 +6,8 @@ return [
 	'bonus_maxout' => 30000, //Binary bonus cannot over $35000
 
 	//Interest range
-	'min_interest' => '20',
-	'max_interest' => '24',
+	'min_interest' => 0.66,
+	'max_interest' => 0.8,
 
 	//Bonus when member have new F1
 	'bonus_range_1_pay' => 0.07,
@@ -16,10 +16,10 @@ return [
 	'bonus_range_4_pay' => 0.1,
 	
 	//Binary level
-	'bi_sale_cond_lv_1' => 10000,
-	'bi_sale_cond_lv_2' => 100000,
-	'bi_sale_cond_lv_3' => 1000000,
-	'bi_sale_cond_lv_4' => 2000000,
+	'bi_sale_cond_lv_1' => 1000,
+	'bi_sale_cond_lv_2' => 10000,
+	'bi_sale_cond_lv_3' => 100000,
+	'bi_sale_cond_lv_4' => 200000,
 	
 	//Bonus for each binary level
 	'bi_lv_1_bonus' => 0.04,
@@ -34,10 +34,10 @@ return [
 	'bi_inter_cond_lv_4' => 50000,
 
 	//Bonus for each binary interest level
-	'bi_lv_1_inter_bonus' => 0.14,
-	'bi_lv_2_inter_bonus' => 0.16,
-	'bi_lv_3_inter_bonus' => 0.18,
-	'bi_lv_4_inter_bonus' => 0.2,
+	'bi_lv_1_inter_bonus' => 0.08,
+	'bi_lv_2_inter_bonus' => 0.1,
+	'bi_lv_3_inter_bonus' => 0.12,
+	'bi_lv_4_inter_bonus' => 0.14,
 
 
 	'binary_matching_bonus' => 0.05,
@@ -61,19 +61,20 @@ return [
         2 => 'adminlte_lang::wallet.interest',
         3 => 'adminlte_lang::wallet.binary',
         4 => 'adminlte_lang::wallet.loyalty',
-        5 => 'adminlte_lang::wallet.usd_clp_type',
         6 => 'adminlte_lang::wallet.reinvest_clp_type', //holding wallet to clp wallet
-        7 => 'adminlte_lang::wallet.btc_clp_type',
         8 => 'adminlte_lang::wallet.clp_btc_type',
         9 => 'adminlte_lang::wallet.withdraw_btc_type',
         10 => 'adminlte_lang::wallet.withdraw_clp_type',
-        11 => 'adminlte_lang::wallet.transfer_btc_type',
         12 => 'adminlte_lang::wallet.transfer_clp_type', //REMOVE
         13 => 'adminlte_lang::wallet.deposit_btc_type',
         14 => 'adminlte_lang::wallet.deposit_clp_type',
         15 => 'adminlte_lang::wallet.buy_pack',
         16 => 'adminlte_lang::wallet.tl_withdraw_pack',
+        //17 => 'adminlte_lang::wallet.binary_interest',
+        18 => 'adminlte_lang::wallet.binary_interest',
+        //19 => 'adminlte_lang::wallet.binary_interest',
+        19 => 'adminlte_lang::wallet.global_bonus',
     ),
 
-    'listLoyalty' => array(1 => "Broker", 2 => "Supervisor", 3 => "Manager", 4 => "Executive", 5 => "President"),
+    'listLoyalty' => array(1 => "Sapphire", 2 => "Emerald", 3 => "Diamond", 4 => "Blue Diamond", 5 => "Black Diamond"),
     ];

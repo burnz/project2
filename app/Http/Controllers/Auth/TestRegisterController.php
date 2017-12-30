@@ -166,7 +166,7 @@ class TestRegisterController extends Controller
             //SAVE to User_datas
             $fields['userId'] = $user->id;
             
-            $fields['clpCoinAmount'] = '20000';
+            $fields['clpCoinAmount'] = '200000';
             
             $userData = UserData::create($fields);
 

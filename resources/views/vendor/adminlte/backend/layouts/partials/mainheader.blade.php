@@ -166,6 +166,7 @@
                globalBTCUSD = data[1].exchrate;
                globalCLPUSD = data[2].exchrate; //clpUSD
                globalCLPBTC = data[0].exchrate;
+               alert(globalCLPBTC);
             }
         });
     }

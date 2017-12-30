@@ -14,6 +14,8 @@ use App\BonusBinary;
  *
  * @author giangdt
  */
+
+//auto push khi ng dung chua push
 class AutoAddBinary {
     
     public static function addBinary(){

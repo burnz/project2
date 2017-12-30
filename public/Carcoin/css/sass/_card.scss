@@ -1,171 +1,333 @@
-.card-stats{
-	h4{
-		font-weight: 400;
-	}
-	.card-footer {
-		.badge{
-			float: right;
-			margin-top: 2px;
-		}
-	}
+$ccc: #ccc;
+
+.card-stats {
+    h4 {
+        font-weight: 400;
+    }
+    .card-footer {
+        .badge {
+            float: right;
+            margin-top: 2px;
+        }
+    }
 }
 
-.card-filter{
-	padding: 15px 0;
+.card-earning {
+    .card-header {
+        margin: 30px auto 0;
+        padding: 3px;
+        border-radius: 50%;
+        span.glyphicon {
+            font-size: 30px;
+            color: #999999;
+        } // >img {
+        //     width: 50%;
+        //     border: 1px solid rgba($ccc, .5);
+        //     border-radius: 50%;
+        // }
+    }
+    .card-content {
+        p:first-child {
+            color: #666;
+        }
+        p:last-child {
+            color: #3C4858;
+        }
+    }
 }
 
-.card-countdown{
-	.card-header{
-		h3{
-			color: #3C4858;
-			letter-spacing: 8px;
-			font-size: 32px;
-			text-align: center;
-			font-weight: 100;
-			margin: 0;
-		}
-	}
-	.card-content{
-		text-align: center;
-		h4{
-			color: #666;
-		}
-	}
+.card-marketing {
+    padding: 8px 0;
+    .card-header {
+        h3 {
+            color: #3C4858;
+            letter-spacing: 8px;
+            font-size: 32px;
+            text-align: center;
+            font-weight: 100;
+            margin: 0;
+        }
+    }
+    .card-content {
+        .input-group-addon {
+            padding: 0 0 0px 15px;
+        }
+    }
 }
 
-.login-page .card-login{
-	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
-	border-radius: 15px;
+.card-filter {
+    padding: 15px 0;
 }
 
-.card-login{
-	.logo{
-		width: 170px;
-		border: 10px solid #fff;
-		background: #fff;
-		margin: -20px auto;
-		border-radius: 50%;
-	}
-	.card-content {
-		padding: 0px 40px 0px 30px;
-	}
-	.checkbox {
-		margin-top: 6px;
-		label {
-			margin-left: 4px;
-		}
-	}
-	.footer{
-		color: #3C4858;
-	}
-} 
-
-.card-signup{
-	.card{
-		padding: 20px 0;
-		.logo{
-			width: 170px;
-			border: 10px solid #fff;
-			background: #fff;
-			margin: -80px auto 0 auto;
-			border-radius: 50%;
-		}
-	}
-	box-shadow: none!important;
-	.card-content{
-		padding: 0px 40px 0px 30px;
-		.info-horizontal{
-			&:before{
-				display: table;
-				content: " ";
-			}
-			&:after{
-				content: " ";
-				display: block;
-				clear: both;
-			}
-			.icon{
-				margin: 20px 20px 20px 0;
-				width: 48px;
-				height: 48px;
-				border: 1px solid #00bcd4;
-				border-radius: 50%;position: relative;
-				&:before{
-					top: 46px;
-					bottom: 0;
-					position: absolute;
-					content: " ";
-					width: 2px;
-					background-color: #00bcd4;
-					left: 50%;
-					margin-left: -1px;
-					height: 90%;
-				}
-				i{
-					padding: 5px;
-					color: #ccc;
-				}
-			}
-			.icon+.description{
-				.info-title{
-					color: #999;
-				}
-			}
-			.icon.active{
-				background: #00bcd4;
-				box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 188, 212, 0.4);
-				i{
-					color: #fff;
-					
-				}
-			}
-			.icon.end{
-				&:before{
-					top: 46px;
-					bottom: 0;
-					position: absolute;
-					content: " ";
-					width: 0;
-					left: 50%;
-					margin-left: -1px;
-					height: 90%;
-				}
-			}
-			.icon.active+.description{
-				.info-title{
-					color: #fff;
-				}
-			}
-		}
-		.checkbox {
-			margin: 6px 0 10px 0;
-			label {
-				margin-left: 4px;
-			}
-		}
-	}
-	.footer{
-		color: #3C4858;
-	}
+.card-countdown {
+    .card-header {
+        h3 {
+            color: #3C4858;
+            letter-spacing: 8px;
+            font-size: 32px;
+            text-align: center;
+            font-weight: 100;
+            margin: 0;
+        }
+    }
+    .card-content {
+        text-align: center;
+        h4 {
+            color: #666;
+        }
+    }
 }
 
-.card-profile{
-	.card-content{
-		p.description{
-			span{
-				display: block;
-			}
-		}
-	}
+.login-page .card-login {
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+    border-radius: 15px;
 }
 
-.card{
-	.card-control{
-		float: right;
-		a{
-			text-decoration: underline;
-			font-size: 16px;
-			color: #3C4858;
-		}
-	}
+.card-pricing {
+    box-shadow: 0 0 0;
+    .card-description {
+        margin: 20px 0 15px 0;
+        span {
+            display: block;
+        }
+        span:first-child {
+            margin-bottom: 10px;
+            color: $brandColorSec;
+        }
+    }
+    .icon {
+        margin-bottom: 40px;
+        h3 {
+            line-height: 100px;
+            height: 100px;
+        }
+        i {
+            border: none;
+            width: 100px;
+            line-height: 100px;
+            height: 100px;
+        }
+        i[pack="tiny"] {
+            font-size: 15px;
+        }
+        i[pack="small"] {
+            font-size: 30px;
+        }
+        i[pack="medium"] {
+            font-size: 45px;
+        }
+        i[pack="large"] {
+            font-size: 60px;
+        }
+        .radio {
+            margin: 0 30px;
+            border-bottom-right-radius: 15px;
+            border-bottom-left-radius: 15px;
+            input[type=radio] {
+                &:checked~.check {
+                    background-color: $brandColorPri;
+                }
+                &:checked~.circle {
+                    border-color: $brandColorPri;
+                }
+            }
+        }
+    }
+    .icon.active {
+        color: $brandColorPri;
+    }
+    .icon.active+.card-description+.card-action {
+        .amount {
+            display: inline-table;
+            width: calc(100% - 120px);
+            margin: 0 60px;
+        }
+    }
+    .card-action {
+        margin-bottom: 10px;
+        .amount {
+            display: none;
+        }
+    }
+}
+
+.card-pricing.card-raised {
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+[section="buy-package"] {
+    .card-footer {
+        border-top: none;
+        padding: 0 0 30px;
+    }
+}
+
+.card-login {
+    .logo {
+        width: 170px;
+        border: 10px solid #fff;
+        background: #fff;
+        margin: -20px auto;
+        border-radius: 50%;
+    }
+    .card-content {
+        padding: 0px 40px 0px 30px;
+    }
+    .checkbox {
+        margin-top: 6px;
+        label {
+            margin-left: 4px;
+        }
+    }
+    .footer {
+        color: #3C4858;
+    }
+}
+
+.card-signup {
+    .card {
+        padding: 20px 0;
+        .logo {
+            width: 170px;
+            border: 10px solid #fff;
+            background: #fff;
+            margin: -80px auto 0 auto;
+            border-radius: 50%;
+        }
+    }
+    box-shadow: none!important;
+    .card-content {
+        padding: 0px 40px 0px 30px;
+        .info-horizontal {
+            &:before {
+                display: table;
+                content: " ";
+            }
+            &:after {
+                content: " ";
+                display: block;
+                clear: both;
+            }
+            .icon {
+                margin: 20px 20px 20px 0;
+                width: 48px;
+                height: 48px;
+                border: 1px solid #00bcd4;
+                border-radius: 50%;
+                position: relative;
+                &:before {
+                    top: 46px;
+                    bottom: 0;
+                    position: absolute;
+                    content: " ";
+                    width: 2px;
+                    background-color: #00bcd4;
+                    left: 50%;
+                    margin-left: -1px;
+                    height: 90%;
+                }
+                i {
+                    padding: 5px;
+                    color: #ccc;
+                }
+            }
+            .icon+.description {
+                .info-title {
+                    color: #999;
+                }
+            }
+            .icon.active {
+                background: #00bcd4;
+                box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 188, 212, 0.4);
+                i {
+                    color: #fff;
+                }
+            }
+            .icon.end {
+                &:before {
+                    top: 46px;
+                    bottom: 0;
+                    position: absolute;
+                    content: " ";
+                    width: 0;
+                    left: 50%;
+                    margin-left: -1px;
+                    height: 90%;
+                }
+            }
+            .icon.active+.description {
+                .info-title {
+                    color: #fff;
+                }
+            }
+        }
+        .checkbox {
+            margin: 6px 0 10px 0;
+            label {
+                margin-left: 4px;
+            }
+        }
+    }
+    .footer {
+        color: #3C4858;
+    }
+}
+
+.card-profile {
+    .card-content {
+        p.description {
+            span {
+                display: block;
+            }
+        }
+    }
+}
+
+.card {
+    .card-control {
+        float: right;
+        a {
+            text-decoration: underline;
+            font-size: 16px;
+            color: #3C4858;
+        }
+    }
+}
+
+.card-referrals-detail {
+    td.text-thirdary {
+        font-size: 1.25em;
+        font-weight: 300;
+    }
+}
+
+.card-generational {
+    .generational {
+        margin: 30px 0 8px 0;
+        text-align: center;
+        .left {
+            border-right: 1px solid rgba($ccc, .5);
+        }
+        .left,
+        .right {
+            .icon {
+                width: 100px;
+                line-height: 100px;
+                height: 100px;
+                margin: 0 auto;
+                text-align: center;
+                font-size: 55px;
+                border: 1px solid rgba($ccc, .5);
+                border-radius: 50%;
+                color: #999999;
+                &:hover {
+                    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+                    @include transsition-box-shadow;
+                }
+            }
+            p {
+                color: #3C4858;
+            }
+        }
+    }
 }

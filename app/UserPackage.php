@@ -26,7 +26,7 @@ class UserPackage extends Model
     public static function getHistoryPackage(){
         $package = new UserPackage;
         $tableName = $package->getTable();
-        $data = $package->select("$tableName.id","$tableName.buy_date","$tableName.release_date","packages.name")
+        $data = $package->select("$tableName.id","$tableName.buy_date","$tableName.release_date","$tableName.amount_increase","packages.name","$tableName.withdraw")
                 ->where("userId",Auth::user()->id)
                 ->join("packages","packages.id","=","$tableName.packageId")
                 ->get();
@@ -34,6 +34,12 @@ class UserPackage extends Model
         return $data;
     }
     
+    public static function getTotalAmount($uid)
+    {
+        $package=\DB::table('user_packages')->where('userId','=',$uid)->sum('amount_increase');
+        return $package;
+    }
+
     public function package(){
         return $this->hasOne(Package::class, 'id', 'packageId');
     }

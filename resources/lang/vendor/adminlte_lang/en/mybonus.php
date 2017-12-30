@@ -13,8 +13,8 @@ return [
     'partner'           	=> 'Partner',
     'amount'           	=> 'Amount',
 
-    'reinvest'           	=> 'Holding(40%)',
-    'transfer_withdraw'           	=> 'Transfer/withdraw(60%)',
+    'reinvest'           	=> 'Reinvest(40%)',
+    'transfer_withdraw'           	=> 'CarCoin(60%)',
 
     'week'           	=> 'Week',
     'lopen'           	=> 'L-Open',

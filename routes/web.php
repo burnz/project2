@@ -76,11 +76,11 @@ Route::group( ['middleware' => ['auth']], function() {
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@showBTCWallet')->name('wallet.btc');
     Route::get('wallets/getbtccoin',"Wallet\BtcWalletController@getBtcCoin");
-    //Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@buyCLP");
+    Route::post('wallets/btcbuyclp',"Wallet\BtcWalletController@buyCLP");
 
     Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
 
-    //Route::get('wallets/clptranfer',"Wallet\ClpWalletController@clptranfer");
+    Route::get('wallets/car/transfer',"Wallet\ClpWalletController@clptranfer");
 
     //Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     //Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
@@ -89,7 +89,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::get('wallets/car/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
-    //Route::post('wallets/clpwithdraw', 'Wallet\WithDrawController@clpWithDraw');
+    Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
+    Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');
@@ -98,12 +99,15 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
 
 
-    Route::get('mybonus/faststart', 'MyBonusController@faststart');
-    Route::get('mybonus/binary', 'MyBonusController@binary');
+    Route::get('mybonus/infinity-interest', 'MyBonusController@infinifyInterest');
+    Route::get('mybonus/infinity', 'MyBonusController@binary');
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
 
-    Route::get('packages/invest', 'PackageController@invest');
+
+    Route::get('packages/buy','PackageController@buyPackage')->name('package.buy');
+
+    //Route::get('packages/invest', 'PackageController@invest');
     Route::post('packages/invest', [ 'as' => 'packages.invest', 'uses' => 'PackageController@invest']);
     Route::post('packages/withdraw', [ 'as' => 'packages.withdraw', 'uses' => 'PackageController@withDraw']);
     Route::resource('packages', 'PackageController');
@@ -144,11 +148,14 @@ Route::post('getnotification','GetNotificationController@getNotification');
 
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
-//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
-//Route::get('test-binary', 'TestController@testBinary');
-//Route::get('test-interest',"TestController@testInterest");
+
+Route::get('test-interest',"TestController@testInterest");
+Route::get('test-infinity','TestController@testInfinityBonus');
+Route::get('test-infinity-interest', 'TestController@testInfinityInterest');
+Route::get('test-global-bonus','TestController@testGlobalBonus');
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 Route::get('test',"TestController@test");
 

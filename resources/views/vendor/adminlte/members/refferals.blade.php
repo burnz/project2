@@ -24,7 +24,7 @@
                                 <div class="col-sm-12">
                                     <div class="" style="display:none">
                                     {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
-                                        <input type="text" name="userSelect" id="userSelect"/>
+                                        <input type="text" value="" name="userSelect" id="userSelect"/>
                                         <input type="hidden" name="legpos" id="legpos" value="0">
                                     {!! Form::close() !!}
                                     </div>
@@ -105,7 +105,7 @@
         }else{
             swal({
                 title: "Are you sure?",
-                text: $(".btn_submit_left").attr('data-name') + " will be push to the Left!",
+                text: $(".btn_submit_left").attr('data-name') + " will be pushed to the Left!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
@@ -116,6 +116,7 @@
                 function(){
                     $('#legpos').val(1);
                     $('#userSelect').val(uid);
+                    
                     $('#pushIntoTreeForm').submit();
             });
 
@@ -130,7 +131,7 @@
         }else{
             swal({
                 title: "Are you sure?",
-                text: $(".btn_submit_left").attr('data-name') + " will be push to the Left!",
+                text: $(".btn_submit_left").attr('data-name') + " will be pushed to the Right!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",

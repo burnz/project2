@@ -9,6 +9,7 @@ use App\User;
 use App\UserData;
 use App\BonusFastStart;
 use App\BonusBinary;
+use App\BonusBinaryInterest;
 use App\LoyaltyUser;
 use Auth;
 use Session;
@@ -20,6 +21,7 @@ class MyBonusController extends Controller
         $this->middleware('auth');
     }
 
+
 	public function faststart(Request $request){
 		$currentuserid = Auth::user()->id;
         $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)->orderBy('id', 'desc')->paginate();
@@ -30,6 +32,12 @@ class MyBonusController extends Controller
 		$currentuserid = Auth::user()->id;
         $binarys = BonusBinary::where('userId', '=',$currentuserid)->orderBy('id', 'desc')->paginate();
         return view('adminlte::mybonus.binary')->with('binarys', $binarys);
+    }
+    public function infinifyInterest(Request $request)
+    {
+        $currentuserid = Auth::user()->id;
+        $binarys = BonusBinaryInterest::where('userId','=',$currentuserid)->orderBy('id','desc')->paginate();
+        return view('adminlte::mybonus.infinity_interest',compact('binarys'));
     }
     public function binaryCalculatorBonus(Request $request){
 	    $totalBonus = 0;

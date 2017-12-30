@@ -24,22 +24,19 @@ class Wallet extends Model
      * Bonus Type
      */
     
+    
     // Fast start bonus
     const FAST_START_TYPE = 1;
     // Lãi <=> Intervest
     const INTEREST_TYPE = 2;
     // Binary bonus <=> hoa hồng cân nhánh
-    const BINARY_TYPE = 3;
+    const BINARY_TYPE = 3;//infinity
     // Ltoyalty bonus
     const LTOYALTY_TYPE = 4;
-    // Tranfer Usd to Clp
-    const USD_CLP_TYPE = 5;
     // Tranfer holding to Clp
     const REINVEST_CLP_TYPE = 6;
     // Buy CLP by BTC
     const BTC_CLP_TYPE = 7;
-    // Sell Clp to Btc
-    const CLP_BTC_TYPE = 8;
     // WithDraw BTC
     const WITH_DRAW_BTC_TYPE = 9;
     // Withdraw CLP
@@ -59,7 +56,9 @@ class Wallet extends Model
     // Pack bonus type
     const BONUS_TYPE = 17;
     // Pack bonus type
-    const MATCHING_TYPE = 18;
+    const MATCHING_TYPE = 18;//infinity interest
+    //Global bonus
+    const GLOBAL_BONUS=19;
     //inOut 
     const IN = "in" ;
     

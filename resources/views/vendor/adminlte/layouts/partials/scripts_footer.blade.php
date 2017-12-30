@@ -45,7 +45,7 @@
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{asset('Carcoin/js/jquery.countdown.min.js')}}"></script>
     <script src="{{asset('Carcoin/js/demo.js')}}"></script>
-
+    <script type="text/javascript" src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
     
     <!-- <script src="{{ url (mix('/js/app.js')) }}"></script> -->
     

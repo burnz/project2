@@ -11,6 +11,7 @@ $(function () {
 					},
 					timeout : 15000
 				}).done(function(data) {
+					//console.log(data);
 					if (data instanceof Array) {
 						var children = [];
 						for (var i = 0; i < data.length; i++) {
@@ -20,10 +21,11 @@ $(function () {
 								text: user.uid +' '+ user.u,
 								data: {
 									username: user.id +' '+ user.u,
-                                    packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
+									totalAmount:'$'+user.totalAmount,
+                                    //packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                     totalMembers: user.totalMembers,
                                     leg: user.leg,
-                                    rankId: getRank(user.rankId),
+                                    loyaltyId: getRank(user.rankId),
 								},
 								id: user.id,
 								children: user.dmc?true:false,
@@ -38,10 +40,11 @@ $(function () {
 							text: user.uid +' '+ user.u,
 							data: {
 								username: user.id +' '+ user.u,
-                                packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
+                                //packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
+                                totalAmount: '$'+user.totalAmount,
                                 totalMembers: user.totalMembers,
                                 leg: user.leg,
-                                rankId: getRank(user.rankId),
+                                loyaltyId: getRank(user.rankId),
 							},
 							id: user.id,
 							children: user.dmc?true:false,
@@ -58,7 +61,7 @@ $(function () {
 			columns: [
 				{width: '50%', header: "ID/Username"},
 				{width: '5%', value: "totalMembers", header: "Total member"},
-				{width: '5%', value: "packageId", header: "Lending Package"},
+				{width: '5%', value: "totalAmount", header: "Total Amount"},
 				{width: '5%', value: "leg", header: "Left/Right"},
 				{width: '5%', value: "loyaltyId", header: "Rank"}
 			],
@@ -74,7 +77,7 @@ $(function () {
 
 		var rankName = ''
 		if(rankId == 0) {
-			rankName = '';
+			rankName = '-';
 		}
 		else if(rankId == 1) {
 			rankName = 'SAPPHIRE';

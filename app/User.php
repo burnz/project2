@@ -81,6 +81,7 @@ class User extends Authenticatable
 			
 			if(isset($userData) && $userData->packageId > 0)
 			{
+				
 				if($userData->packageId == 1)
 					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_1_pay');
 
@@ -96,9 +97,13 @@ class User extends Authenticatable
 				$userData->totalBonus = $userData->totalBonus + $packageBonus;
 				$userData->save();
 
+				
+
+
 				$userCoin = $userData->userCoin;
 				if($userCoin && $packageBonus > 0)
 				{
+
 					//Get info of user
 					$user = Auth::user();
 
@@ -107,15 +112,16 @@ class User extends Authenticatable
 					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 					$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
 					$userCoin->save();
-
+					
 					$fieldUsd = [
 						'walletType' => Wallet::CLP_WALLET,
 						'type' => Wallet::FAST_START_TYPE,
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
-						'amount' => $usdAmount,
-						'note'   => $user->name . ' bought package'
+						'amount' => $clpAmount,
+						'note'   => $user->name . ' bought package',
 					];
+					
 					Wallet::create($fieldUsd);
 
 					$fieldInvest = [
@@ -155,6 +161,7 @@ class User extends Authenticatable
 		}
 	}
 
+
 	/**
 	* Loop to root to re-assign lastLeft, lastRight user in tree and caculate binary sales for each node. 
 	*/
@@ -168,14 +175,12 @@ class User extends Authenticatable
 		{
 			if($isUpgrade == true) 
 			{
-				// If $userRoot already in binary tree
 				$userPackage = UserPackage::where('userId', $userId)
 								->where('packageId', $packageId)
-								->orderBy('packageId', 'desc')
+								->orderBy('id', 'desc')
 								->first();
-
 				$usdCoinAmount = isset($userPackage->amount_increase) ? $userPackage->amount_increase : 0;
-
+				// If $userRoot already in binary tree
 				if ($legpos == 1){
 					//Total sale on left
 					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
@@ -186,10 +191,12 @@ class User extends Authenticatable
 			} 
 			elseif($userRoot->totalMembers == 0) 
 			{
-				// If $userRoot don't have own tree
-				$userPackage = Package::where('pack_id', $packageId)->first();
-				$usdCoinAmount = isset($userPackage->price) ? $userPackage->price : 0;
+				
+				$userPackage = UserPackage::where('userId', $userId)
+								->sum('amount_increase');
+				$usdCoinAmount = $userPackage;			
 
+				// If $userRoot don't have own tree
 				if ($legpos == 1){
 					//Update genelogy on left
 					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
@@ -218,8 +225,7 @@ class User extends Authenticatable
 
 				$user->totalMembers = $user->totalMembers + 1;
 				
-			} 
-			
+			}
 
 			$user->save();
 
@@ -245,7 +251,7 @@ class User extends Authenticatable
 			// $user->userId = $binaryUserId
 			if($user->packageId > 0) self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
 			
-			if($user->binaryUserId > 0 && $user->packageId > 0) {    
+			if($user->binaryUserId > 0 && $user->packageId > 0) {
 				User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade, $continue);
 			}
 		}
@@ -260,10 +266,12 @@ class User extends Authenticatable
 		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
 		$week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
+
 		if($week && $week->id > 0) { //If already have record just update amount increase 
 			if($legpos == 1){
 				$week->leftNew = $week->leftNew + $usdCoinAmount;
 			}else{
+
 				$week->rightNew = $week->rightNew + $usdCoinAmount;
 			}
 			$week->save();

@@ -55,6 +55,7 @@
                                             </div>
                                         </div>
 
+
                                         <div class="row" authentication>
                                             <div class="col-md-12 d-flex my-3 justify-content-between">
                                                 <div class="togglebutton">
@@ -70,7 +71,7 @@
                                                     @if(!Auth::user()->is2fa)
                                                         <img src="{{ $google2faUrl }}">
                                                     @else
-                                                        <img src="">
+                                                        
                                                     @endif
                                                 </div>
                                             </div>
@@ -194,10 +195,15 @@
                                 $( '#errorOldPassword' ).html("{{ trans('adminlte_lang::profile.wrong_password') }}");
                             } else if (result.success){
                                 $('#myModalChangePassword').modal('hide');
-                                alert("{{ trans('adminlte_lang::profile.success') }}");
+                                swal({
+                                    type: 'success',
+                                    title: '{{ trans('adminlte_lang::profile.success') }}',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
                             } else {
                                 $('#myModalChangePassword').modal('hide');
-                                alert("{{ trans('adminlte_lang::profile.fail') }}");
+                                swal("Oops...","{{ trans('adminlte_lang::profile.fail') }}","error");
                             } 
 
 
@@ -228,15 +234,15 @@
                         type : "get",
                         success : function (result){
                             if(result.success){
-                                //document.getElementById('logout-form').submit();//logout user
+                                document.getElementById('logout-form').submit();//logout user
                                 location.href = '{{ url()->current() }}';
                             }else{
-                                alert(result.msg);
+                                swal('Oops...',result.msg,'error');
                             }
                         }
                     });
                 }else{
-                    alert('Please input 2FA code.');
+                    swal('Oops...','Please input 2FA code.','error');
                 }
             });
         }
@@ -251,14 +257,15 @@
                         type : "get",
                         success : function (result){
                             if(result.success){
+                                //
                                 location.href = '{{ url()->current() }}';
                             }else{
-                                alert(result.msg);
+                                swal('Oops...',result.msg,'error');
                             }
                         }
                     });
                 }else{
-                    alert('Please input 2FA code.');
+                    swal('Oops...','Please input 2FA code.','error');
                 }
             });
         }

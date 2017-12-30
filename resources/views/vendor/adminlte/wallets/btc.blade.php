@@ -66,28 +66,38 @@
                                         <div class="align-self-center">
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal"
                                                     data-target="#bitcoin-deposit">
-                                                                        <span class="btn-label">
-                                                                            <i class="material-icons">shop</i>
-                                                                        </span> Deposit
+                                                    <span class="btn-label">
+                                                        <i class="material-icons">shop</i>
+                                                    </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal"
                                                     data-target="#bitcoin-withdraw">
-                                                                        <span class="btn-label">
-                                                                            <i class="material-icons reflect">shop</i>
-                                                                        </span> Withdraw
+                                                    <span class="btn-label">
+                                                        <i class="material-icons reflect">shop</i>
+                                                    </span> Withdraw
                                                 <div class="ripple-container"></div>
                                             </button>
-                                           
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
-                                    
+                                            <div class="card-filter clearfix">
+                                                <div class="col-md-4">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Select Type</label>
+                                                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control', 'id' => 'wallet_type']) }}
+                                                    <span class="material-input"></span></div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-primary btn-round" id="btn_filter">Filter</button>
+                                                    <button type="button" class="btn btn-outline-primary btn-round" id="btn_filter_clear">Clear</button>
+                                                </div>
+                                            </div>
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
-                                                <table class="table" cellspacing="0" width="100%" style="width:100%">
+                                                <table class="table" id="tbBTC" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
@@ -141,7 +151,6 @@
 <script src="{{asset('Carcoin/js/jquery.qrcode.min.js')}}"></script>
 <script src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
 <script type="text/javascript">
-        console.log($("#qrcode").html());
     var qrcode = $("#qrcode").qrcode({
                     width: 180,
                     height: 180,
@@ -211,5 +220,98 @@
             });
 
             //end withdraw action
+    
+            //buy clp
+            $('#buy-clp').on('click', function () {
+                var clpAmount = $('#clpAmount').val();
+                var btcAmount = $('#btcAmount').val();
+                if($.trim(clpAmount) == ''){
+                    $("#clpAmount").parents("div.form-group").addClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
+                }else{
+                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcAmount) == ''){
+                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text("BTC Amount is required");
+                }else{
+                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(clpAmount) != '' && $.trim(btcAmount) != ''){
+                    $.ajax({
+                        method : 'POST',
+                        url: "{{ url('wallets/btcbuyclp') }}",
+                        data: {clpAmount: clpAmount, btcAmount: btcAmount, _token:'{{ csrf_token() }}'}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.btcAmountErr !== '') {
+                                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.btcAmountErr);
+                                }else {
+                                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+
+                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                                if(data.msg.clpAmountErr !== '') {
+                                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                                    $("#btcAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
+                                }else {
+                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                }
+
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
+            });
+            $(".switch-BTC-to-CLP").on('keyup mousewheel', function () {
+                var value = $(this).val();
+                var result = value / globalCLPBTC;
+                $(".switch-CLP-to-BTC").val(result.toFixed(2));
+                $(".switch-CLP-to-BTC").trigger("change");
+            });
+
+            $(".switch-CLP-to-BTC").on('keyup mousewheel', function () {
+                var value = $(this).val();
+                var result = value * globalCLPBTC;
+                $(".switch-BTC-to-CLP").val(result.toFixed(5));
+                $(".switch-BTC-to-CLP").trigger("change");
+            });
+            //end buy clp
+
+            $('#tbBTC').DataTable({
+                "ordering": false,
+                "searching":false,
+                "bLengthChange": false,
+            });
+            
+            //fillter grid
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if(wallet_type > 0){
+                    location.href = '{{ url()->current() }}?type='+wallet_type;
+                }else{
+                    swal("Please choose a type!");
+                    return false;
+                }
+            });
+            $('#btn_filter_clear').on('click', function () {
+                location.href = '{{ url()->current() }}';
+            });
+
 </script>
 @stop

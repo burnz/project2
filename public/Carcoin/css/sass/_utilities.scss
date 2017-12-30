@@ -114,17 +114,17 @@ i.material-icons[icon="img"][size="x-lg"] {
 
 [data-background-color="carcoin-primary-1"] {
     background: linear-gradient(60deg, #C00710, #ED1C26);
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba($brandColorPri, 0.4);
 }
 
 [data-background-color="carcoin-primary-2"] {
     background: linear-gradient(60deg, #ED1C26, #F94952);
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba($brandColorPri, 0.4);
 }
 
 [data-background-color="carcoin-primary-3"] {
     background: linear-gradient(60deg, #F94952, #FC7279);
-    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba($brandColorPri, 0.4);
 }
 .full-page[filter-color="carcoin-primary-1"]:after {
     background: -o-linear-gradient(to bottom, #C00710, #ED1C26 100%);
@@ -204,4 +204,59 @@ i.material-icons[icon="img"][size="x-lg"] {
 
 .togglebutton label{
     color: #666;
+}
+
+/* Label */
+
+.label-table {
+    display: inline-block;
+    width: 80%;
+    min-width: 8ex;
+    font-size: 1em;
+    max-width: 100px;
+    padding: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: top
+}
+
+.label-default {
+    background-color: #e3e8ee;
+    color: #333
+}
+
+.label-primary {
+    background-color: #42a5f5
+}
+
+.label-info {
+    background-color: #00bcd4
+}
+
+.label-success {
+    background-color: #8bc34a
+}
+
+.label-warning {
+    background-color: #ffa726
+}
+
+.label-danger {
+    background-color: #ef5350
+}
+
+.label-mint {
+    background-color: #26a69a
+}
+
+.label-purple {
+    background-color: #ba68c8
+}
+
+.label-pink {
+    background-color: #ec407a
+}
+
+.label-dark {
+    background-color: #263238
 }

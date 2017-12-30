@@ -38,56 +38,7 @@
 		}
 	}
 }
-#carcoin-buy-package{
-	.card-pricing{
-		.card-description{
-			margin: 20px 0 15px 0;
-			span{
-				display: block;
-			}
-			span:first-child{
-				margin-bottom: 10px;
-				color: $brandColorSec;
-			}
-		}
-		.card-action{
-			margin-bottom: 10px;
-			.radio{
-				margin: 0 30px;
-				padding: 10px;
-				border-top: 1px solid rgba(0, 0, 0, 0.14);
-				border-bottom-right-radius: 15px;
-				border-bottom-left-radius: 15px;
-				input[type=radio]:checked~.check{
-					background-color: $brandColorPri;
-				}
-			}
-		}
-		.icon{
-			i{
-				border: none;
-				width: 100px;
-				line-height: 100px;
-				height: 100px;
-			}
-			i[pack="tiny"]{
-				font-size: 15px;
-			}
-			i[pack="small"]{
-				font-size: 30px;
-			}
-			i[pack="medium"]{
-				font-size: 45px;
-			}
-			i[pack="large"]{
-				font-size: 60px;
-			}
-		}
-		.icon.active{
-			color: $brandColorPri;
-		}
-	}
-}
+	
 .user-wallet{
 	margin-right: 30px;
 	.left{

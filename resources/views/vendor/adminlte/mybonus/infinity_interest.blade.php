@@ -14,7 +14,7 @@
 	                    <i class="material-icons">card_giftcard</i>
 	                </div>
 	                <div class="card-content">
-	                	<h4 class="card-title">Infinity Bonus</h4>
+	                	<h4 class="card-title">Infinity Interest Bonus</h4>
 	                	<div class=""><!--table-responsive table-scroll-y-->
 	                		<div id="employee-grid_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
 	                			<div class="row">
@@ -32,9 +32,6 @@
 												<th>{{ trans('adminlte_lang::mybonus.ropen') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.lnew') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.rnew') }}</th>
-												<th>{{ trans('adminlte_lang::mybonus.lover') }}</th>
-												<th>{{ trans('adminlte_lang::mybonus.rover') }}</th>
-												<th>{{ trans('adminlte_lang::mybonus.settled') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.bonus') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.reinvest') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.transfer_withdraw') }}</th>
@@ -43,14 +40,12 @@
 	                					<tbody>
 	                						@foreach ($binarys as $binary)
 											<tr>
-												<td>{{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")) }} - {{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")) }}</td>
+												<td>{{ date( "Y/m/d", strtotime(substr($binary->weekYear,0,4)."W".substr($binary->weekYear,4,2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->weekYear,0,4)."W".substr($binary->weekYear,4,2)."7")) }}</td>
 												<td>{{ number_format($binary->leftOpen, 2) }}</td>
 												<td>{{ number_format($binary->rightOpen,2) }}</td>
 												<td>{{ number_format($binary->leftNew, 2) }}</td>
 												<td>{{ number_format($binary->rightNew, 2) }}</td>
-												<td>{{ number_format($binary->leftOpen + $binary->leftNew, 2) }}</td>
-												<td>{{ number_format($binary->rightOpen + $binary->rightNew, 2) }}</td>
-												<td>{{ number_format($binary->settled, 2) }}</td>
+												
 												<td>{{ number_format($binary->bonus, 2) }}</td>
 												<td>{{ $binary->bonus >= 0 ? number_format(($binary->bonus*40/100), 2) : '' }}</td>
 												<td>{{ $binary->bonus >= 0 ? number_format(($binary->bonus*60/100), 2) : '' }}</td>

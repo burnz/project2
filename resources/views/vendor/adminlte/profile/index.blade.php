@@ -159,26 +159,55 @@
                                 <h4 class="card-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</h4>
                                 <p class="description">
                                     <span>ID: {{ Auth::user()->uid }}</span>
-                                    <span>Rank: </span>
+                                    <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }} @else - @endif</span>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="row">
+                    @if(isset($sponsor))
+                    <div class="row">
                         <div class="card card-profile">
                             <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
                                 <i class="material-icons">perm_identity</i>
                             </div>
-                            <div class="card-content">
-                                <h4 class="card-title">Sponsor</h4>
-                                <p class="description">
-                                    <span>ID: {{ Auth::user()->uid }}</span>
-                                    <span>Rank: </span>
-                                </p>
+                            <div class="card-content text-left">
+                                <h4 class="card-title">{{ trans('adminlte_lang::profile.sponsor') }}</h4>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">{{ trans('adminlte_lang::profile.sponsor_id') }}</label>
+                                        <p class="form-control">{{ $sponsor->uid }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">{{ trans('adminlte_lang::profile.sponsor_username') }}</label>
+                                        <p class="form-control">{{ $sponsor->name }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">{{ trans('adminlte_lang::profile.first_name') }}</label>
+                                        <p class="form-control">{{ $sponsor->firstname }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">{{ trans('adminlte_lang::profile.last_name') }}</label>
+                                        <p class="form-control">{{ $sponsor->lastname }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">{{ trans('adminlte_lang::profile.my_email') }}</label>
+                                        <p class="form-control">{{ $sponsor->email }}</p>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
-                    </div> -->
-                    <div class="row">
+                    </div>
+                    @endif
+                    <!-- <div class="row">
                         <div class="card card-profile">
                             <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
                                 <i class="material-icons">insert_link</i>
@@ -190,7 +219,7 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

@@ -69,19 +69,22 @@ class ClpWalletController extends Controller {
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
-            if($key == 5) $wallet_type[$key] = trans($val);
-            if($key == 6) $wallet_type[$key] = trans($val);
-            if($key == 7) $wallet_type[$key] = trans($val);
-            if($key == 8) $wallet_type[$key] = trans($val);
-            if($key == 10) $wallet_type[$key] = trans($val);
-            if($key == 12) $wallet_type[$key] = trans($val);
-            if($key == 14) $wallet_type[$key] = trans($val);
-            if($key == 15) $wallet_type[$key] = trans($val);
+            if($key == 1) $wallet_type[$key] = trans($val);//referral
+            if($key == 2) $wallet_type[$key] = trans($val);//interest
+            if($key == 3) $wallet_type[$key] = trans($val);//infinity
+            if($key == 7) $wallet_type[$key] = trans($val);//buy car by btc
+            if($key == 10) $wallet_type[$key] = trans($val);//withdraw
+            if($key == 12) $wallet_type[$key] = trans($val);//transfer
+            if($key == 14) $wallet_type[$key] = trans($val);//deposit
+            if($key == 15) $wallet_type[$key] = trans($val);//buy package
+            if($key == 18) $wallet_type[$key] = trans($val);//infinity interest
+            if($key == 19) $wallet_type[$key] = trans($val);//global bonus
+
         }
 
         $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
         $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
-
+        
         return view('adminlte::wallets.clp', ['packages' => $packages, 
             'user' => $user, 
             'lstPackSelect' => $lstPackSelect, 
@@ -107,69 +110,6 @@ class ClpWalletController extends Controller {
             CLPWallet::create();
         }
 
-    }
-
-    public function sellCLP(Request $request)
-    {
-        if($request->ajax()) 
-        {
-
-            $userCoin = Auth::user()->userCoin;
-
-            $clpAmountErr = '';
-            if($request->clpAmount == ''){
-                $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
-            }elseif (!is_numeric($request->clpAmount)){
-                $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
-            }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
-                $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough_clp');
-            }
-
-            if ( $clpAmountErr == '') {
-                //Amount CLP
-                $clpRate = ExchangeRate::getCLPBTCRate() * 0.95;
-                $amountBTC = $request->clpAmount * $clpRate;
-                $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount - $request->clpAmount);
-                $userCoin->btcCoinAmount = $userCoin->btcCoinAmount + $amountBTC;
-                $userCoin->save();
-
-                $fieldCLP = [
-                    'walletType' => Wallet::CLP_WALLET,//usd
-                    'type' => Wallet::CLP_BTC_TYPE,//bonus f1
-                    'inOut' => Wallet::OUT,
-                    'userId' => Auth::user()->id,
-                    'amount' => $request->clpAmount,
-                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
-                ];
-                Wallet::create($fieldCLP);
-
-                $fieldBTC = [
-                    'walletType' => Wallet::BTC_WALLET,//reinvest
-                    'type' => Wallet::CLP_BTC_TYPE,//bonus f1
-                    'inOut' => Wallet::IN,
-                    'userId' => Auth::user()->id,
-                    'amount' => $amountBTC,
-                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
-                ];
-
-                Wallet::create($fieldBTC);
-                $request->session()->flash( 'successMessage', trans('adminlte_lang::wallet.msg_sell_clp_success') );
-
-                return response()->json(array('err' => false));
-            } else {
-                $result = [
-                        'err' => true,
-                        'msg' =>[
-                                'clpAmountErr' => $clpAmountErr,
-                            ]
-                    ];
-
-                return response()->json($result);
-            }
-            
-        }
-
-        return response()->json(array('err' => false, 'msg' => null));
     }
 
     /** 

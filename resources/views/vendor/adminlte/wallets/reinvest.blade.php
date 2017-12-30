@@ -37,17 +37,32 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="align-self-center">
+                                            
+                                        </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="card-content p-0">
+                                            <div class="card-filter clearfix">
+                                                <div class="col-md-4">
+                                                    <div class="form-group label-floating">
+                                                        <label class="control-label">Select Type</label>
+                                                        {{ Form::select('wallet_type', $wallet_type, ($requestQuery && isset($requestQuery['type']) ? $requestQuery['type'] : 0), ['class' => 'form-control', 'id' => 'wallet_type']) }}
+                                                    <span class="material-input"></span></div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-primary btn-round" id="btn_filter">Filter</button>
+                                                    <button type="button" class="btn btn-outline-primary btn-round" id="btn_filter_clear">Clear</button>
+                                                </div>
+                                            </div>
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
                                             <div class="table-responsive">
-                                                <table class="table" cellspacing="0" width="100%" style="width:100%">
+                                                <table class="table" id="tbRIV" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_no') }}</th>
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_date') }}</th>
-                                                        <th>{{ trans('adminlte_lang::wallet.wallet_release_date') }}</th>
+                                                        
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_type') }}</th>
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_in') }}</th>
                                                         <th>{{ trans('adminlte_lang::wallet.wallet_out') }}</th>
@@ -58,7 +73,7 @@
                                                     <tr>
                                                         <td>{{ $key+1 }}</td>
                                                         <td>{{ $wallet->created_at }}</td> 
-                                                        <td>{{ date('Y-m-d', strtotime("+6 months", strtotime($wallet->updated_at))) }}</td> 
+                                                        
                                                         <td>
                                                             {{ $wallet_type && isset($wallet_type[$wallet->type]) ? $wallet_type[$wallet->type] : '' }}
                                                         </td>
@@ -90,4 +105,61 @@
         </div>
     </div>
 </div>
-@include('adminlte::wallets.wallet-modal') @endsection
+<!--  Reinvest Wallet -->
+<div class="modal fade" id="reinvest-buy-carcoin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
+                <h4 class="modal-title" id="myModalLabel">Buy Carcoin - <b style="vertical-align: bottom;">$ 0.00000</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">attach_money</i> </span>
+                            <div class="form-group label-floating">
+                                <label class="control-label">USD Amount</label>
+                                <input type="text" class="form-control" value>
+                            </div>
+                        </div>
+                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
+                            <div class="form-group label-floating">
+                                <label class="control-label">Carcoin Amount</label>
+                                <input type="text" class="form-control" value>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-round">Submit</button>
+                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            $('#tbRIV').DataTable({
+                "ordering": false,
+                "searching":false,
+                "bLengthChange": false,
+            });
+            //filter
+            $('#btn_filter').on('click', function () {
+                var wallet_type = parseInt($('#wallet_type option:selected').val());
+                if(wallet_type > 0){
+                    location.href = '{{ url()->current() }}?type='+wallet_type;
+                }else{
+                    alert('Please choose a type!');
+                    return false;
+                }
+            });
+            $('#btn_filter_clear').on('click', function () {
+                location.href = '{{ url()->current() }}';
+            });
+        });
+    </script>
+@stop

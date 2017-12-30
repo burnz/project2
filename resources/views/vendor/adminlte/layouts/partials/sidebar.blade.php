@@ -6,6 +6,7 @@
         <a href="javascript:;" class="simple-text logo-normal">
             Car Coin
         </a>
+
     </div>
     <div class="sidebar-wrapper">
         <div class="user">
@@ -16,16 +17,16 @@
                 <span>{{ Auth::user()->name }}</span>
                 <span>ID: {{  Auth::user()->uid }}</span>
                 <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
-                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('cryptolanding.listLoyalty')[Auth::user()->userData->loyaltyId] }}@endif</span>
+                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }} @else - @endif</span>
             </div>
         </div>
         <ul class="nav">
-            <!-- <li>
+            <li>
                 <a href="{{ url('home') }}">
                     <i class="material-icons">dashboard</i>
                     <p> {{ trans('adminlte_lang::default.side_dashboard') }} </p>
                 </a>
-            </li> -->
+            </li>
             <li>
                 <a href="{{ url('/order')}}">
                     <i class="material-icons">shopping_cart</i>
@@ -63,12 +64,7 @@
                     </ul>
                 </div>
             </li>
-            <!-- <li>
-                <a href="my-bonus.php">
-                    <i class="material-icons">card_giftcard</i>
-                    <p> My Bonus </p>
-                </a>
-            </li> -->
+            
             <li>
                  <a data-toggle="collapse" href="#pagesExamples1">
                     <i class="material-icons">assignment_ind</i>
@@ -99,6 +95,36 @@
                         </li>
                     </ul>
                 </div>
+            </li>
+            <li>
+                <a data-toggle="collapse" href="#my_bonus">
+                    <i class="material-icons">card_giftcard</i>
+                    <p> My Bonus 
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse" id="my_bonus">
+                    <ul class="nav">
+                        <li>
+                            <a href="/mybonus/infinity">
+                                <span class="sidebar-mini"> I </span>
+                                <span class="sidebar-normal"> Infinity Bonus </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mybonus/infinity-interest">
+                                <span class="sidebar-mini"> I </span>
+                                <span class="sidebar-normal"> Infinity Interest </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="{{ url('packages/buy')}}">
+                    <i class="material-icons">payment</i>
+                    <p> Buy Package </p>
+                </a>
             </li>
         </ul>
     </div>
