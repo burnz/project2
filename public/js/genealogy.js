@@ -21,11 +21,11 @@ $(function () {
 								text: user.uid +' '+ user.u,
 								data: {
 									username: user.id +' '+ user.u,
-									totalAmount:'$'+user.totalAmount,
-                                    //packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
+									//totalAmount:'$'+user.totalAmount,
+                                    packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                     totalMembers: user.totalMembers,
                                     leg: user.leg,
-                                    loyaltyId: getRank(user.rankId),
+                                    rankId: getRank(user.rankId),
 								},
 								id: user.id,
 								children: user.dmc?true:false,
@@ -40,11 +40,11 @@ $(function () {
 							text: user.uid +' '+ user.u,
 							data: {
 								username: user.id +' '+ user.u,
-                                //packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
-                                totalAmount: '$'+user.totalAmount,
+                                packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
+                                //totalAmount: '$'+user.totalAmount,
                                 totalMembers: user.totalMembers,
                                 leg: user.leg,
-                                loyaltyId: getRank(user.rankId),
+                                rankId: getRank(user.rankId),
 							},
 							id: user.id,
 							children: user.dmc?true:false,
@@ -61,9 +61,9 @@ $(function () {
 			columns: [
 				{width: '50%', header: "ID/Username"},
 				{width: '5%', value: "totalMembers", header: "Total member"},
-				{width: '5%', value: "totalAmount", header: "Total Amount"},
+				{width: '5%', value: "packageId", header: "Lending Amount"},
 				{width: '5%', value: "leg", header: "Left/Right"},
-				{width: '5%', value: "loyaltyId", header: "Rank"}
+				{width: '5%', value: "rankId", header: "Rank"}
 			],
 			width: "100%",
 			fixedHeader: false,
