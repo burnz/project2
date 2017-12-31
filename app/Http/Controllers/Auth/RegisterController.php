@@ -114,11 +114,11 @@ class RegisterController extends Controller
             'name'     => 'required|without_spaces|non_utf8|min:3|max:255|unique:users,name',
             'email'    => 'required|email|max:255|unique:users,email',
             'password' => 'required|min:8|confirmed',
-            //'name_country' => 'required',
+            'name_country' => 'required',
             'phone'    => 'required',
             'terms'    => 'required',
-            //'refererId'    => 'required',
-            //'country'    => 'required|not_in:0',
+            'refererId'    => 'required',
+            'country'    => 'required|not_in:0',
             'g-recaptcha-response'=> config('app.enable_captcha') ? 'required|captcha' : '',
         ], $customeMessage);
     }
