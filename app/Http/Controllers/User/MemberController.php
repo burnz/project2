@@ -13,6 +13,7 @@ use Auth;
 use Session;
 use App\UserTreePermission;
 use App\Http\Controllers\Controller;
+use App\BonusBinaryInterest;
 
 class MemberController extends Controller
 {
@@ -119,6 +120,10 @@ class MemberController extends Controller
     
     public function binary(Request $request){
         $currentuserid = Auth::user()->id;
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
         if($request->ajax()){
             if(isset($request['id']) && $request['id'] > 0) {
                 $user = User::find($request['id']);
@@ -129,6 +134,16 @@ class MemberController extends Controller
                     $childLeft = UserData::where('binaryUserId', $user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
+
+                    //calculator infinity interest
+                    $ifLeft=$ifRight=0;
+                    $infinityInterest=BonusBinaryInterest::where('userId',$user->id)->where('weekYear',$weekYear)->first();
+                    if($infinityInterest)
+                    {
+                        $ifLeft = $infinityInterest->leftNew + $infinityInterest->leftOpen;
+                        $ifRight = $infinityInterest->rightNew + $infinityInterest->rightOpen;
+                    }
+
                     //$weeklySale=$this->getTotalSale($user->id);
                     $fields = [
                         'lvl' => 0,
@@ -145,7 +160,9 @@ class MemberController extends Controller
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
-                        'posi'=>$user->userData->leftRight
+                        'posi'=>$user->userData->leftRight,
+                        'ifLeft'=>number_format($ifLeft,3),
+                        'ifRight'=>number_format($ifRight,3)
                     ];
                     $children = self::getBinaryChildren($user->id);
                     if ($children) {
@@ -170,6 +187,14 @@ class MemberController extends Controller
                     $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->id);
                     //$weeklySale=$this->getTotalSale($user->id);
+                    //calculator infinity interest
+                    $ifLeft=$ifRight=0;
+                    $infinityInterest=BonusBinaryInterest::where('userId',$user->id)->where('weekYear',$weekYear)->first();
+                    if($infinityInterest)
+                    {
+                        $ifLeft = $infinityInterest->leftNew + $infinityInterest->leftOpen;
+                        $ifRight = $infinityInterest->rightNew + $infinityInterest->rightOpen;
+                    }
                     $fields = [
                         'lvl' => 0,
                         'id' => $user->id,
@@ -185,7 +210,9 @@ class MemberController extends Controller
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
-                        'posi'=>$user->userData->leftRight
+                        'posi'=>$user->userData->leftRight,
+                        'ifLeft'=>number_format($ifLeft,3),
+                        'ifRight'=>number_format($ifRight,3)
                     ];
                     $children = self::getBinaryChildren($user->id);
                     if ($children) {
@@ -201,6 +228,14 @@ class MemberController extends Controller
                 $childRight = UserData::where('binaryUserId', $user->id)->where('leftRight', 'right')->first();
                 $weeklySale = self::getWeeklySale($user->id);
                 //$weeklySale=$this->getTotalSale($user->id);
+                //calculator infinity interest
+                $ifLeft=$ifRight=0;
+                $infinityInterest=BonusBinaryInterest::where('userId',$user->id)->where('weekYear',$weekYear)->first();
+                if($infinityInterest)
+                {
+                    $ifLeft = $infinityInterest->leftNew + $infinityInterest->leftOpen;
+                    $ifRight = $infinityInterest->rightNew + $infinityInterest->rightOpen;
+                }
                 $fields = [
                     'lvl'     => 0,
                     'id'     => $user->id,
@@ -216,7 +251,9 @@ class MemberController extends Controller
                     'pkg'     => 2000,
                     'lMembers'     => $user->userData->leftMembers,
                     'rMembers'     => $user->userData->rightMembers,
-                    'posi'=> $user->userData->leftRight
+                    'posi'=> $user->userData->leftRight,
+                    'ifLeft'=>number_format($ifLeft,3),
+                    'ifRight'=>number_format($ifRight,3)
                 ];
                 $children = self::getBinaryChildren($user->id);
                 if($children){
@@ -335,6 +372,10 @@ class MemberController extends Controller
     }
 
     function getBinaryChildren($userId, $level = 0){
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+        if($weeked < 10)$weekYear = $year.'0'.$weeked;
         $currentuserid = Auth::user()->id;
         $level = $level + 1;
         $fields = array();
@@ -345,6 +386,16 @@ class MemberController extends Controller
                     $childLeft = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'left')->first();
                     $childRight = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'right')->first();
                     $weeklySale = self::getWeeklySale($user->user->id);
+
+                    //calculator infinity interest
+                    $ifLeft=$ifRight=0;
+                    $infinityInterest=BonusBinaryInterest::where('userId',$user->user->id)->where('weekYear',$weekYear)->first();
+                    if($infinityInterest)
+                    {
+                        $ifLeft = $infinityInterest->leftNew + $infinityInterest->leftOpen;
+                        $ifRight = $infinityInterest->rightNew + $infinityInterest->rightOpen;
+                    }
+
                     $field = [
                         'position' => ($user->leftRight == 'left') ? 'right' : 'left',
                         'lvl' => $level,
@@ -361,7 +412,9 @@ class MemberController extends Controller
                         'pkg'     => 2000,
                         'lMembers' => $user->leftMembers,
                         'rMembers' => $user->rightMembers,
-                        'posi'=>$user->leftRight
+                        'posi'=>$user->leftRight,
+                        'ifLeft'=>number_format($ifLeft,3),
+                        'ifRight'=>number_format($ifRight,3)
                     ];
                     $children = self::getBinaryChildren($user->user->id, $level);
                     if ($children) {

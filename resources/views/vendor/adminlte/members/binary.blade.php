@@ -154,18 +154,19 @@
 .node-info{
     display: none;
     position: absolute;
-    height: 100px;
+    height: 125px;
     background: #fff;
     border-radius: 15px;
     width: 100%;
     border: 1px solid #ddd;
-    right: -140px;
+    right: -245px;
     top: 0px;
     z-index: 999999999;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: .3s;
     border-top-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
+    width: 180%;
 }
 .tooltip-arrow {
     top: 5%;
@@ -199,7 +200,7 @@
     width: 20px;
 }
 .left-posi{
-    left: -140px;
+    left: -245px;
     border-top-right-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 15px !important;
@@ -208,7 +209,7 @@
 .left-posi .tooltip-arrow{
     border-left-color: #6C7A89 !important;
     border-width: 10px 0 20px 10px;
-    left: 128px;
+    left: 233px;
 }
 .left-posi .tooltip-content-title
 {
@@ -217,6 +218,14 @@
 }
 .disable-tt{
     display: none !important;
+}
+.tt-saleLeft{
+    width: 50%;
+    float: left;
+}
+.tt-saleRight{
+    width: 50%;
+    float: right;
 }
 </style>
 
@@ -580,7 +589,9 @@ var getTree = function (id, cb) {
                     rMembers: node.rMembers,
                     lSale: node.left,
                     rSale: node.right,
-                    posi: node.posi
+                    posi: node.posi,
+                    ifLeft:node.ifLeft,
+                    ifRight:node.ifRight
                 };
                 if (node.lvl == 3) {
                     node.innerHTML = leafTmpl(node.text);
