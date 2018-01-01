@@ -41,7 +41,16 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         //Get today min price
-        $oPrice = OrderMin::whereDate('order_date', Carbon::now()->format('Y-m-d'))->first();
+        $currentHour = date('H');
+        if($currentHour >= 21) {
+            $tomorrow = Carbon::tomorrow()->toDateString();
+            $endTime = strtotime($tomorrow . '+21 hours');
+            $endTime = date('Y-m-d H:i:s', $endTime);
+        } else {
+            $endTime = date('Y-m-d 21:00:00');
+        }
+
+        $oPrice = OrderMin::where('order_date', '<', $endTime)->orderBy('id', 'desc')->first();
         if(empty($oPrice)){
             $price = OrderMin::orderBy('id', 'desc')->first()->price;
         } else {
