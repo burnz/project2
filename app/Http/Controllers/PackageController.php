@@ -99,7 +99,13 @@ class PackageController extends Controller
                     return true;
                 return false;
             });
-
+            Validator::extend('fundCheck',function($attribute, $value, $parameters){
+                if($value!=Package::TYPE_USD && $value!=Package::TYPE_CAR)
+                {
+                    return false;
+                }
+                return true;
+            });
             Validator::extend('amountCheck',function($attribute,$value,$parameters){
                     $userCoin=UserCoin::where('userId','=',Auth::user()->id)->first();
                     $walletId=$parameters[0];
@@ -125,11 +131,12 @@ class PackageController extends Controller
                     return false;
             });
 
-            $errors=['packageAmount.package_check'=>'Invest amount and package selected does not match','packageAmount.amount_check'=>'Wallet amount does not enough to buy package','packageAmount.amount_divided'=>'Amount must be divided by 10'];
+            $errors=['packageAmount.package_check'=>'Invest amount and package selected does not match','packageAmount.amount_check'=>'Wallet amount does not enough to buy package','packageAmount.amount_divided'=>'Amount must be divided by 10','refundType.fund_check'=>'Please select refund type'];
             $this->validate($request, [
                 'packageAmount'    => 'required|packageCheck:' . $request->packageId.'|amountCheck:'.$request->walletId.'|amountDivided',
                 'packageId' => 'required|not_in:0',
-                'walletId'=>  'required|not_in:0'
+                'walletId'=>  'required|not_in:0',
+                'refundType'=>'required|fundCheck:'.$request->refundType
             ],$errors);
 
             //add data to user data
@@ -171,6 +178,8 @@ class PackageController extends Controller
                 'userId' => $currentuserid,
                 'packageId' => $request->packageId,
                 'amount_increase' => $amount_increase,
+                'refund_type'=>$request->refundType,
+                'amount_carcoin'=>round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ " . $packageSelected->capital_release ." days")),
                 'weekYear' => $weekYear,
@@ -303,7 +312,7 @@ class PackageController extends Controller
                 return $this->responseError($errorCode = true,$message);
             }else{
                 UserPackage::where("id",$tempHistoryPackage->id)->update(["withdraw"=> 1 ]);
-                $amountCLP=round($tempHistoryPackage->amount_increase / ExchangeRate::getCLPUSDRate(), 2);
+                $amountCLP=$tempHistoryPackage->refund_type==1?round($tempHistoryPackage->amount_increase / ExchangeRate::getCLPUSDRate(), 2):$tempHistoryPackage->amount_carcoin;
                 $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
                 $update = UserCoin::where("userId",Auth::user()->id)
                         ->update(["clpCoinAmount" => $money]);
