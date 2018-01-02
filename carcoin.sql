@@ -649,3 +649,7 @@ CREATE TABLE `withdraw_confirm` (
   KEY `updated_at` (`updated_at`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+ALTER TABLE user_packages ADD refund_type tinyint DEFAULT 1 NULL;
+ALTER TABLE user_packages ADD amount_carcoin integer(11) DEFAULT 0 NULL;
