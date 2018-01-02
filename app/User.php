@@ -184,9 +184,13 @@ class User extends Authenticatable
 				if ($legpos == 1){
 					//Total sale on left
 					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
+					if($isInGenealogy)
+						$user->saleGenLeft = $user->saleGenLeft + $usdCoinAmount;
 				}else{
 					//Total sale on right
 					$user->totalSaleRight = $user->totalSaleRight + $usdCoinAmount;
+					if($isInGenealogy)
+						$user->saleGenRight = $user->saleGenRight + $usdCoinAmount;
 				}
 			} 
 			elseif($userRoot->totalMembers == 0) 
@@ -384,134 +388,68 @@ class User extends Authenticatable
 	*   Calculate loyalty bonus
 	*/
 	public static function bonusLoyaltyUser($userId, $refererId, $legpos){
-		$leftRight = $legpos == 1 ? 'left' : 'right';
-
-		$isSilver = 0;
-		$isGold = 0;
-		$isPear = 0;
-		$isEmerald = 0;
-		$isDiamond = 0;
 
 		$userData = UserData::where('userId', $userId)->where('packageId', '>', 0)->first();
 
 
 		//Get sale left, right
-		$saleOnLeft = $userData->totalSaleLeft;
+		$saleOnLeft = $userData->saleGenLeft;
 
-		$saleOnRight = $userData->totalSaleRight;
+		$saleOnRight = $userData->saleGenLeft;
 		
 		//Get UserData
 		$userInfo = UserData::where('userId', '=', $userId)->get()->first();
-		$loyaltyUser = LoyaltyUser::where('userId', '=', $userId)->first();
 
-		if( isset($loyaltyUser->isSilver) && $loyaltyUser->isSilver == 0 )
-			$isSilver = self::getBonusLoyaltyUser($saleOnLeft, $saleOnRight, 'silver',$userInfo->packageId);
+		$rank = self::getRank($saleOnLeft, $saleOnRight, $userInfo->packageId);
 
-		if( isset($loyaltyUser->isGold) && $loyaltyUser->isGold == 0 ) 
-			$isGold = self::getBonusLoyaltyUser($saleOnLeft, $saleOnRight, 'gold',$userInfo->packageId);
-
-		if(isset($loyaltyUser->isPear) && $loyaltyUser->isPear == 0 ) 
-			$isPear = self::getBonusLoyaltyUser($saleOnLeft, $saleOnRight, 'pear', $userInfo->packageId);
-
-		if(isset($loyaltyUser->isEmerald) && $loyaltyUser->isEmerald == 0 ) 
-			$isEmerald = self::getBonusLoyaltyUser($saleOnLeft, $saleOnRight, 'emerald', $userInfo->packageId);
-
-		if(isset($loyaltyUser->isDiamond) && $loyaltyUser->isDiamond == 0 ) 
-			$isDiamond = self::getBonusLoyaltyUser($saleOnLeft, $saleOnRight, 'diamond', $userInfo->packageId);
-
-		$loyaltyId = 0;
-		if($isSilver) $loyaltyId = 1;
-		if($isGold) $loyaltyId = 2;
-		if($isPear) $loyaltyId = 3;
-		if($isEmerald) $loyaltyId = 4;
-		if($isDiamond) $loyaltyId = 5;
-
-		if($loyaltyId > 0) {
-			$userInfo->loyaltyId = $loyaltyId;
-			$userInfo->save();
-		}
-		
-
-		$fields = [
-			'userId'     => $userId,
-			'leftRight'     => $leftRight,
-			'isSilver'     => $isSilver,
-			'isGold'     => $isGold,
-			'isPear'     => $isPear,
-			'isEmerald'     => $isEmerald,
-			'isDiamond'     => $isDiamond,
-			'refererId'     => $refererId,
-		];
-
-		if($loyaltyUser)
-		{
-
-			$loyaltyUser->f1Left = $saleOnLeft;
-			$loyaltyUser->f1Right = $saleOnRight;
-
-			$loyaltyUser->save();
-		}
-		else
-		{
-			LoyaltyUser::create($fields);
-		}
+		$userInfo->loyaltyId = $rank;
+		$userInfo->save();
 	}
 
 
 	/**
 	*  Check and Get loyalty type
 	*/
-	public static function getBonusLoyaltyUser($saleOnLeft, $saleOnRight, $type, $packageId)
+	public static function getRank($saleOnLeft, $saleOnRight, $packageId)
 	{
-		if($type == 'silver') 
-		{
+		$rank = 0;
+		if($saleOnLeft >= config('carcoin.loyalty_upgrate_silver') 
+			&& $saleOnRight >= config('carcoin.loyalty_upgrate_silver')
+			&& $packageId > 0) {
+			$rank = 1;
 			
-			if($saleOnLeft >= config('carcoin.loyalty_upgrate_silver') 
-				&& $saleOnRight >= config('carcoin.loyalty_upgrate_silver')
-				&& $packageId > 4) {
-				return 1;
-				
-			}
 		}
-		elseif($type == 'gold') 
-		{
+	
+		
+		if($saleOnLeft >= config('carcoin.loyalty_upgrate_gold') 
+			&& $saleOnRight >= config('carcoin.loyalty_upgrate_gold')
+			&& $packageId > 1) {
+			$rank = 2;
 			
-			if($saleOnLeft >= config('carcoin.loyalty_upgrate_gold') 
-				&& $saleOnRight >= config('carcoin.loyalty_upgrate_gold')
-				&& $packageId > 4) {
-				return 1;
-				
-			}
 		}
-		elseif($type == 'pear')
-		{
-			if($saleOnLeft >= config('carcoin.loyalty_upgrate_pear') 
-				&& $saleOnRight >= config('carcoin.loyalty_upgrate_pear')
-				&& $packageId > 5) {
-				return 1;
-				
-			}
+	
+		if($saleOnLeft >= config('carcoin.loyalty_upgrate_pear') 
+			&& $saleOnRight >= config('carcoin.loyalty_upgrate_pear')
+			&& $packageId > 2) {
+			$rank = 3;
+			
 		}
-		elseif($type == 'emerald')
-		{
-			if($saleOnLeft >= config('carcoin.loyalty_upgrate_emerald') 
-				&& $saleOnRight >= config('carcoin.loyalty_upgrate_emerald')
-				&& $packageId > 6) {
-				return 1;
-				
-			}
+	
+		if($saleOnLeft >= config('carcoin.loyalty_upgrate_emerald') 
+			&& $saleOnRight >= config('carcoin.loyalty_upgrate_emerald')
+			&& $packageId > 3) {
+			$rank = 4;
+			
 		}
-		elseif($type == 'diamond')
-		{
-			if($saleOnLeft >= config('carcoin.loyalty_upgrate_diamond') 
-				&& $saleOnRight >= config('carcoin.loyalty_upgrate_diamond')
-				&& $packageId > 7) {
-				return 1;
-				
-			}
+	
+		if($saleOnLeft >= config('carcoin.loyalty_upgrate_diamond') 
+			&& $saleOnRight >= config('carcoin.loyalty_upgrate_diamond')
+			&& $packageId > 3) {
+			$rank = 5;
+			
 		}
 
-		return 0;
+		return $rank;
 	}
 
 

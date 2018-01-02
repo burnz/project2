@@ -287,7 +287,7 @@ class PackageController extends Controller
             }
 
             //process rank
-            $this->rankProcess();
+            //$this->rankProcess();
 
             return redirect('packages/buy')
             ->with('flash_success','Buy package successfully.');         
