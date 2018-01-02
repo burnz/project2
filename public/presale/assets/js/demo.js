@@ -1165,10 +1165,10 @@ demo = {
 
     },
     initCoutdown: function(){
-        var tomorrow  = moment(new Date()).add(1,'days');
-        tomorrow.set({h: 09, m: 0, s:0});
+        //var tomorrow  = moment(new Date('2018,01,03'));
+        //tomorrow.set({h: 09, m: 0, s:0});
         var labels = ['hours', 'minutes', 'seconds'],
-          nextYear = tomorrow.format('YYYY/MM/DD H:mm:ss'),
+          //nextYear = moment.tz('2018-01-03 00:00', 'America/New_York').format('YYYY/MM/DD H:mm:ss'),
         // var labels = ['hours', 'minutes', 'seconds'],
         //   nextYear = (new Date().getFullYear() + 1) + '/01/01',
           template = _.template($('#main-example-template').html()),
@@ -1208,7 +1208,8 @@ demo = {
           }));
         });
         // Starts the countdown
-        $example.countdown(nextYear, function(event) {
+        nextYear = moment.tz('2018-01-03 00:00', 'America/New_York');
+        $example.countdown(nextYear.toDate(), function(event) {
           var newDate = event.strftime('%H:%M:%S'),
             data;
           if (newDate !== nextDate) {
