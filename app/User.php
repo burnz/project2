@@ -183,7 +183,7 @@ class User extends Authenticatable
 				if ($legpos == 1){
 					//Total sale on left
 					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
-					
+
 					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
 					if($isInGenealogy)
 						$user->saleGenLeft = $user->saleGenLeft + $usdCoinAmount;
@@ -398,7 +398,7 @@ class User extends Authenticatable
 		//Get sale left, right
 		$saleOnLeft = $userData->saleGenLeft;
 
-		$saleOnRight = $userData->saleGenLeft;
+		$saleOnRight = $userData->saleGenRight;
 		
 		//Get UserData
 		$userInfo = UserData::where('userId', '=', $userId)->get()->first();
