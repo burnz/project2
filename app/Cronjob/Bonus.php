@@ -142,12 +142,13 @@ class Bonus
 				}
 			}
 			//update bonus binary interest
+
 			foreach($lstUser as $user)
 			{
 				$volInfo = self::_calLeftRightVolume($user->id);
 				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
 				
-				if($binaryInterest)
+				if(count($binaryInterest)>0)
 				{
 
 					$binaryInterest->leftNew += $volInfo['totalLeft'];
