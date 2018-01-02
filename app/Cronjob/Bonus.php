@@ -24,6 +24,7 @@ use Log;
 use App\Package;
 
 /**
+
  * Description of UpdateStatusBTCTransaction
  *
  * @author giangdt
@@ -676,7 +677,7 @@ class Bonus
 	// 	DB::table('cron_matching_logs')->update(['status' => 0]);
 	// }
 
-	private static function _calLeftRightVolume($userId)//
+	public static function _calLeftRightVolume($userId)//
 	{
 		$userTree = UserTreePermission::where('userId','=',$userId)->first();
 		$totalLeftVol = $totalRightVol = 0;

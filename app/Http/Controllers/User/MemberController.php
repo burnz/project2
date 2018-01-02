@@ -434,6 +434,59 @@ class MemberController extends Controller
                //->paginate();
         return view('adminlte::members.refferals')->with('users', $users);
     }
+
+    public function rankProcess()
+    {
+        $lstUser = User::where('active', '=', 1)->get();
+        foreach($lstUser as $user){
+            $userData=$user->userData;
+        $packageId=$userData->packageId;
+        $rank=0;
+        $totalLeft=floatval($userData->totalSaleLeft);
+        $totalRight=floatval($userData->totalSaleRight);
+        if($totalLeft >= config('carcoin.loyalty_upgrate_silver') && 
+                $totalRight >= config('carcoin.loyalty_upgrate_silver') && 
+                $packageId >= 1 )
+            {
+                $rank=1;
+            }
+
+            if($totalLeft >= config('carcoin.loyalty_upgrate_gold') && 
+                $totalRight >= config('carcoin.loyalty_upgrate_gold') && 
+                $packageId >= 2)
+            {
+                $rank=2;
+            }
+
+            if($totalLeft >= config('carcoin.loyalty_upgrate_pear') && 
+                $totalRight >= config('carcoin.loyalty_upgrate_pear') && 
+                $packageId >= 3)
+            {
+                $rank=3;
+            }
+
+            if($totalLeft > config('carcoin.loyalty_upgrate_emerald') && 
+                $totalRight > config('carcoin.loyalty_upgrate_emerald') && 
+                $packageId == 4)
+            {
+                $rank=4;
+            }
+
+            if($totalLeft > config('carcoin.loyalty_upgrate_diamond') && 
+                $totalRight > config('carcoin.loyalty_upgrate_diamond') && 
+                $packageId == 4)
+            {
+                $rank=5;
+            }
+            if($userData->loyaltyId<$rank)
+            {
+                $userData->loyaltyId=$rank;
+                $userData->save();
+            }
+
+        }
+    }
+
     public function pushIntoTree(Request $request){
 
         //if($request->ajax()){
@@ -472,17 +525,18 @@ class MemberController extends Controller
 
                     //Calculate binary bonus
                     User::bonusBinary(
-                                    $userData->userId, 
-                                    $userData->refererId, 
-                                    $userData->packageId, 
-                                    $userData->binaryUserId, 
-                                    $request['legpos'],
-                                    false
-                                );
+                        $userData->userId, 
+                        $userData->refererId, 
+                        $userData->packageId, 
+                        $userData->binaryUserId, 
+                        $request['legpos'],
+                        false
+                    );
 
                     //Calculate loyalty
                     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     User::updateUserBinary($userData->userId);
+                    $this->rankProcess();
                     return redirect('members/binary')
                         ->with('flash_message', trans('adminlte_lang::member.msg_push_tree_success'));
                     //return response()->json(['status'=>1]);

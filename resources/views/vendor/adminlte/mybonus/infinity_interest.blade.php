@@ -40,7 +40,7 @@
 	                					<tbody>
 	                						@foreach ($binarys as $binary)
 											<tr>
-												<td>{{ date( "Y/m/d", strtotime(substr($binary->weekYear,0,4)."W".substr($binary->weekYear,4,2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->weekYear,0,4)."W".substr($binary->weekYear,4,2)."7")) }}</td>
+												<td>{{ date( "Y/m/d", strtotime(substr($binary->weekYear,0,4)."W".substr($binary->weekYear,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->weekYear,0,4)."W".substr($binary->weekYear,-2)."7")) }}</td>
 												<td>{{ number_format($binary->leftOpen, 2) }}</td>
 												<td>{{ number_format($binary->rightOpen,2) }}</td>
 												<td>{{ number_format($binary->leftNew, 2) }}</td>

@@ -38,7 +38,7 @@ class UserPackage extends Model
     
     public static function getTotalAmount($uid)
     {
-        $package=\DB::table('user_packages')->where('userId','=',$uid)->sum('amount_increase');
+        $package=\DB::table('user_packages')->where('userId','=',$uid)->where('withdraw','=',0)->sum('amount_increase');
         return $package;
     }
 
