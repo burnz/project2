@@ -24,6 +24,7 @@ use Log;
 use App\Package;
 
 /**
+
  * Description of UpdateStatusBTCTransaction
  *
  * @author giangdt
@@ -135,12 +136,13 @@ class Bonus
 				}
 			}
 			//update bonus binary interest
+
 			foreach($lstUser as $user)
 			{
 				$volInfo = self::_calLeftRightVolume($user->id);
 				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
 				
-				if($binaryInterest)
+				if(count($binaryInterest)>0)
 				{
 					$binaryInterest->leftNew += $volInfo['totalLeft'];
 					$binaryInterest->rightNew +=$volInfo['totalRight'];
@@ -669,7 +671,7 @@ class Bonus
 	// 	DB::table('cron_matching_logs')->update(['status' => 0]);
 	// }
 
-	private static function _calLeftRightVolume($userId)//
+	public static function _calLeftRightVolume($userId)//
 	{
 		$userTree = UserTreePermission::where('userId','=',$userId)->first();
 		$totalLeftVol = $totalRightVol = 0;
