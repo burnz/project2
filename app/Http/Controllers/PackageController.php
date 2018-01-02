@@ -81,11 +81,11 @@ class PackageController extends Controller
         $lstUser = User::where('active', '=', 1)->get();
         foreach($lstUser as $user){
             $userData=$user->userData;
-        $packageId=$userData->packageId;
-        $rank=0;
-        $totalLeft=floatval($userData->totalSaleLeft);
-        $totalRight=floatval($userData->totalSaleRight);
-        if($totalLeft >= config('carcoin.loyalty_upgrate_silver') && 
+            $packageId=$userData->packageId;
+            $rank=0;
+            $totalLeft=$userData->totalSaleLeft;
+            $totalRight=$userData->totalSaleRight;
+            if($totalLeft >= config('carcoin.loyalty_upgrate_silver') && 
                 $totalRight >= config('carcoin.loyalty_upgrate_silver') && 
                 $packageId >= 1 )
             {
@@ -93,7 +93,7 @@ class PackageController extends Controller
             }
 
             if($totalLeft >= config('carcoin.loyalty_upgrate_gold') && 
-                $totalRight >= config('carcoin.loyalty_upgrate_gold') && 
+                $totalRight >=config('carcoin.loyalty_upgrate_gold') && 
                 $packageId >= 2)
             {
                 $rank=2;
@@ -106,19 +106,20 @@ class PackageController extends Controller
                 $rank=3;
             }
 
-            if($totalLeft > config('carcoin.loyalty_upgrate_emerald') && 
-                $totalRight > config('carcoin.loyalty_upgrate_emerald') && 
+            if($totalLeft >= config('carcoin.loyalty_upgrate_emerald') && 
+                $totalRight >= config('carcoin.loyalty_upgrate_emerald') && 
                 $packageId == 4)
             {
                 $rank=4;
             }
 
-            if($totalLeft > config('carcoin.loyalty_upgrate_diamond') && 
-                $totalRight > config('carcoin.loyalty_upgrate_diamond') && 
+            if($totalLeft >= config('carcoin.loyalty_upgrate_diamond') && 
+                $totalRight >= config('carcoin.loyalty_upgrate_diamond') && 
                 $packageId == 4)
             {
                 $rank=5;
             }
+
             if($userData->loyaltyId<$rank)
             {
                 $userData->loyaltyId=$rank;
