@@ -103,7 +103,6 @@ class User extends Authenticatable
 				$userCoin = $userData->userCoin;
 				if($userCoin && $packageBonus > 0)
 				{
-
 					//Get info of user
 					$user = Auth::user();
 
@@ -184,11 +183,15 @@ class User extends Authenticatable
 				if ($legpos == 1){
 					//Total sale on left
 					$user->totalSaleLeft = $user->totalSaleLeft + $usdCoinAmount;
+					
+					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
 					if($isInGenealogy)
 						$user->saleGenLeft = $user->saleGenLeft + $usdCoinAmount;
 				}else{
 					//Total sale on right
 					$user->totalSaleRight = $user->totalSaleRight + $usdCoinAmount;
+
+					$isInGenealogy = self::updateUserGenealogyLeftRight($binaryUserId, $userId, $legpos);
 					if($isInGenealogy)
 						$user->saleGenRight = $user->saleGenRight + $usdCoinAmount;
 				}
@@ -417,7 +420,6 @@ class User extends Authenticatable
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_silver')
 			&& $packageId > 0) {
 			$rank = 1;
-			
 		}
 	
 		
@@ -425,28 +427,24 @@ class User extends Authenticatable
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_gold')
 			&& $packageId > 1) {
 			$rank = 2;
-			
 		}
 	
 		if($saleOnLeft >= config('carcoin.loyalty_upgrate_pear') 
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_pear')
 			&& $packageId > 2) {
 			$rank = 3;
-			
 		}
 	
 		if($saleOnLeft >= config('carcoin.loyalty_upgrate_emerald') 
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_emerald')
 			&& $packageId > 3) {
 			$rank = 4;
-			
 		}
 	
 		if($saleOnLeft >= config('carcoin.loyalty_upgrate_diamond') 
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_diamond')
 			&& $packageId > 3) {
 			$rank = 5;
-			
 		}
 
 		return $rank;
