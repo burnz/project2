@@ -368,7 +368,7 @@ class Bonus
 			$firstYear = $year - 1;
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		if($firstWeek < 10) $firstWeekYear = $firstYear.'00'.$firstWeek;
 		/* =======END ===== */
 		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
 		foreach($listBinaryInterest as $binary)
