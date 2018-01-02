@@ -939,7 +939,7 @@ class Bonus
 		$bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / $numberOfBlackDiamond;
 
 		//Get all user in loyalty table with loyaltyId > 0
-		$listLoyaltyUser = UserData::where('loyaltyId', '>', 2)
+		$listLoyaltyUser = UserData::where('loyaltyId', '>', 0)
 							->where('status', 1)
 							->where('packageId', '>', 0)
 							->get();
