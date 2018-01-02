@@ -21,7 +21,7 @@ $(function () {
 								text: user.uid +' '+ user.u,
 								data: {
 									username: user.id +' '+ user.u,
-									//totalAmount:'$'+user.totalAmount,
+									totalAmount:'$'+user.totalAmount,
                                     packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                     totalMembers: user.totalMembers,
                                     leg: user.leg,
@@ -41,7 +41,7 @@ $(function () {
 							data: {
 								username: user.id +' '+ user.u,
                                 packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
-                                //totalAmount: '$'+user.totalAmount,
+                                totalAmount: '$'+user.totalAmount,
                                 totalMembers: user.totalMembers,
                                 leg: user.leg,
                                 rankId: getRank(user.rankId),
@@ -61,7 +61,7 @@ $(function () {
 			columns: [
 				{width: '50%', header: "ID/Username"},
 				{width: '5%', value: "totalMembers", header: "Total member"},
-				{width: '5%', value: "packageId", header: "Lending Amount"},
+				{width: '5%', value: "totalAmount", header: "Lending Amount"},
 				{width: '5%', value: "leg", header: "Left/Right"},
 				{width: '5%', value: "rankId", header: "Rank"}
 			],

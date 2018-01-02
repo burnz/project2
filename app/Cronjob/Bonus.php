@@ -970,7 +970,7 @@ class Bonus
 
 				$fieldUsd = [
 					'walletType' => Wallet::CLP_WALLET,//
-					'type' =>  Wallet::BINARY_TYPE,//bonus week
+					'type' =>  Wallet::GLOBAL_BONUS,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $clpAmount,
@@ -981,7 +981,7 @@ class Bonus
 
 				$fieldInvest = [
 					'walletType' => Wallet::REINVEST_WALLET,//reinvest
-					'type' => Wallet::BINARY_TYPE,//bonus week
+					'type' => Wallet::GLOBAL_BONUS,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $reinvestAmount,

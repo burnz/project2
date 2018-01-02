@@ -118,7 +118,7 @@ class User extends Authenticatable
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
 						'amount' => $clpAmount,
-						'note'   => $user->name . ' bought package',
+						'note'   => '60% bonus - ' . $user->name . ' lending amount $' . $usdCoinAmount,
 					];
 					
 					Wallet::create($fieldUsd);
@@ -129,7 +129,7 @@ class User extends Authenticatable
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
 						'amount' => $reinvestAmount,
-						'note'   => $user->name . ' bought package'
+						'note'   => '40% bonus - ' . $user->name . ' lending amount $' . $usdCoinAmount,
 					];
 					Wallet::create($fieldInvest);
 				}
@@ -414,20 +414,20 @@ class User extends Authenticatable
 		$rank = 0;
 		if($saleOnLeft >= config('carcoin.loyalty_upgrate_silver') 
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_silver')
-			&& $packageId > 0) {
+			&& $packageId > 1) {
 			$rank = 1;
 		}
 	
 		
 		if($saleOnLeft >= config('carcoin.loyalty_upgrate_gold') 
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_gold')
-			&& $packageId > 1) {
+			&& $packageId > 2) {
 			$rank = 2;
 		}
 	
 		if($saleOnLeft >= config('carcoin.loyalty_upgrate_pear') 
 			&& $saleOnRight >= config('carcoin.loyalty_upgrate_pear')
-			&& $packageId > 2) {
+			&& $packageId > 3) {
 			$rank = 3;
 		}
 	

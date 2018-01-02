@@ -168,11 +168,11 @@
                                                                 </div>
                                                                 <div class="card-description">
                                                                     <span>
-                                                                        <b>${{$pval->min_price}} - ${{$pval->max_price}}</b>
+                                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
                                                                     </span>
                                                                     <span class="carcoin-color">
                                                                         <i class="material-icons" icon="carcoin-primary"></i>
-                                                                        <b>{{$pval->min_price_clp}}</b> - <b>{{$pval->max_price_clp}}</b>
+                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
                                                                     </span>
                                                                 </div>
                                                                 <div class="card-action">
