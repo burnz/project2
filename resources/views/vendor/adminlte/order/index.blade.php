@@ -122,7 +122,7 @@
                 <div class="col-md-4 align-self-center">
                     <div class="card card-countdown">
                         <div class="card-header text-center">
-                            <h3>ANNOUCEMENT</h3>
+                            <h3>ANNOUNCEMENT</h3>
                         </div>
                         <div class="card-content">
                             <h4>Lending program starts in:</h4>
