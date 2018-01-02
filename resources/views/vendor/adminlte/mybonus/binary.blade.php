@@ -43,7 +43,8 @@
 	                					<tbody>
 	                						@foreach ($binarys as $binary)
 											<tr>
-												<td>{{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")) }} - {{ date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")) }}</td>
+												<td>{{ date( "Y/m/d", strtotime($binary->year."W".(strlen($binary->weeked)==1?"0".$binary->weeked:$binary->weeked)."1")) }} - {{ date( "Y/m/d", strtotime($binary->year."W".(strlen($binary->weeked)==1?"0".$binary->weeked:$binary->weeked)."7")) }}</td>
+												
 												<td>{{ number_format($binary->leftOpen, 2) }}</td>
 												<td>{{ number_format($binary->rightOpen,2) }}</td>
 												<td>{{ number_format($binary->leftNew, 2) }}</td>

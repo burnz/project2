@@ -198,7 +198,7 @@ class Bonus
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
 
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		if($firstWeek < 10) $firstWeekYear = $firstYear.'00'.$firstWeek;
 
 		/* =======END ===== */
 
@@ -302,9 +302,10 @@ class Bonus
 			$year = date('Y');
 			$weekYear = $year.$weeked;
 
-			if($weeked < 10) $weekYear = $year.'0'.$weeked;
+			if($weeked < 10) $weekYear = $year.'00'.$weeked;
 
 			$week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+
 			// Yes => update L-Open, R-Open
 			if(isset($week) && $week->id > 0) {
 				$week->leftOpen = $leftOpen;
@@ -361,7 +362,7 @@ class Bonus
 			$firstYear = $year - 1;
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		if($firstWeek < 10) $firstWeekYear = $firstYear.'00'.$firstWeek;
 		/* =======END ===== */
 		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
 		foreach($listBinaryInterest as $binary)
