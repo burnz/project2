@@ -24,6 +24,7 @@ use Log;
 use App\Package;
 
 /**
+
  * Description of UpdateStatusBTCTransaction
  *
  * @author giangdt
@@ -42,13 +43,12 @@ class Bonus
 		$year = date('Y');
 		$weekYear = $year.$weeked;
 
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 		try {
 			$lstUser = User::where('active', '=', 1)->get();
 			foreach($lstUser as $user){
 				//Get cron status
-				//$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
-				//if(isset($cronStatus) && $cronStatus->status == 1) continue;
+				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
+				if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 				$userData = $user->userData;
 								
@@ -88,16 +88,10 @@ class Bonus
 							'inOut' => Wallet::IN,
 							'userId' => $user->id,
 							'amount' => $clpAmount,
-							'note' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price
+							'note' => '$' . $usdAmount . ' of $'. $pack->amount_increase .' package '. $pack->packageId
 						];
 
 						Wallet::create($fieldUsd);
-
-						$fieldTotal = [
-							'userId' => $user->id,
-							'total_interest' => $clpAmount,
-							'weekYear' => '$' . $usdAmount . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price
-						];
 
 						//Calculate total week interest for each users
 						$totalInterest += $usdAmount;
@@ -125,7 +119,7 @@ class Bonus
 								'inOut' => Wallet::IN,
 								'userId' => $user->id,
 								'amount' => $clpAmount,
-								'note' => '$' . $bonusPack . ' of package'. $packInfo->min_price . '-' .$packInfo->max_price.' - Daily Interest Bonus'
+								'note' => '$' . $bonusPack . ' bonus of $' . $pack->amount_increase .' package '. $pack->packageId
 							];
 
 							Wallet::create($fieldBonus);
@@ -136,19 +130,19 @@ class Bonus
 					$weekTotal->weekYear = $weekYear;
 					$weekTotal->save();
 					//Update cron status from 0 => 1
-					//$cronStatus->status = 1;
-					//$cronStatus->save();
+					$cronStatus->status = 1;
+					$cronStatus->save();
 				}
 			}
 			//update bonus binary interest
+
 			foreach($lstUser as $user)
 			{
 				$volInfo = self::_calLeftRightVolume($user->id);
 				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
 				
-				if($binaryInterest)
+				if(count($binaryInterest)>0)
 				{
-
 					$binaryInterest->leftNew += $volInfo['totalLeft'];
 					$binaryInterest->rightNew +=$volInfo['totalRight'];
 					$binaryInterest->save();
@@ -190,12 +184,8 @@ class Bonus
 		$year = date('Y');
 		$weekYear = $year.$weeked;
 
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
-
 		$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-		//$firstWeek = $weeked;
 		$firstYear = $year;
-		$firstWeekYear = $firstYear.$firstWeek;
 
 		if($firstWeek == 0){
 			$firstWeek = 52;
@@ -203,7 +193,7 @@ class Bonus
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
 
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 
 		/* =======END ===== */
 
@@ -211,8 +201,8 @@ class Bonus
 		foreach ($lstBinary as $binary) 
 		{
 			//Get cron status
-			//$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
-			//if(isset($cronStatus) && $cronStatus->status == 1) continue;
+			$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+			if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 			$leftOver = $binary->leftOpen + $binary->leftNew;
 			$rightOver = $binary->rightOpen + $binary->rightNew;
@@ -307,9 +297,8 @@ class Bonus
 			$year = date('Y');
 			$weekYear = $year.$weeked;
 
-			if($weeked < 10) $weekYear = $year.'0'.$weeked;
-
 			$week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+
 			// Yes => update L-Open, R-Open
 			if(isset($week) && $week->id > 0) {
 				$week->leftOpen = $leftOpen;
@@ -338,8 +327,8 @@ class Bonus
 			}
 
 			//Update cron status from 0 => 1
-			//$cronStatus->status = 1;
-			//$cronStatus->save();
+			$cronStatus->status = 1;
+			$cronStatus->save();
 		}
 
 		//Update status from 1 => 0 after run all user
@@ -357,23 +346,22 @@ class Bonus
 		$weeked = date('W');
 		$year = date('Y');
 		$weekYear = $year.$weeked;
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
 		$firstWeek = $weeked - 1;
 		$firstYear = $year;
-		$firstWeekYear = $firstYear.$firstWeek;
 		if($firstWeek == 0){
 			$firstWeek = 52;
 			$firstYear = $year - 1;
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'0'.$firstWeek;
+		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 		/* =======END ===== */
 		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
 		foreach($listBinaryInterest as $binary)
 		{
 			//Get cron status
-			//$cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
-			//if(isset($cronStatus) && $cronStatus->status == 1) continue;
+			$cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
+			if(isset($cronStatus) && $cronStatus->status == 1) continue;
 			//$volInfo = self::_calLeftRightVolume($binary->userId);
 			$leftOver = $binary->leftNew + $binary->leftOpen;
 			$rightOver = $binary->rightNew + $binary->leftOpen;
@@ -452,8 +440,6 @@ class Bonus
 			$year = date('Y');
 			$weekYear = $year.$weeked;
 
-			if($weeked < 10) $weekYear = $year.'0'.$weeked;
-
 			$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
 			// Yes => update L-Open, R-Open
 			if(isset($week) && $week->id > 0) {
@@ -482,8 +468,8 @@ class Bonus
 				BonusBinaryInterest::create($field);
 			}
 			//Update cron status from 0 => 1
-			//$cronStatus->status = 1;
-			//$cronStatus->save();
+			$cronStatus->status = 1;
+			$cronStatus->save();
 		}
 		//Update status from 1 => 0 after run all user
 		DB::table('cron_matching_logs')->update(['status' => 0]);
@@ -676,7 +662,7 @@ class Bonus
 	// 	DB::table('cron_matching_logs')->update(['status' => 0]);
 	// }
 
-	private static function _calLeftRightVolume($userId)//
+	public static function _calLeftRightVolume($userId)//
 	{
 		$userTree = UserTreePermission::where('userId','=',$userId)->first();
 		$totalLeftVol = $totalRightVol = 0;
@@ -946,7 +932,7 @@ class Bonus
 		$bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / $numberOfBlackDiamond;
 
 		//Get all user in loyalty table with loyaltyId > 0
-		$listLoyaltyUser = UserData::where('loyaltyId', '>', 2)
+		$listLoyaltyUser = UserData::where('loyaltyId', '>', 0)
 							->where('status', 1)
 							->where('packageId', '>', 0)
 							->get();
@@ -984,7 +970,7 @@ class Bonus
 
 				$fieldUsd = [
 					'walletType' => Wallet::CLP_WALLET,//
-					'type' =>  Wallet::BINARY_TYPE,//bonus week
+					'type' =>  Wallet::GLOBAL_BONUS,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $clpAmount,
@@ -995,7 +981,7 @@ class Bonus
 
 				$fieldInvest = [
 					'walletType' => Wallet::REINVEST_WALLET,//reinvest
-					'type' => Wallet::BINARY_TYPE,//bonus week
+					'type' => Wallet::GLOBAL_BONUS,//bonus week
 					'inOut' => Wallet::IN,
 					'userId' => $binary->userId,
 					'amount' => $reinvestAmount,

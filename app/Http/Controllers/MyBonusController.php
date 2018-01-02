@@ -48,7 +48,7 @@ class MyBonusController extends Controller
             $weeked = date('W');
             $year = date('Y');
             $weekYear = $year.$weeked;
-            if($weeked < 10)$weekYear = $year.'0'.$weeked;
+            
             $binary = BonusBinary::where('userId', '=',$currentuserid)->where('weekYear', '=',$weekYear)->get();
             $totalBonus = round($totalBonusPercent * $binary->settled);
         }

@@ -87,6 +87,22 @@
         .label-danger {
             background-color: #d9534f;
         }
+        .card-action .refund {
+            width: auto !important;
+            margin: 0 15px 0 15px !important;
+        }
+        .refund .bootstrap-select{
+            margin-top: 0px !important;
+        }
+        .card-pricing .card-description{
+            margin:0 !important;
+        }
+        .card-action>.amount{
+            margin-top: -15px !important;
+        }
+        .has-error .help-block{
+            display: block !important;
+        }
     </style>
 	<div class="content">
         <div class="container-fluid">
@@ -152,21 +168,34 @@
                                                                 </div>
                                                                 <div class="card-description">
                                                                     <span>
-                                                                        <b>${{$pval->min_price}} - ${{$pval->max_price}}</b>
+                                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
                                                                     </span>
                                                                     <span class="carcoin-color">
                                                                         <i class="material-icons" icon="carcoin-primary"></i>
-                                                                        <b>{{$pval->min_price_clp}}</b> - <b>{{$pval->max_price_clp}}</b>
+                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
                                                                     </span>
                                                                 </div>
                                                                 <div class="card-action">
+
+<div class="form-group my-4 refund input-group">
+    <span class="input-group-addon pr-0">
+        <i class="material-icons">refresh</i>
+    </span>
+    <div class="form-group label-floating">
+        <select class="selectpicker refund-type" name="refundType" id="refund_type" data-style="select-with-transition" title="Refund Type" data-size="2">
+            <option value="1">REFUND BY USD</option>
+            <option value="2">REFUND BY CAR</option>
+        </select>
+        <p class="help-block errorRefund"></p>
+    </div>
+</div>
                                                                     <div class="input-group form-group my-4 amount">
                                                                         <span class="input-group-addon pr-0">
                                                                             <i class="material-icons">attach_money</i>
                                                                         </span>
                                                                         <div class="form-group label-floating">
-                                                                            <label class="control-label">Your Amount</label>
-                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10">
+                                                                            
+                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10" placeholder="Your Amount">
                                                                             <span class="material-input"></span>
                                                                             <p class="help-block errorAmount"></p>
                                                                         </div>
@@ -210,7 +239,7 @@
                                 </select>
                             </div>
                             
-                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round" disabled="">Buy Packages</button>
+                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Buy Packages</button>
 
                         </div>
                         <div class="col-md-12 my-4">
@@ -219,7 +248,9 @@
                                     <thead class="text-thirdary">
                                         <th>Date</th>
                                         <th>Package</th>
+                                        <th>Refund Type</th>
                                         <th>Lending Amount</th>
+                                        <th>Carcoin Amount</th>
                                         <th>Rease Date</th>
                                         <th>Action</th>
                                     </thead>
@@ -229,7 +260,9 @@
                                                 <tr>
                                                     <td>{{date_format(date_create($upVal->buy_date),'m-d-Y H:i:s')}}</td>
                                                     <td>{{$upVal->name}}</td>
+                                                    <td>{{$upVal->refund_type==1?'By USD':'By Carcoin'}}</td>
                                                     <td>${{number_format($upVal->amount_increase,0)}}</td>
+                                                    <td>{{number_format($upVal->amount_carcoin,0)}} CAR</td>
                                                     <td>{{date_format(date_create($upVal->release_date),'m-d-Y H:i:s')}}</td>
                                                     <td>
                                                         @if($upVal->withdraw==1)
@@ -254,6 +287,7 @@
                             <input type="hidden" id="packageId" name="packageId"/>
                             <input type="hidden" name="packageAmount" id="packageAmount"/>
                             <input type="hidden" id="walletId" name="walletId" />
+                            <input type="hidden" name="refundType" id="refundType" />
                         {!! Form::close() !!}
                     </div>
                 </div>
@@ -319,8 +353,15 @@
                 let packageId=pricing.children().find('input[type="radio"]').val();
                 let minAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-min'));
                 let maxAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-max'));
+                let refund=pricing.children().find('.selectpicker.refund-type').val();
                 let amount=pricing.children().find('input[type="number"]').val();
-
+                if(refund=='')
+                {
+                    pricing.children().find('.errorRefund').text('Choose refund type');
+                    pricing.children().find('.refund').children('.label-floating').addClass('has-error');
+                    return false;
+                }
+                
                 if(amount<minAmount || amount>maxAmount)
                 {
                     pricing.children().find('.errorAmount').text('$'+minAmount+' - $'+maxAmount);
@@ -365,6 +406,7 @@
                 }).then(function(result){
                     $('#packageAmount').val(amount);
                     $('#packageId').val(packageId);
+                    $('#refundType').val(refund);
                     $('#bPackageF').submit();
                 })
 
