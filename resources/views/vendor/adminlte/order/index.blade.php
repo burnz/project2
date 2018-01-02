@@ -5,17 +5,8 @@
 
     <!--  Custom CSS    -->
     <link href="/presale/assets/css/custom.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js"></script>
-    <script>
-
-
-        $(document).ready(function() {
-
-            lightbox.start($('.example-image-link'));
-
-        });
-    </script>
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js"></script> -->
 @endsection
 @section('content')
 
@@ -25,7 +16,7 @@
         </div>
         <div class="container-fluid">
             <div class="row d-flex" section="dashboard-status">
-                <div class="col-md-8 align-self-center">
+                <!-- <div class="col-md-8 align-self-center">
                     <div class="row">
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="card card-stats">
@@ -127,27 +118,41 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-md-4 align-self-center">
                     <div class="card card-countdown">
                         <div class="card-header text-center">
-                            <h3>HURRY UP!</h3>
+                            <h3>ANNOUCEMENT</h3>
                         </div>
                         <div class="card-content">
-                            <h4>Token Sale Registration ends in:</h4>
+                            <h4>Lending program starts in:</h4>
                             <div class="countdown">
                                 <div class="countdown-container" id="countdown"></div>
                             </div>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
-                                <i class="material-icons">gavel</i> CARCOIN is only sold with a limit of 200,000 coins/day.
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-8 align-self-center">
+                    <div class="card card-countdown">
+                        <!-- <div class="card-header text-center">
+                            <h3>HURRY UP!</h3>
+                        </div> -->
+                        <div class="card-content">
+                            <img src="http://dev.carcoin/img/popup/popup-noel-2017.jpg"/>
+                        </div>
+                        <!-- <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">gavel</i> CARCOIN is only sold with a limit of 200,000 coins/day.
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
             </div>
-            <div class="row d-flex" section="create-an-order">
+            <!-- <div class="row d-flex" section="create-an-order">
                 <div class="col-md-4 align-self-center">
                     <div class="card">
                         <div class="card-header">
@@ -234,7 +239,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="row">
                 <div class="col-md-12">
@@ -285,6 +290,8 @@
     </div>
 @endsection
 @section('script')
+    <script src="https://momentjs.com/downloads/moment-timezone.js"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone-with-data.js"></script>
     <script src="/presale/assets/js/jquery.countdown.min.js"></script>
     <script src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
     <script src="/presale/assets/js/demo.js"></script>
