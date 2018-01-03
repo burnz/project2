@@ -35,13 +35,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //Transfer CAR in pre-sale
-        try {
-            $schedule->call(function () {
-                TransferCarPresale::transfer();
-            })->dailyAt('21:00');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         TransferCarPresale::transfer();
+        //     })->dailyAt('21:00');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 
         //Auto add to binary at 23:30 every sunday
         // try {
@@ -52,14 +52,14 @@ class Kernel extends ConsoleKernel
         //     Log::info($ex);
         // }
         
-        // Profit run everyday
-        // try {
-        //     $schedule->call(function () {
-        //         Bonus::bonusDayCron();
-        //     })->daily();
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
+        //Profit run everyday
+        try {
+            $schedule->call(function () {
+                Bonus::bonusDayCron();
+            })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
 
         // Binary bonus run on monday each week
         // try {
