@@ -29,7 +29,7 @@ class TransferCarPresale
     public static function transfer(){
         $today = Carbon::today();
 
-        if($today > config('app.pre_sale_end')) return ;
+        //if($today > config('app.pre_sale_end')) return ;
 
         set_time_limit(0);
         
@@ -41,9 +41,7 @@ class TransferCarPresale
         $startTime = date('Y-m-d H:i:s', $startTime);
 
         try {
-            $lstOrder = OrderList::where('created_at', '>', $startTime)
-                            ->where('created_at', '<', $endTime)
-                            ->where('status', 1)
+            $lstOrder = OrderList::where('status', 1)
                             ->orderBy('price', 'desc')
                             ->orderBy('created_at', 'asc')
                             ->get();
