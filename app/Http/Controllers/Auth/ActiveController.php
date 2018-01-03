@@ -55,23 +55,23 @@ class ActiveController extends Controller
                         
                         //Active vaf redirect ve trang thong bao kem theo link login
                         if($user){
-                            if($user->name) {
-                                $accountWallet = $this->GenerateWallet(self::COINBASE,$user->name);
-                                $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
-                            }
+                            // if($user->name) {
+                            //     $accountWallet = $this->GenerateWallet(self::COINBASE,$user->name);
+                            //     $accountWallet = $this->GenerateAddress(self::COINBASE, $user->name);
+                            // }
                             
-                            if(!$accountWallet){
-                                return false;
-                            }
+                            // if(!$accountWallet){
+                            //     return false;
+                            // }
 
                             $user->active = 1;
                             $user->save();
                             UserData::find($user->id )->update( ['active' => 1] );
 
-                            $userCoin = $user->userCoin;
-                            $userCoin->accountCoinBase = $accountWallet['accountId'];
-                            $userCoin->walletAddress = $accountWallet['walletAddress'];
-                            $userCoin->save();
+                            //$userCoin = $user->userCoin;
+                            // $userCoin->accountCoinBase = $accountWallet['accountId'];
+                            // $userCoin->walletAddress = $accountWallet['walletAddress'];
+                            //$userCoin->save();
 
                             User::updateUserGenealogy($user->id);
                             return redirect("notification/useractive");
