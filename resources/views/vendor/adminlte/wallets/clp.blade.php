@@ -57,15 +57,30 @@
                                     </div>
                                     <div class="col-md-12 d-flex justify-content-center mb-3" user-wallet>
                                         <div class="user-wallet">
-                                            <div class="left">
-                                                <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/ic_zcoin-pri.svg"></i>
-                                            </div>
-                                            <div class="right">
-                                                <span>Your Balance</span>
-                                                <div class="content carcoin-color">
-                                                {{ number_format($walletAmount['amountCLP'], 5) }}
+                                            <div>
+                                                <div class="left">
+                                                    <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/ic_zcoin-pri.svg"></i>
+                                                </div>
+                                                <div class="right">
+                                                    <span>Your Balance</span>
+                                                    <div class="content carcoin-color">
+                                                    {{ number_format($walletAmount['amountCLP'], 5) }}
+                                                    </div>
                                                 </div>
                                             </div>
+                                            @if($walletAmount['amountHoldingCAR'] > 0)
+                                            <div>
+                                                <div class="left">
+                                                    <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/ic_zcoin-sec.svg"></i>
+                                                </div>
+                                                <div class="right">
+                                                    <span>Suspended Amount</span>
+                                                    <div class="content">
+                                                    {{ number_format($walletAmount['amountHoldingCAR'], 5) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endif
                                         </div>
                                         <div class="align-self-center">  
                                             <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" data-target="#carcoin-deposit">

@@ -30,11 +30,12 @@ class AppServiceProvider extends ServiceProvider
             {
                 $amountBTC=Auth::user()->userCoin->btcCoinAmount;
                 $amountCLP=Auth::user()->userCoin->clpCoinAmount;
+                $amountHoldingCAR=Auth::user()->userCoin->usdAmount;
                 $amountReinvest=Auth::user()->userCoin->reinvestAmount;
 
                 $btcUSDRate = ExchangeRate::getBTCUSDRate();
 
-                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest]);
+                $view->with('walletAmount',['amountBTC'=>$amountBTC,'amountCLP'=>$amountCLP,'amountReinvest'=>$amountReinvest, 'amountHoldingCAR'=>$amountHoldingCAR,]);
                 $view->with('btcUSDRate', $btcUSDRate);
             }
         });
