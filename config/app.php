@@ -141,6 +141,7 @@ return [
     'pre_sale_end'=> env('PRE_SALE_END', '2017-12-31'),
     'clp_price' => env('CLP_PRICE', 1),
     'virtual_account' => env('LIST_VIRTUAL_ACCOUNT'),
+    'top_leaders' => env('TOP_LEADERS'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

@@ -145,7 +145,7 @@ class WithDrawController extends Controller
 										self::sendCoinBTC($request, $id);
 									}elseif($withdrawConfirm->type == 'car')
 									{
-										if($totalToday <= 3000)
+										if($totalToday <= 10000)
 										{
 											self::sendCoinCLP($request, $id);
 										}else
@@ -540,12 +540,12 @@ class WithDrawController extends Controller
 			$userData = Auth::user()->userData;
 			if($userData->packageId < 1)
 			{
-				$withdrawAmountErr = 'Please be noted that the minimum mining pack for any withdrawal requests is $100';
+				$withdrawAmountErr = 'Please be noted that the minimum lending amount for any withdrawal requests is $200';
 			}
 
-			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 3000)
+			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 4000)
 			{
-				$withdrawAmountErr = 'You cannot withdraw more than $3,000 per time';
+				$withdrawAmountErr = 'You cannot withdraw more than $4000 per time';
 			}
 
 			//Only transfer CLP, Withdraw $10.000 per day
@@ -555,7 +555,7 @@ class WithDrawController extends Controller
 
             if($currentTotal > 10000)
             {
-                $withdrawAmountErr = 'You cannot transfer & withdraw more than $10,000 a day';
+                $withdrawAmountErr = 'Daily transfer and withdraw amount cannot exceed $10,000';
             }
 
 			if($request->walletAddress == ''){

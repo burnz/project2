@@ -160,13 +160,17 @@ class ClpWalletController extends Controller {
             }
 
             //Only transfer CLP, Withdraw $10.000 per day
-            $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
-
-            $currentTotal = $request->clpAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
-
-            if($currentTotal > 10000)
+            $topLeaders = explode(',', config('app.top_leaders'));
+            if( !in_array(Auth::user()->id, $topLeaders) )
             {
-                $clpAmountErr = 'You cannot transfer & withdraw more than $10,000 a day';
+                $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
+
+                $currentTotal = $request->clpAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
+
+                if($currentTotal > 10000)
+                {
+                    $clpAmountErr = 'Daily transfer and withdraw amount cannot exceed $10,000';
+                }
             }
             
 
