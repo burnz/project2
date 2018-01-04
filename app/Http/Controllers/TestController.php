@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Notification;
 use App\UserCoin;
+use App\UserData;
 use App\User;
 use App\Wallet;
 use DB;
@@ -24,6 +25,11 @@ use App\Cronjob\GetClpWallet;
 use App\Cronjob\TransferCarPresale;
 use App\OrderList;
 use Carbon\Carbon;
+use App\CronProfitLogs;
+use App\CronBinaryLogs;
+use App\CronMatchingLogs;
+use App\CronLeadershipLogs;
+use App\TotalWeekSales;
 
 use App\Cronjob\Bonus;
 /**
@@ -44,6 +50,7 @@ class TestController {
     //put your code here
     function testInterest($param = null) {
         //Get Notification
+
         Bonus::bonusDayCron();
         echo "Return bonus day for user successfully!";
     }
@@ -111,38 +118,21 @@ class TestController {
     }
 
     function test() {
-
-        //Return btc to user
-        // $orderList = OrderList::where('price', '=', '0.6')->where('status', 1)->get();
-        // dd($orderList);
-        // foreach($orderList as $order) {
-        //     $order->status = 0;
-        //     $order->save();
-
-        //     //Return BTC
-        //     $userCoin = UserCoin::where('userId', $order->user_id)->first();
-        //     $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $order->btc_value);
-        //     $userCoin->save();
-        // }
-
-        // dd("XXXXX");
-
-        //Update address for NULL user
-        $nullUsers = UserCoin::whereNull('walletAddress')->get();
-
-        dd($nullUsers);
-
-        foreach($nullUsers as $userCoin)
-        {
-            $user = User::find($userCoin->userId);
-            if($user->name){
-                $walletAddress = $this->GenerateAddress($user->name);
-                $userCoin->walletAddress = $walletAddress['walletAddress'];
-                $userCoin->save();
-            }
+        set_time_limit(0);
+        //Update logs for Land users
+        $landUsers = UserData::where('packageId', '>', 0)->where('userId', '<', 3669)->where('userId', '>', 2)->get();
+        foreach($landUsers as $user) {
+            if(CronProfitLogs::where('userId', $user->userId)->count() < 1) 
+                CronProfitLogs::create(['userId' => $user->userId]);
+            if(CronBinaryLogs::where('userId', $user->userId)->count() < 1) 
+                CronBinaryLogs::create(['userId' => $user->userId]);
+            if(CronMatchingLogs::where('userId', $user->userId)->count() < 1) 
+                CronMatchingLogs::create(['userId' => $user->userId]);
+            if(CronLeadershipLogs::where('userId', $user->userId)->count() < 1) 
+                CronLeadershipLogs::create(['userId' => $user->userId]);
+            if(TotalWeekSales::where('userId', $user->userId)->count() < 1) 
+                TotalWeekSales::create(['userId' => $user->userId]);
         }
-       
-        dd("Update userWallet success");
     }
 
     private function GenerateAddress( $name = null ) {
