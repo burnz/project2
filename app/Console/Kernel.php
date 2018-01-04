@@ -56,7 +56,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusDayCron();
-            })->daily();
+            })->dailyAt('08:00');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
