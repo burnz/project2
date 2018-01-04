@@ -120,19 +120,14 @@ class TestController {
     function test() {
         set_time_limit(0);
         //Update logs for Land users
-        $landUsers = UserData::where('packageId', '>', 0)->where('userId', '<', 3669)->where('userId', '>', 2)->get();
+        $landUsers = User::whereNotNull('value_package')->where('id', '<', 3669)->where('id', '>', 2)->get();
         foreach($landUsers as $user) {
-            if(CronProfitLogs::where('userId', $user->userId)->count() < 1) 
-                CronProfitLogs::create(['userId' => $user->userId]);
-            if(CronBinaryLogs::where('userId', $user->userId)->count() < 1) 
-                CronBinaryLogs::create(['userId' => $user->userId]);
-            if(CronMatchingLogs::where('userId', $user->userId)->count() < 1) 
-                CronMatchingLogs::create(['userId' => $user->userId]);
-            if(CronLeadershipLogs::where('userId', $user->userId)->count() < 1) 
-                CronLeadershipLogs::create(['userId' => $user->userId]);
-            if(TotalWeekSales::where('userId', $user->userId)->count() < 1) 
-                TotalWeekSales::create(['userId' => $user->userId]);
+            $valueCar = $user->value_package / ExchangeRate::getCLPUSDRate();
+            $userCoin = $user->userCoin;
+            $userCoin->usdAmount = $valueCar;
+            $userCoin->save();
         }
+        dd("DONE");
     }
 
     private function GenerateAddress( $name = null ) {
