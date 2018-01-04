@@ -156,7 +156,7 @@ Route::get('test-interest',"TestController@testInterest");
 Route::get('test-infinity','TestController@testInfinityBonus');
 Route::get('test-infinity-interest', 'TestController@testInfinityInterest');
 Route::get('test-global-bonus','TestController@testGlobalBonus');
-//Route::get('test-auto-binary',"TestController@testAutoAddBinary");
+Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 Route::get('test',"TestController@test");
 
 
