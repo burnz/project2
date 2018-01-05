@@ -1990,6 +1990,23 @@ i.material-icons[icon="img"][size="x-lg"] > img {
           font-weight: bolder; }
   .navbar-wallet > li:last-child {
     margin-right: 0; }
+  .navbar-wallet > li.dropdown {
+    display: flex;
+    align-self: center; }
+    .navbar-wallet > li.dropdown [data-toggle="dropdown"] > i {
+      cursor: pointer; }
+    .navbar-wallet > li.dropdown .dropdown-menu {
+      min-width: unset;
+      left: -170px; }
+      .navbar-wallet > li.dropdown .dropdown-menu > li a {
+        display: flex; }
+        .navbar-wallet > li.dropdown .dropdown-menu > li a .icon {
+          width: 40px;
+          margin-right: 10px; }
+        .navbar-wallet > li.dropdown .dropdown-menu > li a .content small {
+          font-size: 100%;
+          font-weight: 100;
+          color: inherit; }
 
 .navbar-wallet:last-child {
   margin-left: 10px; }
@@ -6856,13 +6873,6 @@ i.material-icons[icon="img"][size="x-lg"] > img {
     .register-page .card-signup [sign-up-step] .info-horizontal:last-child {
       padding-right: 0; } }
 @media (max-width: 767px) {
-  .navbar-wallet > li > a {
-    display: inline-block; }
-    .navbar-wallet > li > a > .icon {
-      float: left; }
-    .navbar-wallet > li > a > .content {
-      width: 100%; }
-
   .navbar-wallet:last-child {
     position: absolute;
     left: 0;
@@ -6938,9 +6948,6 @@ i.material-icons[icon="img"][size="x-lg"] > img {
       width: 61.9%;
       left: 56%; } }
 @media (max-width: 413px) {
-  .navbar-wallet > li > a > .icon {
-    display: none; }
-
   .navbar-wallet:last-child {
     font-size: 11px; }
 
@@ -6951,9 +6958,6 @@ i.material-icons[icon="img"][size="x-lg"] > img {
     width: 60.9%;
     left: 58%; } }
 @media (max-width: 320px) {
-  .navbar-wallet > li > a {
-    padding: 5px; }
-
   [section="wallet-panel"] .nav > li > a {
     width: 80px;
     min-width: 100%;

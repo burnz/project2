@@ -88,10 +88,10 @@
 }
 
 .node-lvl-0{
-    background: linear-gradient(90deg, #C00710, #ED1C26);
+    background: linear-gradient(90deg, #005200, #008500);
 }
 .node-lvl-1{
-    background: linear-gradient(90deg, #ED1C26, #F94952);
+    background: linear-gradient(90deg, #008500, #009e00);
 }
 .node-lvl-2{
     background: linear-gradient(90deg, #F94952, #FC7279);
@@ -159,7 +159,7 @@
     border-radius: 15px;
     width: 100%;
     border: 1px solid #ddd;
-    right: -245px;
+    /*right: -245px; */
     top: 0px;
     z-index: 999999999;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -170,7 +170,7 @@
 }
 .tooltip-arrow {
     top: 3%;
-    left: -10px;
+    
     margin-top: -5px;
     border-width: 10px 10px 20px 0;
     border-right-color: #6C7A89 !important;
@@ -200,7 +200,7 @@
     width: 20px;
 }
 .left-posi{
-    left: -245px;
+    left: -186%;
     border-top-right-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 15px !important;
@@ -209,7 +209,10 @@
 .left-posi .tooltip-arrow{
     border-left-color: #6C7A89 !important;
     border-width: 10px 0 20px 10px;
-    left: 233px;
+    right: -10px;
+}
+.right-posi .tooltip-arrow{
+    left: -10px;
 }
 .left-posi .tooltip-content-title
 {
@@ -243,6 +246,10 @@
 }
 #tree-container{
     min-height:670px;
+}
+.right-posi
+{
+    right:-186%;
 }
 </style>
 
