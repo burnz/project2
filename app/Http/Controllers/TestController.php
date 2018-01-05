@@ -120,9 +120,18 @@ class TestController {
     function test() {
         set_time_limit(0);
         //Update logs for Land users
-        $allUsers = User::where('id', '>', 2)->get();
+        $allUsers = User::where('id', '>', 2)->where('active', 1)->get();
         foreach($allUsers as $user) {
-            User::reUpdateUserGenealogy($user->id);
+            if(CronProfitLogs::where('userId', $user->id)->count() < 1) 
+                CronProfitLogs::create(['userId' => $user->id]);
+            if(CronBinaryLogs::where('userId', $user->id)->count() < 1) 
+                CronBinaryLogs::create(['userId' => $user->id]);
+            if(CronMatchingLogs::where('userId', $user->id)->count() < 1)
+                CronMatchingLogs::create(['userId' => $user->id]);
+            if(CronLeadershipLogs::where('userId', $user->id)->count() < 1) 
+                CronLeadershipLogs::create(['userId' => $user->id]);
+            if(TotalWeekSales::where('userId', $user->id)->count() < 1) 
+                TotalWeekSales::create(['userId' => $user->id]);
         }
         dd("DONE");
     }

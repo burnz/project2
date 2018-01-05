@@ -15,6 +15,8 @@ use App\BonusBinary;
 use App\ExchangeRate;
 use App\CronProfitLogs;
 use App\CronBinaryLogs;
+use App\CronMatchingLogs;
+use App\CronLeadershipLogs;
 use App\TotalWeekSales;
 use App\UserTreePermission;
 use App\BonusBinaryInterest;
@@ -138,6 +140,9 @@ class Bonus
 
 			foreach($lstUser as $user)
 			{
+				$userData = $user->userData;
+				if($userData->isBinary == 0) continue;
+				
 				$volInfo = self::_calLeftRightVolume($user->id);
 				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
 				

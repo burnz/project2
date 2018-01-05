@@ -35,22 +35,22 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //Transfer CAR in pre-sale
-        try {
-            $schedule->call(function () {
-                TransferCarPresale::transfer();
-            })->dailyAt('21:00');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
-
-        //Auto add to binary at 23:30 every sunday
         // try {
         //     $schedule->call(function () {
-        //         AutoAddBinary::addBinary();
-        //     })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
+        //         TransferCarPresale::transfer();
+        //     })->dailyAt('21:00');
         // } catch (\Exception $ex) {
         //     Log::info($ex);
         // }
+
+        //Auto add to binary at 23:30 every sunday
+        try {
+            $schedule->call(function () {
+                AutoAddBinary::addBinary();
+            })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
         
         //Profit run everyday
         try {
@@ -62,19 +62,27 @@ class Kernel extends ConsoleKernel
         }
 
         // Binary bonus run on monday each week
-        // try {
-        //     $schedule->call(function () {
-        //         Bonus::bonusBinaryWeekCron();
-        //     })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
+        try {
+            $schedule->call(function () {
+                Bonus::bonusBinaryWeekCron();
+            })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
+        // Binary bonus infinity interest
+        try {
+            $schedule->call(function () {
+                Bonus::bonusMatchingWeekCron();
+            })->weekly()->mondays()->at('01:00'); //->weekly()->mondays()->at('01:00');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
 
         /**
          * @author Huynq 
          * run every 30s update notification
          */
-        $stringCronTab = "* * * * * *";
         try {
             $schedule->call(function () {
                 UpdateBtcCoin::UpdateBtcCoinAmount();
@@ -86,14 +94,13 @@ class Kernel extends ConsoleKernel
          * @author Huynq
          * run every day update availableAmount(from holding wallet) table usercoin
          */
-        // $stringCronTab = "* * * * * *";
-        // try {
-        //     $schedule->call(function () {
-        //         AvailableAmount::getAvailableAmount();
-        //     })->daily();
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
+        try {
+            $schedule->call(function () {
+                AvailableAmount::getAvailableAmount();
+            })->daily();
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
         
         // Cronjob update exchange BTC, CLP rate
         try {
