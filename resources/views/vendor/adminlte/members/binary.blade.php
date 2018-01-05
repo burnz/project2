@@ -227,6 +227,20 @@
     width: 50%;
     float: right;
 }
+.node-footer{
+    width:100%;
+    padding:5px;
+    margin-top:5px !important;
+    text-align:left;
+}
+.node-footer-left{
+    width:50%;
+    float:left;
+}
+.node-footer-right{
+    with:50%;
+    float:right;
+}
 </style>
 
 <body>

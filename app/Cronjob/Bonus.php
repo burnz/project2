@@ -551,6 +551,7 @@ class Bonus
 		$lastDayPreviousMonth = new \DateTime('LAST DAY OF PREVIOUS MONTH');
 		$totalCompanyIncome = 0;
 		
+
 		$buyPack = DB::table('user_packages')
 				->select(DB::raw('SUM(amount_increase) as sumamount'))
 				->where('created_at', '>=', $firstDayPreviousMonth->format('Y-m-d 00:00:00')) 
@@ -565,8 +566,11 @@ class Bonus
 		$numberOfDiamond=DB::table('user_datas')->where('loyaltyId',3)->where('status',1)->where('packageId','>',0)->count();
 		//Number of BlueDiamond
 		$numberOfBlueDiamond=DB::table('user_datas')->where('loyaltyId',4)->where('status',1)->where('packageId','>',0)->count();
+
 		//Number of BlackDiamond
 		$numberOfBlackDiamond=DB::table('user_datas')->where('loyaltyId',5)->where('status',1)->where('packageId','>',0)->count();
+
+
 
 		$sapphireBonus = config('carcoin.sapphire_leadership_bonus');
 		$emeraldBonus = config('carcoin.emerald_leadership_bonus');
@@ -579,13 +583,15 @@ class Bonus
 		$bonusSapphire = $totalCompanyIncome * $sapphireBonus / ($ttBonusSapphire==0?1:$ttBonusSapphire);
 
 		$ttBonusEmerald=($numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+
 		$bonusEmerald = $totalCompanyIncome * $emeraldBonus / ($ttBonusEmerald==0?1:$ttBonusEmerald);
 
 		$ttBonusDiamond=($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+
 		$bonusDiamond = $totalCompanyIncome * $diamondBonus / ($ttBonusDiamond==0?1:$ttBonusDiamond);
 
-
 		$ttBonusBlueDiamond=($numberOfBlueDiamond + $numberOfBlackDiamond);
+
 		$bonusBlueDiamond = $totalCompanyIncome * $blueDiamondBonus / ($ttBonusBlueDiamond==0?1:$ttBonusBlueDiamond);
 
 		$bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / ($numberOfBlackDiamond==0?1:$numberOfBlackDiamond);
@@ -603,25 +609,34 @@ class Bonus
 			if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
 			if($user->loyaltyId == 1)
+			{
 				$bonus = $bonusSapphire;
+			}
 
 			if($user->loyaltyId == 2)
+			{
 				$bonus = $bonusEmerald;
+			}
 
 			if($user->loyaltyId == 3)
+			{
 				$bonus = $bonusDiamond;
+			}
 
 			if($user->loyaltyId == 4)
+			{
 				$bonus = $bonusBlueDiamond;
+			}
 
-			if($user->loyaltyId == 3)
+			if($user->loyaltyId == 5)
+			{
 				$bonus = $bonusBlackDiamond;
+			}
 
 			if($bonus > 0)
 			{
 				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
 				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
-
 				$userCoin = UserCoin::find($user->userId);
 				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
 				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
@@ -633,7 +648,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $user->userId,
 					'amount' => $clpAmount,
-					'note'=>'Paid 60% Global Bonus for '.(new \DateTime())->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.clp_bonus_pay')
+					'note'=>'Paid 60% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.clp_bonus_pay')
 				];
 
 				Wallet::create($fieldUsd);
@@ -644,7 +659,7 @@ class Bonus
 					'inOut' => Wallet::IN,
 					'userId' => $user->userId,
 					'amount' => $reinvestAmount,
-					'note'=>'Paid 40% Global Bonus for '.(new \DateTime())->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
+					'note'=>'Paid 40% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
 				];
 
 				Wallet::create($fieldInvest);
