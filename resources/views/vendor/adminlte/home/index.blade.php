@@ -131,6 +131,7 @@
                                         <th>Lending Amount</th>
                                         <th>Release Date</th>
                                         <th>Status</th>
+
                                     </thead>
                                     <tbody style="height: 179px;">
                                     	@if(count($data['history_package'])>0)
@@ -142,9 +143,9 @@
                                                     <td>{{date_format(date_create($pval->release_date),'d-m-Y')}}</td>
                                                     <td>
                                                         @if($pval->withdraw==1)
-                                                            <button class="btn btn-simple btn-google m-0 p-0">Withdrawn</button>
+                                                            <button class="btn btn-simple btn-google m-0 p-0">Released</button>
                                                         @else
-                                                            <button class="btn btn-simple btn-linkedin m-0 p-0">Waiting</button>
+                                                            <button class="btn btn-simple btn-linkedin m-0 p-0">Lending</button>
                                                         @endif
                                                     </td>
 		                                        </tr>
