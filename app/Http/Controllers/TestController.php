@@ -120,12 +120,9 @@ class TestController {
     function test() {
         set_time_limit(0);
         //Update logs for Land users
-        $landUsers = User::whereNotNull('value_package')->where('id', '<', 3669)->where('id', '>', 2)->get();
-        foreach($landUsers as $user) {
-            $valueCar = $user->value_package / ExchangeRate::getCLPUSDRate();
-            $userCoin = $user->userCoin;
-            $userCoin->usdAmount = $valueCar;
-            $userCoin->save();
+        $allUsers = User::where('id', '>', 2)->get();
+        foreach($allUsers as $user) {
+            User::reUpdateUserGenealogy($user->id);
         }
         dd("DONE");
     }

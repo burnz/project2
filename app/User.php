@@ -467,6 +467,23 @@ class User extends Authenticatable
 			self::updateUserGenealogy($user->userData->refererId, $userId);
 	}
 
+	public static function reUpdateUserGenealogy($refererId, $userId = 0){
+		if($userId == 0)$userId = $refererId;
+		$user = UserTreePermission::find($refererId);
+		if($user){
+			$listUsers = explode(',', $user->genealogy);
+			if(!in_array($userId, $listUsers))
+			{
+				$user->genealogy = $user->genealogy .','.$userId;
+				$user->genealogy_total = $user->genealogy_total + 1;
+				$user->save();
+			}
+			
+			if($user->userData->refererId > 0)
+			self::reUpdateUserGenealogy($user->userData->refererId, $userId);
+		}
+	}
+
 	public static function updateUserBinary($binaryUserId, $userId = 0){
 		if($userId == 0)$userId = $binaryUserId;
 		$user = UserTreePermission::find($binaryUserId);
