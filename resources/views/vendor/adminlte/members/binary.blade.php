@@ -154,7 +154,7 @@
 .node-info{
     display: none;
     position: absolute;
-    height: 125px;
+    height: 170px;
     background: #fff;
     border-radius: 15px;
     width: 100%;
@@ -169,7 +169,7 @@
     width: 180%;
 }
 .tooltip-arrow {
-    top: 5%;
+    top: 3%;
     left: -10px;
     margin-top: -5px;
     border-width: 10px 10px 20px 0;
@@ -240,6 +240,9 @@
 .node-footer-right{
     with:50%;
     float:right;
+}
+#tree-container{
+    min-height:670px;
 }
 </style>
 
