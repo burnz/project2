@@ -2455,7 +2455,7 @@ i.material-icons[icon="img"][size="x-lg"] > img {
   transform: translate3d(0, 0, 0); }
 
 .countdown .count {
-  background: #008500;
+  background: #008500 !important;
   color: #f8f8f8;
   display: block;
   font-family: 'Oswald', sans-serif;
@@ -2479,8 +2479,8 @@ i.material-icons[icon="img"][size="x-lg"] > img {
   transform-style: flat; }
 
 .countdown .count.top {
-  border-top: 1px solid rgba(0, 158, 0, 0.2);
-  border-bottom: 1px solid rgba(0, 158, 0, 0.1);
+  border-top: 1px solid rgba(0, 158, 0, 0.2) !important;
+  border-bottom: 1px solid rgba(0, 158, 0, 0.1) !important;
   border-radius: 5px 5px 0 0;
   height: 50%;
   -webkit-transform-origin: 50% 100%;
@@ -2495,8 +2495,8 @@ i.material-icons[icon="img"][size="x-lg"] > img {
   background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.2), transparent);
   background-image: -ms-linear-gradient(rgba(255, 255, 255, 0.2), transparent);
   background-image: -o-linear-gradient(rgba(255, 255, 255, 0.2), transparent);
-  border-top: 1px solid #00b800;
-  border-bottom: 1px solid #00b800;
+  border-top: 1px solid #00b800 !important;
+  border-bottom: 1px solid #00b800 !important;
   border-radius: 0 0 5px 5px;
   line-height: 0;
   height: 50%;
