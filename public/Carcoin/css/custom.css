@@ -81,7 +81,7 @@ i.material-icons[icon="img"][size="x-lg"] > img {
   color: #ffb629; }
 
 .carcoin-color {
-  color: #009e00; }
+  color: #009e00 !important; }
 
 .reinvest-color {
   color: #1f1f2e; }
