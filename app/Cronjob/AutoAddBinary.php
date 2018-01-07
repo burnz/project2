@@ -19,12 +19,24 @@ use App\BonusBinary;
 class AutoAddBinary {
     
     public static function addBinary(){
+
         //Set no limit execution timeout
         set_time_limit(0);
         //Get this weekYear;
         $weeked = date('W');
         $year = date('Y');
         $weekYear = $year.$weeked;
+
+        // $firstWeek = $weeked -1; //Pre week
+        // $firstYear = $year;
+
+        // if($firstWeek == 0){
+        //     $firstWeek = 52;
+        //     $firstYear = $year - 1;
+        //     $weekYear = $firstYear.$firstWeek;
+        // }
+
+        // if($firstWeek < 10 && $firstWeek > 0) $weekYear = $firstYear.'0'.$firstWeek;
 
         //Get all member which has isBinary > 0 orderby id
         $allMember = UserData::where('isBinary', 1)->where('packageId', '>', 0)->orderby('userId')->get();
@@ -38,6 +50,7 @@ class AutoAddBinary {
             {
                 //Get left or right is weak
                 $thisWeek = BonusBinary::where('userId', '=', $member->userId)->where('weekYear', '=', $weekYear)->first();
+                
                 if(!$thisWeek) {
                     continue;
                 }
@@ -50,6 +63,7 @@ class AutoAddBinary {
                 } else {
                     $leftWeak = 1;
                 }
+
 
                 foreach($allF1NotYetBinary as $f1Member)
                 {

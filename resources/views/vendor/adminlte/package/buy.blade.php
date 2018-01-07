@@ -251,8 +251,8 @@
                                         <th>Refund Type</th>
                                         <th>Lending Amount</th>
                                         <th>Carcoin Amount</th>
-                                        <th>Rease Date</th>
-                                        <th>Action</th>
+                                        <th>Release Date</th>
+                                        <th>Status</th>
                                     </thead>
                                     <tbody>
                                         @if(count($userPack)>0)
@@ -266,10 +266,10 @@
                                                     <td>{{date_format(date_create($upVal->release_date),'m-d-Y H:i:s')}}</td>
                                                     <td>
                                                         @if($upVal->withdraw==1)
-                                                            <button class="btn btn-simple btn-google m-0 p-0">Withdrawn</button>
+                                                            <button class="btn btn-simple btn-google m-0 p-0">Released</button>
                                                         @else
                                                             @if($datetimeNow->diff(new DateTime($upVal->release_date))->format('%R%a')>0)
-                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Waiting</button>
+                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Lending</button>
                                                             @else
                                                                 <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
                                                             @endif
