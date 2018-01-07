@@ -670,8 +670,8 @@ class Bonus
 			}
 
 			//Update cron status from 0 => 1
-			//$cronStatus->status = 1;
-			//$cronStatus->save();
+			$cronStatus->status = 1;
+			$cronStatus->save();
 		}
 
 		//Update status from 1 => 0 after run all user
