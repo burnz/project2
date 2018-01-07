@@ -27,17 +27,6 @@ class AutoAddBinary {
         $year = date('Y');
         $weekYear = $year.$weeked;
 
-        // $firstWeek = $weeked -1; //Pre week
-        // $firstYear = $year;
-
-        // if($firstWeek == 0){
-        //     $firstWeek = 52;
-        //     $firstYear = $year - 1;
-        //     $weekYear = $firstYear.$firstWeek;
-        // }
-
-        // if($firstWeek < 10 && $firstWeek > 0) $weekYear = $firstYear.'0'.$firstWeek;
-
         //Get all member which has isBinary > 0 orderby id
         $allMember = UserData::where('isBinary', 1)->where('packageId', '>', 0)->orderby('userId')->get();
 
