@@ -122,10 +122,10 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('profile', 'User\ProfileController');
 
     //Auction
-    Route::get('order','Order\OrderController@index')->name('order.manage');
-    Route::post('order', 'Order\OrderController@index');
-    Route::get('gethistorydataorderuser', 'Order\OrderController@getHistoryDataOrder');
-    Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
+    // Route::get('order','Order\OrderController@index')->name('order.manage');
+    // Route::post('order', 'Order\OrderController@index');
+    // Route::get('gethistorydataorderuser', 'Order\OrderController@getHistoryDataOrder');
+    // Route::get('gethistorydatatrademarket', 'Order\OrderController@getHistoryDataTradeMarket');
 
     Route::get('todayorder','Backend\Order\ToDayOrderController@show');
     Route::get('historyorder','Backend\Order\HistoryOrderController@show');

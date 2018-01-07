@@ -45,7 +45,7 @@ class LoginController extends Controller{
      *
      * @var string
      */
-    //protected $redirectTo = '/home';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -82,10 +82,8 @@ class LoginController extends Controller{
             return '/admin/home';
         }
 
-        //$this->redirectTo = '/home';
-        //return '/home';
-        $this->redirectTo='/order';
-        return '/order';
+        $this->redirectTo = '/home';
+        return '/home';
     }
 
     protected function attemptLogin(Request $request){
@@ -207,13 +205,13 @@ class LoginController extends Controller{
             return redirect(url('/admin/home'));
         }
 
-        $this->redirectTo = '/order';
-        return redirect(url('/order'));
+        $this->redirectTo = '/home';
+        return redirect(url('/home'));
     }
 
     public function auth2fa(Request $request){
         if(Session::get('google2fa')) 
-            return redirect('/order');
+            return redirect('/home');
         $valid = true;
         if($request->isMethod('post')){
             $key = Session::get('authy:auth:2fa');
