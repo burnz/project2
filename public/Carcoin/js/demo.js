@@ -1,4 +1,17 @@
 $(document).ready(function() {
+    
+    $("input[type=number]").on("keypress", function(event){
+        var charCode = event.charCode;
+        if (charCode != 0) {
+            // 48 - 57
+            if (charCode < 46 || charCode > 57 || charCode == 47) {
+                event.preventDefault();
+            }
+        }
+    });
+
+
+
     $sidebar = $('.sidebar');
     $sidebar_img_container = $sidebar.find('.sidebar-background');
 
@@ -1479,5 +1492,10 @@ demo = {
             }
         });
     }
+
+
+    
+
+
 
 }
