@@ -232,7 +232,7 @@
                             </div>
                             <!--end modal-->
 
-                            <div class="col-xs-2">
+                            <div class=" col-md-2 col-xs-6 col-sm-3">
                                     <select class="selectpicker" name="wallet_type" id="wallet_type" data-style="select-with-transition" title="Sellect Wallet" data-size="2">
                                     <option value="2">CARCOIN WALLET</option>
                                     <option value="3">REINVEST WALLET</option>
