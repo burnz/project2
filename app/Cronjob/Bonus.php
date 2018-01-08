@@ -43,7 +43,6 @@ class Bonus
 		$year = date('Y');
 		$weekYear = $year.$weeked;
 
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 		try {
 			$lstUser = User::where('active', '=', 1)->get();
 			foreach($lstUser as $user){
@@ -185,12 +184,8 @@ class Bonus
 		$year = date('Y');
 		$weekYear = $year.$weeked;
 
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
-
 		$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-		//$firstWeek = $weeked;
 		$firstYear = $year;
-		$firstWeekYear = $firstYear.$firstWeek;
 
 		if($firstWeek == 0){
 			$firstWeek = 52;
@@ -198,7 +193,7 @@ class Bonus
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
 
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'00'.$firstWeek;
+		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 
 		/* =======END ===== */
 
@@ -302,8 +297,6 @@ class Bonus
 			$year = date('Y');
 			$weekYear = $year.$weeked;
 
-			if($weeked < 10) $weekYear = $year.'00'.$weeked;
-
 			$week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
 
 			// Yes => update L-Open, R-Open
@@ -353,16 +346,15 @@ class Bonus
 		$weeked = date('W');
 		$year = date('Y');
 		$weekYear = $year.$weeked;
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
+
 		$firstWeek = $weeked - 1;
 		$firstYear = $year;
-		$firstWeekYear = $firstYear.$firstWeek;
 		if($firstWeek == 0){
 			$firstWeek = 52;
 			$firstYear = $year - 1;
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
-		if($firstWeek < 10) $firstWeekYear = $firstYear.'00'.$firstWeek;
+		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 		/* =======END ===== */
 		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
 		foreach($listBinaryInterest as $binary)
@@ -447,8 +439,6 @@ class Bonus
 			$weeked = date('W');
 			$year = date('Y');
 			$weekYear = $year.$weeked;
-
-			if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
 			$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
 			// Yes => update L-Open, R-Open

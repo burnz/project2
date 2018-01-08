@@ -229,7 +229,7 @@ class PackageController extends Controller
             $weeked = date('W');
             $year = date('Y');
             $weekYear = $year.$weeked;
-            if($weeked < 10) $weekYear = $year.'0'.$weeked;
+            
             $packageSelected = Package::find($request->packageId);
             UserPackage::create([
                 'userId' => $currentuserid,

@@ -270,8 +270,6 @@ class User extends Authenticatable
 		$year = date('Y');
 		$weekYear = $year.$weeked;
 
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
-
 		$week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
 
 		if($week && $week->id > 0) { //If already have record just update amount increase 
@@ -329,8 +327,6 @@ class User extends Authenticatable
 		$weeked = date('W');
 		$year = date('Y');
 		$weekYear = $year.$weeked;
-
-		if($weeked < 10) $weekYear = $year.'0'.$weeked;
 
 		$binary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->first();
 		if($binary){

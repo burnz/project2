@@ -123,7 +123,7 @@ class MemberController extends Controller
         $weeked = date('W');
         $year = date('Y');
         $weekYear = $year.$weeked;
-        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+
         if($request->ajax()){
             if(isset($request['id']) && $request['id'] > 0) {
                 $user = User::find($request['id']);
@@ -279,7 +279,7 @@ class MemberController extends Controller
         $weeked = date('W');
         $year = date('Y');
         $weekYear = $year.$weeked;
-        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+
         $package = UserPackage::where('userId', $userId)
                             ->where('weekYear', '=', $weekYear)
                             ->groupBy(['userId'])
@@ -358,7 +358,7 @@ class MemberController extends Controller
         $weeked = date('W');
         $year = date('Y');
         $weekYear = $year.$weeked;
-        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+
         $week = BonusBinary::where('userId', '=', $userId)->where('weekYear', '=', $weekYear)->first();
         $result = ['left'=>0, 'right'=>0, 'total'=>0];
 
@@ -375,7 +375,7 @@ class MemberController extends Controller
         $weeked = date('W');
         $year = date('Y');
         $weekYear = $year.$weeked;
-        if($weeked < 10)$weekYear = $year.'0'.$weeked;
+        
         $currentuserid = Auth::user()->id;
         $level = $level + 1;
         $fields = array();
