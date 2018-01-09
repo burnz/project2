@@ -281,42 +281,29 @@
                                     <h4 class="card-title">Binary Tree</h4>
                                     <div class="box">
                                         <div class="box-body" style="padding-top:0;">
-                                            <!-- <div class="col-xs-5" style="padding-left: 0; padding-top: 15px;position: absolute;">
-                                                {!! Form::open(['url' => url('members/pushIntoTree'), 'id' => 'pushIntoTreeForm']) !!}
-                                                <div class="col-xs-12 col-lg-6" style="padding-left: 0;">
-                                                    {{ Form::select('userSelect', $lstUserSelect, null, ['class' => 'form-control', 'id'=>'userSelect', 'size' => 4], ['placeholder' => 'Choose an username']) }}
-                                                </div>
-                                                <div class="col-xs-12 col-lg-6" style="padding-left: 0;" id="push_into">
-                                                    <input type="hidden" name="legpos" id="legpos" value="0">
-                                                    {!! Form::button('Push to Left', ['class' => 'btn btn-fill btn-xs btn-info btn-round', 'id' => 'btn_submit_left', 'style'=>'margin-top:10px;width:100%;']) !!}
-                                                    <br>
-                                                    {!! Form::button('Push to Right', ['class' => 'btn btn-fill btn-xs btn-primary btn-round', 'id' => 'btn_submit_right', 'style'=>'margin-top:10px;width:100%;']) !!}
+                                            
+<div class="col-xs-12 col-md-4 col-md-offset-7 col-sm-4 col-sm-offset-7 binary-search text-center" style="padding-top: 15px;right:-14px;">
+    <!-- <div class="input-group input-group-sm"> -->
+        <div class="col-lg-8">
+            <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
+        </div>
+        <div class="col-lg-2">
+            <!-- <span class="input-group-btn"> -->
+                <button type="button" id="search-button" class="btn btn-primary btn-flat btn-round" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
+                <!-- </span> -->
+            </div>
+            <!-- </div> -->
+        </div>
+        <div class="clearfix"></div>
+        <div class="" style="margin-top: 15px;text-align:center;">
+            <center>
+                <button class="btn btn-round btn-white btn-fill btn-just-icon" type="button" id="refresh-tree"
+                style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i></button>
 
-                                                </div>
-                                                {!! Form::close() !!}
-                                            </div> -->
-                                            <div class="col-xs-5 binary-search" style="padding-top: 15px;position: absolute;right:-14px;">
-                                                <!-- <div class="input-group input-group-sm"> -->
-                                                    <div class="col-lg-6">
-                                                        <input type="text" class="form-control" id="search-input" placeholder="{{ trans('adminlte_lang::member.refferals_username') }}">
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <!-- <span class="input-group-btn"> -->
-                                                            <button type="button" id="search-button" class="btn btn-primary btn-flat btn-round" ><i class="fa fa-search"></i> {{ trans('adminlte_lang::member.btn_search') }}</button>
-                                                            <!-- </span> -->
-                                                        </div>
-                                                        <!-- </div> -->
-                                                    </div>
-
-                                                    <div style="margin-top: 15px;text-align:center;">
-                                                        <center>
-                                                            <button class="btn btn-round btn-white btn-fill btn-just-icon" type="button" id="refresh-tree"
-                                                            style="margin-bottom: 5px;"><i class="fa fa-step-backward rotate90"></i></button>
-
-                                                        </center>
-                                                        <center><button class="btn btn-round btn-white btn-fill btn-just-icon" type="button" id="go-up"><i
-                                                            class="fa fa-play rotate120 "></i></button></center>
-                                                        </div>
+            </center>
+            <center><button class="btn btn-round btn-white btn-fill btn-just-icon" type="button" id="go-up"><i
+                class="fa fa-play rotate120 "></i></button></center>
+            </div>
                                                         <div class="chart" id="tree-container"></div>
 
                                                         <div class="pull-left">
