@@ -58,6 +58,16 @@
         font-size: 6px;
         height: 50px;
     }
+    .box-body{
+        overflow: scroll;
+    }
+    #tree-container{
+        width: 1024px;
+        overflow-x: scroll;
+    }
+    .node-loyalty{
+        font-size: 1.5rem;
+    }
 }
 .tree-node:hover {
     cursor: pointer;
@@ -86,6 +96,7 @@
     /* filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=1.5); */
     -ms-transform: rotate(30deg);
 }
+
 
 .node-lvl-0{
     background: linear-gradient(90deg, #005200, #008500);
