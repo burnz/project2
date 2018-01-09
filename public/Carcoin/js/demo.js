@@ -57,7 +57,7 @@ $(document).ready(function() {
 
 
 
-        if(wrapper.offsetWidth >= 768){
+        if(wrapper.offsetWidth >= 992){
             var dropdown = document.querySelector('.navbar-header .navbar-wallet[icon] li.dropdown'),
                 dropdown_child = document.querySelectorAll('.navbar-header .navbar-wallet[icon] .dropdown-menu > li');
 
@@ -78,10 +78,7 @@ $(document).ready(function() {
         }
 
 
-        if(wrapper.offsetWidth <= 767 && wrapper.offsetWidth >= 481){
-            size = 2; 
-        }
-        if(wrapper.offsetWidth <= 480){
+        if(wrapper.offsetWidth <= 768){
             size = 1; 
         }
 

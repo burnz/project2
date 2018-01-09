@@ -15,16 +15,10 @@
 	                </div>
 	                <div class="card-content">
 	                	<h4 class="card-title">Infinity Interest Bonus</h4>
-	                	<div class=""><!--table-responsive table-scroll-y-->
-	                		<div id="employee-grid_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-	                			<div class="row">
-	                                <div class="col-sm-6"></div>
-	                                <div class="col-sm-6"></div>
-	                            </div>
-	                		</div>
 	                		<div class="row">
+	                				<div class="table-responsive">
 	                			<div class="col-sm-12">
-	                				<table class="table dataTable no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
+	                				<table class="table no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
 	                					<thead class="text-thirdary">
 	                						<tr>
 	                							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
@@ -62,3 +56,12 @@
 		</div>
 	</div>
 @endsection
+@section('script')
+	<script type="text/javascript">
+		$('#referrals-grid').DataTable({
+            "ordering": false,
+            "searching":false,
+            "bLengthChange": false,
+        });
+	</script>
+@stop

@@ -6,6 +6,14 @@
 
 
 @section('content')
+	<style type="text/css">
+		.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    background-color: #ee2229;
+    border-color: #9c27b0;
+    color: #FFFFFF;
+    box-shadow: 0 14px 26px -12px rgba(238, 34, 41, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(238, 34, 41, 0.2);
+}
+	</style>
 	<div class="content">
 		<div class="container-fluid">
 			<div class="col-md-12 align-self-center">
@@ -15,16 +23,10 @@
 	                </div>
 	                <div class="card-content">
 	                	<h4 class="card-title">Infinity Bonus</h4>
-	                	<div class=""><!--table-responsive table-scroll-y-->
-	                		<div id="employee-grid_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-	                			<div class="row">
-	                                <div class="col-sm-6"></div>
-	                                <div class="col-sm-6"></div>
-	                            </div>
-	                		</div>
-	                		<div class="row">
+    					<div class="row">
+	                		<div class="table-responsive">
 	                			<div class="col-sm-12">
-	                				<table class="table dataTable no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
+	                				<table class="table no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
 	                					<thead class="text-thirdary">
 	                						<tr>
 	                							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
@@ -68,3 +70,12 @@
 		</div>
 	</div>
 @endsection
+@section('script')
+	<script type="text/javascript">
+		$('#referrals-grid').DataTable({
+            "ordering": false,
+            "searching":false,
+            "bLengthChange": false,
+        });
+	</script>
+@stop

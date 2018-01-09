@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-content">
                     <h4 class="card-title">Referrals</h4>
-                    <div class=""><!--table-responsive table-scroll-y-->
+                    <div class="table-responsive"><!--table-responsive table-scroll-y-->
                         <div id="employee-grid_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
                             <div class="row">
                                 <div class="col-sm-6"></div>
