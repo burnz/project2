@@ -3,7 +3,7 @@
 <script type="text/javascript" src="{{asset('Carcoin/js/lodash.min.js')}}"></script>
     <script src="{{asset('Carcoin/js/bootstrap.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('Carcoin/js/material.min.js')}}" type="text/javascript"></script>
-    <script src="{{asset('Carcoin/js/perfect-scrollbar.jquery.min.js')}}" type="text/javascript"></script>
+    <!-- <script src="{{asset('Carcoin/js/perfect-scrollbar.jquery.min.js')}}" type="text/javascript"></script> -->
     <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script> -->
     <!-- Library for adding dinamically elements -->

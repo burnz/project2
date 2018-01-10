@@ -1,10 +1,12 @@
 @charset "UTF-8";
 /* Brand Color */
 /* Coin Color */
-.modal input:not([type="button"]){
-    position: absolute !important;
+.modal-open .modal {
+    overflow-y: hidden;
 }
-
+body.modal-open {
+    overflow: hidden !important;
+}
 .sidebar .nav {
   margin: 20px 0; }
 
@@ -69,7 +71,7 @@ i.material-icons[icon="img"][size="x-lg"] > img {
 
 /* Modal */
 .wrapper {
-  z-index: 1049; }
+  /*z-index: 1049;*/ }
 
 .modal-content .modal-header button {
   position: absolute;
