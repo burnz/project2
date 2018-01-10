@@ -1,6 +1,4 @@
-.modal input:not([type="button"]){
-    position: absolute !important;
-}
+
 
 .box-widget .wallet-title{
         padding: 0;

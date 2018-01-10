@@ -1,6 +1,10 @@
 @charset "UTF-8";
 /* Brand Color */
 /* Coin Color */
+.modal input:not([type="button"]){
+    position: absolute !important;
+}
+
 .sidebar .nav {
   margin: 20px 0; }
 
