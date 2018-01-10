@@ -1,12 +1,9 @@
 @charset "UTF-8";
 /* Brand Color */
 /* Coin Color */
-.modal-open .modal {
-    overflow-y: hidden;
-}
-body.modal-open {
-    overflow: hidden !important;
-}
+
+body.iosBugFixCaret.modal-open { position: fixed; width: 100%; }
+
 .sidebar .nav {
   margin: 20px 0; }
 

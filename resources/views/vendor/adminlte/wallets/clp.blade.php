@@ -120,7 +120,7 @@
                                             <div class="clearfix"></div>
                                             <!-- <h4 class="card-title">Command</h4> -->
 
-                                            <div class="material-datatables">
+                                            <div class="material-datatables table-responsive">
                                                 <table class="table table-striped table-no-bordered table-hover" id="tbCLP" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
                                                         <th style="width: 20%;">Date/Time</th>
