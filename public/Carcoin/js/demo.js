@@ -9,9 +9,11 @@ $(document).ready(function() {
 
         // Add CSS class to body
         $("body").addClass("iosBugFixCaret");
+        console.log('WTF');
 
     }
-    
+
+
     $("input[type=number]").on("keypress", function(event){
         var charCode = event.charCode;
         if (charCode != 0) {
