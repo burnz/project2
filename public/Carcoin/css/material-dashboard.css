@@ -13148,7 +13148,7 @@ footer .btn {
     }
     html,
     body {
-        overflow-x: hidden;
+        overflow: hidden;
     }
     .nav-open .menu-on-left .main-panel,
     .nav-open .menu-on-left .wrapper-full-page,
