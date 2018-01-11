@@ -95,7 +95,7 @@
                                                                         </span> Withdraw
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-transfer">
+                                            <button id="btnTransfer" class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-transfer">
                                                 <span class="btn-label">
                                                     <i class="material-icons">swap_horiz</i>
                                                                         </span> Transfer
@@ -340,11 +340,17 @@
     <script src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(){
+
+            $('#btnTransfer').click(function(){
+                if ( iOS && iOS11 ) {
+                    window.location.href='{{URL::to("wallets/car/itransfer")}}';
+                }
+            });
+
+
             var mytimer;
             var packageId = {{ Auth::user()->userData->packageId }};
             var packageIdPick = packageId;
-
-
             var qrcode = $("#qrcode").qrcode({
                     width: 180,
                     height: 180,
@@ -353,7 +359,6 @@
                     colorLight: "#ffffff",
                     //correctLevel: qrcode.CorrectLevel.H
                 });
-
             $('.btnwallet-address').tooltip({
                 trigger: 'click',
                 placement: 'bottom'
@@ -377,7 +382,6 @@
                 setTooltip('Copied!');
                 hideTooltip();
             });
-
             //get address wallet
             $(".get-clpwallet").click(function(){
                 $(".get-clpwallet").attr("disabled", "disabled");
@@ -396,13 +400,11 @@
                     console.log("Error response!")
                 });
             });
-
             
             $('#withdraw-clp').on('click', function () {
                 var withdrawAmount = $('#withdrawAmount').val();
                 var walletAddress = $('#walletAddress').val();
                 var withdrawOTP = $('#withdrawOTP').val();
-
                 if($.trim(withdrawAmount) == ''){
                     $("#withdrawAmount").parents("div.form-group").addClass('has-error');
                     $("#withdrawAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
@@ -431,7 +433,6 @@
                     $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                 }
-
                 if($.trim(withdrawAmount) != '' && $.trim(walletAddress) != '' && $.trim(withdrawOTP) != ''){
                     $('#withdraw-clp').attr('disabled', true);
                     $.ajax({
@@ -448,7 +449,6 @@
                                     $("#withdrawAmount").parents("div.form-group").removeClass('has-error');
                                     $("#withdrawAmount").parents("div.form-group").find('.help-block').text('');
                                 }
-
                                 if(data.msg.walletAddressErr !== '') {
                                     $("#walletAddress").parents("div.form-group").addClass('has-error');
                                     $("#walletAddress").parents("div.form-group").find('.help-block').text(data.msg.walletAddressErr);
@@ -456,7 +456,6 @@
                                     $("#walletAddress").parents("div.form-group").removeClass('has-error');
                                     $("#walletAddress").parents("div.form-group").find('.help-block').text('');
                                 }
-
                                 if(data.msg.withdrawOTPErr !== '') {
                                     $("#withdrawOTP").parents("div.form-group").addClass('has-error');
                                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text(data.msg.withdrawOTPErr);
@@ -464,7 +463,6 @@
                                     $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
                                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                                 }
-
                                 $('#withdraw-clp').attr('disabled', false);
                             }
                         } else {
@@ -478,7 +476,6 @@
                     });
                 }
             });
-
             
             
             $('#clpUsername').on('blur onmouseout onfocusout keyup', function () {
@@ -514,14 +511,11 @@
                     }, 1000);
                 }
             });
-
-
             $('#clptranfer').on('click', function () {
                 var clpAmount = $('#clpAmount').val();
                 var clpUsername = $('#clpUsername').val();
                 var clpOTP = $('#clpOTP').val();
                 var clpUid = $('#clpUid').val();
-
                 if($.trim(clpAmount) == ''){
                     $("#clpAmount").parents("div.form-group").addClass('has-error');
                     $("#clpAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
@@ -564,7 +558,6 @@
                                     $("#clpAmount").parents("div.form-group").removeClass('has-error');
                                     $("#clpAmount").parents("div.form-group").find('.help-block').text('');
                                 }
-
                                 if(data.msg.clpUsernameErr !== '') {
                                     $("#clpUsername").parents("div.form-group").addClass('has-error');
                                     $("#clpUsername").parents("div.form-group").find('.help-block').text(data.msg.clpUsernameErr);
@@ -577,7 +570,6 @@
                                         $("#clpUsername").parents("div.form-group").find('.help-block').text('');
                                     }
                                 }
-
                                 if(data.msg.clpUidErr !== '') {
                                     $("#clpUid").parents("div.form-group").addClass('has-error');
                                     $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
@@ -585,7 +577,6 @@
                                     $("#clpUid").parents("div.form-group").removeClass('has-error');
                                     $("#clpUid").parents("div.form-group").find('.help-block').text('');
                                 }
-
                                 if(data.msg.clpOTPErr !== '') {
                                     $("#clpOTP").parents("div.form-group").addClass('has-error');
                                     $("#clpOTP").parents("div.form-group").find('.help-block').text(data.msg.clpOTPErr);
@@ -604,7 +595,6 @@
                     });
                 }
             });
-
             //sell carcoin
             $('#sell-clp').on('click', function () {
                 var clpAmount = $('#sellCLPAmount').val();
@@ -638,11 +628,9 @@
                                 }else {
                                     $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
                                     $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
-
                                     $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
                                     $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
                                 }
-
                             }
                         } else {
                             $('#tranfer').modal('hide');
@@ -660,13 +648,11 @@
                 var result = value / (globalCLPBTC * 0.95) ;
                 $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(2)).trigger("change");
             });
-
             $(".switch-CLP-to-BTC-sellclp").on('keyup mousewheel', function () {
                 var value = $(this).val();
                 var result = value * globalCLPBTC * 0.95;
                 $(".switch-BTC-to-CLP-sellclp").val(result.toFixed(5)).trigger("change");
             });
-
             /*('#tbCLP').DataTable({
                 "ordering": false,
                 "searching":false,
@@ -683,7 +669,6 @@
                     return false;
                 }
             });
-
             $('#btn_filter_clear').on('click', function () {
                 location.href = '{{ url()->current() }}';
             });

@@ -66,6 +66,7 @@ Route::group( ['middleware' => ['auth']], function() {
 
     
     //Route::get('wallets/switchusdclp', 'Wallet\UsdWalletController@switchUSDCLP');
+    Route::get('wallets/car/itransfer','Wallet\ClpWalletController@viewClpTransfer');
     Route::get('wallets/getrateusdbtc', 'Wallet\UsdWalletController@getDataWallet');
     Route::post('wallets/btcwithdraw', 'Wallet\WithDrawController@btcWithDraw');
 
