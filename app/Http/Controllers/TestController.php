@@ -66,7 +66,7 @@ class TestController {
     }
     function testGlobalBonus()
     {
-        Bonus::globalBonus();
+        Bonus::bonusLeadershipMonthCron();
         return 'Return gobal bonus month for user successfully';
     }
 

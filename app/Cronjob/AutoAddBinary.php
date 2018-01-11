@@ -19,6 +19,7 @@ use App\BonusBinary;
 class AutoAddBinary {
     
     public static function addBinary(){
+
         //Set no limit execution timeout
         set_time_limit(0);
         //Get this weekYear;
@@ -38,6 +39,7 @@ class AutoAddBinary {
             {
                 //Get left or right is weak
                 $thisWeek = BonusBinary::where('userId', '=', $member->userId)->where('weekYear', '=', $weekYear)->first();
+                
                 if(!$thisWeek) {
                     continue;
                 }
@@ -50,6 +52,7 @@ class AutoAddBinary {
                 } else {
                     $leftWeak = 1;
                 }
+
 
                 foreach($allF1NotYetBinary as $f1Member)
                 {

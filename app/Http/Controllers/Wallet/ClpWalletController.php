@@ -37,6 +37,11 @@ class ClpWalletController extends Controller {
         $this->middleware('auth');
     }
     
+    public function viewClpTransfer(Request $request)
+    {
+        return view('adminlte::wallets.clpTransfer');
+    }
+
     /**
      * @author Huynq
      * @return type

@@ -90,17 +90,7 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
-        /** 
-         * @author Huynq
-         * run every day update availableAmount(from holding wallet) table usercoin
-         */
-        try {
-            $schedule->call(function () {
-                AvailableAmount::getAvailableAmount();
-            })->daily();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        
         
         // Cronjob update exchange BTC, CLP rate
         try {

@@ -2,7 +2,7 @@
 <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="-987 2406.1 291.3 291.3" style="enable-background:new -987 2406.1 291.3 291.3;" xml:space="preserve">
-<style type="text/css">
+<!-- <style type="text/css">
 	.st0{fill:#ED1C24;}
 	.st1{fill:none;stroke:#FFFFFF;stroke-width:8.5039;stroke-miterlimit:10;}
 	.st2{fill:none;stroke:#FFFFFF;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
@@ -10,6 +10,15 @@
 	.st4{fill:none;stroke:#FFFFFF;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	.st5{clip-path:url(#SVGID_2_);}
 	.st6{fill:#D71920;}
+</style> -->
+<style type="text/css">
+ .st0{fill:#00B700;}
+ .st1{fill:none;stroke:#FFFFFF;stroke-width:8.5039;stroke-miterlimit:10;}
+ .st2{fill:none;stroke:#FFFFFF;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+ .st3{fill:#FFFFFF;}
+ .st4{fill:none;stroke:#FFFFFF;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+ .st5{clip-path:url(#SVGID_2_);}
+ .st6{fill:#009e00;}
 </style>
 <g id="XMLID_6800_">
 	<circle id="XMLID_6801_" class="st0" cx="-841.4" cy="2551.7" r="145"/>
