@@ -342,7 +342,7 @@
         jQuery(document).ready(function(){
 
             $('#btnTransfer').click(function(){
-                if ( iOS && iOS11 ) {
+                if ( window.iOS && window.iOS11 ) {
                     window.location.href='{{URL::to("wallets/car/itransfer")}}';
                 }
             });
