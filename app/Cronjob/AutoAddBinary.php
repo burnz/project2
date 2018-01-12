@@ -18,6 +18,54 @@ use App\BonusBinary;
 //auto push khi ng dung chua push
 class AutoAddBinary {
     
+//    public static function addBinary(){
+//
+//        //Set no limit execution timeout
+//        set_time_limit(0);
+//        //Get this weekYear;
+//        $weeked = date('W');
+//        $year = date('Y');
+//        $weekYear = $year.$weeked;
+//
+//        //Get all member which has isBinary > 0 orderby id
+//        $allMember = UserData::where('isBinary', 1)->where('packageId', '>', 0)->orderby('userId')->get();
+//
+//        //Foreach each
+//        foreach($allMember as $member) {
+//            //Check each member, get all F1 not yet add to binary
+//            $allF1NotYetBinary = UserData::where('isBinary', 0)->where('status', 1)->where('refererId', $member->userId)->get();
+//
+//            if($allF1NotYetBinary)
+//            {
+//                //Get left or right is weak
+//                $thisWeek = BonusBinary::where('userId', '=', $member->userId)->where('weekYear', '=', $weekYear)->first();
+//
+//                if(!$thisWeek) {
+//                    continue;
+//                }
+//                $leftOver = $thisWeek->leftOpen + $thisWeek->leftNew;
+//                $rightOver = $thisWeek->rightOpen + $thisWeek->rightNew;
+//
+//                $leftWeak = 0;
+//                if ($leftOver >= $rightOver) {
+//                    $leftWeak = 0;
+//                } else {
+//                    $leftWeak = 1;
+//                }
+//
+//
+//                foreach($allF1NotYetBinary as $f1Member)
+//                {
+//                    if($leftWeak) {//Add to left
+//                        self::pushToTree($member->userId, $f1Member->userId, 1);
+//                    } else {//Add to right
+//                        self::pushToTree($member->userId, $f1Member->userId, 2);
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     public static function addBinary(){
 
         //Set no limit execution timeout
@@ -28,40 +76,33 @@ class AutoAddBinary {
         $weekYear = $year.$weeked;
 
         //Get all member which has isBinary > 0 orderby id
-        $allMember = UserData::where('isBinary', 1)->where('packageId', '>', 0)->orderby('userId')->get();
+        $allMember = UserData::where('isBinary', 0)->where('packageId', '>', 0)
+                        ->whereNotNull('packageId')
+                        ->orderBy('refererId')->get();
 
         //Foreach each
         foreach($allMember as $member) {
-            //Check each member, get all F1 not yet add to binary
-            $allF1NotYetBinary = UserData::where('isBinary', 0)->where('status', 1)->where('refererId', $member->userId)->get();
+            //Get left or right is weak
+            $thisWeek = BonusBinary::where('userId', '=', $member->refererId)->where('weekYear', '=', $weekYear)->first();
 
-            if($allF1NotYetBinary) 
-            {
-                //Get left or right is weak
-                $thisWeek = BonusBinary::where('userId', '=', $member->userId)->where('weekYear', '=', $weekYear)->first();
-                
-                if(!$thisWeek) {
-                    continue;
-                }
-                $leftOver = $thisWeek->leftOpen + $thisWeek->leftNew;
-                $rightOver = $thisWeek->rightOpen + $thisWeek->rightNew;
+            if(!$thisWeek) {
+                continue;
+            }
+            $leftOver = $thisWeek->leftOpen + $thisWeek->leftNew;
+            $rightOver = $thisWeek->rightOpen + $thisWeek->rightNew;
 
+            $leftWeak = 0;
+            if ($leftOver >= $rightOver) {
                 $leftWeak = 0;
-                if ($leftOver >= $rightOver) {
-                    $leftWeak = 0;
-                } else {
-                    $leftWeak = 1;
-                }
+            } else {
+                $leftWeak = 1;
+            }
 
 
-                foreach($allF1NotYetBinary as $f1Member)
-                {
-                    if($leftWeak) {//Add to left
-                        self::pushToTree($member->userId, $f1Member->userId, 1);
-                    } else {//Add to right
-                        self::pushToTree($member->userId, $f1Member->userId, 2);
-                    }
-                }
+            if($leftWeak) {//Add to left
+                self::pushToTree($member->refererId, $member->userId, 1);
+            } else {//Add to right
+                self::pushToTree($member->refererId, $member->userId, 2);
             }
         }
     }
