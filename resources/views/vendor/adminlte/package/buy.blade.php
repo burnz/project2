@@ -127,7 +127,7 @@
                     </div>
                 @elseif(Session::has('flash_error'))
                     <div class="col-md-12">
-                        <div class="alert alert-error">
+                        <div class="alert alert-danger">
                             {{Session::get('flash_error')}}
                         </div>
                     </div>
@@ -345,6 +345,12 @@
                     break;
                 }
                 $('#walletId').val(walletType);
+                
+                if ( window.iOS && window.iOS11 ) {
+                    window.location.href='{{URL::to("packages/ibuy?wid=")}}'+walletType;
+                    return false;
+                }
+
                 $('#modBuyPackage').modal('show');
             });
 

@@ -23,7 +23,7 @@
                                     <form action="{{url(config('adminlte.login_url', 'login'))}}" method="post">
                                         {!! csrf_field() !!}
                                         <div class="card-content">
-                                            <div class="input-group">
+                                            <div class="input-group form-group">
                                                 <span class="input-group-addon">
                                                     <i class="material-icons">account_circle</i>
                                                 </span>
@@ -42,7 +42,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="input-group">
+                                            <div class="input-group form-group">
                                                 <span class="input-group-addon">
                                                     <i class="material-icons">lock_outline</i>
                                                 </span>

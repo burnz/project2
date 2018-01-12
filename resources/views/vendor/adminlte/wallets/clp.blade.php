@@ -83,13 +83,13 @@
                                             @endif
                                         </div>
                                         <div class="align-self-center">  
-                                            <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" data-target="#carcoin-deposit">
+                                            <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" id="btnDeposit" data-target="#carcoin-deposit">
                                                 <span class="btn-label">
                                                     <i class="material-icons">shop</i>
                                                                         </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" data-target="#carcoin-withdraw">
+                                            <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" id="btnWithdraw" data-target="#carcoin-withdraw">
                                                 <span class="btn-label">
                                                     <i class="material-icons reflect">shop</i>
                                                                         </span> Withdraw
@@ -346,6 +346,16 @@
                     window.location.href='{{URL::to("wallets/car/itransfer")}}';
                 }
             });
+            $('#btnWithdraw').click(function(){
+                if ( window.iOS && window.iOS11 ) {
+                    window.location.href='{{URL::to("wallets/car/iwithdraw")}}';
+                }
+            });
+            $('#btnDeposit').click(function(){
+                if ( window.iOS && window.iOS11 ) {
+                    window.location.href='{{URL::to("wallets/car/ideposit")}}';
+                }
+            });
 
 
             var mytimer;
@@ -389,7 +399,7 @@
                 $this.button('loading');
                 $.get("{{URL::to('wallets/car/getaddressclpwallet')}}", function(data, status){
                     if (data.err){
-                        alert("{{trans('adminlte_lang::wallet.not_get_address_clp_wallet')}}");
+                        swal("Whoops!","{{trans('adminlte_lang::wallet.not_get_address_clp_wallet')}}","error");
                         $this.button('reset');
                         $(".get-clpwallet").removeAttr("disabled");
                     }else{

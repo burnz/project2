@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    
+
     var ua = navigator.userAgent;
     window.iOS = /iPad|iPhone|iPod/.test(ua),
     window.iOS11 = /OS 11_0_1|OS 11_0_2|OS 11_0_3|OS 11_1|OS 11_1_1|OS 11_1_2|OS 11_2|OS 11_2_1|OS 11_2_2|OS 11_2_5/.test(ua);

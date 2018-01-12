@@ -64,14 +64,14 @@
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal"
+                                            <button class="btn btn-thirdary btn-round" id="btnDeposit" data-toggle="modal"
                                                     data-target="#bitcoin-deposit">
                                                     <span class="btn-label">
                                                         <i class="material-icons">shop</i>
                                                     </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal"
+                                            <button class="btn btn-thirdary btn-round" id="btnWithdraw" data-toggle="modal"
                                                     data-target="#bitcoin-withdraw">
                                                     <span class="btn-label">
                                                         <i class="material-icons reflect">shop</i>
@@ -144,13 +144,27 @@
     </div>
 </div>
 
-@include('adminlte::wallets.wallet-modal')
 @endsection
+@include('adminlte::wallets.wallet-modal')
 
 @section('script')
 <script src="{{asset('Carcoin/js/jquery.qrcode.min.js')}}"></script>
 <script src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
 <script type="text/javascript">
+
+    $('#btnDeposit').on('click',function(){
+        if ( window.iOS && window.iOS11 ) {
+            window.location.href='{{URL::to("wallets/btc/ideposit")}}';
+        }
+    });
+    $('#btnWithdraw').on('click',function(){
+        if ( window.iOS && window.iOS11 ) {
+            window.location.href='{{URL::to("wallets/btc/iwithdraw")}}';
+        }
+    });
+
+
+
     var qrcode = $("#qrcode").qrcode({
                     width: 180,
                     height: 180,
