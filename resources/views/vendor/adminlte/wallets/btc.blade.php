@@ -155,11 +155,13 @@
     $('#btnDeposit').on('click',function(){
         if ( window.iOS && window.iOS11 ) {
             window.location.href='{{URL::to("wallets/btc/ideposit")}}';
+            return false;
         }
     });
     $('#btnWithdraw').on('click',function(){
         if ( window.iOS && window.iOS11 ) {
             window.location.href='{{URL::to("wallets/btc/iwithdraw")}}';
+            return false;
         }
     });
 

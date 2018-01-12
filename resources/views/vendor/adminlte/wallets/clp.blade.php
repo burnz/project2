@@ -344,16 +344,19 @@
             $('#btnTransfer').click(function(){
                 if ( window.iOS && window.iOS11 ) {
                     window.location.href='{{URL::to("wallets/car/itransfer")}}';
+                    return false;
                 }
             });
             $('#btnWithdraw').click(function(){
                 if ( window.iOS && window.iOS11 ) {
                     window.location.href='{{URL::to("wallets/car/iwithdraw")}}';
+                    return false;
                 }
             });
             $('#btnDeposit').click(function(){
                 if ( window.iOS && window.iOS11 ) {
                     window.location.href='{{URL::to("wallets/car/ideposit")}}';
+                    return false;
                 }
             });
 
