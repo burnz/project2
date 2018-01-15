@@ -10,6 +10,9 @@
     }
     </style>
 	<div class="content">
+        <div id="popup" style="display: none">
+            <a href="{{ asset('img/popup/Maldives_Incentive_Trip.jpg') }}" data-lightbox="image-1" data-title="Maldives Incentive Trip" class="example-image-link" >Image #1</a>
+        </div>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
@@ -163,6 +166,15 @@
     </div>
 @stop
 @section('script')
+    @if(config('app.enable_popup'))
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/css/lightbox.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.10.0/js/lightbox.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            lightbox.start($('.example-image-link'));
+        });
+    </script>
+    @endif
 	<script type="text/javascript">
 		jQuery(document).ready(function($){
 			//section ref_link
