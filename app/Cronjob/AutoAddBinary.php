@@ -78,6 +78,7 @@ class AutoAddBinary {
         //Get all member which has isBinary > 0 orderby id
         $allMember = UserData::where('isBinary', 0)->where('packageId', '>', 0)
                         ->whereNotNull('refererId')
+                        ->where('userId', '>', 2)
                         ->orderBy('refererId')->get();
         //Foreach each
         try {
