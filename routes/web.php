@@ -173,10 +173,10 @@ Route::get('update-award', 'TestController@showUpdateAward')->name('test.showAwa
 Route::post('save-award', 'TestController@updateAward')->name('test.saveAward');
 
 
-Route::get('test-interest',"TestController@testInterest");
-Route::get('test-infinity','TestController@testInfinityBonus');
-Route::get('test-infinity-interest', 'TestController@testInfinityInterest');
-//Route::get('test-global-bonus','TestController@testGlobalBonus');
+Route::get('run-agency-bonus',"TestController@testInterest");
+Route::get('run-infinity','TestController@testInfinityBonus');
+Route::get('run-ticket-bonus', 'TestController@testInfinityInterest');
+Route::get('run-award-bonus','TestController@testGlobalBonus');
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 //Route::get('test',"TestController@test");
 

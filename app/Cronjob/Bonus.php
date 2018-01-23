@@ -202,16 +202,22 @@ class Bonus
                     $percentBonus = config('carcoin.bi_lv_5_bonus');
                 }
 
-                if($leftOver > $rightOver) $level = $rightOver;
-                else $level = $leftOver;
+                $leftOver = $binary->leftOpen + $binary->leftNew;
+                $rightOver = $binary->rightOpen + $binary->rightNew;
 
-                $leftOpen = $leftOver - $level;
-                $rightOpen = $rightOver - $level;
+                if ($leftOver >= $rightOver) {
+                    $leftOpen = $leftOver - $rightOver;
+                    $rightOpen = 0;
+                    $settled = $rightOver;
+                } else {
+                    $leftOpen = 0;
+                    $rightOpen = $rightOver - $leftOver;
+                    $settled = $leftOver;
+                }
 
-                $bonus = $level * $percentBonus;
+                $binary->settled = $settled;
 
-
-                $binary->settled = $level;
+                $bonus = $settled * $percentBonus;
 
                 //Bonus canot over maxout $30,000
                 if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
@@ -388,23 +394,25 @@ class Bonus
                     $bonus = 0;
                     self::calculateRevenueByLevel(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus, $user->userId);
 
-                    //each ticket price 0.0002 btc
-                    $bonus = $bonus * config('carcoin.price_per_ticket');
-                    $userCoin = $user->userCoin;
-                    $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
-                    $userCoin->save();
+                    if($bonus > 0) {
+                        //each ticket price 0.0002 btc
+                        $bonus = $bonus * config('carcoin.price_per_ticket');
+                        $userCoin = $user->userCoin;
+                        $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
+                        $userCoin->save();
 
-                    //insert to log
-                    $fieldUsd = [
-                        'walletType' => Wallet::BTC_WALLET,
-                        'type' => Wallet::REVENUE_BONUS,
-                        'inOut' => Wallet::IN,
-                        'userId' => $user->userId,
-                        'amount' => $bonus,
-                        'note'   => 'return revenue bonus',
-                    ];
-                    
-                    Wallet::create($fieldUsd);
+                        //insert to log
+                        $fieldUsd = [
+                            'walletType' => Wallet::BTC_WALLET,
+                            'type' => Wallet::REVENUE_BONUS,
+                            'inOut' => Wallet::IN,
+                            'userId' => $user->userId,
+                            'amount' => $bonus,
+                            'note'   => 'return revenue bonus',
+                        ];
+                        
+                        Wallet::create($fieldUsd);
+                    }
                 }
 
                 //Update cron status from 0 => 1
@@ -526,21 +534,23 @@ class Bonus
                     $bonus = 0;
                     self::calculateAwardReturn(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus, $user->userId);
 
-                    $userCoin = $user->userCoin;
-                    $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
-                    $userCoin->save();
+                    if($bonus > 0) {
+                        $userCoin = $user->userCoin;
+                        $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
+                        $userCoin->save();
 
-                    //insert to log
-                    $fieldUsd = [
-                        'walletType' => Wallet::BTC_WALLET,
-                        'type' => Wallet::AWARD_BONUS,
-                        'inOut' => Wallet::IN,
-                        'userId' => $user->userId,
-                        'amount' => $bonus,
-                        'note'   => 'return awards bonus',
-                    ];
-                    
-                    Wallet::create($fieldUsd);
+                        //insert to log
+                        $fieldUsd = [
+                            'walletType' => Wallet::BTC_WALLET,
+                            'type' => Wallet::AWARD_BONUS,
+                            'inOut' => Wallet::IN,
+                            'userId' => $user->userId,
+                            'amount' => $bonus,
+                            'note'   => 'awards bonus',
+                        ];
+                        
+                        Wallet::create($fieldUsd);
+                    }
                 }
 
                 //Update cron status from 0 => 1
@@ -581,8 +591,6 @@ class Bonus
         }
 
         if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
-
-        $firstWeekYear = $weekYear;
 
         /* =======END ===== */
         try {
@@ -710,18 +718,6 @@ class Bonus
     */
     public static function calculateRevenueByLevel($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
     {
-        //get all F1
-        $listF1 = DB::table('users')->whereIn('refererId', $userId)->pluck('id')->toArray();
-        //calculate revenue
-        $revenue = DB::table('tickets')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('quantity');
-
-        $commission = 0;
-        if($level == 1) $commission = self::TICKET_LEVEL_1;
-        if($level == 2) $commission = self::TICKET_LEVEL_2;
-        if($level == 3) $commission = self::TICKET_LEVEL_3;
-        if($level == 4) $commission = self::TICKET_LEVEL_4;
-        if($level == 5) $commission = self::TICKET_LEVEL_5;
-
         if($level == 1) {
             $listF1NotAgency = DB::table('users_data')->whereIn('refererId', $userId)
                             ->where('packageId', '=', 0)
@@ -732,7 +728,11 @@ class Bonus
             $revenue = DB::table('tickets')->whereIn('user_id', $listF1NotAgency)
                     ->where('week_year','=', $weekYear)
                     ->sum('quantity');
-            $bonus += $value * self::TICKET_DR_CUS;
+            $bonus += $revenue * self::TICKET_DR_CUS;
+
+            WeekTicketsHistory::where('week_year', $weekYear)
+                        ->where('user_id', $rootId)
+                        ->update(['direct_cs' => $revenue * self::TICKET_DR_CUS]);
 
             $listF1Agency = DB::table('users_data')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
@@ -743,20 +743,35 @@ class Bonus
             $revenue = DB::table('tickets')->whereIn('user_id', $listF1Agency)
                     ->where('week_year','=', $weekYear)
                     ->sum('quantity');
-            $bonus += $value * self::TICKET_LEVEL_1;
+            $bonus += $revenue * self::TICKET_LEVEL_1;
 
             WeekTicketsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
-                        ->update(['level_' . $level => $revenue * $commission]);
+                        ->update(['level_' . $level => $revenue *  self::TICKET_LEVEL_1]);
+
+            $listF1 = $listF1Agency;
         } else {
+            //get all F1
+            $listF1 = DB::table('users_data')->whereIn('refererId', $userId)
+                            ->where('packageId', '>', 0)
+                            ->pluck('userId')
+                            ->toArray();
 
-        }
+            //calculate revenue
+            $revenue = DB::table('tickets')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('quantity');
 
-        $bonus += $revenue * $commission;
+            $commission = 0;
+            if($level == 2) $commission = self::TICKET_LEVEL_2;
+            if($level == 3) $commission = self::TICKET_LEVEL_3;
+            if($level == 4) $commission = self::TICKET_LEVEL_4;
+            if($level == 5) $commission = self::TICKET_LEVEL_5;
+
+            $bonus += $revenue * $commission;
         
-        WeekTicketsHistory::where('week_year', $weekYear)
+            WeekTicketsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
                         ->update(['level_' . $level => $revenue * $commission]);
+        }
 
         if($level <= $maxLevel)
             self::calculateRevenueByLevel($listF1, $weekYear, $level + 1, $maxLevel, $bonus, $rootId);
@@ -769,10 +784,7 @@ class Bonus
     */
     public static function calculateAwardReturn($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
     {
-        //get all F1
-        $listF1 = DB::table('users')->whereIn('refererId', $userId)->pluck('id')->toArray();
-        //calculate revenue
-        $value = DB::table('awards')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('value');
+        
 
         if($level == 1) {
             $listF1NotAgency = DB::table('users_data')->whereIn('refererId', $userId)
@@ -785,6 +797,10 @@ class Bonus
                     ->where('week_year','=', $weekYear)
                     ->sum('value');
             $bonus += $value * self::AWARD_DR_CUS;
+
+            WeekAwardsHistory::where('week_year', $weekYear)
+                        ->where('user_id', $rootId)
+                        ->update(['direct_cs' => $value * self::AWARD_DR_CUS]);
 
             $listF1Agency = DB::table('users_data')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
@@ -800,7 +816,17 @@ class Bonus
             WeekAwardsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
                         ->update(['level_' . $level => $value * self::AWARD_AGENCY]);
+
+            $listF1 = $listF1Agency;
         } else {
+            //get all F1
+            $listF1 = DB::table('users_data')->whereIn('refererId', $userId)
+                            ->where('packageId', '>', 0)
+                            ->pluck('userId')
+                            ->toArray();
+            //calculate revenue
+            $value = DB::table('awards')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('value');
+
             $bonus += $value * self::AWARD_AGENCY;
         
             WeekAwardsHistory::where('week_year', $weekYear)

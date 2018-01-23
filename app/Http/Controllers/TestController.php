@@ -62,7 +62,6 @@ class TestController {
     //put your code here
     function testInterest($param = null) {
         //Get Notification
-
         Bonus::bonusNewAgencyCron();
         echo "Return bonus day for user successfully!";
     }
@@ -73,12 +72,12 @@ class TestController {
     }
     function testInfinityInterest()
     {
-        Bonus::bonusMatchingWeekCron();
+        Bonus::bonusRevenueCron();
         return 'Return bonus Infinity Interest week for user successfully';
     }
     function testGlobalBonus()
     {
-        Bonus::bonusLeadershipMonthCron();
+        Bonus::bonusAwardCron();
         return 'Return gobal bonus month for user successfully';
     }
 
