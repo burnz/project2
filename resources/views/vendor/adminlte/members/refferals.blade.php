@@ -99,7 +99,7 @@
         }else{
             swal({
                 title: "Are you sure?",
-                text: $(".btn_submit_left").attr('data-name') + " will be pushed to the Left!",
+                text: $(this).attr('data-name') + " will be pushed to the Left!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
@@ -125,7 +125,7 @@
         }else{
             swal({
                 title: "Are you sure?",
-                text: $(".btn_submit_left").attr('data-name') + " will be pushed to the Right!",
+                text: $(this).attr('data-name') + " will be pushed to the Right!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
