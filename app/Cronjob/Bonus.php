@@ -202,143 +202,147 @@ class Bonus
 		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 
 		/* =======END ===== */
+        try {
+            $lstBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->get();
+            foreach ($lstBinary as $binary)
+            {
+                //Get cron status
+                $cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
+                if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
-		$lstBinary = BonusBinary::where('weekYear', '=', $firstWeekYear)->get();
-		foreach ($lstBinary as $binary) 
-		{
-			//Get cron status
-			$cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
-			if(isset($cronStatus) && $cronStatus->status == 1) continue;
+                $leftOver = $binary->leftOpen + $binary->leftNew;
+                $rightOver = $binary->rightOpen + $binary->rightNew;
 
-			$leftOver = $binary->leftOpen + $binary->leftNew;
-			$rightOver = $binary->rightOpen + $binary->rightNew;
+                //Caculate level to get binary commision
+                $level = 0;
+                $percentBonus = 0;
+                $packageId = $binary->userData->packageId;
 
-			//Caculate level to get binary commision
-			$level = 0;
-			$percentBonus = 0;
-			$packageId = $binary->userData->packageId;
+                if($leftOver >= config('carcoin.bi_sale_cond_lv_1') &&
+                    $rightOver >= config('carcoin.bi_sale_cond_lv_1') &&
+                    $packageId >= 1 )
+                {
+                    $level = config('carcoin.bi_sale_cond_lv_1');
+                    $percentBonus = config('carcoin.bi_lv_1_bonus');
+                }
 
-			if($leftOver >= config('carcoin.bi_sale_cond_lv_1') && 
-				$rightOver >= config('carcoin.bi_sale_cond_lv_1') && 
-				$packageId >= 1 )
-			{
-				$level = config('carcoin.bi_sale_cond_lv_1');
-				$percentBonus = config('carcoin.bi_lv_1_bonus');
-			}
+                if($leftOver >= config('carcoin.bi_sale_cond_lv_2') &&
+                    $rightOver >= config('carcoin.bi_sale_cond_lv_2') &&
+                    $packageId >= 2)
+                {
+                    $level = config('carcoin.bi_sale_cond_lv_2');
+                    $percentBonus = config('carcoin.bi_lv_2_bonus');
+                }
 
-			if($leftOver >= config('carcoin.bi_sale_cond_lv_2') && 
-				$rightOver >= config('carcoin.bi_sale_cond_lv_2') && 
-				$packageId >= 2)
-			{
-				$level = config('carcoin.bi_sale_cond_lv_2');
-				$percentBonus = config('carcoin.bi_lv_2_bonus');
-			}
+                if($leftOver >= config('carcoin.bi_sale_cond_lv_3') &&
+                    $rightOver >= config('carcoin.bi_sale_cond_lv_3') &&
+                    $packageId >= 3)
+                {
+                    $level = config('carcoin.bi_sale_cond_lv_3');
+                    $percentBonus = config('carcoin.bi_lv_3_bonus');
+                }
 
-			if($leftOver >= config('carcoin.bi_sale_cond_lv_3') && 
-				$rightOver >= config('carcoin.bi_sale_cond_lv_3') && 
-				$packageId >= 3)
-			{
-				$level = config('carcoin.bi_sale_cond_lv_3');
-				$percentBonus = config('carcoin.bi_lv_3_bonus');
-			}
+                if($leftOver > config('carcoin.bi_sale_cond_lv_4') &&
+                    $rightOver > config('carcoin.bi_sale_cond_lv_4') &&
+                    $packageId == 4)
+                {
+                    $level = config('carcoin.bi_sale_cond_lv_4');
+                    $percentBonus = config('carcoin.bi_lv_4_bonus');
+                }
 
-			if($leftOver > config('carcoin.bi_sale_cond_lv_4') && 
-				$rightOver > config('carcoin.bi_sale_cond_lv_4') && 
-				$packageId == 4)
-			{
-				$level = config('carcoin.bi_sale_cond_lv_4');
-				$percentBonus = config('carcoin.bi_lv_4_bonus');
-			}
-
-			$leftOpen = $leftOver - $level;
-			$rightOpen = $rightOver - $level;
+                $leftOpen = $leftOver - $level;
+                $rightOpen = $rightOver - $level;
 
 
-			$bonus = $level * $percentBonus;
-			
+                $bonus = $level * $percentBonus;
 
-			$binary->settled = $level;
 
-			//Bonus canot over maxout $30,000
-			if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
+                $binary->settled = $level;
 
-			$binary->bonus = $bonus;
-			$binary->save();
+                //Bonus canot over maxout $30,000
+                if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
 
-			if($bonus > 0){
-				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                $binary->bonus = $bonus;
+                $binary->save();
 
-				$userCoin = $binary->userCoin;
-				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-				$userCoin->save();
+                if($bonus > 0){
+                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
 
-				$fieldUsd = [
-					'walletType' => Wallet::CLP_WALLET,//usd
-					'type' =>  Wallet::BINARY_TYPE,//bonus week
-					'inOut' => Wallet::IN,
-					'userId' => $binary->userId,
-					'amount' => $clpAmount,
-					'note'	=>'Paid 60% [Infinity Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.clp_bonus_pay')
-				];
+                    $userCoin = $binary->userCoin;
+                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+                    $userCoin->save();
 
-				Wallet::create($fieldUsd);
+                    $fieldUsd = [
+                        'walletType' => Wallet::CLP_WALLET,//usd
+                        'type' =>  Wallet::BINARY_TYPE,//bonus week
+                        'inOut' => Wallet::IN,
+                        'userId' => $binary->userId,
+                        'amount' => $clpAmount,
+                        'note'	=> '$' . $bonus * config('carcoin.clp_bonus_pay') . ' - paid 60% of $'.$bonus
+                    ];
 
-				$fieldInvest = [
-					'walletType' => Wallet::REINVEST_WALLET,//reinvest
-					'type' => Wallet::BINARY_TYPE,//bonus week
-					'inOut' => Wallet::IN,
-					'userId' => $binary->userId,
-					'amount' => $reinvestAmount,
-					'note'	=>'Paid 40% [Infinity Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.reinvest_bonus_pay')
-				];
+                    Wallet::create($fieldUsd);
 
-				Wallet::create($fieldInvest);
-			}
+                    $fieldInvest = [
+                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                        'type' => Wallet::BINARY_TYPE,//bonus week
+                        'inOut' => Wallet::IN,
+                        'userId' => $binary->userId,
+                        'amount' => $reinvestAmount,
+                        'note'	=> '$' . $bonus * config('carcoin.reinvest_bonus_pay') . ' - paid 40% of $'.$bonus
+                    ];
 
-			//Check already have record for this week?
-			
-			$weeked = date('W');
-			$year = date('Y');
-			$weekYear = $year.$weeked;
+                    Wallet::create($fieldInvest);
+                }
 
-			$week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+                //Check already have record for this week?
 
-			// Yes => update L-Open, R-Open
-			if(isset($week) && $week->id > 0) {
-				$week->leftOpen = $leftOpen;
-				$week->rightOpen = $rightOpen;
+                $weeked = date('W');
+                $year = date('Y');
+                $weekYear = $year.$weeked;
 
-				//update leftNew
-				$week->leftNew=0;//reset leftNew
-				$week->rightNew=0;//reset rightNew
-				//update RightNew
+                $week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
 
-				$week->save();
-			} else {
-				// No => create new
-				$field = [
-					'userId' => $binary->userId,
-					'weeked' => $weeked,
-					'year' => $year,
-					'leftNew' => 0,
-					'rightNew' => 0,
-					'leftOpen' => $leftOpen,
-					'rightOpen' => $rightOpen,
-					'weekYear' => $weekYear,
-				];
+                // Yes => update L-Open, R-Open
+                if(isset($week) && $week->id > 0) {
+                    $week->leftOpen = $leftOpen;
+                    $week->rightOpen = $rightOpen;
 
-				BonusBinary::create($field);
-			}
+                    //update leftNew
+                    $week->leftNew=0;//reset leftNew
+                    $week->rightNew=0;//reset rightNew
+                    //update RightNew
 
-			//Update cron status from 0 => 1
-			$cronStatus->status = 1;
-			$cronStatus->save();
-		}
+                    $week->save();
+                } else {
+                    // No => create new
+                    $field = [
+                        'userId' => $binary->userId,
+                        'weeked' => $weeked,
+                        'year' => $year,
+                        'leftNew' => 0,
+                        'rightNew' => 0,
+                        'leftOpen' => $leftOpen,
+                        'rightOpen' => $rightOpen,
+                        'weekYear' => $weekYear,
+                    ];
 
-		//Update status from 1 => 0 after run all user
-		DB::table('cron_binary_logs')->update(['status' => 0]);
+                    BonusBinary::create($field);
+                }
+
+                //Update cron status from 0 => 1
+                $cronStatus->status = 1;
+                $cronStatus->save();
+            }
+
+            //Update status from 1 => 0 after run all user
+            DB::table('cron_binary_logs')->update(['status' => 0]);
+        } catch(\Exception $e) {
+            Log::error('Running Infinity Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::info($e->getTraceAsString());
+        }
 	}
 
 	/**
@@ -362,123 +366,125 @@ class Bonus
 		}
 		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 		/* =======END ===== */
-		$listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
-		foreach($listBinaryInterest as $binary)
-		{
-			//Get cron status
-			$cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
-			if(isset($cronStatus) && $cronStatus->status == 1) continue;
-			//$volInfo = self::_calLeftRightVolume($binary->userId);
-			$leftOver = $binary->leftNew + $binary->leftOpen;
-			$rightOver = $binary->rightNew + $binary->leftOpen;
-			
-			//Caculate level to get binary commision
-			$level = 0;
-			$percentBonus = 0;
-			$packageId = $binary->userData->packageId;
-			if($leftOver >= config('carcoin.bi_inter_cond_lv_1') && 
-				$rightOver >= config('carcoin.bi_inter_cond_lv_1') && 
-				$packageId >= 1 )
-			{
-				$level = config('carcoin.bi_inter_cond_lv_1');
-				$percentBonus = config('carcoin.bi_lv_1_inter_bonus');
-			}
-			if($leftOver >= config('carcoin.bi_inter_cond_lv_2') && 
-				$rightOver >= config('carcoin.bi_inter_cond_lv_2') && 
-				$packageId >= 2)
-			{
-				$level = config('carcoin.bi_inter_cond_lv_2');
-				$percentBonus = config('carcoin.bi_lv_2_inter_bonus');
-			}
-			if($leftOver >= config('carcoin.bi_inter_cond_lv_3') && 
-				$rightOver >= config('carcoin.bi_inter_cond_lv_3') && 
-				$packageId >= 3)
-			{
-				$level = config('carcoin.bi_inter_cond_lv_3');
-				$percentBonus = config('carcoin.bi_lv_3_inter_bonus');
-			}
-			if($leftOver > config('carcoin.bi_inter_cond_lv_4') && 
-				$rightOver > config('carcoin.bi_inter_cond_lv_4') && 
-				$packageId == 4)
-			{
-				$level = config('carcoin.bi_inter_cond_lv_4');
-				$percentBonus = config('carcoin.bi_lv_4_inter_bonus');
-			}
-			$leftOpen = $leftOver - $level;
-			$rightOpen = $rightOver - $level;
-			$bonus = $level * $percentBonus;
 
-			//Bonus canot over maxout $30,000
-			if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
+        try {
+            $listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
+            foreach($listBinaryInterest as $binary)
+            {
+                //Get cron status
+                $cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
+                if(isset($cronStatus) && $cronStatus->status == 1) continue;
+                //$volInfo = self::_calLeftRightVolume($binary->userId);
+                $leftOver = $binary->leftNew + $binary->leftOpen;
+                $rightOver = $binary->rightNew + $binary->leftOpen;
 
-			$binary->bonus = $bonus;
-			$binary->save();
-			
-			if($bonus > 0)
-			{
-				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$userCoin = $binary->userCoin;
-				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-				$userCoin->save();
-				$fieldUsd = [
-					'walletType' => Wallet::CLP_WALLET,//
-					'type' =>  Wallet::MATCHING_TYPE,//bonus week
-					'inOut' => Wallet::IN,
-					'userId' => $binary->userId,
-					'amount' => $clpAmount,
-					'note'	=>'Paid 60% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.clp_bonus_pay')
-				];
-				Wallet::create($fieldUsd);
-				$fieldInvest = [
-					'walletType' => Wallet::REINVEST_WALLET,//reinvest
-					'type' => Wallet::MATCHING_TYPE,//bonus week
-					'inOut' => Wallet::IN,
-					'userId' => $binary->userId,
-					'amount' => $reinvestAmount,
-					'note'	=>'Paid 40% [Infinity Interest Bonus] for ['.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."1")).' - '.date( "Y/m/d", strtotime($binary->year."W".$binary->weeked."7")).'] - $'.$bonus * config('carcoin.reinvest_bonus_pay')
-				];
-				Wallet::create($fieldInvest);
-			}
+                //Caculate level to get binary commision
+                $level = 0;
+                $percentBonus = 0;
+                $packageId = $binary->userData->packageId;
+                if($leftOver >= config('carcoin.bi_inter_cond_lv_1') &&
+                    $rightOver >= config('carcoin.bi_inter_cond_lv_1') &&
+                    $packageId >= 1 )
+                {
+                    $level = config('carcoin.bi_inter_cond_lv_1');
+                    $percentBonus = config('carcoin.bi_lv_1_inter_bonus');
+                }
+                if($leftOver >= config('carcoin.bi_inter_cond_lv_2') &&
+                    $rightOver >= config('carcoin.bi_inter_cond_lv_2') &&
+                    $packageId >= 2)
+                {
+                    $level = config('carcoin.bi_inter_cond_lv_2');
+                    $percentBonus = config('carcoin.bi_lv_2_inter_bonus');
+                }
+                if($leftOver >= config('carcoin.bi_inter_cond_lv_3') &&
+                    $rightOver >= config('carcoin.bi_inter_cond_lv_3') &&
+                    $packageId >= 3)
+                {
+                    $level = config('carcoin.bi_inter_cond_lv_3');
+                    $percentBonus = config('carcoin.bi_lv_3_inter_bonus');
+                }
+                if($leftOver > config('carcoin.bi_inter_cond_lv_4') &&
+                    $rightOver > config('carcoin.bi_inter_cond_lv_4') &&
+                    $packageId == 4)
+                {
+                    $level = config('carcoin.bi_inter_cond_lv_4');
+                    $percentBonus = config('carcoin.bi_lv_4_inter_bonus');
+                }
+                $leftOpen = $leftOver - $level;
+                $rightOpen = $rightOver - $level;
+                $bonus = $level * $percentBonus;
 
-			$weeked = date('W');
-			$year = date('Y');
-			$weekYear = $year.$weeked;
+                //Bonus canot over maxout $30,000
+                if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
 
-			$week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
-			// Yes => update L-Open, R-Open
-			if(isset($week) && $week->id > 0) {
-				$week->leftOpen = $leftOpen;
-				$week->rightOpen = $rightOpen;
+                $binary->bonus = $bonus;
+                $binary->save();
 
-				//update leftNew
-				$week->leftNew=0;//reset leftNew
-				$week->rightNew=0;//reset rightNew
-				//update RightNew
+                if($bonus > 0)
+                {
+                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $userCoin = $binary->userCoin;
+                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+                    $userCoin->save();
+                    $fieldUsd = [
+                        'walletType' => Wallet::CLP_WALLET,//
+                        'type' =>  Wallet::MATCHING_TYPE,//bonus week
+                        'inOut' => Wallet::IN,
+                        'userId' => $binary->userId,
+                        'amount' => $clpAmount,
+                        'note'	=> '$' . $bonus * config('carcoin.clp_bonus_pay') . ' - paid 60% of $'.$bonus
+                    ];
+                    Wallet::create($fieldUsd);
+                    $fieldInvest = [
+                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                        'type' => Wallet::MATCHING_TYPE,//bonus week
+                        'inOut' => Wallet::IN,
+                        'userId' => $binary->userId,
+                        'amount' => $reinvestAmount,
+                        'note'	=> '$' . $bonus * config('carcoin.reinvest_bonus_pay') . ' - paid 40% of $'.$bonus
+                    ];
+                    Wallet::create($fieldInvest);
+                }
 
-				$week->save();
-			} else {
-				// No => create new
-				$field = [
-					'userId' => $binary->userId,
-					'weeked' => $weeked,
-					'year' => $year,
-					'leftNew' => 0,
-					'rightNew' => 0,
-					'leftOpen' => $leftOpen,
-					'rightOpen' => $rightOpen,
-					'weekYear' => $weekYear,
-				];
+                $week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
+                // Yes => update L-Open, R-Open
+                if(isset($week) && $week->id > 0) {
+                    $week->leftOpen = $leftOpen;
+                    $week->rightOpen = $rightOpen;
 
-				BonusBinaryInterest::create($field);
-			}
-			//Update cron status from 0 => 1
-			$cronStatus->status = 1;
-			$cronStatus->save();
-		}
-		//Update status from 1 => 0 after run all user
-		DB::table('cron_matching_logs')->update(['status' => 0]);
+                    //update leftNew
+                    $week->leftNew=0;//reset leftNew
+                    $week->rightNew=0;//reset rightNew
+                    //update RightNew
+
+                    $week->save();
+                } else {
+                    // No => create new
+                    $field = [
+                        'userId' => $binary->userId,
+                        'weeked' => $weeked,
+                        'year' => $year,
+                        'leftNew' => 0,
+                        'rightNew' => 0,
+                        'leftOpen' => $leftOpen,
+                        'rightOpen' => $rightOpen,
+                        'weekYear' => $weekYear,
+                    ];
+
+                    BonusBinaryInterest::create($field);
+                }
+                //Update cron status from 0 => 1
+                $cronStatus->status = 1;
+                $cronStatus->save();
+            }
+            //Update status from 1 => 0 after run all user
+            DB::table('cron_matching_logs')->update(['status' => 0]);
+        } catch(\Exception $e) {
+            Log::error('Running Infinity Interest has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::info($e->getTraceAsString());
+        }
 	}
 
 	public static function _calLeftRightVolume($userId)//
@@ -554,127 +560,131 @@ class Bonus
 		$firstDayPreviousMonth = new \DateTime('FIRST DAY OF PREVIOUS MONTH');
 		$lastDayPreviousMonth = new \DateTime('LAST DAY OF PREVIOUS MONTH');
 		$totalCompanyIncome = 0;
-		
 
-		$buyPack = DB::table('user_packages')
-				->select(DB::raw('SUM(amount_increase) as sumamount'))
-				->where('created_at', '>=', $firstDayPreviousMonth->format('Y-m-d 00:00:00')) 
-				->where('created_at', '<', $lastDayPreviousMonth->format('Y-m-d 23:59:00'))
-				->get();
-		$totalCompanyIncome =isset($buyPack[0]->sumamount)?$buyPack[0]->sumamount:0;
-		//Number of Sapphire
-		$numberOfSapphire=DB::table('user_datas')->where('loyaltyId',1)->where('status',1)->where('packageId','>',0)->count();
-		//Number of Emerald
-		$numberOfEmerald=DB::table('user_datas')->where('loyaltyId',2)->where('status',1)->where('packageId','>',0)->count();
-		//Number of Diamond
-		$numberOfDiamond=DB::table('user_datas')->where('loyaltyId',3)->where('status',1)->where('packageId','>',0)->count();
-		//Number of BlueDiamond
-		$numberOfBlueDiamond=DB::table('user_datas')->where('loyaltyId',4)->where('status',1)->where('packageId','>',0)->count();
+        try {
+            $buyPack = DB::table('user_packages')
+                    ->select(DB::raw('SUM(amount_increase) as sumamount'))
+                    ->where('created_at', '>=', $firstDayPreviousMonth->format('Y-m-d 00:00:00'))
+                    ->where('created_at', '<', $lastDayPreviousMonth->format('Y-m-d 23:59:00'))
+                    ->get();
+            $totalCompanyIncome =isset($buyPack[0]->sumamount)?$buyPack[0]->sumamount:0;
+            //Number of Sapphire
+            $numberOfSapphire=DB::table('user_datas')->where('loyaltyId',1)->where('status',1)->where('packageId','>',0)->count();
+            //Number of Emerald
+            $numberOfEmerald=DB::table('user_datas')->where('loyaltyId',2)->where('status',1)->where('packageId','>',0)->count();
+            //Number of Diamond
+            $numberOfDiamond=DB::table('user_datas')->where('loyaltyId',3)->where('status',1)->where('packageId','>',0)->count();
+            //Number of BlueDiamond
+            $numberOfBlueDiamond=DB::table('user_datas')->where('loyaltyId',4)->where('status',1)->where('packageId','>',0)->count();
 
-		//Number of BlackDiamond
-		$numberOfBlackDiamond=DB::table('user_datas')->where('loyaltyId',5)->where('status',1)->where('packageId','>',0)->count();
+            //Number of BlackDiamond
+            $numberOfBlackDiamond=DB::table('user_datas')->where('loyaltyId',5)->where('status',1)->where('packageId','>',0)->count();
 
 
 
-		$sapphireBonus = config('carcoin.sapphire_leadership_bonus');
-		$emeraldBonus = config('carcoin.emerald_leadership_bonus');
-		$diamondBonus = config('carcoin.diamond_leadership_bonus');
-		$blueDiamondBonus = config('carcoin.bluediamond_leadership_bonus');
-		$blackDiamondBonus = config('carcoin.blackdiamond_leadership_bonus');
+            $sapphireBonus = config('carcoin.sapphire_leadership_bonus');
+            $emeraldBonus = config('carcoin.emerald_leadership_bonus');
+            $diamondBonus = config('carcoin.diamond_leadership_bonus');
+            $blueDiamondBonus = config('carcoin.bluediamond_leadership_bonus');
+            $blackDiamondBonus = config('carcoin.blackdiamond_leadership_bonus');
 
-		$ttBonusSapphire=($numberOfSapphire + $numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+            $ttBonusSapphire=($numberOfSapphire + $numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
 
-		$bonusSapphire = $totalCompanyIncome * $sapphireBonus / ($ttBonusSapphire==0?1:$ttBonusSapphire);
+            $bonusSapphire = $totalCompanyIncome * $sapphireBonus / ($ttBonusSapphire==0?1:$ttBonusSapphire);
 
-		$ttBonusEmerald=($numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+            $ttBonusEmerald=($numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
 
-		$bonusEmerald = $totalCompanyIncome * $emeraldBonus / ($ttBonusEmerald==0?1:$ttBonusEmerald);
+            $bonusEmerald = $totalCompanyIncome * $emeraldBonus / ($ttBonusEmerald==0?1:$ttBonusEmerald);
 
-		$ttBonusDiamond=($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
+            $ttBonusDiamond=($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
 
-		$bonusDiamond = $totalCompanyIncome * $diamondBonus / ($ttBonusDiamond==0?1:$ttBonusDiamond);
+            $bonusDiamond = $totalCompanyIncome * $diamondBonus / ($ttBonusDiamond==0?1:$ttBonusDiamond);
 
-		$ttBonusBlueDiamond=($numberOfBlueDiamond + $numberOfBlackDiamond);
+            $ttBonusBlueDiamond=($numberOfBlueDiamond + $numberOfBlackDiamond);
 
-		$bonusBlueDiamond = $totalCompanyIncome * $blueDiamondBonus / ($ttBonusBlueDiamond==0?1:$ttBonusBlueDiamond);
+            $bonusBlueDiamond = $totalCompanyIncome * $blueDiamondBonus / ($ttBonusBlueDiamond==0?1:$ttBonusBlueDiamond);
 
-		$bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / ($numberOfBlackDiamond==0?1:$numberOfBlackDiamond);
+            $bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / ($numberOfBlackDiamond==0?1:$numberOfBlackDiamond);
 
-		//Get all user in loyalty table with loyaltyId > 0
-		$listLoyaltyUser = UserData::where('loyaltyId', '>', 0)
-							->where('status', 1)
-							->where('packageId', '>', 0)
-							->get();
+            //Get all user in loyalty table with loyaltyId > 0
+            $listLoyaltyUser = UserData::where('loyaltyId', '>', 0)
+                                ->where('status', 1)
+                                ->where('packageId', '>', 0)
+                                ->get();
 
-		foreach($listLoyaltyUser as $user)
-		{
-			//Get cron status
-			$cronStatus = CronLeadershipLogs::where('userId', $user->userId)->first();
-			if(isset($cronStatus) && $cronStatus->status == 1) continue;
+            foreach($listLoyaltyUser as $user)
+            {
+                //Get cron status
+                $cronStatus = CronLeadershipLogs::where('userId', $user->userId)->first();
+                if(isset($cronStatus) && $cronStatus->status == 1) continue;
 
-			if($user->loyaltyId == 1)
-			{
-				$bonus = $bonusSapphire;
-			}
+                if($user->loyaltyId == 1)
+                {
+                    $bonus = $bonusSapphire;
+                }
 
-			if($user->loyaltyId == 2)
-			{
-				$bonus = $bonusEmerald;
-			}
+                if($user->loyaltyId == 2)
+                {
+                    $bonus = $bonusEmerald;
+                }
 
-			if($user->loyaltyId == 3)
-			{
-				$bonus = $bonusDiamond;
-			}
+                if($user->loyaltyId == 3)
+                {
+                    $bonus = $bonusDiamond;
+                }
 
-			if($user->loyaltyId == 4)
-			{
-				$bonus = $bonusBlueDiamond;
-			}
+                if($user->loyaltyId == 4)
+                {
+                    $bonus = $bonusBlueDiamond;
+                }
 
-			if($user->loyaltyId == 5)
-			{
-				$bonus = $bonusBlackDiamond;
-			}
+                if($user->loyaltyId == 5)
+                {
+                    $bonus = $bonusBlackDiamond;
+                }
 
-			if($bonus > 0)
-			{
-				$clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
-				$userCoin = UserCoin::find($user->userId);
-				$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-				$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-				$userCoin->save();
+                if($bonus > 0)
+                {
+                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $userCoin = UserCoin::find($user->userId);
+                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+                    $userCoin->save();
 
-				$fieldUsd = [
-					'walletType' => Wallet::CLP_WALLET,//
-					'type' =>  Wallet::GLOBAL_BONUS,//bonus month
-					'inOut' => Wallet::IN,
-					'userId' => $user->userId,
-					'amount' => $clpAmount,
-					'note'=>'Paid 60% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.clp_bonus_pay')
-				];
+                    $fieldUsd = [
+                        'walletType' => Wallet::CLP_WALLET,//
+                        'type' =>  Wallet::GLOBAL_BONUS,//bonus month
+                        'inOut' => Wallet::IN,
+                        'userId' => $user->userId,
+                        'amount' => $clpAmount,
+                        'note'=>'Paid 60% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.clp_bonus_pay')
+                    ];
 
-				Wallet::create($fieldUsd);
+                    Wallet::create($fieldUsd);
 
-				$fieldInvest = [
-					'walletType' => Wallet::REINVEST_WALLET,//reinvest
-					'type' => Wallet::GLOBAL_BONUS,//bonus month
-					'inOut' => Wallet::IN,
-					'userId' => $user->userId,
-					'amount' => $reinvestAmount,
-					'note'=>'Paid 40% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
-				];
+                    $fieldInvest = [
+                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
+                        'type' => Wallet::GLOBAL_BONUS,//bonus month
+                        'inOut' => Wallet::IN,
+                        'userId' => $user->userId,
+                        'amount' => $reinvestAmount,
+                        'note'=>'Paid 40% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
+                    ];
 
-				Wallet::create($fieldInvest);
-			}
+                    Wallet::create($fieldInvest);
+                }
 
-			//Update cron status from 0 => 1
-			$cronStatus->status = 1;
-			$cronStatus->save();
-		}
+                //Update cron status from 0 => 1
+                $cronStatus->status = 1;
+                $cronStatus->save();
+            }
 
-		//Update status from 1 => 0 after run all user
-		DB::table('cron_leadership_logs')->update(['status' => 0]);
+            //Update status from 1 => 0 after run all user
+            DB::table('cron_leadership_logs')->update(['status' => 0]);
+        } catch(\Exception $e) {
+            Log::error('Running Global Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::info($e->getTraceAsString());
+        }
 	}
 }

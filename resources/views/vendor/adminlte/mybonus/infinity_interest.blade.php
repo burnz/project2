@@ -26,6 +26,8 @@
 												<th>{{ trans('adminlte_lang::mybonus.ropen') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.lnew') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.rnew') }}</th>
+												<th>{{ trans('adminlte_lang::mybonus.lover') }}</th>
+												<th>{{ trans('adminlte_lang::mybonus.rover') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.bonus') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.reinvest') }}</th>
 												<th>{{ trans('adminlte_lang::mybonus.transfer_withdraw') }}</th>
@@ -39,7 +41,8 @@
 												<td>{{ number_format($binary->rightOpen,2) }}</td>
 												<td>{{ number_format($binary->leftNew, 2) }}</td>
 												<td>{{ number_format($binary->rightNew, 2) }}</td>
-												
+												<td>{{ number_format($binary->leftOpen + $binary->leftNew, 2) }}</td>
+												<td>{{ number_format($binary->rightOpen + $binary->rightNew, 2) }}</td>
 												<td>{{ number_format($binary->bonus, 2) }}</td>
 												<td>{{ $binary->bonus >= 0 ? number_format(($binary->bonus*40/100), 2) : '' }}</td>
 												<td>{{ $binary->bonus >= 0 ? number_format(($binary->bonus*60/100), 2) : '' }}</td>

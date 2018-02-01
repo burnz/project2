@@ -79,32 +79,50 @@ class AutoAddBinary {
         $allMember = UserData::where('isBinary', 0)->where('packageId', '>', 0)
                         ->whereNotNull('refererId')
                         ->orderBy('refererId')->get();
-
         //Foreach each
-        foreach($allMember as $member) {
-            //Get left or right is weak
-            $thisWeek = BonusBinary::where('userId', '=', $member->refererId)->where('weekYear', '=', $weekYear)->first();
+        try {
+            foreach($allMember as $member)
+            {
+                //Get left or right is weak
+                $thisWeek = BonusBinary::where('userId', '=', $member->refererId)->where('weekYear', '=', $weekYear)->first();
 
-            if(!$thisWeek) {
-                continue;
-            }
-            $leftOver = $thisWeek->leftOpen + $thisWeek->leftNew;
-            $rightOver = $thisWeek->rightOpen + $thisWeek->rightNew;
+                if(!$thisWeek) {
+                    $fields = [
+                        'userId'     => $member->refererId,
+                        'weeked'     => $weeked,
+                        'year'     => $year,
+                        'weekYear'     => $weekYear,
+                    ];
 
-            $leftWeak = 0;
-            if ($leftOver >= $rightOver) {
+                    $fields['leftOpen'] = 0;
+                    $fields['rightOpen'] = 0;
+                    $fields['leftNew'] = 0;
+                    $fields['rightNew'] = 0;
+
+                    $thisWeek = BonusBinary::create($fields);
+                }
+                $leftOver = $thisWeek->leftOpen + $thisWeek->leftNew;
+                $rightOver = $thisWeek->rightOpen + $thisWeek->rightNew;
+
                 $leftWeak = 0;
-            } else {
-                $leftWeak = 1;
-            }
+                if ($leftOver >= $rightOver) {
+                    $leftWeak = 0;
+                } else {
+                    $leftWeak = 1;
+                }
 
 
-            if($leftWeak) {//Add to left
-                self::pushToTree($member->refererId, $member->userId, 1);
-            } else {//Add to right
-                self::pushToTree($member->refererId, $member->userId, 2);
+                if($leftWeak) {//Add to left
+                    self::pushToTree($member->refererId, $member->userId, 1);
+                } else {//Add to right
+                    self::pushToTree($member->refererId, $member->userId, 2);
+                }
             }
+        } catch(\Exception $e) {
+            \Log::error('Running AutoAddBinary has error: ' . date('Y-m-d') .$e->getMessage());
+            \Log::info($e->getTraceAsString());
         }
+
     }
 
     public static function pushToTree($userId, $f1UserId, $legPos) 

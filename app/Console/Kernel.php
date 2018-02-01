@@ -34,15 +34,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //Transfer CAR in pre-sale
-        // try {
-        //     $schedule->call(function () {
-        //         TransferCarPresale::transfer();
-        //     })->dailyAt('21:00');
-        // } catch (\Exception $ex) {
-        //     Log::info($ex);
-        // }
-
         //Auto add to binary at 23:30 every sunday
         try {
             $schedule->call(function () {
@@ -79,6 +70,15 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
+        // Binary bonus leadership monthly
+        try {
+            $schedule->call(function () {
+                Bonus::bonusLeadershipMonthCron();
+            })->monthlyOn(1, '2:00');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
         /**
          * @author Huynq 
          * run every 30s update notification
@@ -90,8 +90,7 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
-        
-        
+
         // Cronjob update exchange BTC, CLP rate
         try {
             $schedule->call(function (){
