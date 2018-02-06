@@ -113,7 +113,7 @@
 .wp-node-loyalty{
     display: block;
     width: 100%;
-    min-height: 100px;
+    min-height: 145px;
     border: 1px solid #DDDDDD;
     border-radius: 15px;
     text-align: center;
@@ -179,6 +179,7 @@
     border-bottom-right-radius: 0 !important;
     width: 180%;
 }
+/*
 .tooltip-arrow {
     top: 3%;
     
@@ -189,6 +190,7 @@
     border-style: solid;
     border-color: transparent;
 }
+*/
 .tree-node p
 {
     margin:0 !important;
@@ -196,6 +198,7 @@
 .node-if-header{
     padding-top: 5px;
 }
+/*
 .tooltip-content-title
 {
     color: #fff;
@@ -206,6 +209,7 @@
 .tooltip-content-body{
     padding: 2px 10px;
 }
+*/
 .lb-tt-tt{
     line-height: 0;
     width: 20px;
@@ -217,6 +221,9 @@
     border-bottom-right-radius: 15px !important;
     border-top-left-radius: 15px !important;
 }
+
+/*
+
 .left-posi .tooltip-arrow{
     border-left-color: #6C7A89 !important;
     border-width: 10px 0 20px 10px;
@@ -230,12 +237,15 @@
     border-top-right-radius: 0 !important;
     border-top-left-radius: 15px !important;
 }
+
+*/
 .disable-tt{
     display: none !important;
 }
 .tt-saleLeft{
     width: 50%;
     float: left;
+    padding-left: 5px;
 }
 .tt-saleRight{
     width: 50%;
