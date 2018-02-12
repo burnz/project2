@@ -143,6 +143,7 @@ return [
     'clp_price' => env('CLP_PRICE', 1),
     'virtual_account' => env('LIST_VIRTUAL_ACCOUNT'),
     'top_leaders' => env('TOP_LEADERS'),
+    'fullnode_api_url' => env('FULLNODE_API_URL'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
