@@ -172,9 +172,9 @@ class ClpWalletController extends Controller {
 
                 $currentTotal = $request->clpAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
 
-                if($currentTotal > 10000)
+                if($currentTotal > 60000)
                 {
-                    $clpAmountErr = 'Daily transfer and withdraw amount cannot exceed $10,000';
+                    $clpAmountErr = 'Daily transfer cannot exceed $60,000';
                 }
             }
             
