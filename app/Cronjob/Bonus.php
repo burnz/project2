@@ -199,7 +199,11 @@ class Bonus
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
 
+
+
 		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
+        //dd($firstWeek);
 
 		/* =======END ===== */
         try {
@@ -222,7 +226,7 @@ class Bonus
                     $rightOver >= config('carcoin.bi_sale_cond_lv_1') &&
                     $packageId >= 1 )
                 {
-                    $level = config('carcoin.bi_sale_cond_lv_1');
+                    //$level = config('carcoin.bi_sale_cond_lv_1');
                     $percentBonus = config('carcoin.bi_lv_1_bonus');
                 }
 
@@ -230,7 +234,7 @@ class Bonus
                     $rightOver >= config('carcoin.bi_sale_cond_lv_2') &&
                     $packageId >= 2)
                 {
-                    $level = config('carcoin.bi_sale_cond_lv_2');
+                    //$level = config('carcoin.bi_sale_cond_lv_2');
                     $percentBonus = config('carcoin.bi_lv_2_bonus');
                 }
 
@@ -238,7 +242,7 @@ class Bonus
                     $rightOver >= config('carcoin.bi_sale_cond_lv_3') &&
                     $packageId >= 3)
                 {
-                    $level = config('carcoin.bi_sale_cond_lv_3');
+                    //$level = config('carcoin.bi_sale_cond_lv_3');
                     $percentBonus = config('carcoin.bi_lv_3_bonus');
                 }
 
@@ -246,13 +250,15 @@ class Bonus
                     $rightOver > config('carcoin.bi_sale_cond_lv_4') &&
                     $packageId == 4)
                 {
-                    $level = config('carcoin.bi_sale_cond_lv_4');
+                    //$level = config('carcoin.bi_sale_cond_lv_4');
                     $percentBonus = config('carcoin.bi_lv_4_bonus');
                 }
 
+                if($leftOver > $rightOver) $level = $rightOver;
+                else $level = $leftOver;
+
                 $leftOpen = $leftOver - $level;
                 $rightOpen = $rightOver - $level;
-
 
                 $bonus = $level * $percentBonus;
 
@@ -310,11 +316,6 @@ class Bonus
                     $week->leftOpen = $leftOpen;
                     $week->rightOpen = $rightOpen;
 
-                    //update leftNew
-                    $week->leftNew=0;//reset leftNew
-                    $week->rightNew=0;//reset rightNew
-                    //update RightNew
-
                     $week->save();
                 } else {
                     // No => create new
@@ -333,6 +334,7 @@ class Bonus
                 }
 
                 //Update cron status from 0 => 1
+                //echo $binary->userId . "---";
                 $cronStatus->status = 1;
                 $cronStatus->save();
             }
@@ -386,30 +388,30 @@ class Bonus
                     $rightOver >= config('carcoin.bi_inter_cond_lv_1') &&
                     $packageId >= 1 )
                 {
-                    $level = config('carcoin.bi_inter_cond_lv_1');
                     $percentBonus = config('carcoin.bi_lv_1_inter_bonus');
                 }
                 if($leftOver >= config('carcoin.bi_inter_cond_lv_2') &&
                     $rightOver >= config('carcoin.bi_inter_cond_lv_2') &&
                     $packageId >= 2)
                 {
-                    $level = config('carcoin.bi_inter_cond_lv_2');
                     $percentBonus = config('carcoin.bi_lv_2_inter_bonus');
                 }
                 if($leftOver >= config('carcoin.bi_inter_cond_lv_3') &&
                     $rightOver >= config('carcoin.bi_inter_cond_lv_3') &&
                     $packageId >= 3)
                 {
-                    $level = config('carcoin.bi_inter_cond_lv_3');
                     $percentBonus = config('carcoin.bi_lv_3_inter_bonus');
                 }
                 if($leftOver > config('carcoin.bi_inter_cond_lv_4') &&
                     $rightOver > config('carcoin.bi_inter_cond_lv_4') &&
                     $packageId == 4)
                 {
-                    $level = config('carcoin.bi_inter_cond_lv_4');
                     $percentBonus = config('carcoin.bi_lv_4_inter_bonus');
                 }
+
+                if($leftOver > $rightOver) $level = $rightOver;
+                else $level = $leftOver;
+
                 $leftOpen = $leftOver - $level;
                 $rightOpen = $rightOver - $level;
                 $bonus = $level * $percentBonus;
