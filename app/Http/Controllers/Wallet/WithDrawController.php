@@ -111,9 +111,9 @@ class WithDrawController extends Controller
 
 		if($request->d != '')
 		{
-			$data = json_decode(base64_decode($request->d));
-			
-			if($data && isset($data[1]) && $data[1] > 0 && isset($data[2]) && in_array($data[2], ['btc', 'clp']))
+			$data = json_decode(base64_decode($request->d))
+
+			if($data && isset($data[1]) && $data[1] > 0 && isset($data[2]) && in_array($data[2], ['btc', 'car']))
 			{
 				list($token, $id, $type, $amount) = $data;
 				$withdrawConfirm = WithdrawConfirm::where('id', '=', $id)->where('withdrawAmount', $amount)->first();
@@ -549,13 +549,13 @@ class WithDrawController extends Controller
 			}
 
 			//Only transfer CLP, Withdraw $10.000 per day
-            $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
+            $totalMoneyOut = UserCoin::getTotalWithdrawDay(Auth::user()->id);
 
             $currentTotal = $request->withdrawAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
 
             if($currentTotal > 10000)
             {
-                $withdrawAmountErr = 'Daily transfer and withdraw amount cannot exceed $10,000';
+                $withdrawAmountErr = 'Daily withdraw amount cannot exceed $10,000';
             }
 
 			if($request->walletAddress == ''){
@@ -587,7 +587,7 @@ class WithDrawController extends Controller
 						'type' => 'clp',
 					];
 					$withdrawConfirm = WithdrawConfirm::create($field);
-					$encrypt    = [hash("sha256", md5(md5($withdrawConfirm->id))), $withdrawConfirm->id, 'clp', $request->withdrawAmount];
+					$encrypt    = [hash("sha256", md5(md5($withdrawConfirm->id))), $withdrawConfirm->id, 'car', $request->withdrawAmount];
 					$linkConfirm =  URL::to('/confirmWithdraw')."?d=".base64_encode(json_encode($encrypt));
 					$coinData = ['amount' => $request->withdrawAmount, 'address' => $request->walletAddress, 'type' => 'car'];
 					$user->notify(new WithDrawConfirmNoti($user, $coinData, $linkConfirm));
