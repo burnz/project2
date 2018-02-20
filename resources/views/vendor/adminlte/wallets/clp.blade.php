@@ -83,13 +83,13 @@
                                             @endif
                                         </div>
                                         <div class="align-self-center">  
-                                            <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" data-target="#carcoin-deposit">
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
                                                 <span class="btn-label">
                                                     <i class="material-icons">shop</i>
                                                                         </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" disabled="" data-toggle="modal" data-target="#carcoin-withdraw">
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw">
                                                 <span class="btn-label">
                                                     <i class="material-icons reflect">shop</i>
                                                                         </span> Withdraw
@@ -121,7 +121,7 @@
                                             <!-- <h4 class="card-title">Command</h4> -->
 
                                             <div class="material-datatables table-responsive">
-                                                <table class="table table-striped table-no-bordered table-hover" id="tbCLP" cellspacing="0" width="100%" style="width:100%">
+                                                <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
                                                     <thead class="text-thirdary">
                                                         <th style="width: 20%;">Date/Time</th>
                                                         <th>Type</th>
@@ -183,7 +183,7 @@
                         <h5>Your Carcoin Wallet address</h5>
                         <input type="text" class="form-control" readonly="true" id="wallet-address" value="{{$walletAddress}}">
                         @if(empty($walletAddress))
-                        <button class="btn btn-primary btn-round get-clpwallet">Generate
+                        <button class="btn btn-primary btn-round get-wallet">Generate
                             <div class="ripple-container"></div>
                         </button>
                         @endif
@@ -220,7 +220,7 @@
                         <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">Carcoin Amount</label>
-                                <input type="number" class="form-control withdrawclpinput" id="withdrawAmount" name="withdrawAmount">
+                                <input type="number" class="form-control" id="withdrawAmount" name="withdrawAmount">
                                 <p class="help-block"></p>
                             </div>
                         </div>
@@ -245,7 +245,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round" id="withdraw-clp">Submit</button>
+                <button type="button" class="btn btn-primary btn-round" id="withdraw-car">Submit</button>
                 <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -264,7 +264,7 @@
                         <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">Carcoin Amount</label>
-                                <input type="number" class="form-control amount-clp-tranfer" id="clpAmount" name="clpAmount">
+                                <input type="number" class="form-control" id="carAmount" name="carAmount">
                                 <p class="help-block"></p>
                             </div>
                         </div>
@@ -272,63 +272,29 @@
                         <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">person</i> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">User</label>
-                                <input type="text" class="form-control" id="clpUsername" name="clpUsername">
+                                <input type="text" class="form-control" id="carUsername" name="carUsername">
                                 <p class="help-block"></p>
                             </div>
                         </div>
                         <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">assignment_ind</i> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">ID</label>
-                                <input type="number" class="form-control" id="clpUid" name="clpUid">
+                                <input type="number" class="form-control" id="carUid" name="carUid">
                                 <p class="help-block"></p>
                             </div>
                         </div>
                         <div class="input-group form-group"> <span class="input-group-addon"> <i class="material-icons">vpn_key</i> </span>
                             <div class="form-group label-floating">
                                 <label class="control-label">2FA code E.g. 123456</label>
-                                <input type="number" class="form-control" id="clpOTP" name="clpOTP">
+                                <input type="number" class="form-control" id="carOTP" name="carOTP">
+                                <p class="help-block"></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="clptranfer" class="btn btn-primary btn-round">Submit</button>
-                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="carcoin-sell" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
-                <h4 class="modal-title" id="myModalLabel4">Sell Carcoin - <b class="carcoin-color" style="vertical-align: bottom;"><img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;">{{ number_format($walletAmount['amountCLP'], 5) }}</b></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">Carcoin Amount</label>
-                                <input type="number" class="form-control switch-CLP-to-BTC-sellclp" id="sellCLPAmount" name="clpAmount">
-                            </div>
-                        </div>
-                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
-                            <div class="form-group label-floating">
-                                <label class="control-label">BTC Amount</label>
-                                <input type="number" class="form-control switch-BTC-to-CLP-sellclp" id="sellBTCAmount" name="btcAmount">
-                            </div>
-                        </div>
-                        <div class="form-group pull-right">
-                            <label>Rate: <b>{{number_format(App\ExchangeRate::getCLPBTCRate() * 0.95, 8)}}</b></label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-round" id="sell-clp">{{trans('adminlte_lang::default.submit')}}</button>
+                <button type="button" id="car-tranfer" class="btn btn-primary btn-round">Submit</button>
                 <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -383,25 +349,25 @@
                 hideTooltip();
             });
             //get address wallet
-            $(".get-clpwallet").click(function(){
-                $(".get-clpwallet").attr("disabled", "disabled");
+            $(".get-wallet").click(function(){
+                $(".get-wallet").attr("disabled", "disabled");
                 var $this = $(this);
                 $this.button('loading');
-                $.get("{{URL::to('wallets/car/getaddressclpwallet')}}", function(data, status){
+                $.get("{{URL::to('wallets/car/getaddresswallet')}}", function(data, status){
                     if (data.err){
                         alert("{{trans('adminlte_lang::wallet.not_get_address_clp_wallet')}}");
                         $this.button('reset');
-                        $(".get-clpwallet").removeAttr("disabled");
+                        $(".get-wallet").removeAttr("disabled");
                     }else{
                         $("#wallet-address").val(data.data);
-                        $(".get-clpwallet").hide();
+                        $(".get-wallet").hide();
                     }
                 }).fail(function () {
                     console.log("Error response!")
                 });
             });
             
-            $('#withdraw-clp').on('click', function () {
+            $('#withdraw-car').on('click', function () {
                 var withdrawAmount = $('#withdrawAmount').val();
                 var walletAddress = $('#walletAddress').val();
                 var withdrawOTP = $('#withdrawOTP').val();
@@ -434,7 +400,7 @@
                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                 }
                 if($.trim(withdrawAmount) != '' && $.trim(walletAddress) != '' && $.trim(withdrawOTP) != ''){
-                    $('#withdraw-clp').attr('disabled', true);
+                    $('#withdraw-car').attr('disabled', true);
                     $.ajax({
                         method : 'POST',
                         url: "{{ url('wallets/car/withdraw') }}",
@@ -463,14 +429,14 @@
                                     $("#withdrawOTP").parents("div.form-group").removeClass('has-error');
                                     $("#withdrawOTP").parents("div.form-group").find('.help-block').text('');
                                 }
-                                $('#withdraw-clp').attr('disabled', false);
+                                $('#withdraw-car').attr('disabled', false);
                             }
                         } else {
                             $('#tranfer').modal('hide');
                             location.href = '{{ url()->current() }}';
                         }
                     }).fail(function () {
-                        $('#withdraw-clp').attr('disabled', false);
+                        $('#withdraw-car').attr('disabled', false);
                         $('#tranfer').modal('hide');
                         swal("Some things wrong!");
                     });
@@ -478,31 +444,31 @@
             });
             
             
-            $('#clpUsername').on('blur onmouseout onfocusout keyup', function () {
+            $('#carUsername').on('blur onmouseout onfocusout keyup', function () {
                 clearTimeout(mytimer);
                 var search = $(this).val();
                 if(search.length >= 3){
                     mytimer = setTimeout(function(){
-                        $('#clpUid').parents("div.form-group").find('.fa-id-card-o').remove();
-                        $('#clpUid').parents("div.form-group").find('.input-group-addon').append('<i class="fa fa-spinner"></i>');
+                        $('#carUid').parents("div.form-group").find('.fa-id-card-o').remove();
+                        $('#carUid').parents("div.form-group").find('.input-group-addon').append('<i class="fa fa-spinner"></i>');
                         $.ajax({
                             type: "GET",
                             url: "/users/search",
                             data: {username : search}
                         }).done(function(data){
-                            $('#clpUid').parents("div.form-group").find('.fa-spinner').remove();
-                            $('#clpUid').parents("div.form-group").find('.input-group-addon').append('<i class="fa fa-id-card-o"></i>');
+                            $('#carUid').parents("div.form-group").find('.fa-spinner').remove();
+                            $('#carUid').parents("div.form-group").find('.input-group-addon').append('<i class="fa fa-id-card-o"></i>');
                             if(data.err) {
-                                $("#clpUsername").parents("div.form-group").addClass('has-error');
-                                $("#clpUsername").parents("div.form-group").find('.help-block').text(data.err);
-                                $('#clpUid').val('');
+                                $("#carUsername").parents("div.form-group").addClass('has-error');
+                                $("#carUsername").parents("div.form-group").find('.help-block').text(data.err);
+                                $('#carUid').val('');
                             }else{
-                                $('#clpUsername').parents("div.form-group").removeClass('has-error');
-                                $("#clpUsername").parents("div.form-group").find('.help-block').text('');
-                                $('#clpUid').parents("div.form-group").removeClass('has-error');
-                                $('#clpUid').parents("div.form-group").find('.help-block').text('');
-                                $('#clpUid').val(data.id);
-                                $('#clpUid').trigger('change');
+                                $('#carUsername').parents("div.form-group").removeClass('has-error');
+                                $("#carUsername").parents("div.form-group").find('.help-block').text('');
+                                $('#carUid').parents("div.form-group").removeClass('has-error');
+                                $('#carUid').parents("div.form-group").find('.help-block').text('');
+                                $('#carUid').val(data.id);
+                                $('#carUid').trigger('change');
                             }
                         }).fail(function (){
                             $('#tranfer').modal('hide');
@@ -511,125 +477,78 @@
                     }, 1000);
                 }
             });
-            $('#clptranfer').on('click', function () {
-                var clpAmount = $('#clpAmount').val();
-                var clpUsername = $('#clpUsername').val();
-                var clpOTP = $('#clpOTP').val();
-                var clpUid = $('#clpUid').val();
-                if($.trim(clpAmount) == ''){
-                    $("#clpAmount").parents("div.form-group").addClass('has-error');
-                    $("#clpAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
+            $('#car-tranfer').on('click', function () {
+                var carAmount = $('#carAmount').val();
+                var carUsername = $('#carUsername').val();
+                var carOTP = $('#carOTP').val();
+                var carUid = $('#carUid').val();
+                if($.trim(carAmount) == ''){
+                    $("#carAmount").parents("div.form-group").addClass('has-error');
+                    $("#carAmount").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
                 }else{
-                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
-                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                    $("#carAmount").parents("div.form-group").removeClass('has-error');
+                    $("#carAmount").parents("div.form-group").find('.help-block').text('');
                 }
-                if($.trim(clpUsername) == ''){
-                    $("#clpUsername").parents("div.form-group").addClass('has-error');
-                    $("#clpUsername").parents("div.form-group").find('.help-block').text("{{ trans('adminlte_lang::wallet.username_required') }}");
+                if($.trim(carUsername) == ''){
+                    $("#carUsername").parents("div.form-group").addClass('has-error');
+                    $("#carUsername").parents("div.form-group").find('.help-block').text("{{ trans('adminlte_lang::wallet.username_required') }}");
                 }else{
-                    $("#clpUsername").parents("div.form-group").removeClass('has-error');
-                    $("#clpUsername").parents("div.form-group").find('.help-block').text('');
+                    $("#carUsername").parents("div.form-group").removeClass('has-error');
+                    $("#carUsername").parents("div.form-group").find('.help-block').text('');
                 }
-                if($.trim(clpUid) == ''){
-                    $("#clpUid").parents("div.form-group").addClass('has-error');
-                    $("#clpUid").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.uid_required')}}");
+                if($.trim(carUid) == ''){
+                    $("#carUid").parents("div.form-group").addClass('has-error');
+                    $("#carUid").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.uid_required')}}");
                 }else{
-                    $("#clpUid").parents("div.form-group").removeClass('has-error');
-                    $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                    $("#carUid").parents("div.form-group").removeClass('has-error');
+                    $("#carcarUid").parents("div.form-group").find('.help-block').text('');
                 }
-                if($.trim(clpOTP) == ''){
-                    $("#clpOTP").parents("div.form-group").addClass('has-error');
-                    $("#clpOTP").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.otp_required')}}");
+                if($.trim(carOTP) == ''){
+                    $("#carOTP").parents("div.form-group").addClass('has-error');
+                    $("#carOTP").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.otp_required')}}");
                 }else{
-                    $("#clpOTP").parents("div.form-group").removeClass('has-error');
-                    $("#clpOTP").parents("div.form-group").find('.help-block').text('');
+                    $("#carOTP").parents("div.form-group").removeClass('has-error');
+                    $("#carOTP").parents("div.form-group").find('.help-block').text('');
                 }
-                if($.trim(clpAmount) != '' && $.trim(clpUsername) != '' && $.trim(clpOTP) != ''){
+                if($.trim(carAmount) != '' && $.trim(carUsername) != '' && $.trim(carOTP) != ''){
                     $.ajax({
                         url: "{{ url('wallets/car/transfer') }}",
-                        data: {clpAmount: clpAmount, clpUsername: clpUsername, clpOTP: clpOTP, clpUid: clpUid}
+                        data: {carAmount: carAmount, carUsername: carUsername, carOTP: carOTP, carUid: carUid}
                     }).done(function (data) {
                         if (data.err) {
                             if(typeof data.msg !== undefined){
-                                if(data.msg.clpAmountErr !== '') {
-                                    $("#clpAmount").parents("div.form-group").addClass('has-error');
-                                    $("#clpAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
+                                if(data.msg.carAmountErr !== '') {
+                                    $("#carAmount").parents("div.form-group").addClass('has-error');
+                                    $("#carAmount").parents("div.form-group").find('.help-block').text(data.msg.carAmountErr);
                                 }else {
-                                    $("#clpAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#clpAmount").parents("div.form-group").find('.help-block').text('');
+                                    $("#carAmount").parents("div.form-group").removeClass('has-error');
+                                    $("#carAmount").parents("div.form-group").find('.help-block').text('');
                                 }
-                                if(data.msg.clpUsernameErr !== '') {
-                                    $("#clpUsername").parents("div.form-group").addClass('has-error');
-                                    $("#clpUsername").parents("div.form-group").find('.help-block').text(data.msg.clpUsernameErr);
+                                if(data.msg.carUsernameErr !== '') {
+                                    $("#carUsername").parents("div.form-group").addClass('has-error');
+                                    $("#carUsername").parents("div.form-group").find('.help-block').text(data.msg.carUsernameErr);
                                 }else {
                                     if(data.msg.transferRuleErr !== '') {
-                                        $("#clpUsername").parents("div.form-group").addClass('has-error');
-                                        $("#clpUsername").parents("div.form-group").find('.help-block').text(data.msg.transferRuleErr);
+                                        $("#carUsername").parents("div.form-group").addClass('has-error');
+                                        $("#carUsername").parents("div.form-group").find('.help-block').text(data.msg.transferRuleErr);
                                     } else {
-                                        $("#clpUsername").parents("div.form-group").removeClass('has-error');
-                                        $("#clpUsername").parents("div.form-group").find('.help-block').text('');
+                                        $("#carUsername").parents("div.form-group").removeClass('has-error');
+                                        $("#carUsername").parents("div.form-group").find('.help-block').text('');
                                     }
                                 }
-                                if(data.msg.clpUidErr !== '') {
-                                    $("#clpUid").parents("div.form-group").addClass('has-error');
-                                    $("#clpUid").parents("div.form-group").find('.help-block').text(data.msg.clpUidErr);
+                                if(data.msg.carUidErr !== '') {
+                                    $("#carUid").parents("div.form-group").addClass('has-error');
+                                    $("#carUid").parents("div.form-group").find('.help-block').text(data.msg.carUidErr);
                                 }else {
-                                    $("#clpUid").parents("div.form-group").removeClass('has-error');
-                                    $("#clpUid").parents("div.form-group").find('.help-block').text('');
+                                    $("#carUid").parents("div.form-group").removeClass('has-error');
+                                    $("#carUid").parents("div.form-group").find('.help-block').text('');
                                 }
-                                if(data.msg.clpOTPErr !== '') {
-                                    $("#clpOTP").parents("div.form-group").addClass('has-error');
-                                    $("#clpOTP").parents("div.form-group").find('.help-block').text(data.msg.clpOTPErr);
+                                if(data.msg.carOTPErr !== '') {
+                                    $("#carOTP").parents("div.form-group").addClass('has-error');
+                                    $("#carOTP").parents("div.form-group").find('.help-block').text(data.msg.carOTPErr);
                                 }else {
-                                    $("#clpOTP").parents("div.form-group").removeClass('has-error');
-                                    $("#clpOTP").parents("div.form-group").find('.help-block').text('');
-                                }
-                            }
-                        } else {
-                            $('#tranfer').modal('hide');
-                            location.href = '{{ url()->current() }}';
-                        }
-                    }).fail(function () {
-                        $('#tranfer').modal('hide');
-                        swal("Some things wrong!");
-                    });
-                }
-            });
-            //sell carcoin
-            $('#sell-clp').on('click', function () {
-                var clpAmount = $('#sellCLPAmount').val();
-                var btcAmount = $('#sellBTCAmount').val();
-                if($.trim(clpAmount) == ''){
-                    $("#sellCLPAmount").parents("div.form-group").addClass('has-error');
-                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text("CLP Amount is required");
-                }else{
-                    $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
-                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
-                }
-                if($.trim(btcAmount) == ''){
-                    $("#sellBTCAmount").parents("div.form-group").addClass('has-error');
-                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text("BTC Amount is required");
-                }else{
-                    $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
-                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
-                }
-                
-                if($.trim(clpAmount) != '' && $.trim(btcAmount) != ''){
-                    $.ajax({
-                        method : 'POST',
-                        url: "{{ url('wallets/sellclp') }}",
-                        data: {clpAmount: clpAmount, btcAmount: btcAmount,_token:"{{csrf_token()}}"}
-                    }).done(function (data) {
-                        if (data.err) {
-                            if(typeof data.msg !== undefined){
-                                if(data.msg.clpAmountErr !== '') {
-                                    $("#sellCLPAmount").parents("div.form-group").addClass('has-error');
-                                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text(data.msg.clpAmountErr);
-                                }else {
-                                    $("#sellCLPAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#sellCLPAmount").parents("div.form-group").find('.help-block').text('');
-                                    $("#sellBTCAmount").parents("div.form-group").removeClass('has-error');
-                                    $("#sellBTCAmount").parents("div.form-group").find('.help-block').text('');
+                                    $("#carOTP").parents("div.form-group").removeClass('has-error');
+                                    $("#carOTP").parents("div.form-group").find('.help-block').text('');
                                 }
                             }
                         } else {
@@ -642,23 +561,7 @@
                     });
                 }
             });
-    
-            $(".switch-BTC-to-CLP-sellclp").on('keyup mousewheel', function () {
-                var value = $(this).val();
-                var result = value / (globalCLPBTC * 0.95) ;
-                $(".switch-CLP-to-BTC-sellclp").val(result.toFixed(2)).trigger("change");
-            });
-            $(".switch-CLP-to-BTC-sellclp").on('keyup mousewheel', function () {
-                var value = $(this).val();
-                var result = value * globalCLPBTC * 0.95;
-                $(".switch-BTC-to-CLP-sellclp").val(result.toFixed(5)).trigger("change");
-            });
-            /*('#tbCLP').DataTable({
-                "ordering": false,
-                "searching":false,
-                "bLengthChange": false,
-                "responsive": true
-            }); */
+
             //filter
             $('#btn_filter').on('click', function () {
                 var wallet_type = parseInt($('#wallet_type option:selected').val());

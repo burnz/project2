@@ -130,35 +130,35 @@ class ClpWalletController extends Controller {
             $userCoin = Auth::user()->userCoin;
             $clpAmountErr = $clpUsernameErr = $clpUidErr = $clpOTPErr = $transferRuleErr = '';
 
-            if($request->clpAmount == ''){
+            if($request->carAmount == ''){
                 $clpAmountErr = trans('adminlte_lang::wallet.amount_required');
-            }elseif (!is_numeric($request->clpAmount)){
+            }elseif (!is_numeric($request->carAmount)){
                 $clpAmountErr = trans('adminlte_lang::wallet.amount_number');
-            }elseif ($userCoin->clpCoinAmount < $request->clpAmount){
+            }elseif ($userCoin->clpCoinAmount < $request->carAmount){
                 $clpAmountErr = trans('adminlte_lang::wallet.error_not_enough');
             }
 
-            if($request->clpUsername == ''){
+            if($request->carUsername == ''){
                 $clpUsernameErr = trans('adminlte_lang::wallet.username_required');
-            }elseif (!preg_match('/^\S*$/u', $request->clpUsername)){
+            }elseif (!preg_match('/^\S*$/u', $request->carUsername)){
                 $clpUsernameErr = trans('adminlte_lang::wallet.username_notspace');
-            }elseif (!User::where('name', $request->clpUsername)->where('active', 1)->count()){
+            }elseif (!User::where('name', $request->carUsername)->where('active', 1)->count()){
                 $clpUsernameErr = trans('adminlte_lang::wallet.username_not_invalid');
             }
 
-            if($request->clpUid == ''){
+            if($request->carUid == ''){
                 $clpUidErr = trans('adminlte_lang::wallet.uid_required');
-            }elseif (!preg_match('/^\S*$/u', $request->clpUid)){
+            }elseif (!preg_match('/^\S*$/u', $request->carUid)){
                 $clpUidErr = trans('adminlte_lang::wallet.uid_notspace');
-            }elseif (!User::where('uid', $request->clpUid)->where('active', 1)->count()){
-                $clpUidErr = trans('adminlte_lang::wallet.uid_not_invalid');
+            }elseif (!User::where('uid', $request->carUid)->where('active', 1)->count()){
+                $clpUidErr = trans('adminlte_lang::wallet.ui_not_invalid');
             }
 
-            if($request->clpOTP == ''){
+            if($request->carOTP == ''){
                 $clpOTPErr = trans('adminlte_lang::wallet.otp_required');
             }else{
                 $key = Auth::user()->google2fa_secret;
-                $valid = Google2FA::verifyKey($key, $request->clpOTP);
+                $valid = Google2FA::verifyKey($key, $request->carOTP);
                 if(!$valid){
                     $clpOTPErr = trans('adminlte_lang::wallet.otp_not_match');
                 }
@@ -170,7 +170,7 @@ class ClpWalletController extends Controller {
             {
                 $totalMoneyOut = UserCoin::getTotalWithdrawTransferDay(Auth::user()->id);
 
-                $currentTotal = $request->clpAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
+                $currentTotal = $request->carAmount * ExchangeRate::getCLPUSDRate() + $totalMoneyOut;
 
                 if($currentTotal > 60000)
                 {
@@ -186,7 +186,7 @@ class ClpWalletController extends Controller {
                 $lstCurrentGenealogyUser = explode(',', $userTreePermission->genealogy);
 
             // Get all Genealogy transfer user
-            $transferUser = User::where('name', '=', $request->clpUsername)->first();
+            $transferUser = User::where('name', '=', $request->carUsername)->first();
             $lstTransferGenealogyUser = [];
             if($userTreePermission = $transferUser->userTreePermission)
                 $lstTransferGenealogyUser = explode(',', $userTreePermission->genealogy);
@@ -197,12 +197,12 @@ class ClpWalletController extends Controller {
             }
 
             if($clpAmountErr =='' && $clpUsernameErr == '' && $clpOTPErr == '' && $clpUidErr == '' && $transferRuleErr == ''){
-                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $request->clpAmount;
+                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $request->carAmount;
                 $userCoin->save();
-                $userRi = User::where('name', $request->clpUsername)->where('active', 1)->first();
+                $userRi = User::where('name', $request->carUsername)->where('active', 1)->first();
                 $userRiCoin = $userRi->userCoin;
                 if($userRiCoin){
-                    $userRiCoin->clpCoinAmount = $userRiCoin->clpCoinAmount + $request->clpAmount;
+                    $userRiCoin->clpCoinAmount = $userRiCoin->clpCoinAmount + $request->carAmount;
                     $userRiCoin->save();
 
                     $field = [
@@ -210,8 +210,8 @@ class ClpWalletController extends Controller {
                         'type' =>  Wallet::TRANSFER_CLP_TYPE,//transfer BTC
                         'inOut' => Wallet::OUT,
                         'userId' => $userCoin->userId,
-                        'amount' => $request->clpAmount,
-                        'note' => 'To ' . $request->clpUsername
+                        'amount' => $request->carAmount,
+                        'note' => 'To ' . $request->carUsername
                     ];
 
                     Wallet::create($field);
@@ -221,7 +221,7 @@ class ClpWalletController extends Controller {
                         'type' => Wallet::TRANSFER_CLP_TYPE,//transfer BTC
                         'inOut' => Wallet::IN,
                         'userId' => $userRiCoin->userId,
-                        'amount' => $request->clpAmount,
+                        'amount' => $request->carAmount,
                         'note' => 'From ' . Auth::user()->name
                     ];
 
@@ -233,10 +233,10 @@ class ClpWalletController extends Controller {
                     $result = [
                         'err' => true,
                         'msg' =>[
-                                'clpAmountErr' => '',
-                                'clpUsernameErr' => trans('adminlte_lang::wallet.user_required'),
-                                'clpOTPErr' => '',
-                                'clpUidErr' => '',
+                                'carAmountErr' => '',
+                                'carUsernameErr' => trans('adminlte_lang::wallet.user_required'),
+                                'carOTPErr' => '',
+                                'carUidErr' => '',
                                 'transferRuleErr' => '',
                             ]
                     ];
@@ -246,10 +246,10 @@ class ClpWalletController extends Controller {
                 $result = [
                     'err' => true,
                     'msg' =>[
-                        'clpAmountErr' => $clpAmountErr,
-                        'clpUsernameErr' => $clpUsernameErr,
-                        'clpOTPErr' => $clpOTPErr,
-                        'clpUidErr' => $clpUidErr,
+                        'carAmountErr' => $clpAmountErr,
+                        'carUsernameErr' => $clpUsernameErr,
+                        'carOTPErr' => $clpOTPErr,
+                        'carUidErr' => $clpUidErr,
                         'transferRuleErr' => $transferRuleErr,
                     ]
                 ];
