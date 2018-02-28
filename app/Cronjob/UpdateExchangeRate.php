@@ -21,7 +21,7 @@ class UpdateExchangeRate {
     const SO_LUONG_TY_GIA_CAN_UPDATE = 3;
 
     public static function updateExchangRate() {
-        $interval = 30;
+        $interval = 5;
 
         try {
             for ($i = 0; $i < ceil(60 / $interval); $i++) {
