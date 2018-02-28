@@ -4,6 +4,7 @@ namespace App;
 
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use App\ExchangeRate;
 
 /**
 *  @author GiangDT
@@ -13,6 +14,7 @@ class ExchangeRateAPI
 
     const DEFAULT_BTC_EXCHANGE_URL = 'https://www.bitstamp.net/api/v2/ticker/';
 
+    const DEFAULT_CAR_EXCHANGE_URL = 'https://btc-alpha.com/api/charts/CARS_BTC/1/chart/';
 
     private $client;
 
@@ -23,9 +25,9 @@ class ExchangeRateAPI
 
     public function getCLPUSDRate()
     {
-        $clpPrice = config('app.clp_price');
+        $clpUSDRate = self::getCLPBTCRate() * self::getBTCUSDRate();
         
-        return $clpPrice;
+        return round($clpUSDRate, 2);
     }
 
     public function getBTCUSDRate() 
@@ -42,7 +44,8 @@ class ExchangeRateAPI
 
     public function getCLPBTCRate()
     {
-        $clpBTCRate = self::getCLPUSDRate() / self::getBTCUSDRate();
-        return round($clpBTCRate, 8);
+        $clpBTCRate = ExchangeRate::where('from_currency', '=', 'clp')->where('to_currency', '=', 'btc')->first();
+        
+        return $clpBTCRate->exchrate;
     }
 }
