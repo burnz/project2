@@ -89,7 +89,7 @@ Route::group( ['middleware' => ['auth']], function() {
     //CLP WALLET
     Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
-    Route::get('wallets/car/getaddressclpwallet', 'Wallet\ClpWalletController@getClpWallet');
+    Route::get('wallets/car/getaddresswallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
     Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
     
@@ -146,11 +146,11 @@ Route::group( ['middleware' => ['auth']], function() {
 });
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
-
+Route::post('clpnotification','GetNotificationController@clpNotification');
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
-Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
 
 
 //Route::get('test-interest',"TestController@testInterest");

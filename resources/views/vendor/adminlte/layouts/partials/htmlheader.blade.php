@@ -73,12 +73,11 @@
             url: '{{ URL::to("exchange") }}',
             success: function(data){
                $('.btcusd').html(formatter.format(data[1].exchrate));
-               $('.clpusd').html(formatter.format(data[2].exchrate));
-               $('.clpbtc').html(formatterBTC.format(data[0].exchrate));
-               $('.clpbtcsell').html(formatterBTC.format(data[0].exchrate * 0.95));
+               $('.carusd').html(formatter.format(data[2].exchrate));
+               $('.carbtc').html(formatterBTC.format(data[0].exchrate));
                globalBTCUSD = data[1].exchrate;
-               globalCLPUSD = data[2].exchrate; //clpUSD
-               globalCLPBTC = data[0].exchrate;
+               globalCARUSD = data[2].exchrate;
+               globalCARBTC = data[0].exchrate;
             }
         });
     }

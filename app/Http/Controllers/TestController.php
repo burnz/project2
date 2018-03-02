@@ -32,6 +32,7 @@ use App\CronLeadershipLogs;
 use App\TotalWeekSales;
 
 use App\Cronjob\Bonus;
+use App\BonusBinary;
 /**
  * Description of TestController
  *
@@ -119,19 +120,54 @@ class TestController {
 
     function test() {
         set_time_limit(0);
+        //Insert log for user root (2)
+        $field = ['userId' => 2, 'status' => 0];
+        CronLeadershipLogs::create($field);
+        CronMatchingLogs::create($field);
+        CronProfitLogs::create($field);
+        CronBinaryLogs::create($field);
+
+        // dd("XXX");
         //Update logs for Land users
-        $allUsers = User::where('id', '>', 2)->where('active', 1)->get();
-        foreach($allUsers as $user) {
-            if(CronProfitLogs::where('userId', $user->id)->count() < 1) 
-                CronProfitLogs::create(['userId' => $user->id]);
-            if(CronBinaryLogs::where('userId', $user->id)->count() < 1) 
-                CronBinaryLogs::create(['userId' => $user->id]);
-            if(CronMatchingLogs::where('userId', $user->id)->count() < 1)
-                CronMatchingLogs::create(['userId' => $user->id]);
-            if(CronLeadershipLogs::where('userId', $user->id)->count() < 1) 
-                CronLeadershipLogs::create(['userId' => $user->id]);
-            if(TotalWeekSales::where('userId', $user->id)->count() < 1) 
-                TotalWeekSales::create(['userId' => $user->id]);
+        $listUser = DB::table('bonus_binary')->distinct()->whereNull('bonus')->where('bonus_tmp', '>', 0)->get(['userId']);
+        //dd($listUser);
+        foreach ($listUser as $key => $value) 
+        {
+            //if(in_array($value->userId, array('875', '876', '908', '1240', '1318', '2423' , '3042', '3637', '3673', '3727', '3731', '3827'))) continue;
+            $bonusList = BonusBinary::whereNull('bonus')->where('weeked', '>', 2)->where('weeked', '<', 7)->where('userId', '=', $value->userId)->orderBy('id', 'asc')->get();
+            
+            $rightOpen = 0; $leftOpen = 0;
+            foreach ($bonusList as $key => $val) {
+                if($val->bonus_tmp === 0) continue; 
+                $rightOpen += $val->rightOpen + $val->rightNew;
+                $leftOpen += $val->leftOpen + $val->leftNew;
+            }
+
+            //dd($bonusList);
+
+            //dd($value->userId . '---L:' . $leftOpen . '---R:' . $rightOpen);
+
+            //select weeked 7
+            $weeked = BonusBinary::where('weeked', 7)->where('userId', $value->userId)->first();
+            if($weeked) {
+                $weeked->rightOpen = $rightOpen;
+                $weeked->leftOpen = $leftOpen;
+                $weeked->save();
+            } else {
+                $fieldUsd = [
+                    'userId' => $value->userId,
+                    'rightOpen' => $rightOpen,
+                    'leftOpen' => $leftOpen,
+                    'rightNew' => 0,
+                    'leftNew' => 0,
+                    'weeked' => 7,
+                    'year' => 2018,
+                    'weekYear' => '201807'
+                ];
+
+                BonusBinary::create($fieldUsd);
+            }
+
         }
         dd("DONE");
     }
