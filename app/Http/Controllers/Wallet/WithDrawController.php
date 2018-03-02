@@ -111,7 +111,7 @@ class WithDrawController extends Controller
 
 		if($request->d != '')
 		{
-			$data = json_decode(base64_decode($request->d))
+			$data = json_decode(base64_decode($request->d));
 
 			if($data && isset($data[1]) && $data[1] > 0 && isset($data[2]) && in_array($data[2], ['btc', 'car']))
 			{
