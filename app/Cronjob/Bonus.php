@@ -378,7 +378,7 @@ class Bonus
                 if(isset($cronStatus) && $cronStatus->status == 1) continue;
                 //$volInfo = self::_calLeftRightVolume($binary->userId);
                 $leftOver = $binary->leftNew + $binary->leftOpen;
-                $rightOver = $binary->rightNew + $binary->leftOpen;
+                $rightOver = $binary->rightNew + $binary->rightOpen;
 
                 //Caculate level to get binary commision
                 $level = 0;
@@ -408,7 +408,7 @@ class Bonus
                 {
                     $percentBonus = config('carcoin.bi_lv_4_inter_bonus');
                 }
-
+                
                 if($leftOver > $rightOver) $level = $rightOver;
                 else $level = $leftOver;
 
