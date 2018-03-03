@@ -276,8 +276,6 @@ class ClpWalletController extends Controller {
             } elseif ( CLPWallet::where('userId', $userId)->count() > 0 ){
                 return response()->json(array('err' => true, 'msg' => null));
             }
-            $clpAddress = new CLPWalletAPI();
-            $result = $clpAddress->generateWallet();
 
             try {
                 $clpAddress = new CLPWalletAPI();
