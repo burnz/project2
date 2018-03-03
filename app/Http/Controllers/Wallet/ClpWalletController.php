@@ -42,6 +42,17 @@ class ClpWalletController extends Controller {
         return view('adminlte::wallets.clpTransfer');
     }
 
+    public function viewClpWithdraw(Request $request)
+    {
+        return view('adminlte::wallets.clpWithdraw');
+    }
+    public function viewClpDeposit(Request $request){
+        $currentuserid = Auth::user()->id;
+        $clpWallet = CLPWallet::where('userId', $currentuserid)->selectRaw('address')->first();
+        $walletAddress = isset($clpWallet->address) ? $clpWallet->address : '';
+        return view('adminlte::wallets.clpDeposit',compact('walletAddress'));
+    }
+
     /**
      * @author Huynq
      * @return type

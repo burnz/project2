@@ -85,6 +85,8 @@ Route::group( ['middleware' => ['auth']], function() {
 
     //Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     //Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');
+    Route::get('wallets/btc/ideposit','Wallet\BtcWalletController@showBtcDeposit');
+    Route::get('wallets/btc/iwithdraw','Wallet\BtcWalletController@showBtcWithdraw');
     
     //CLP WALLET
     Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
@@ -92,7 +94,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/car/getaddresswallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
     Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
-    
+    Route::get('wallets/car/iwithdraw','Wallet\ClpWalletController@viewClpWithdraw');
+    Route::get('wallets/car/ideposit','Wallet\ClpWalletController@viewClpDeposit');
     //Get total value
     Route::get('wallets/totalvalue','WalletController@getMaxTypeWallet');
         
@@ -105,7 +108,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
     Route::resource('mybonus', 'MyBonusController');
 
-
+    Route::get('packages/ibuy','PackageController@showBuyPackage');
     Route::get('packages/buy','PackageController@buyPackage')->name('package.buy');
 
     //Route::get('packages/invest', 'PackageController@invest');

@@ -345,6 +345,12 @@
                     break;
                 }
                 $('#walletId').val(walletType);
+                
+                if ( window.iOS && window.iOS11 ) {
+                    window.location.href='{{URL::to("packages/ibuy?wid=")}}'+walletType;
+                    return false;
+                }
+
                 $('#modBuyPackage').modal('show');
             });
 

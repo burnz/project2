@@ -83,13 +83,13 @@
                                             @endif
                                         </div>
                                         <div class="align-self-center">  
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit">
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit" id ="btnDeposit">
                                                 <span class="btn-label">
                                                     <i class="material-icons">shop</i>
                                                                         </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw">
+                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw" id="btnWithdraw">
                                                 <span class="btn-label">
                                                     <i class="material-icons reflect">shop</i>
                                                                         </span> Withdraw
@@ -310,9 +310,21 @@
             $('#btnTransfer').click(function(){
                 if ( window.iOS && window.iOS11 ) {
                     window.location.href='{{URL::to("wallets/car/itransfer")}}';
+                    return false;
                 }
             });
-
+            $('#btnWithdraw').click(function(){
+                if ( window.iOS && window.iOS11 ) {
+                    window.location.href='{{URL::to("wallets/car/iwithdraw")}}';
+                    return false;
+                }
+            });
+            $('#btnDeposit').click(function(){
+                if ( window.iOS && window.iOS11 ) {
+                    window.location.href='{{URL::to("wallets/car/ideposit")}}';
+                    return false;
+                }
+            });
 
             var mytimer;
             var packageId = {{ Auth::user()->userData->packageId }};

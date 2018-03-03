@@ -54,6 +54,32 @@ class PackageController extends Controller
     * Buy package action( upgrade package)
     */
 
+    public function showBuyPackage(Request $request)
+    {
+        $wid=$request->wid;
+        if(!empty($wid) && ($wid==2 | $wid==3 ))
+        {
+
+            $package=Package::all();
+            $exchange=ExchangeRate::where([['from_currency','=','clp'],['to_currency','=','usd']])->first();
+            $rate_clp_usd=isset($exchange->exchrate)?$exchange->exchrate:1;
+            $dataPack=[];
+            if(count($package)>0)
+            {
+                foreach($package as $pkey=>$pval)
+                {
+                    $pval->min_price_clp=round($pval->min_price/$rate_clp_usd,4);
+                    $pval->max_price_clp=round($pval->max_price/$rate_clp_usd,4);
+                    array_push($dataPack, $pval);
+                }
+            }
+            return view('adminlte::package.iBuy',compact('dataPack','package','exchange','userPack'));
+        }
+        return redirect('packages/buy')
+        ->with('flash_error','Whoops. Something went wrong.');
+        
+    }
+
     public function buyPackage()
     {
         $package=Package::all();
