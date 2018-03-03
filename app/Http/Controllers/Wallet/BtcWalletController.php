@@ -44,6 +44,14 @@ class BtcWalletController extends Controller
         $this->middleware('auth');
     }
     
+    public function showBtcDeposit(Request $request){
+        $walletAddress = Auth::user()->userCoin->walletAddress;
+        return view('adminlte::wallets.btcDeposit',compact('walletAddress'));
+    }
+    public function showBtcWithdraw(Request $request)
+    {
+        return view('adminlte::wallets.btcWithdraw');
+    }
     /**
      * @author Huy NQ
      * @param Request $request

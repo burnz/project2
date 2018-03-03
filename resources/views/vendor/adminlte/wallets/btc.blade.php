@@ -64,14 +64,14 @@
                                             </div>
                                         </div>
                                         <div class="align-self-center">
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal"
+                                            <button id="btnDeposit" class="btn btn-thirdary btn-round" data-toggle="modal"
                                                     data-target="#bitcoin-deposit">
                                                     <span class="btn-label">
                                                         <i class="material-icons">shop</i>
                                                     </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal"
+                                            <button id="btnWithdraw" class="btn btn-thirdary btn-round" data-toggle="modal"
                                                     data-target="#bitcoin-withdraw">
                                                     <span class="btn-label">
                                                         <i class="material-icons reflect">shop</i>
@@ -151,6 +151,20 @@
 <script src="{{asset('Carcoin/js/jquery.qrcode.min.js')}}"></script>
 <script src="{{asset('Carcoin/js/clipboard.min.js')}}"></script>
 <script type="text/javascript">
+    $('#btnDeposit').on('click',function(){
+        if ( window.iOS && window.iOS11 ) {
+            window.location.href='{{URL::to("wallets/btc/ideposit")}}';
+            return false;
+        }
+    });
+
+    $('#btnWithdraw').on('click',function(){
+        if ( window.iOS && window.iOS11 ) {
+            window.location.href='{{URL::to("wallets/btc/iwithdraw")}}';
+            return false;
+        }
+    });
+
     var qrcode = $("#qrcode").qrcode({
                     width: 180,
                     height: 180,
