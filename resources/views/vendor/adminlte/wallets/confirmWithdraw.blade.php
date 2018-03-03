@@ -20,7 +20,7 @@
                                             </a>
                                         </div>
                                         <h3 class="card-title text-center" style="position: relative;margin-top: 20px;">
-                                            Withdrawal{{ ($withdrawConfirm->type == 'btc' ? 'BTC' : 'CAR') }} Confirmed
+                                            Withdrawal{{ ($withdrawConfirm->type == 'btc' ? ' BTC' : ' CAR') }} Confirmation
                                         </h3>
                                     </div>
                                     <div class="card-content">
