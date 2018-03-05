@@ -111,6 +111,12 @@
                                 <span class="sidebar-normal"> Infinity Interest </span>
                             </a>
                         </li>
+                        {{--<li>--}}
+                            {{--<a href="/mybonus/history-bonus">--}}
+                                {{--<span class="sidebar-mini"> I </span>--}}
+                                {{--<span class="sidebar-normal"> History Bonus </span>--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
                     </ul>
                 </div>
             </li>
@@ -120,9 +126,17 @@
                     <p> Buy Package </p>
                 </a>
             </li>
+
+            <li >
+                <a href="{{ url('/news')}}" id="news">
+                    <i class="material-icons">mail</i>
+                    <p> News </p>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
+<script src="{{asset('js/js.storage.min.js')}}"></script>
 <script>
 // Active Sidebar Class 
 var sidebarNav = document.querySelectorAll('.sidebar-wrapper .nav > li > a');
@@ -140,7 +154,22 @@ for (let i = 0; i < sidebarNav.length; i++) {
             (subMenu.classList.add("in"), subMenu.parentNode.classList.add("active")) :
             subMenu
 
-
     }
 }
+$(document).ready(function (){
+    var hasNews = {{count($carNews)}}
+    storage = Storages.localStorage;
+
+    $("#news").on('click', function(){
+        storage.set('date_read', new Date());
+    });
+
+    var readDate = moment(storage.get('date_read'));
+    var today = moment(new Date());
+    if(hasNews && (storage.get('date_read') == undefined || today.diff(readDate, "days") > 3)) {
+        $("#news i").attr("style", "background-color: #ffb629");
+    } else {
+        $("#news i").attr("style", "");
+    }
+});
 </script>

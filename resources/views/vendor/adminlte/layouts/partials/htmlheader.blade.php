@@ -23,7 +23,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="{{asset('Carcoin/js/jquery-3.2.1.min.js')}}" type="text/javascript"></script>
-
+    <script src="{{asset('js/jquery.storageapi.min.js')}}"></script>
     <script type="text/javascript">
         window.trans = @php
             // copy all translations from /resources/lang/CURRENT_LOCALE/* to global JS variable

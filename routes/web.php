@@ -138,8 +138,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::resource('ordermin', 'Backend\Order\OrderMinController');
 
     //News
-    Route::get('info','User\InfoController@clp');
-    Route::resource('news','Backend\News\NewsController');
+    Route::get('/news','User\InfoController@clp');
+    Route::get('news/detail/{id}','News\DisplayNewsController@displayDetailNews');
+    Route::resource('admin/news','Backend\News\NewsController');
     //get ty gia
     Route::get('exchange',function(App\ExchangeRate $rate){
         return $rate->getExchRate();
