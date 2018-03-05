@@ -27,7 +27,6 @@
             <tr class="heading">
                 <th>Number</th>
                 <th>Title</th>
-                <th>Category</th>
                 <th>Short Description</th>
             </tr>
             </thead>
@@ -36,17 +35,7 @@
                     <tr>
                         <td>{{ ++$i }}</td>
                         <td>{{ $new->title }}</td>
-                        <td>
-                            @if ($new->category_id  == News::CRYPTO )
-                                Crypto
-                            @elseif ( $new->category_id  == News::BLOCKCHAIN )
-                                Blockchain
-                            @elseif ( $new->category_id  == News::CLP)
-                                CLP
-                            @else ( $new->category_id  == News::P2P )
-                                P2P
-                            @endif
-                        </td>
+
                         <td>{!! $new->short_desc !!}</td>
                         <td>
                             <a href="/news/{{ $new->id }}/edit" class="btn btn-default glyphicon glyphicon-edit">Edit</a>

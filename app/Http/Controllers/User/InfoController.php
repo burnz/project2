@@ -23,10 +23,9 @@ class InfoController extends Controller
 
     public function clp(Request $request)
     {
-        $listNews = News::where('category_id', 3)->orderBy('id', 'desc')->paginate(5);
-        $title = "CLP News";
-        $type = 'clp';
-
+        $listNews = News::where('category_id', 3)->orderBy('created_at', 'desc')->get();
+        $title = "CAR News";
+        $type = 'car';
         return view('adminlte::news.index', compact('listNews', 'title', 'type'));
     }
 }
