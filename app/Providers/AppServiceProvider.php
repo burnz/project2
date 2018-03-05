@@ -8,6 +8,8 @@ use Validator;
 use App\ExchangeRate;
 use View;
 use Auth;
+use DB;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,22 @@ class AppServiceProvider extends ServiceProvider
             }
                 return false;
         });
+
+        //Get CLP news
+        $clpNews = DB::table('news')
+            ->where('category_id', 3)
+            ->where('created_at', '>', Carbon::now()->subDay(3))
+            ->select('id')
+            ->get();
+
+        $aCLPNews = [];
+        foreach($clpNews as $news) {
+            $aCLPNews[] = $news->id;
+        }
+
+        //$aCLPNews = json_encode($aCLPNews);
+
+        View::share('carNews', $aCLPNews);
 
         view()->composer('*', function ($view){
             if(Auth::user())

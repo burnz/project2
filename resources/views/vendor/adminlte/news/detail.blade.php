@@ -1,51 +1,38 @@
-@extends('adminlte::layouts.member')
-
-@section('contentheader_title')
-   <?php 
-   use App\Http\Controllers\News\DisplayNewsController;
-   $newsTitle = new DisplayNewsController();
-  
-   ?>
-   {{  $newsTitle->category[$data->category_id] }}
+@extends('adminlte::layouts.backend')
+@section('htmlheader_title')
+    {{ $data->title }}
 @endsection
 
-@section('main-content')
-    @if ( session()->has("errorMessage") )
-        <div class="callout callout-danger">
-            <h4>Warning!</h4>
-            <p>{!! session("errorMessage") !!}</p>
-        </div>
-        {{ session()->forget('errorMessage') }}
-    @elseif ( session()->has("successMessage") )
-        <div class="callout callout-success">
-            <h4>Success</h4>
-            <p>{!! session("successMessage") !!}</p>
-        </div>
-        {{ session()->forget('successMessage') }}
-    @else
-        <div></div>
-    @endif
-    <div class="row">
-        <div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{ $data->title }}</h3>
+@section('content')
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card" section="buy-package">
+                        <div class="card-header">
+                            <h3 class="card-title text-center">
+                                {{ $data->title }}
+                            </h3>
+                        </div>
+                        <div class="card-content clearfix">
+                            <div class="card card-plain card-raised">
+                                <div class="card-header">
+
+                                </div>
+                                <div class="card-content p-0 content">
+                                    <div class="icon active">
+                                    </div>
+                                    <div style="margin-left: 20px; margin-right: 20px">
+                                        {!! $data->desc !!}
+                                    </div>
+                                </div>
+                                <div class="card-footer" style="padding: 20px 0 5px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              {!! $data->desc !!}
-              <!-- /.row -->
-            </div>
-            <!-- ./box-body -->
-            <div class="box-footer">
-             
-              <!-- /.row -->
-            </div>
-            <!-- /.box-footer -->
-          </div>
-          <!-- /.box -->
         </div>
-      </div>
-      </div>
-        <!-- /.col -->
-@endsection
+    </div>
+@stop
