@@ -123,7 +123,7 @@ class WithDrawController extends Controller
 					if($withdrawConfirm->status == 0)
 					{
 						$count = WithdrawConfirm::where('id','=', $id)
-								->where('updated_at','>', Carbon::now()->subMinutes(30))
+								->where('updated_at','>', Carbon::now()->subMinutes(5))
 								->count();
 
 						if($count == 0)

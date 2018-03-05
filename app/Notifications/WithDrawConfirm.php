@@ -25,7 +25,7 @@ class WithDrawConfirm extends Notification
             ->greeting('Hi '.$this->user->name. ',')
             ->line('A request to withdraw '.$this->coinData['amount'].' '.($this->coinData['type'] == 'btc' ? 'BTC' : 'CAR').' from your CAR account to address '.$this->coinData['address'].' was just made.')
             ->action('Confirmation link', $this->linkConfirm)
-            ->line('This link will expire in 30 mins.')
+            ->line('This link will expire in 5 mins.')
             ->line('If you did not request a withdrawal. Please contact us immediately!');
     }
 }
