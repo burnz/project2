@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Google2FA;
+use URL;
+use App\Notifications\UserRegistered;
 
 class UserController extends Controller
 {
@@ -294,5 +296,20 @@ class UserController extends Controller
             }
         }
         return response()->json(array('err' => 'User not exit.'));
+    }
+
+    public function resendActiveEmail(Request $request)
+    {
+        $user = User::where('id', '=', $request->userid)->first();
+        $user->updated_at = date('Y-m-d H:i:s');
+        $user->save();
+        $email = $user->email;
+        $encrypt = [hash("sha256", md5(md5($email))), $email];
+        $linkActive = URL::to('/active') . "/" . base64_encode(json_encode($encrypt));
+        $user->notify(new UserRegistered($user, $linkActive));
+
+        flash()->success('Have sent activation email for ' . $user->name);
+
+        return redirect()->back();
     }
 }

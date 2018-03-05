@@ -62,6 +62,11 @@
                                             Reset 2FA
                                         </button>
                                         {!! Form::close() !!}
+                                        {!! Form::open( ['method' => 'post', 'url' => route('users.resendActiveEmail', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to resend active email?")']) !!}
+                                        <button type="submit" class="btn btn-xs btn-info">
+                                            Resend Active Email
+                                        </button>
+                                        {!! Form::close() !!}
                                         {!! Form::open( ['method' => 'post', 'url' => route('users.lock', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Lock this user?")']) !!}
                                         <button type="submit" class="btn btn-xs btn-info">
                                             @if($item->active == 1) Lock @else Unlock @endif
