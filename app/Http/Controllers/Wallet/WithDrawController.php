@@ -579,7 +579,16 @@ class WithDrawController extends Controller
 			if(  $withdrawAmountErr == '' && $walletAddressErr == '' && $withdrawOTPErr == '') {
 				$user = Auth::user();
 				if($user){
-					$field = [
+                    $count = WithdrawConfirm::where('userId','=', Auth::user()->id)
+                        ->where('updated_at','>', Carbon::now()->subMinutes(5))
+                        ->count();
+
+                    if($count) {
+                        $request->session()->flash( 'errorMessage', 'The withdrawal must execute one by one!' );
+                        return response()->json(array('err' => false));
+                    }
+
+                        $field = [
 						'withdrawAmount' => $request->withdrawAmount,
 						'walletAddress' => $request->walletAddress,
 						'userId' => Auth::user()->id,
