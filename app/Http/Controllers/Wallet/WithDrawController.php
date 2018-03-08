@@ -580,6 +580,7 @@ class WithDrawController extends Controller
 				$user = Auth::user();
 				if($user){
                     $count = WithdrawConfirm::where('userId','=', Auth::user()->id)
+                        ->where('status', 0)
                         ->where('updated_at','>', Carbon::now()->subMinutes(5))
                         ->count();
 
