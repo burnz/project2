@@ -14,6 +14,8 @@ use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
+use App\Cronjob;
+use Carbon\Carbon;
 use Log;
 
 class Kernel extends ConsoleKernel
@@ -48,13 +50,16 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusDayCron();
-            })->dailyAt('08:00');
+            })->hourly()->when(function () {
+                $data = Cronjob::first();
+                if($data->hour_run == Carbon::now()->hour) return true;
+                else return false;
+            });
         } catch (\Exception $ex) {
             Log::info($ex);
         }
 
         // Binary bonus run on monday each week
-	
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
@@ -123,7 +128,7 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
-	// Cron job update get CLP
+	   // Cron job update get CLP
         try {
             $schedule->call(function (){
                 UpdateCLPCoin::UpdateClpCoinAmount();
