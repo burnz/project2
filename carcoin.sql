@@ -653,3 +653,65 @@ CREATE TABLE `withdraw_confirm` (
 
 ALTER TABLE user_packages ADD refund_type tinyint DEFAULT 1 NULL;
 ALTER TABLE user_packages ADD amount_carcoin integer(11) DEFAULT 0 NULL;
+
+/* 14/03/2018 - Add table to tracking running cronjob randomly */
+/*  -----BEGIN----------- */
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for rand_cronjob_interest
+-- ----------------------------
+DROP TABLE IF EXISTS `rand_cronjob_interest`;
+CREATE TABLE `rand_cronjob_interest` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `hour_run` int(11) DEFAULT NULL,
+  `next_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of rand_cronjob_interest
+-- ----------------------------
+INSERT INTO `rand_cronjob_interest` VALUES ('1', '2018-03-12 18:09:32', '2018-03-12 15:00:48', '15', '2018-03-12');
+
+
+-- ----------------------------
+-- Table structure for rand_cronjob_binary
+-- ----------------------------
+DROP TABLE IF EXISTS `rand_cronjob_binary`;
+CREATE TABLE `rand_cronjob_binary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `hour_run` int(11) DEFAULT NULL,
+  `next_week` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of rand_cronjob_binary
+-- ----------------------------
+INSERT INTO `rand_cronjob_binary` VALUES ('1', '2018-03-12 01:26:22', '2018-03-13 05:00:52', '3', '12');
+
+
+-- ----------------------------
+-- Table structure for rand_cronjob_binary_interest
+-- ----------------------------
+DROP TABLE IF EXISTS `rand_cronjob_binary_interest`;
+CREATE TABLE `rand_cronjob_binary_interest` (
+  `id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `hour_run` int(11) DEFAULT NULL,
+  `next_week` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of rand_cronjob_binary_interest
+-- ----------------------------
+INSERT INTO `rand_cronjob_binary_interest` VALUES ('1', '2018-03-12 01:26:55', '2018-03-12 01:26:58', '15', '11');
+
+
+/*  -----END----------- */

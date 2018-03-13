@@ -14,7 +14,7 @@ use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
-use App\Cronjob;
+use App\RandCronjobInterest;
 use App\RandCronjobBinary;
 use App\RandCronjobBinaryInterest;
 use Carbon\Carbon;
@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
             $schedule->call(function () {
                 Bonus::bonusDayCron();
             })->hourly()->when(function () {
-                $data = Cronjob::first();
+                $data = RandCronjobInterest::first();
 
                 if($data->hour_run == Carbon::now()->hour && $data->next_date == Carbon::now()->toDateString()) {
                     $nextHour = rand(1,12);
@@ -71,7 +71,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->mondays()->hourly()->when(function () {
+            })->hourly()->when(function () {
                 $data = RandCronjobBinary::first();
 
                 if($data->hour_run == Carbon::now()->hour && $data->next_week == Carbon::now()->weekOfYear) {
@@ -92,7 +92,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusMatchingWeekCron();
-            })->weekly()->mondays()->hourly()->when(function () {
+            })->hourly()->when(function () {
                 $data = RandCronjobBinaryInterest::first();
 
                 if($data->hour_run == Carbon::now()->hour && $data->next_week == Carbon::now()->weekOfYear) {

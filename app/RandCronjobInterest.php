@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class Cronjob extends Model
+class RandCronjobInterest extends Model
 {
     
     protected $fillable = [
@@ -15,6 +15,6 @@ class Cronjob extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-        $this->setTable('cronjob');
+        $this->setTable('rand_cronjob_interest');
     }
 }
