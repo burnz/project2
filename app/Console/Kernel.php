@@ -14,6 +14,10 @@ use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
+use App\RandCronjobInterest;
+use App\RandCronjobBinary;
+use App\RandCronjobBinaryInterest;
+use Carbon\Carbon;
 use Log;
 
 class Kernel extends ConsoleKernel
@@ -48,17 +52,36 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusDayCron();
-            })->dailyAt('08:00');
+            })->hourly()->when(function () {
+                $data = RandCronjobInterest::first();
+
+                if($data->hour_run == Carbon::now()->hour && $data->next_date == Carbon::now()->toDateString()) {
+                    $nextHour = rand(1,12);
+                    $data->update(['hour_run' => $nextHour, 'next_date' => Carbon::tomorrow()->toDateString()]);
+                    return true;
+                } else {
+                    return false;   
+                }
+            });
         } catch (\Exception $ex) {
             Log::info($ex);
         }
 
         // Binary bonus run on monday each week
-	
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->mondays()->at('00:30'); //->weekly()->mondays()->at('00:30');
+            })->hourly()->when(function () {
+                $data = RandCronjobBinary::first();
+
+                if($data->hour_run == Carbon::now()->hour && $data->next_week == Carbon::now()->weekOfYear) {
+                    $nextHour = rand(1,12);
+                    $data->update(['hour_run' => $nextHour, 'next_week' => Carbon::now()->addDays(7)->weekOfYear]);
+                    return true;
+                } else {
+                    return false;   
+                }
+            }); //->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -69,7 +92,17 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusMatchingWeekCron();
-            })->weekly()->mondays()->at('01:00'); //->weekly()->mondays()->at('01:00');
+            })->hourly()->when(function () {
+                $data = RandCronjobBinaryInterest::first();
+
+                if($data->hour_run == Carbon::now()->hour && $data->next_week == Carbon::now()->weekOfYear) {
+                    $nextHour = rand(1,12);
+                    $data->update(['hour_run' => $nextHour, 'next_week' => Carbon::now()->addDays(7)->weekOfYear]);
+                    return true;
+                } else {
+                    return false;   
+                }
+            }); //->weekly()->mondays()->at('01:00');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -123,7 +156,7 @@ class Kernel extends ConsoleKernel
             Log::info($ex);
         }
 
-	// Cron job update get CLP
+	   // Cron job update get CLP
         try {
             $schedule->call(function (){
                 UpdateCLPCoin::UpdateClpCoinAmount();
