@@ -336,8 +336,10 @@ class Bonus
 
                 //Update cron status from 0 => 1
                 //echo $binary->userId . "---";
-                $cronStatus->status = 1;
-                $cronStatus->save();
+                if(isset($cronStatus)) {
+                    $cronStatus->status = 1;
+                    $cronStatus->save();
+                }
             }
 
             //Update status from 1 => 0 after run all user
@@ -481,8 +483,10 @@ class Bonus
                     BonusBinaryInterest::create($field);
                 }
                 //Update cron status from 0 => 1
-                $cronStatus->status = 1;
-                $cronStatus->save();
+                if(isset($cronStatus)) {
+                    $cronStatus->status = 1;
+                    $cronStatus->save();
+                }
             }
             //Update status from 1 => 0 after run all user
             DB::table('cron_matching_logs')->update(['status' => 0]);
