@@ -192,6 +192,7 @@ class Bonus
 
 		$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
 		$firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
 
 		if($firstWeek == 0){
 			$firstWeek = 52;
@@ -361,6 +362,8 @@ class Bonus
 
 		$firstWeek = $weeked - 1;
 		$firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+
 		if($firstWeek == 0){
 			$firstWeek = 52;
 			$firstYear = $year - 1;
