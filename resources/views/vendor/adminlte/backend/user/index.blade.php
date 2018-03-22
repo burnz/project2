@@ -37,9 +37,11 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
+                                @can('add_users')
                                 <th>Email</th>
                                 <th>CAR</th>
                                 <th>Role</th>
+                                @endcan
                                 <th>Created At</th>
                                 @can('edit_users', 'delete_users')
                                 <th class="text-center">Actions</th>
@@ -49,11 +51,13 @@
                             <tbody>
                             @foreach($result as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->uid }}</td>
                                     <td>{{ $item->name }}</td>
+                                    @can('add_users')
                                     <td>{{ $item->email }}</td>
                                     <td>@isset($item->usercoin->clpCoinAmount){{ number_format($item->usercoin->clpCoinAmount, 2) }}@endisset</td>
                                     <td>{{ $item->roles->implode('name', ', ') }}</td>
+                                    @endcan
                                     <td>{{ $item->created_at->toFormattedDateString() }}</td>
                                     
                                     <td class="text-center">
@@ -68,7 +72,7 @@
                                             Resend Active Email
                                         </button>
                                         {!! Form::close() !!}
-                                        @can('edit_users')
+                                        @can('add_users')
                                         {!! Form::open( ['method' => 'post', 'url' => route('users.lock', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Lock this user?")']) !!}
                                         <button type="submit" class="btn btn-xs btn-info">
                                             @if($item->active == 1) Lock @else Unlock @endif
