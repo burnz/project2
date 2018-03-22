@@ -61,7 +61,7 @@
                                     <td>{{ $item->created_at->toFormattedDateString() }}</td>
                                     
                                     <td class="text-center">
-                                        
+                                        @if($item->name != 'admin')
                                         {!! Form::open( ['method' => 'post', 'url' => route('users.reset2fa', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Are yous sure wanted to reset 2FA it?")']) !!}
                                         <button type="submit" class="btn btn-xs btn-info">
                                             Reset 2FA
@@ -71,6 +71,7 @@
                                         <button type="submit" class="btn btn-xs btn-info">
                                             Resend Active Email
                                         </button>
+                                        @endif
                                         {!! Form::close() !!}
                                         @can('add_users')
                                         {!! Form::open( ['method' => 'post', 'url' => route('users.lock', ['userid' => $item->id]), 'style' => 'display: inline', 'onSubmit' => 'return confirm("Lock this user?")']) !!}
