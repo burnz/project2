@@ -22,9 +22,6 @@
                             $per_found = $role->hasPermissionTo($perm->name);
                         }
 
-                        if( isset($user)) {
-                            $per_found = $user->hasDirectPermission($perm->name);
-                        }
                     ?>
 
                     <div class="col-md-3">
