@@ -122,6 +122,54 @@ class Wallet extends Model
                     ->toArray();
         }
     }
+
+    public static function getDataReportUSD($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('type, DATE(wallets.created_at) as date, SUM(wallets.amount_usd) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->whereIn('type',[self::FAST_START_TYPE,self::INTEREST_TYPE,
+                        self::BINARY_TYPE,self::LTOYALTY_TYPE,self::MATCHING_TYPE])
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('type')
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->orderBy('type')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw('type, CONCAT(WEEKOFYEAR(wallets.created_at),"-",YEAR(wallets.created_at)) as date, SUM(wallets.amount_usd) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->whereIn('type',[self::FAST_START_TYPE,self::INTEREST_TYPE,
+                        self::BINARY_TYPE,self::LTOYALTY_TYPE,self::MATCHING_TYPE])
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('type')
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->orderBy('type')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw('type, CONCAT(MONTH(wallets.created_at),"-",YEAR(wallets.created_at)) as date, SUM(wallets.amount_usd) as totalPrice')
+                    ->where('inOut','in')
+                    ->where('walletType',self::CLP_WALLET)
+                    ->whereIn('type',[self::FAST_START_TYPE,self::INTEREST_TYPE,
+                        self::BINARY_TYPE,self::LTOYALTY_TYPE,self::MATCHING_TYPE])
+                    ->whereDate('wallets.created_at','>=', $date['from_date'])
+                    ->whereDate('wallets.created_at','<=', $date['to_date'])
+                    ->groupBy('type')
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->orderBy('type')
+                    ->get()
+                    ->toArray();
+        }
+    }
+
     /*Get DATA for BTC DEPOSIT Report*/
     public static function getDataForBtcDepositReport($date,$opt){
         switch ($opt){

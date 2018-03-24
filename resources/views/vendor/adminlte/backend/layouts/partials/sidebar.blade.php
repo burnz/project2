@@ -32,8 +32,12 @@
                             <a href="{{ url('report/commission') }}">Commission (CAR)
                             </a>
                         </li>
-                        <li class="{{ Request::segment(2) === 'commission' ? 'active' : null }}">
-                            <a href="{{ url('report/commission') }}">Commission (USD)
+                        <li class="{{ Request::segment(2) === 'commission-usd' ? 'active' : null }}">
+                            <a href="{{ url('report/commission-usd') }}">Commission (USD)
+                            </a>
+                        </li>
+                        <li class="{{ Request::segment(2) === 'rank' ? 'active' : null }}">
+                            <a href="{{ url('report/rank') }}">Rank Statistic
                             </a>
                         </li>
                     </ul>

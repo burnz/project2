@@ -126,6 +126,62 @@ class RepoReportController
         return $this->helper->json_encode_prettify($data);
     }
 
+    /*
+     * Xử lý điều hướng lấy dữ liệu theo option
+     * */
+    public function action_commission_usd($opt, $dateCustom = array()){
+        switch ($opt) {
+            case self::DAY_NOW :
+                $data = $this->getDataForCommissionUSD($opt,$dateCustom);
+                break;
+            case self::WEEK_NOW :
+                $data = $this->getDataForCommissionUSD($opt,$dateCustom);
+                break;
+            case self::MONTH_NOW :
+                $data = $this->getDataForCommissionUSD($opt,$dateCustom);
+                break;
+            default:
+                break;
+        }
+        return $this->helper->json_encode_prettify($data);
+    }
+
+    public function getDataForCommissionUSD($opt,$dateCustom){
+        $data = array();
+        $data['data_analytic'] = $this->wallet->getDataReportUSD($dateCustom, $opt);
+        $data['action_type'] = ['Referral', 'Interest',
+            'Infinity', 'Rank', 'Infinity Interest'];
+        $data['type'] = [Wallet::FAST_START_TYPE, Wallet::INTEREST_TYPE, Wallet::BINARY_TYPE,
+            Wallet::LTOYALTY_TYPE, Wallet::MATCHING_TYPE];
+        $type_10_6 = [Wallet::FAST_START_TYPE, Wallet::BINARY_TYPE,
+            Wallet::LTOYALTY_TYPE, Wallet::MATCHING_TYPE];
+        $temp = array();
+
+        foreach ($data['data_analytic'] as $value) {
+            if (in_array($value['type'], $type_10_6)) {
+                $temp[$value['date']][$value['type']] = $value['totalPrice'] * 10 / 6;
+            } else {
+                $temp[$value['date']][$value['type']] = $value['totalPrice'];
+            }
+        }
+
+        foreach ($temp as $key => $value) {
+            foreach ($data['type'] as $val) {
+                if (!isset($value[$val])) {
+                    $temp[$key][$val] = $value[$val] = 0;
+                }
+            }
+            //sort type wallet
+            ksort($temp[$key]);
+        }
+
+        $data['data_analytic'] = $temp;
+        $data['link'] = $this->renderLink($dateCustom);
+        $data['opt'] = (int)$opt;
+        $data['date_custom'] = $dateCustom;
+        return $data;
+    }
+
     public function getDataForCommission($opt,$dateCustom){
         $data = array();
         $data['data_analytic'] = $this->wallet->getDataReport($dateCustom, $opt);

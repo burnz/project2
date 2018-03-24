@@ -5,7 +5,7 @@
 @endsection
 
 @section('contentheader_description')
-    Commissions CAR
+    Commissions USD
 @endsection
 
 @section('main-content')
@@ -45,5 +45,5 @@
     {{--END-BODY--}}
     {{--Chart--}}
     <script type="text/javascript" src="{{URL::asset('js/report/commission-chart-draw.js')}}"></script>
-    <script type="text/javascript" src="{{URL::asset('js/report/commission-index.js')}}"></script>
+    <script type="text/javascript" src="{{URL::asset('js/report/commission-usd-index.js')}}"></script>
 @endsection
