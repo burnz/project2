@@ -715,3 +715,7 @@ INSERT INTO `rand_cronjob_binary_interest` VALUES ('1', '2018-03-12 01:26:55', '
 
 
 /*  -----END----------- */
+
+/* 25/03/2018 */
+ALTER TABLE wallets ADD COLUMN amount_usd DOUBLE;
+/* 25/03/2018 */

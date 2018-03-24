@@ -91,6 +91,7 @@ class Bonus
 							'inOut' => Wallet::IN,
 							'userId' => $user->id,
 							'amount' => $clpAmount,
+                            'amount_usd' => $usdAmount,
 							'note' => '$' . $usdAmount . ' of $'. $pack->amount_increase .' package '. $pack->packageId
 						];
 
@@ -122,6 +123,7 @@ class Bonus
 								'inOut' => Wallet::IN,
 								'userId' => $user->id,
 								'amount' => $clpAmount,
+                                'amount_usd' => $bonusPack,
 								'note' => '$' . $bonusPack . ' bonus of $' . $pack->amount_increase .' package '. $pack->packageId
 							];
 
@@ -287,6 +289,7 @@ class Bonus
                         'inOut' => Wallet::IN,
                         'userId' => $binary->userId,
                         'amount' => $clpAmount,
+                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
                         'note'	=> '$' . $bonus * config('carcoin.clp_bonus_pay') . ' - paid 60% of $'.$bonus
                     ];
 
@@ -298,6 +301,7 @@ class Bonus
                         'inOut' => Wallet::IN,
                         'userId' => $binary->userId,
                         'amount' => $reinvestAmount,
+                        'amount_usd' => $bonus * config('carcoin.reinvest_bonus_pay'),
                         'note'	=> '$' . $bonus * config('carcoin.reinvest_bonus_pay') . ' - paid 40% of $'.$bonus
                     ];
 
@@ -441,6 +445,7 @@ class Bonus
                         'inOut' => Wallet::IN,
                         'userId' => $binary->userId,
                         'amount' => $clpAmount,
+                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
                         'note'	=> '$' . $bonus * config('carcoin.clp_bonus_pay') . ' - paid 60% of $'.$bonus
                     ];
                     Wallet::create($fieldUsd);
@@ -450,6 +455,7 @@ class Bonus
                         'inOut' => Wallet::IN,
                         'userId' => $binary->userId,
                         'amount' => $reinvestAmount,
+                        'amount_usd' => $bonus * config('carcoin.reinvest_bonus_pay'),
                         'note'	=> '$' . $bonus * config('carcoin.reinvest_bonus_pay') . ' - paid 40% of $'.$bonus
                     ];
                     Wallet::create($fieldInvest);
@@ -667,6 +673,7 @@ class Bonus
                         'inOut' => Wallet::IN,
                         'userId' => $user->userId,
                         'amount' => $clpAmount,
+                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
                         'note'=>'Paid 60% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.clp_bonus_pay')
                     ];
 
@@ -678,6 +685,7 @@ class Bonus
                         'inOut' => Wallet::IN,
                         'userId' => $user->userId,
                         'amount' => $reinvestAmount,
+                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
                         'note'=>'Paid 40% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
                     ];
 

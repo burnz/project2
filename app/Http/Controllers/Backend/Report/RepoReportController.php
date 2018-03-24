@@ -18,6 +18,7 @@ use DB;
 use Illuminate\Support\Facades\URL;
 
 
+
 class RepoReportController
 {
     //OPTION
@@ -128,8 +129,8 @@ class RepoReportController
     public function getDataForCommission($opt,$dateCustom){
         $data = array();
         $data['data_analytic'] = $this->wallet->getDataReport($dateCustom, $opt);
-        $data['action_type'] = ['Fast Start', 'Interest Type',
-            'Binary Type', 'Ltoyalty Type', 'Matching Type'];
+        $data['action_type'] = ['Referral', 'Interest',
+            'Infinity', 'Rank', 'Infinity Interest'];
         $data['type'] = [Wallet::FAST_START_TYPE, Wallet::INTEREST_TYPE, Wallet::BINARY_TYPE,
             Wallet::LTOYALTY_TYPE, Wallet::MATCHING_TYPE];
         $type_10_6 = [Wallet::FAST_START_TYPE, Wallet::BINARY_TYPE,

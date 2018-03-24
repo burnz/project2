@@ -1,7 +1,7 @@
 @extends('adminlte::backend.layouts.member')
 
 @section('contentheader_title')
-    {{ trans('adminlte_lang::user.report') }}
+    Reports
 @endsection
 
 @section('contentheader_description')

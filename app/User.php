@@ -8,6 +8,7 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Notifications\ResetPasswords;
 use Auth;
 use DB;
+use App\Http\Controllers\Backend\Report\RepoReportController as Report;
 
 class User extends Authenticatable
 {
@@ -118,6 +119,7 @@ class User extends Authenticatable
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
 						'amount' => $clpAmount,
+						'amount_usd' => $packageBonus * config('carcoin.clp_bonus_pay'),
 						'note'   => '60% bonus - ' . $user->name . ' lending amount $' . $usdCoinAmount,
 					];
 					
@@ -129,6 +131,7 @@ class User extends Authenticatable
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
 						'amount' => $reinvestAmount,
+						'amount_usd' => $packageBonus * config('carcoin.reinvest_bonus_pay'),
 						'note'   => '40% bonus - ' . $user->name . ' lending amount $' . $usdCoinAmount,
 					];
 					Wallet::create($fieldInvest);
@@ -537,6 +540,50 @@ class User extends Authenticatable
 
 		return false;
 	}
+
+	public static function getNewUser( $date ){
+        return self::where('active' , 1)
+            ->whereDate('created_at','>=', $date['from_date'])
+            ->whereDate('created_at','<=', $date['to_date'])
+            ->count();
+    }
+
+    public static function getDataReport($date,$opt){
+        switch ($opt){
+            case Report::DAY_NOW :
+                return self::selectRaw('date(created_at) as date,COUNT(users.id) as totalPrice')
+                    ->where('active' , 1)
+                    ->whereDate('created_at','>=', $date['from_date'])
+                    ->whereDate('created_at','<=', $date['to_date'])
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::WEEK_NOW :
+                return self::selectRaw(
+                    'DATE(users.created_at) AS date, 
+                CONCAT(WEEKOFYEAR(users.created_at),YEAR(users.created_at)) AS week_month_year,
+                COUNT(users.id) AS totalPrice')
+                    ->whereDate('users.created_at','>=', $date['from_date'])
+                    ->whereDate('users.created_at','<=', $date['to_date'])
+                    ->groupBy('week_month_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+            case Report::MONTH_NOW :
+                return self::selectRaw(
+                    'DATE(users.created_at) AS date, 
+                CONCAT(MONTH(users.created_at),YEAR(users.created_at)) AS week_month_year,
+                COUNT(users.id) AS totalPrice')
+                    ->whereDate('users.created_at','>=', $date['from_date'])
+                    ->whereDate('users.created_at','<=', $date['to_date'])
+                    ->groupBy('week_month_year')
+                    ->orderBy('date')
+                    ->get()
+                    ->toArray();
+        }
+
+    }
 
 }
 
