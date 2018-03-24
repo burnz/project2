@@ -176,7 +176,7 @@ class RepoReportController
         }
 
         $data['data_analytic'] = $temp;
-        $data['link'] = $this->renderLink($dateCustom);
+        $data['link'] = $this->renderLinkUSD($dateCustom);
         $data['opt'] = (int)$opt;
         $data['date_custom'] = $dateCustom;
         return $data;
@@ -238,6 +238,25 @@ class RepoReportController
         $data['month'].= "&opt=".self::MONTH_NOW;
         return $data;
     }
+
+    private function renderLinkUSD($dateCustom){
+        $from_date = $dateCustom['from_date'];
+        $to_date = $dateCustom['to_date'];
+
+        $data['day'] = URL('report/commission-usd');
+        $data['day'].= "?from_date=$from_date&to_date=$to_date";
+        $data['day'].= "&opt=".self::DAY_NOW;
+
+        $data['week'] = URL('report/commission-usd');
+        $data['week'].= "?from_date=$from_date&to_date=$to_date";
+        $data['week'].= "&opt=".self::WEEK_NOW;
+
+        $data['month'] = URL('report/commission-usd');
+        $data['month'].= "?from_date=$from_date&to_date=$to_date";
+        $data['month'].= "&opt=".self::MONTH_NOW;
+        return $data;
+    }
+
     /* Action get Data for report Controller
      * Type : new user, total package
      * Option : day , week , month
