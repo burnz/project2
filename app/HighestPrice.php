@@ -20,6 +20,9 @@ class HighestPrice extends Model
         $data = DB::table('high_price_yesterday')
                 ->select('highest_price', 'highest_price_btc')
                 ->first();
-        return round($data->highest_price_btc * $data->highest_price, 5);
+        $price = round($data->highest_price_btc * $data->highest_price, 5);
+        if($price == 0) $price = 1;
+
+        return $price;
     }    
 }
