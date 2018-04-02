@@ -719,3 +719,18 @@ INSERT INTO `rand_cronjob_binary_interest` VALUES ('1', '2018-03-12 01:26:55', '
 /* 25/03/2018 */
 ALTER TABLE wallets ADD COLUMN amount_usd DOUBLE;
 /* 25/03/2018 */
+
+/* 31/03/2018 */
+DROP TABLE IF EXISTS `high_price_yesterday`;
+CREATE TABLE `high_price_yesterday` (
+  `id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `highest_price` double DEFAULT 0,
+  `highest_price_btc` double DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/* 31/03/2018 */
+-- ----------------------------
+-- Records of high_price_yesterday
+-- ----------------------------
+INSERT INTO `high_price_yesterday` VALUES ('1', '2018-03-30 18:13:09', '2018-03-30 18:13:12', '0.00001667', '7246.05');

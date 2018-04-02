@@ -21,6 +21,7 @@ use App\TotalWeekSales;
 use App\UserTreePermission;
 use App\BonusBinaryInterest;
 use App\LoyaltyUser;
+use App\HighestPrice;
 
 use DB;
 use Log;
@@ -72,7 +73,7 @@ class Bonus
 						$bonus = rand(config('carcoin.min_interest')*100, config('carcoin.max_interest')*100)/100;
 
 						$usdAmount = ($pack->amount_increase * $bonus)/100;
-						$clpAmount = $usdAmount / ExchangeRate::getCLPUSDRate();
+						$clpAmount = $usdAmount / HighestPrice::getCarHighestPrice();
 
 
 
@@ -105,7 +106,7 @@ class Bonus
 						{
 							$bonusPack = $pack->amount_increase * $packInfo->bonus;
 
-							$clpAmount = $bonusPack / ExchangeRate::getCLPUSDRate();
+							$clpAmount = $bonusPack / HighestPrice::getCarHighestPrice();
 
 							$userCoin = $user->userCoin;
 							$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
@@ -275,8 +276,8 @@ class Bonus
                 $binary->save();
 
                 if($bonus > 0){
-                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / HighestPrice::getCarHighestPrice();
+                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / HighestPrice::getCarHighestPrice();
 
                     $userCoin = $binary->userCoin;
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
@@ -433,8 +434,8 @@ class Bonus
 
                 if($bonus > 0)
                 {
-                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / HighestPrice::getCarHighestPrice();
+                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / HighestPrice::getCarHighestPrice();
                     $userCoin = $binary->userCoin;
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
                     $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
@@ -660,8 +661,8 @@ class Bonus
 
                 if($bonus > 0)
                 {
-                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate();
-                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate();
+                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / HighestPrice::getCarHighestPrice();
+                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / HighestPrice::getCarHighestPrice();
                     $userCoin = UserCoin::find($user->userId);
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
                     $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
