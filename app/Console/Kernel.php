@@ -52,17 +52,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusDayCron();
-            })->hourly()->when(function () {
-                $data = RandCronjobInterest::first();
-
-                if($data->hour_run == Carbon::now()->hour && $data->next_date == Carbon::now()->toDateString()) {
-                    $nextHour = rand(1,12);
-                    $data->update(['hour_run' => $nextHour, 'next_date' => Carbon::tomorrow()->toDateString()]);
-                    return true;
-                } else {
-                    return false;   
-                }
-            });
+            })->dailyAt('00:01');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -71,17 +61,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->hourly()->when(function () {
-                $data = RandCronjobBinary::first();
-
-                if($data->hour_run == Carbon::now()->hour && $data->next_week == Carbon::now()->weekOfYear) {
-                    $nextHour = rand(1,12);
-                    $data->update(['hour_run' => $nextHour, 'next_week' => Carbon::now()->addDays(7)->weekOfYear]);
-                    return true;
-                } else {
-                    return false;   
-                }
-            }); //->weekly()->mondays()->at('00:30');
+            })->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -92,17 +72,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusMatchingWeekCron();
-            })->hourly()->when(function () {
-                $data = RandCronjobBinaryInterest::first();
-
-                if($data->hour_run == Carbon::now()->hour && $data->next_week == Carbon::now()->weekOfYear) {
-                    $nextHour = rand(1,12);
-                    $data->update(['hour_run' => $nextHour, 'next_week' => Carbon::now()->addDays(7)->weekOfYear]);
-                    return true;
-                } else {
-                    return false;   
-                }
-            }); //->weekly()->mondays()->at('01:00');
+            })->weekly()->mondays()->at('01:00');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
