@@ -14,6 +14,7 @@ use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
+use App\Cronjob\ReturnCarForLandUser;
 use App\RandCronjobInterest;
 use App\RandCronjobBinary;
 use App\RandCronjobBinaryInterest;
@@ -47,6 +48,16 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
+
+        //Return CAR for Land User
+        try {
+            $schedule->call(function () {
+                ReturnCarForLandUser::return();
+            })->dailyAt('02:00');
+        } catch (\Exception $ex) {
+            Log::info($ex);
+        }
+
         
         //Profit run everyday
         try {
@@ -93,7 +104,7 @@ class Kernel extends ConsoleKernel
          */
         try {
             $schedule->call(function () {
-                UpdateBtcCoin::UpdateBtcCoinAmount();
+                //UpdateBtcCoin::UpdateBtcCoinAmount();
             })->everyMinute();
         } catch (\Exception $ex) {
             Log::info($ex);
@@ -111,7 +122,7 @@ class Kernel extends ConsoleKernel
         // Cron job update status withdraw BTC
         try {
             $schedule->call(function () {
-                UpdateStatusBTCWithdraw::updateStatusWithdraw();
+                //UpdateStatusBTCWithdraw::updateStatusWithdraw();
             })->everyFiveMinutes();
         } catch (\Exception $ex) {
             Log::info($ex);

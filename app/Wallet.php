@@ -60,6 +60,9 @@ class Wallet extends Model
     const MATCHING_TYPE = 18;//infinity interest
     //Global bonus
     const GLOBAL_BONUS=19;
+    //Return CAR for Land
+    const LAND_RETURN = 20;
+
     //inOut 
     const IN = "in" ;
     
