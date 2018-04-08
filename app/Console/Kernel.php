@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 ReturnCarForLandUser::return();
-            })->dailyAt('02:00');
+            })->dailyAt('00:15');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
