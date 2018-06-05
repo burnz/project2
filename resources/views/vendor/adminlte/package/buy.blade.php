@@ -67,6 +67,7 @@
         }
         .modal-content .modal-body{
             padding-top:0 !important;
+            padding-bottom: 0 !important;
         }
         .card .card-title{
             font-size:20px;
@@ -102,6 +103,28 @@
         }
         .has-error .help-block{
             display: block !important;
+        }
+        @media (min-width: 992px)
+        {
+            .modal-lg {
+                width: 1100px;
+            }
+        }
+        .card-pricing{
+            margin-top:5px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .card-pricing .card-action .amount{
+            display: inline-table;
+            margin:0 !important;
+
+        }
+        .card-action .refund{
+            margin:0 !important;
+        }
+        .modal .modal-dialog{
+            margin-top: 10px !important;
         }
     </style>
 	<div class="content">
@@ -152,55 +175,85 @@
                                         <!-- <div class="card-header">
                                             <h3 class="card-title text-center">Pick the best package for you</h3>
                                         </div> -->
-                                        <div class="card-content clearfix">
+                                        <div class="card-content clearfix mt-5">
                                             @if(count($dataPack)>0)
                                                 @foreach($dataPack as $pkey=>$pval)
-                                                    <div class="col-md-3">
-                                                        <div class="card card-pricing  <?=$pkey==0?'card-raised':''?>">
-                                                            <div class="card-content p-0">
-                                                                <div class="icon <?=$pkey==0?'active':''?>">
-                                                                    <h3 style="text-transform: uppercase;">{{$pval->name}}</h3>
-                                                                    <div class="radio" big="md">
-                                                                        <label>
-                                                                            <input data-min="{{$pval->min_price}}" data-max="{{$pval->max_price}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':'' ?> value="{{$pval->pack_id}}" > 
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="card-description">
-                                                                    <span>
-                                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
-                                                                    </span>
-                                                                    <span class="carcoin-color">
-                                                                        <i class="material-icons" icon="carcoin-primary"></i>
-                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
-                                                                    </span>
-                                                                </div>
-                                                                <div class="card-action">
+                                                    <div class="row">
+                                                        <div class="col-md-12 ibox">
+                                                            <div class="row ibox-package">
+                                                                <div class="card card-pricing mt-5  <?=$pkey==0?'card-raised':''?>">
+                                                                    <div class="card-content p-0">
+                                                                        <div class="col-md-2 text-center align-self-center">
+                                                                            <div class="icon mb-0 <?=$pkey==0?'active':''?>">
+                                                                                <h3 style="text-transform: uppercase;margin-top: 7px">{{$pval->name}}</h3>
+                                                                                <div class="radio" big="md">
+                                                                                    <label>
+                                                                                        <input data-min="{{$pval->min_price}}" data-max="{{$pval->max_price}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':''?> value="{{$pval->pack_id}}">
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3 text-center align-self-center">
+                                                                            <div class="form-group mt-3">
+                                                                                <div class="card-description">
+                                                                                    <label class="mb-4 font-weight-normal">Lending Amount (car)</label>
 
-<div class="form-group my-4 refund input-group">
-    <span class="input-group-addon pr-0">
-        <i class="material-icons">refresh</i>
-    </span>
-    <div class="form-group label-floating">
-        <select class="selectpicker refund-type" name="refundType" id="refund_type" data-style="select-with-transition" title="Refund Type" data-size="2">
-            <option value="1">REFUND BY USD</option>
-            <option value="2">REFUND BY CAR</option>
-        </select>
-        <p class="help-block errorRefund"></p>
-    </div>
-</div>
-                                                                    <div class="input-group form-group my-4 amount">
-                                                                        <span class="input-group-addon pr-0">
-                                                                            <i class="material-icons">attach_money</i>
-                                                                        </span>
-                                                                        <div class="form-group label-floating">
-                                                                            
-                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10" placeholder="Your Amount">
-                                                                            <span class="material-input"></span>
-                                                                            <p class="help-block errorAmount"></p>
+                                                                                    <span class="carcoin-color">
+                                                                                        <i class="material-icons" icon="carcoin-primary"></i>
+                                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3 text-center align-self-center">
+                                                                            <div class="form-group mt-3">
+                                                                                <div class="card-description">
+                                                                                    <label class="mb-4 font-weight-normal">Lending Amount ($)</label>
+                                                                                    <span>
+                                                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
+                                                                                    </span>
+                                        
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="card-action col-md-4 mb-0 p-0">
+                                                                            <div class="col-md-6 text-center align-self-center">
+                                                                                <div class="form-group mt-3">
+                                                                                    <label class="mb-0 font-weight-normal">Refund Type</label>
+                                                                                    <div class="form-group my-4 refund input-group">
+                                                                                        <span class="input-group-addon pr-0">
+                                                                                            <i class="material-icons">refresh</i>
+                                                                                        </span>
+                                                                                        <div class="form-group label-floating mt-0">
+                                                                                            <select class="selectpicker refund-type" name="refundType" id="refund_type" data-style="select-with-transition" title="Refund Type" data-size="2">
+                                                                                                <option value="1">REFUND BY USD</option>
+                                                                                                <option value="2">REFUND BY CAR</option>
+                                                                                            </select>
+                                                                                            <p class="help-block errorRefund"></p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6 text-center align-self-center">
+                                                                                <div class="form-group mt-3">
+                                                                                    <label class="mb-0 font-weight-normal">Invest Amount</label>
+                                                                                    <div class="input-group mt-0 form-group my-4 amount">
+                                                                                        <span class="input-group-addon pr-0">
+                                                                                            <i class="material-icons">attach_money</i>
+                                                                                        </span>
+                                                                                        <div class="form-group mt-0 label-floating">
+                                                                                            
+                                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10" placeholder="Your Amount">
+                                                                                            <span class="material-input"></span>
+                                                                                            <p class="help-block errorAmount"></p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -212,7 +265,7 @@
                                             @endif
 
 
-                                            <div class="col-md-12">
+                                            <div class="col-md-6 text-left">
                                                 <div class="checkbox">
                                                     <label>
                                                         <input id="term" type="checkbox">
@@ -221,12 +274,15 @@
                                                     <p class="help-block termAgree">Please agree terms and conditions</p>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6 text-right">
+                                                
+                                                    <button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Buy Package</button>
+                                                    <button type="button" class="btn btn-primary btn-round btn-outline-primary" data-dismiss="modal">Close</button>
+                                                
+                                            </div>
                                         </div>
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Buy Package</button>
-                                    <button type="button" class="btn btn-primary btn-round btn-outline-primary" data-dismiss="modal">Close</button>
-                                  </div>
+                                  
                                 </div>
                               </div>
                             </div>
