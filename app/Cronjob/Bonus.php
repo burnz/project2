@@ -37,151 +37,6 @@ class Bonus
 {
 	
 	/**
-	* This cronjob function will every days to caculate and return interest to user's wallet 
-	*/
-	public static function bonusDayCron(){
-		set_time_limit(0);
-
-		/* Get current weekYear */
-		$weeked = date('W');
-		$year = date('Y');
-		$weekYear = $year.$weeked;
-
-		try {
-			$lstUser = User::where('active', '=', 1)->get();
-			foreach($lstUser as $user){
-				//Get cron status
-				$cronStatus = CronProfitLogs::where('userId', $user->id)->first();
-				if(isset($cronStatus) && $cronStatus->status == 1) continue;
-
-				$userData = $user->userData;
-								
-				//Get all pack in user_packages
-				$packages = UserPackage::where('userId', $user->id)
-							->where('withdraw', '<', 1)
-							->get();
-
-				if(count($packages)>0)
-				{
-					//Calculate total week interest for each users
-					$weekTotal = TotalWeekSales::where('userId', $user->id)->first();
-					$totalInterest = 0;
-
-					//Pakages
-					foreach($packages as $pack)
-					{
-						$bonus = rand(config('carcoin.min_interest')*100, config('carcoin.max_interest')*100)/100;
-
-						$usdAmount = ($pack->amount_increase * $bonus)/100;
-						$clpAmount = $usdAmount / HighestPrice::getCarHighestPrice();
-
-
-
-						//Them bang nua interest_weekly
-
-						$userCoin = $user->userCoin;
-						$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-						$userCoin->save();
-
-						//Get package information
-						$packInfo = Package::where('pack_id', $pack->packageId)->first();
-
-						$fieldUsd = [
-							'walletType' => Wallet::CLP_WALLET,//usd
-							'type' => Wallet::INTEREST_TYPE,//bonus day
-							'inOut' => Wallet::IN,
-							'userId' => $user->id,
-							'amount' => $clpAmount,
-                            'amount_usd' => $usdAmount,
-							'note' => '$' . $usdAmount . ' of $'. $pack->amount_increase .' package '. $pack->packageId
-						];
-
-						Wallet::create($fieldUsd);
-
-						//Calculate total week interest for each users
-						$totalInterest += $usdAmount;
-						
-
-						if($pack->packageId > 1)
-						{
-							$bonusPack = $pack->amount_increase * $packInfo->bonus;
-
-							$clpAmount = $bonusPack / HighestPrice::getCarHighestPrice();
-
-							$userCoin = $user->userCoin;
-							$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-							$userCoin->save();
-
-							//Calculate total week interest for each users
-							$totalInterest += $bonusPack;
-
-							//Get package information
-							$packInfo = Package::where('pack_id', $pack->packageId)->first();
-
-							$fieldBonus = [
-								'walletType' => Wallet::CLP_WALLET,//usd
-								'type' => Wallet::INTEREST_TYPE,//bonus day
-								'inOut' => Wallet::IN,
-								'userId' => $user->id,
-								'amount' => $clpAmount,
-                                'amount_usd' => $bonusPack,
-								'note' => '$' . $bonusPack . ' bonus of $' . $pack->amount_increase .' package '. $pack->packageId
-							];
-
-							Wallet::create($fieldBonus);
-						}
-					}
-
-					$weekTotal->total_interest = $totalInterest;//tinh tong->
-					$weekTotal->weekYear = $weekYear;
-					$weekTotal->save();
-					//Update cron status from 0 => 1
-					$cronStatus->status = 1;
-					$cronStatus->save();
-				}
-			}
-			//update bonus binary interest
-
-			foreach($lstUser as $user)
-			{
-				$userData = $user->userData;
-				if($userData->isBinary == 0) continue;
-				
-				$volInfo = self::_calLeftRightVolume($user->id);
-				$binaryInterest=BonusBinaryInterest::where('userId','=',$user->id)->where('weekYear',$weekYear)->first();
-				
-				if(count($binaryInterest)>0)
-				{
-					$binaryInterest->leftNew += $volInfo['totalLeft'];
-					$binaryInterest->rightNew +=$volInfo['totalRight'];
-					$binaryInterest->save();
-				}
-				else
-				{
-
-					$fields=[
-						'userId'=>$user->id,
-						'leftNew'=>$volInfo['totalLeft'],
-						'rightNew'=>$volInfo['totalRight'],
-						'leftOpen'=>0,
-						'rightOpen'=>0,
-						'bonus'=>0,
-						'weekYear'=>$weekYear
-					];
-					BonusBinaryInterest::create($fields);
-				}
-			}
-			//Update status from 1 => 0 after run all user
-			DB::table('cron_profit_day_logs')->update(['status' => 0]);
-
-		} catch(\Exception $e) {
-			Log::error('Running bonusDayCron has error: ' . date('Y-m-d') .$e->getMessage());
-			Log::info($e->getTraceAsString());
-		}
-	}    
-
-
-	/**
 	* This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
 	*/
 	public static function bonusBinaryWeekCron()//infinity
@@ -203,11 +58,7 @@ class Bonus
 			$firstWeekYear = $firstYear.$firstWeek;
 		}
 
-
-
 		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
-
-        //dd($firstWeek);
 
 		/* =======END ===== */
         try {
@@ -216,46 +67,97 @@ class Bonus
             {
                 //Get cron status
                 $cronStatus = CronBinaryLogs::where('userId', $binary->userId)->first();
-                if(isset($cronStatus) && $cronStatus->status == 1) continue;
+                if(!is_null($cronStatus)) {
+                    if( $cronStatus->status == 1) continue;
+                } else {
+                    //insert to log
+                    $field = [
+                        'userId' => $binary->userId,
+                        'status' => 0,
+                    ];
+                    
+                    CronBinaryLogs::create($field);
+                }
 
-                $leftOver = $binary->leftOpen + $binary->leftNew;
-                $rightOver = $binary->rightOpen + $binary->rightNew;
+                //in the initial period don't care about condition
+                if(config('app.condition')) {
+                    //get total sale this week
+                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
+                        $user->packageId >= 1)
+                    {
+                        $maxLevel = 1;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
+                        $user->packageId >= 2)
+                    {
+                        $maxLevel = 2;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
+                        $user->packageId >= 3)
+                    {
+                        $maxLevel = 3;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
+                        $user->packageId >= 4)
+                    {
+                        $maxLevel = 4;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
+                        $user->packageId >= 5)
+                    {
+                        $maxLevel = 5;
+                    }
+                }
+
+                $lefAgencyF1 = UserData::where('refererId', '=', $binary->userId)
+                                ->where('status', 1)->where('leftRight',  'left')->count();
+                $rightAgencyF1 = UserData::where('refererId', '=', $binary->userId)
+                                ->where('status', 1)->where('leftRight',  'right')->count();
 
                 //Caculate level to get binary commision
                 $level = 0;
                 $percentBonus = 0;
                 $packageId = $binary->userData->packageId;
 
-                if($leftOver >= config('carcoin.bi_sale_cond_lv_1') &&
-                    $rightOver >= config('carcoin.bi_sale_cond_lv_1') &&
+                if($lefAgencyF1 >= 1 &&
+                    $rightAgencyF1 >= 1 &&
                     $packageId >= 1 )
                 {
-                    //$level = config('carcoin.bi_sale_cond_lv_1');
                     $percentBonus = config('carcoin.bi_lv_1_bonus');
                 }
 
-                if($leftOver >= config('carcoin.bi_sale_cond_lv_2') &&
-                    $rightOver >= config('carcoin.bi_sale_cond_lv_2') &&
+                if($lefAgencyF1 >= 2 &&
+                    $rightAgencyF1 >= 2 &&
                     $packageId >= 2)
                 {
-                    //$level = config('carcoin.bi_sale_cond_lv_2');
                     $percentBonus = config('carcoin.bi_lv_2_bonus');
                 }
 
-                if($leftOver >= config('carcoin.bi_sale_cond_lv_3') &&
-                    $rightOver >= config('carcoin.bi_sale_cond_lv_3') &&
+                if($lefAgencyF1 >= 3 &&
+                    $rightAgencyF1 >= 3 &&
                     $packageId >= 3)
                 {
-                    //$level = config('carcoin.bi_sale_cond_lv_3');
                     $percentBonus = config('carcoin.bi_lv_3_bonus');
                 }
 
-                if($leftOver > config('carcoin.bi_sale_cond_lv_4') &&
-                    $rightOver > config('carcoin.bi_sale_cond_lv_4') &&
-                    $packageId == 4)
+                if($lefAgencyF1 > 4 &&
+                    $rightAgencyF1 > 4 &&
+                    $packageId >= 4)
                 {
-                    //$level = config('carcoin.bi_sale_cond_lv_4');
                     $percentBonus = config('carcoin.bi_lv_4_bonus');
+                }
+
+                if($lefAgencyF1 > 5 &&
+                    $rightAgencyF1 > 5 &&
+                    $packageId >= 5)
+                {
+                    $percentBonus = config('carcoin.bi_lv_5_bonus');
                 }
 
                 if($leftOver > $rightOver) $level = $rightOver;
@@ -276,12 +178,10 @@ class Bonus
                 $binary->save();
 
                 if($bonus > 0){
-                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / HighestPrice::getCarHighestPrice();
-                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / HighestPrice::getCarHighestPrice();
+                    $clpAmount = $bonus / HighestPrice::getCarHighestPrice();
 
                     $userCoin = $binary->userCoin;
                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
                     $userCoin->save();
 
                     $fieldUsd = [
@@ -291,26 +191,13 @@ class Bonus
                         'userId' => $binary->userId,
                         'amount' => $clpAmount,
                         'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
-                        'note'	=> '$' . $bonus * config('carcoin.clp_bonus_pay') . ' - paid 60% of $'.$bonus
+                        'note'	=> ''
                     ];
 
                     Wallet::create($fieldUsd);
-
-                    $fieldInvest = [
-                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
-                        'type' => Wallet::BINARY_TYPE,//bonus week
-                        'inOut' => Wallet::IN,
-                        'userId' => $binary->userId,
-                        'amount' => $reinvestAmount,
-                        'amount_usd' => $bonus * config('carcoin.reinvest_bonus_pay'),
-                        'note'	=> '$' . $bonus * config('carcoin.reinvest_bonus_pay') . ' - paid 40% of $'.$bonus
-                    ];
-
-                    Wallet::create($fieldInvest);
                 }
 
                 //Check already have record for this week?
-
                 $weeked = date('W');
                 $year = date('Y');
                 $weekYear = $year.$weeked;
@@ -341,7 +228,7 @@ class Bonus
 
                 //Update cron status from 0 => 1
                 //echo $binary->userId . "---";
-                if(isset($cronStatus)) {
+                if(!is_null($cronStatus)) {
                     $cronStatus->status = 1;
                     $cronStatus->save();
                 }
@@ -350,359 +237,439 @@ class Bonus
             //Update status from 1 => 0 after run all user
             DB::table('cron_binary_logs')->update(['status' => 0]);
         } catch(\Exception $e) {
-            Log::error('Running Infinity Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::error('Running Binary Bonus has error: ' . date('Y-m-d') .$e->getMessage());
             Log::info($e->getTraceAsString());
         }
 	}
 
 	/**
-	* This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
+	* This cronjob function will run every week ( return by BTC )
 	*/
-	public static function bonusMatchingWeekCron()
+	public static function bonusRevenueCron()
 	{
 		set_time_limit(0);
-		/* Get previous weekYear */
-		/* =======BEGIN ===== */
-		$weeked = date('W');
-		$year = date('Y');
-		$weekYear = $year.$weeked;
+        /* Get previous weekYear */
+        /* =======BEGIN ===== */
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
 
-		$firstWeek = $weeked - 1;
-		$firstYear = $year;
+        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+        $firstYear = $year;
         $firstWeekYear = $firstYear.$firstWeek;
 
-		if($firstWeek == 0){
-			$firstWeek = 52;
-			$firstYear = $year - 1;
-			$firstWeekYear = $firstYear.$firstWeek;
-		}
-		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
-		/* =======END ===== */
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
 
+        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
+        /* =======END ===== */
         try {
-            $listBinaryInterest = BonusBinaryInterest::where('weekYear', '=', $firstWeekYear)->get();
-            foreach($listBinaryInterest as $binary)
-            {
+            $lstUser = UserData::where('status', '=', 1)->get();
+            foreach($lstUser as $user){
                 //Get cron status
-                $cronStatus = CronMatchingLogs::where('userId', $binary->userId)->first();
-                if(isset($cronStatus) && $cronStatus->status == 1) continue;
-                //$volInfo = self::_calLeftRightVolume($binary->userId);
-                $leftOver = $binary->leftNew + $binary->leftOpen;
-                $rightOver = $binary->rightNew + $binary->rightOpen;
-
-                //Caculate level to get binary commision
-                $level = 0;
-                $percentBonus = 0;
-                $packageId = $binary->userData->packageId;
-                if($leftOver >= config('carcoin.bi_inter_cond_lv_1') &&
-                    $rightOver >= config('carcoin.bi_inter_cond_lv_1') &&
-                    $packageId >= 1 )
-                {
-                    $percentBonus = config('carcoin.bi_lv_1_inter_bonus');
-                }
-                if($leftOver >= config('carcoin.bi_inter_cond_lv_2') &&
-                    $rightOver >= config('carcoin.bi_inter_cond_lv_2') &&
-                    $packageId >= 2)
-                {
-                    $percentBonus = config('carcoin.bi_lv_2_inter_bonus');
-                }
-                if($leftOver >= config('carcoin.bi_inter_cond_lv_3') &&
-                    $rightOver >= config('carcoin.bi_inter_cond_lv_3') &&
-                    $packageId >= 3)
-                {
-                    $percentBonus = config('carcoin.bi_lv_3_inter_bonus');
-                }
-                if($leftOver > config('carcoin.bi_inter_cond_lv_4') &&
-                    $rightOver > config('carcoin.bi_inter_cond_lv_4') &&
-                    $packageId == 4)
-                {
-                    $percentBonus = config('carcoin.bi_lv_4_inter_bonus');
-                }
-                
-                if($leftOver > $rightOver) $level = $rightOver;
-                else $level = $leftOver;
-
-                $leftOpen = $leftOver - $level;
-                $rightOpen = $rightOver - $level;
-                $bonus = $level * $percentBonus;
-
-                //Bonus canot over maxout $30,000
-                if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
-
-                $binary->bonus = $bonus;
-                $binary->save();
-
-                if($bonus > 0)
-                {
-                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / HighestPrice::getCarHighestPrice();
-                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / HighestPrice::getCarHighestPrice();
-                    $userCoin = $binary->userCoin;
-                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-                    $userCoin->save();
-                    $fieldUsd = [
-                        'walletType' => Wallet::CLP_WALLET,//
-                        'type' =>  Wallet::MATCHING_TYPE,//bonus week
-                        'inOut' => Wallet::IN,
-                        'userId' => $binary->userId,
-                        'amount' => $clpAmount,
-                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
-                        'note'	=> '$' . $bonus * config('carcoin.clp_bonus_pay') . ' - paid 60% of $'.$bonus
-                    ];
-                    Wallet::create($fieldUsd);
-                    $fieldInvest = [
-                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
-                        'type' => Wallet::MATCHING_TYPE,//bonus week
-                        'inOut' => Wallet::IN,
-                        'userId' => $binary->userId,
-                        'amount' => $reinvestAmount,
-                        'amount_usd' => $bonus * config('carcoin.reinvest_bonus_pay'),
-                        'note'	=> '$' . $bonus * config('carcoin.reinvest_bonus_pay') . ' - paid 40% of $'.$bonus
-                    ];
-                    Wallet::create($fieldInvest);
-                }
-
-                $week = BonusBinaryInterest::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
-                // Yes => update L-Open, R-Open
-                if(isset($week) && $week->id > 0) {
-                    $week->leftOpen = $leftOpen;
-                    $week->rightOpen = $rightOpen;
-
-                    //update leftNew
-                    $week->leftNew=0;//reset leftNew
-                    $week->rightNew=0;//reset rightNew
-                    //update RightNew
-
-                    $week->save();
+                $cronStatus = CronLeadershipLogs::where('userId', $user->userId)->first();
+                if(!is_null($cronStatus)) {
+                    if($cronStatus->status == 1) continue;
                 } else {
-                    // No => create new
+                    //insert to log
                     $field = [
-                        'userId' => $binary->userId,
-                        'weeked' => $weeked,
-                        'year' => $year,
-                        'leftNew' => 0,
-                        'rightNew' => 0,
-                        'leftOpen' => $leftOpen,
-                        'rightOpen' => $rightOpen,
-                        'weekYear' => $weekYear,
+                        'userId' => $user->userId,
+                        'status' => 0,
                     ];
-
-                    BonusBinaryInterest::create($field);
+                    
+                    CronLeadershipLogs::create($field);
                 }
+
+                $maxLevel = 0;
+                //in the initial period don't care about condition
+                if(config('app.condition')) {
+                    //get total sale this week
+                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
+                        $user->packageId >= 1)
+                    {
+                        $maxLevel = 1;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
+                        $user->packageId >= 2)
+                    {
+                        $maxLevel = 2;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
+                        $user->packageId >= 3)
+                    {
+                        $maxLevel = 3;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
+                        $user->packageId >= 4)
+                    {
+                        $maxLevel = 4;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
+                        $user->packageId >= 5)
+                    {
+                        $maxLevel = 5;
+                    }
+                } else {
+                    switch($user->packageId) {
+                        case 1: $maxLevel = 1;
+                                break;
+                        case 2: $maxLevel = 2;
+                                break;
+                        case 3: $maxLevel = 3;
+                                break;
+                        case 4: $maxLevel = 4;
+                                break;
+                        case 5: $maxLevel = 5;
+                                break;
+                    }
+                }
+
+                if($maxLevel > 0) {
+                    $bonus = 0;
+                    self::calculateRevenueByLevel(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus);
+
+                    //each ticket price 0.0002 btc
+                    $bonus = $bonus * 0.0002;
+                    $userCoin = $user->userCoin;
+                    $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
+                    $userCoin->save();
+
+                    //insert to log
+                    $fieldUsd = [
+                        'walletType' => Wallet::BTC_WALLET,
+                        'type' => Wallet::REVENUE_BONUS,
+                        'inOut' => Wallet::IN,
+                        'userId' => $user->userId,
+                        'amount' => $bonus,
+                        'note'   => 'return revenue bonus',
+                    ];
+                    
+                    Wallet::create($fieldUsd);
+                }
+
                 //Update cron status from 0 => 1
-                if(isset($cronStatus)) {
+                if(!is_null($cronStatus)) {
                     $cronStatus->status = 1;
                     $cronStatus->save();
                 }
-            }
-            //Update status from 1 => 0 after run all user
-            DB::table('cron_matching_logs')->update(['status' => 0]);
-        } catch(\Exception $e) {
-            Log::error('Running Infinity Interest has error: ' . date('Y-m-d') .$e->getMessage());
-            Log::info($e->getTraceAsString());
-        }
-	}
-
-	public static function _calLeftRightVolume($userId)//
-	{
-		$userTree = UserTreePermission::where('userId','=',$userId)->first();
-		$totalLeftVol = $totalRightVol = 0;
-		if($userTree)
-		{
-			$memberLeft = $userTree->binary_left;
-			$memberRight = $userTree->binary_right;
-
-			$listMemberLeft = explode(',', $memberLeft);
-			$listMemberRight = explode(',', $memberRight);
-
-			$chunkLeft = array_chunk($listMemberLeft, 50);
-			foreach($chunkLeft as $chunk)
-			{
-				$weekSale = TotalWeekSales::whereIn('userId', $chunk)
-										->selectRaw('sum(total_interest) as totalVol')
-										->get()
-										->first();
-
-				$totalLeftVol += $weekSale->totalVol;
-			}
-
-			$chunkRight = array_chunk($listMemberRight, 50);
-			foreach($chunkRight as $chunk)
-			{
-				$weekSale = TotalWeekSales::whereIn('userId', $chunk)
-										->selectRaw('sum(total_interest) as totalVol')
-										->get()
-										->first();
-
-				$totalRightVol += $weekSale->totalVol;
-			}
-		}
-		
-
-		return ['totalLeft' => $totalLeftVol, 'totalRight' => $totalRightVol];
-	}
-
-	public static function getRank($rankId) {
-		 $rankName = '';
-		if($rankId == 0) {
-			$rankName = '-';
-		}
-		else if($rankId == 1) {
-			$rankName = 'SAPPHIRE';
-		}
-		else if($rankId == 2) {
-			$rankName = 'EMERALD';
-		}
-		else if($rankId == 3) {
-			$rankName = 'DIAMOND';
-		}
-		else if($rankId == 4) {
-			$rankName = 'BLUE DIAMOND';
-		}
-		else if($rankId == 5) {
-			$rankName = 'BLACK DIAMOND';
-		}
-
-		return $rankName;
-	}
-
-	/**
-	* This cronjob function will run every 00:01 first day of month to caculate and return bonus to user's wallet 
-	*/
-	public static function bonusLeadershipMonthCron()
-	{
-		set_time_limit(0);
-		//
-		$firstDayPreviousMonth = new \DateTime('FIRST DAY OF PREVIOUS MONTH');
-		$lastDayPreviousMonth = new \DateTime('LAST DAY OF PREVIOUS MONTH');
-		$totalCompanyIncome = 0;
-
-        try {
-            $buyPack = DB::table('user_packages')
-                    ->select(DB::raw('SUM(amount_increase) as sumamount'))
-                    ->where('created_at', '>=', $firstDayPreviousMonth->format('Y-m-d 00:00:00'))
-                    ->where('created_at', '<', $lastDayPreviousMonth->format('Y-m-d 23:59:00'))
-                    ->get();
-            $totalCompanyIncome =isset($buyPack[0]->sumamount)?$buyPack[0]->sumamount:0;
-            //Number of Sapphire
-            $numberOfSapphire=DB::table('user_datas')->where('loyaltyId',1)->where('status',1)->where('packageId','>',0)->count();
-            //Number of Emerald
-            $numberOfEmerald=DB::table('user_datas')->where('loyaltyId',2)->where('status',1)->where('packageId','>',0)->count();
-            //Number of Diamond
-            $numberOfDiamond=DB::table('user_datas')->where('loyaltyId',3)->where('status',1)->where('packageId','>',0)->count();
-            //Number of BlueDiamond
-            $numberOfBlueDiamond=DB::table('user_datas')->where('loyaltyId',4)->where('status',1)->where('packageId','>',0)->count();
-
-            //Number of BlackDiamond
-            $numberOfBlackDiamond=DB::table('user_datas')->where('loyaltyId',5)->where('status',1)->where('packageId','>',0)->count();
-
-
-
-            $sapphireBonus = config('carcoin.sapphire_leadership_bonus');
-            $emeraldBonus = config('carcoin.emerald_leadership_bonus');
-            $diamondBonus = config('carcoin.diamond_leadership_bonus');
-            $blueDiamondBonus = config('carcoin.bluediamond_leadership_bonus');
-            $blackDiamondBonus = config('carcoin.blackdiamond_leadership_bonus');
-
-            $ttBonusSapphire=($numberOfSapphire + $numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
-
-            $bonusSapphire = $totalCompanyIncome * $sapphireBonus / ($ttBonusSapphire==0?1:$ttBonusSapphire);
-
-            $ttBonusEmerald=($numberOfEmerald + $numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
-
-            $bonusEmerald = $totalCompanyIncome * $emeraldBonus / ($ttBonusEmerald==0?1:$ttBonusEmerald);
-
-            $ttBonusDiamond=($numberOfDiamond + $numberOfBlueDiamond + $numberOfBlackDiamond);
-
-            $bonusDiamond = $totalCompanyIncome * $diamondBonus / ($ttBonusDiamond==0?1:$ttBonusDiamond);
-
-            $ttBonusBlueDiamond=($numberOfBlueDiamond + $numberOfBlackDiamond);
-
-            $bonusBlueDiamond = $totalCompanyIncome * $blueDiamondBonus / ($ttBonusBlueDiamond==0?1:$ttBonusBlueDiamond);
-
-            $bonusBlackDiamond = $totalCompanyIncome * $blackDiamondBonus / ($numberOfBlackDiamond==0?1:$numberOfBlackDiamond);
-
-            //Get all user in loyalty table with loyaltyId > 0
-            $listLoyaltyUser = UserData::where('loyaltyId', '>', 0)
-                                ->where('status', 1)
-                                ->where('packageId', '>', 0)
-                                ->get();
-
-            foreach($listLoyaltyUser as $user)
-            {
-                //Get cron status
-                $cronStatus = CronLeadershipLogs::where('userId', $user->userId)->first();
-                if(isset($cronStatus) && $cronStatus->status == 1) continue;
-
-                if($user->loyaltyId == 1)
-                {
-                    $bonus = $bonusSapphire;
-                }
-
-                if($user->loyaltyId == 2)
-                {
-                    $bonus = $bonusEmerald;
-                }
-
-                if($user->loyaltyId == 3)
-                {
-                    $bonus = $bonusDiamond;
-                }
-
-                if($user->loyaltyId == 4)
-                {
-                    $bonus = $bonusBlueDiamond;
-                }
-
-                if($user->loyaltyId == 5)
-                {
-                    $bonus = $bonusBlackDiamond;
-                }
-
-                if($bonus > 0)
-                {
-                    $clpAmount = $bonus * config('carcoin.clp_bonus_pay') / HighestPrice::getCarHighestPrice();
-                    $reinvestAmount = $bonus * config('carcoin.reinvest_bonus_pay') / HighestPrice::getCarHighestPrice();
-                    $userCoin = UserCoin::find($user->userId);
-                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-                    $userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
-                    $userCoin->save();
-
-                    $fieldUsd = [
-                        'walletType' => Wallet::CLP_WALLET,//
-                        'type' =>  Wallet::GLOBAL_BONUS,//bonus month
-                        'inOut' => Wallet::IN,
-                        'userId' => $user->userId,
-                        'amount' => $clpAmount,
-                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
-                        'note'=>'Paid 60% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.clp_bonus_pay')
-                    ];
-
-                    Wallet::create($fieldUsd);
-
-                    $fieldInvest = [
-                        'walletType' => Wallet::REINVEST_WALLET,//reinvest
-                        'type' => Wallet::GLOBAL_BONUS,//bonus month
-                        'inOut' => Wallet::IN,
-                        'userId' => $user->userId,
-                        'amount' => $reinvestAmount,
-                        'amount_usd' => $bonus * config('carcoin.clp_bonus_pay'),
-                        'note'=>'Paid 40% Global Bonus for '.(new \DateTime('PREVIOUS MONTH'))->format('m-Y').' - Rank: '.self::getRank($user->loyaltyId).'- $'.$bonus * config('carcoin.reinvest_bonus_pay')
-                    ];
-
-                    Wallet::create($fieldInvest);
-                }
-
-                //Update cron status from 0 => 1
-                $cronStatus->status = 1;
-                $cronStatus->save();
             }
 
             //Update status from 1 => 0 after run all user
             DB::table('cron_leadership_logs')->update(['status' => 0]);
         } catch(\Exception $e) {
-            Log::error('Running Global Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::error('Running Revenue Bonus has error: ' . date('Y-m-d') .$e->getMessage());
             Log::info($e->getTraceAsString());
         }
 	}
+
+    /**
+    * This cronjob function will run every week ( return by BTC )
+    */
+    public static function bonusAwardCron()
+    {
+        set_time_limit(0);
+        /* Get previous weekYear */
+        /* =======BEGIN ===== */
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+        $firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
+
+        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
+        /* =======END ===== */
+        try {
+            $lstUser = UserData::where('status', '=', 1)->get();
+            foreach($lstUser as $user){
+                //Get cron status
+                $cronStatus = CronMatchingLogs::where('userId', $user->userId)->first();
+                if(!is_null($cronStatus)) {
+                    if($cronStatus->status == 1) continue;
+                } else {
+                    //insert to log
+                    $field = [
+                        'userId' => $user->userId,
+                        'status' => 0,
+                    ];
+                    
+                    CronMatchingLogs::create($field);
+                }
+
+                //in the initial period don't care about condition
+                $award = Awards::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
+
+                if($award->value > 0) {
+                    $user = User::find($user->userId);
+                    self::calculateAwardReturn($user->refererId, $award->value, 1, $firstWeekYear, $user->name);
+                }
+
+                //Update cron status from 0 => 1
+                if(!is_null($cronStatus)) {
+                    $cronStatus->status = 1;
+                    $cronStatus->save();
+                }
+            }
+
+            //Update status from 1 => 0 after run all user
+            DB::table('cron_matching_logs')->update(['status' => 0]);
+        } catch(\Exception $e) {
+            Log::error('Running Award Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::info($e->getTraceAsString());
+        }
+    }
+
+    /**
+    * This cronjob function will run every week ( return by BTC )
+    */
+    public static function bonusNewAgencyCron()
+    {
+        set_time_limit(0);
+        /* Get previous weekYear */
+        /* =======BEGIN ===== */
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+        $firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
+
+        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
+        /* =======END ===== */
+        try {
+            $lstUser = UserData::where('status', '=', 1)->get();
+            foreach($lstUser as $user){
+                //Get cron status
+                $cronStatus = CronProfitLogs::where('userId', $user->userId)->first();
+                if(!is_null($cronStatus)) {
+                    if($cronStatus->status == 1) continue;
+                } else {
+                    //insert to log
+                    $field = [
+                        'userId' => $user->userId,
+                        'status' => 0,
+                    ];
+                    
+                    CronProfitLogs::create($field);
+                }
+
+                $maxLevel = 0;
+                //in the initial period don't care about condition
+                if(config('app.condition')) {
+                    //get total sale this week
+                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
+                        $user->packageId >= 1)
+                    {
+                        $maxLevel = 1;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
+                        $user->packageId >= 2)
+                    {
+                        $maxLevel = 2;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
+                        $user->packageId >= 3)
+                    {
+                        $maxLevel = 3;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
+                        $user->packageId >= 4)
+                    {
+                        $maxLevel = 4;
+                    }
+
+                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
+                        $user->packageId >= 5)
+                    {
+                        $maxLevel = 5;
+                    }
+                } else {
+                    switch($user->packageId) {
+                        case 1: $maxLevel = 1;
+                                break;
+                        case 2: $maxLevel = 2;
+                                break;
+                        case 3: $maxLevel = 3;
+                                break;
+                        case 4: $maxLevel = 4;
+                                break;
+                        case 5: $maxLevel = 5;
+                                break;
+                    }
+                }
+
+                if($maxLevel > 0) {
+                    $bonus = 0;
+                    self::calculateBonusOnNewAgency(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus);
+
+                    $bonusCar = $bonus / HighestPrice::getCarHighestPrice();
+                    $userCoin = $user->userCoin;
+                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $bonusCar);
+                    $userCoin->save();
+
+                    //insert to log
+                    $fieldUsd = [
+                        'walletType' => Wallet::CLP_WALLET,
+                        'type' => Wallet::AGENCY_BONUS,
+                        'inOut' => Wallet::IN,
+                        'userId' => $user->userId,
+                        'amount' => $bonusCar,
+                        'note'   => 'new agency bonus',
+                    ];
+                    
+                    Wallet::create($fieldUsd);
+                }
+
+                //Update cron status from 0 => 1
+                if(!is_null($cronStatus)) {
+                    $cronStatus->status = 1;
+                    $cronStatus->save();
+                }
+            }
+
+            //Update status from 1 => 0 after run all user
+            DB::table('cron_profit_day_logs')->update(['status' => 0]);
+        } catch(\Exception $e) {
+            Log::error('Running Profit Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+            Log::info($e->getTraceAsString());
+        }
+    }
+
+    /* 
+    *  Calculate bonus base on  revenue of agency
+    *  @userId array
+    *  @maxLevel max level of agency can receive bonus
+    */
+    public static function calculateRevenueByLevel($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus)
+    {
+        //get all F1
+        $listF1 = DB::table('users')->whereIn('refererId', $userId)->get();
+        //calculate revenue
+        $revenue = DB::table('tickets')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('quantity');
+
+        $commision = 0;
+        if($level == 1) $commision = 0.05;
+        if($level == 2) $commision = 0.02;
+        if($level == 3) $commision = 0.01;
+        if($level == 4) $commision = 0.01;
+        if($level == 5) $commision = 0.01;
+
+        $bonus += $revenue * $commision;
+
+        if($level <= $maxLevel)
+            self::calculateRevenueByLevel($listF1, $weekYear, $level + 1, $maxLevel, &$bonus);
+    }
+
+    /* 
+    *  Calculate bonus base on  award
+    *  @sponsorId int
+    *  @valueAward double value of award
+    */
+    public static function calculateAwardReturn($sponsorId, $valueAward, $level = 1, $weekYear, $agencyName = '')
+    {
+        //get all F1
+        $sponsorData = UserData::find($sponsorId);
+        
+        $commission = 0;
+        if(config('app.condition')) {
+            //get total sale this week
+            $totalTicket = Tickets::where('user_id', $sponsorData->userId)->where('week_year', $weekYear)->first();
+
+            if($level == 1 && $sponsorData->packageId >= 1 && 
+                $totalTicket->quantity >= config('carcoin.condition')[1]) $commission = 0.02;
+            if($level == 2 && $sponsorData->packageId >= 2 && 
+                $totalTicket->quantity >= config('carcoin.condition')[2]) $commission = 0.01;
+            if($level == 3 && $sponsorData->packageId >= 3 && 
+                $totalTicket->quantity >= config('carcoin.condition')[3]) $commission = 0.01;
+            if($level == 4 && $sponsorData->packageId >= 4 && 
+                $totalTicket->quantity >= config('carcoin.condition')[4]) $commission = 0.005;
+            if($level == 5 && $sponsorData->packageId >= 5 && 
+                $totalTicket->quantity >= config('carcoin.condition')[5]) $commission = 0.005;
+        } else {
+            if($level == 1 && $sponsorData->packageId >= 1) $commission = 0.02;
+            if($level == 2 && $sponsorData->packageId >= 2) $commission = 0.01;
+            if($level == 3 && $sponsorData->packageId >= 3) $commission = 0.01;
+            if($level == 4 && $sponsorData->packageId >= 4) $commission = 0.005;
+            if($level == 5 && $sponsorData->packageId >= 5) $commission = 0.005;
+        }
+
+        $bonus = $valueAward * $commission;
+
+        $userCoin = $sponsorData->userCoin;
+        if($userCoin && $bonus > 0)
+        {
+            $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
+            $userCoin->save();
+            
+            $fieldUsd = [
+                'walletType' => Wallet::BTC_WALLET,
+                'type' => Wallet::AWARD_BONUS,
+                'inOut' => Wallet::IN,
+                'userId' => $sponsorData->userId,
+                'amount' => $bonus,
+                'note'   => 'return award bonus from ' . $agencyName,
+            ];
+            
+            Wallet::create($fieldUsd);
+        }
+
+        if($level <= 5)
+            self::calculateAwardReturn($sponsorData->userId, $valueAward, $level + 1);
+    }
+
+    /* 
+    *  Calculate bonus base on  new agency
+    *  @userId array
+    *  @maxLevel max level of agency can receive bonus
+    */
+    public static function calculateBonusOnNewAgency($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus)
+    {
+        //get all F1
+        $listF1 = DB::table('users')->whereIn('refererId', $userId)->get();
+        //calculate revenue
+        $totalPackage = DB::table('user_packages')->whereIn('userId', $listF1)->where('weekYear','=', $weekYear)->sum('amount_increase');
+
+        $commision = 0;
+        if($level == 1) $commision = 0.05;
+        if($level == 2) $commision = 0.04;
+        if($level == 3) $commision = 0.03;
+        if($level == 4) $commision = 0.02;
+        if($level == 5) $commision = 0.01;
+
+        $bonus += $totalPackage * $commision;
+
+        if($level <= $maxLevel)
+            self::calculateBonusOnNewAgency($listF1, $weekYear, $level + 1, $maxLevel, &$bonus);
+    }
 }

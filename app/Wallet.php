@@ -62,6 +62,14 @@ class Wallet extends Model
     const GLOBAL_BONUS=19;
     //Return CAR for Land
     const LAND_RETURN = 20;
+    //award commission 
+    const AWARD_BONUS = 21;
+    //revenue commission 
+    const REVENUE_BONUS = 22;
+    //binary commission 
+    const BINARY_BONUS = 23;
+    //agency commission 
+    const AGENCY_BONUS = 24;
 
     //inOut 
     const IN = "in" ;

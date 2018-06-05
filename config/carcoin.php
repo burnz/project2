@@ -22,10 +22,11 @@ return [
 	'bi_sale_cond_lv_4' => 200000,
 	
 	//Bonus for each binary level
-	'bi_lv_1_bonus' => 0.04,
-	'bi_lv_2_bonus' => 0.06,
+	'bi_lv_1_bonus' => 0.06,
+	'bi_lv_2_bonus' => 0.07,
 	'bi_lv_3_bonus' => 0.08,
-	'bi_lv_4_bonus' => 0.1,
+	'bi_lv_4_bonus' => 0.09,
+	'bi_lv_5_bonus' => 0.1,
 
 	//Binary interest level
 	'bi_inter_cond_lv_1' => 500,
@@ -77,4 +78,12 @@ return [
     ),
 
     'listLoyalty' => array(1 => "Sapphire", 2 => "Emerald", 3 => "Diamond", 4 => "Blue Diamond", 5 => "Black Diamond"),
-    ];
+
+    'condition' => array(
+    	1 => '35',
+    	2 => '70',
+    	3 => '140',
+    	4 => '280',
+    	5 => '560',
+    ),
+];
