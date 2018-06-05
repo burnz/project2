@@ -126,6 +126,14 @@
         .modal .modal-dialog{
             margin-top: 10px !important;
         }
+
+        .form-group {
+            padding-bottom: 8px !important;
+        }
+
+        .mt-3 {
+            margin-top: 5px !important;
+        }
     </style>
 	<div class="content">
         <div class="container-fluid">
@@ -162,7 +170,7 @@
                             <div class="modal fade" id="modBuyPackage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                               <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
-                                  <div class="modal-header">
+                                  <div class="modal-header" style="padding-top: 10px;">
                                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                                     <h4 class="modal-title" id="myModalLabel">Buy Packages
                                         <b id="carcoin-info" class="carcoin-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-pri.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountCLP'], 5) }}</b>
@@ -175,13 +183,13 @@
                                         <!-- <div class="card-header">
                                             <h3 class="card-title text-center">Pick the best package for you</h3>
                                         </div> -->
-                                        <div class="card-content clearfix mt-5">
+                                        <div class="card-content clearfix mt-5" style="padding-top: 0px; padding-bottom: 0px">
                                             @if(count($dataPack)>0)
                                                 @foreach($dataPack as $pkey=>$pval)
                                                     <div class="row">
                                                         <div class="col-md-12 ibox">
                                                             <div class="row ibox-package">
-                                                                <div class="card card-pricing mt-5  <?=$pkey==0?'card-raised':''?>">
+                                                                <div style="margin-top: 0px !important; margin-bottom: 0px !important;" class="card card-pricing mt-5  <?=$pkey==0?'card-raised':''?>">
                                                                     <div class="card-content p-0">
                                                                         <div class="col-md-2 text-center align-self-center">
                                                                             <div class="icon mb-0 <?=$pkey==0?'active':''?>">
@@ -200,7 +208,7 @@
 
                                                                                     <span class="carcoin-color">
                                                                                         <i class="material-icons" icon="carcoin-primary"></i>
-                                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
+                                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b>
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
@@ -210,7 +218,7 @@
                                                                                 <div class="card-description">
                                                                                     <label class="mb-4 font-weight-normal">Lending Amount ($)</label>
                                                                                     <span>
-                                                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
+                                                                                        <b>${{number_format($pval->min_price)}}</b>
                                                                                     </span>
                                         
                                                                                 </div>
@@ -230,22 +238,6 @@
                                                                                                 <option value="2">REFUND BY CAR</option>
                                                                                             </select>
                                                                                             <p class="help-block errorRefund"></p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-6 text-center align-self-center">
-                                                                                <div class="form-group mt-3">
-                                                                                    <label class="mb-0 font-weight-normal">Invest Amount</label>
-                                                                                    <div class="input-group mt-0 form-group my-4 amount">
-                                                                                        <span class="input-group-addon pr-0">
-                                                                                            <i class="material-icons">attach_money</i>
-                                                                                        </span>
-                                                                                        <div class="form-group mt-0 label-floating">
-                                                                                            
-                                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10" placeholder="Your Amount">
-                                                                                            <span class="material-input"></span>
-                                                                                            <p class="help-block errorAmount"></p>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -288,13 +280,6 @@
                             </div>
                             <!--end modal-->
 
-                            <div class=" col-md-2 col-xs-6 col-sm-3">
-                                    <select class="selectpicker" name="wallet_type" id="wallet_type" data-style="select-with-transition" title="Sellect Wallet" data-size="2">
-                                    <option value="2">CARCOIN WALLET</option>
-                                    <option value="3">REINVEST WALLET</option>
-                                </select>
-                            </div>
-                            
                             <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Buy Packages</button>
 
                         </div>
@@ -384,22 +369,8 @@
 
             //buyPackage
             $('#btnBuyPackageS1').click(function(){
-                var walletType=parseFloat($('#wallet_type').val());
-                switch(walletType)
-                {
-                    case 2:
-                        $('#carcoin-info').css('display','inline-block');
-                        $('#reinvest-info').css('display','none');
-                    break;
-                    case 3:
-                        $('#carcoin-info').css('display','none');
-                        $('#reinvest-info').css('display','inline-block');
-                    break;
-                    default:
-                        swal('','Please select wallet to buy packages!','error');
-                        return false;
-                    break;
-                }
+                var walletType=2;
+                
                 $('#walletId').val(walletType);
                 
                 if ( window.iOS && window.iOS11 ) {
