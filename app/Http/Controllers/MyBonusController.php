@@ -9,7 +9,11 @@ use App\User;
 use App\UserData;
 use App\BonusFastStart;
 use App\BonusBinary;
-use App\BonusBinaryInterest;
+use App\Tickets;
+use App\Awards;
+use App\WeekTicketsHistory;
+use App\WeekAgencyHistory;
+use App\WeekAwardsHistory;
 use App\LoyaltyUser;
 use Auth;
 use Session;
@@ -33,12 +37,109 @@ class MyBonusController extends Controller
         $binarys = BonusBinary::where('userId', '=',$currentuserid)->orderBy('id', 'desc')->paginate();
         return view('adminlte::mybonus.binary')->with('binarys', $binarys);
     }
-    public function infinifyInterest(Request $request)
+
+    public function tickets(Request $request)
     {
         $currentuserid = Auth::user()->id;
-        $binarys = BonusBinaryInterest::where('userId','=',$currentuserid)->orderBy('id','desc')->paginate();
-        return view('adminlte::mybonus.infinity_interest',compact('binarys'));
+
+        $binarys = WeekTicketsHistory::where('user_id','=', $currentuserid)->orderBy('id','desc')->paginate();
+
+        return view('adminlte::mybonus.sale_ticket',compact('binarys'));
     }
+
+    public function detailTicket($level)
+    {
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $currentuserid = Auth::user()->id;
+
+        //get list user by level
+        $listUser = [];
+
+        User::getListUserByLevel(1, $level, $listUser);
+
+        if(!isset($listUser[$level])) $listUser[$level] = [];
+        $binarys = Tickets::whereIn('user_id', $listUser[$level])->where('week_year', $weekYear)->where('quantity', '>', 0)->paginate();
+
+        if($level == 1) $percent = 5;
+        if($level == 2) $percent = 2;
+        if($level == 3) $percent = 1;
+        if($level == 4) $percent = 1;
+        if($level == 5) $percent = 1;
+
+        return view('adminlte::mybonus.detail_level_ticket',compact('binarys', 'level', 'percent'));
+    }
+
+    public function awards(Request $request)
+    {
+        $currentuserid = Auth::user()->id;
+
+        $binarys = WeekAwardsHistory::where('user_id','=', $currentuserid)->orderBy('id','desc')->paginate();
+
+        return view('adminlte::mybonus.awards',compact('binarys'));
+    }
+
+    public function detailAward($level)
+    {
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $currentuserid = Auth::user()->id;
+
+        //get list user by level
+        $listUser = [];
+
+        User::getListUserByLevel(1, $level, $listUser);
+
+        if(!isset($listUser[$level])) $listUser[$level] = [];
+        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $weekYear)->where('value', '>', 0)->paginate();
+
+        if($level == 1) $percent = 5;
+        if($level == 2) $percent = 2;
+        if($level == 3) $percent = 1;
+        if($level == 4) $percent = 1;
+        if($level == 5) $percent = 1;
+
+        return view('adminlte::mybonus.detail_level_award',compact('binarys', 'level', 'percent'));
+    }
+
+    public function agency(Request $request)
+    {
+        $currentuserid = Auth::user()->id;
+
+        $binarys = WeekAgencyHistory::where('user_id','=', $currentuserid)->orderBy('id','desc')->paginate();
+
+        return view('adminlte::mybonus.agency',compact('binarys'));
+    }
+
+    public function detailAgency($level)
+    {
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $currentuserid = Auth::user()->id;
+
+        //get list user by level
+        $listUser = [];
+
+        User::getListUserByLevel(1, $level, $listUser);
+
+        if(!isset($listUser[$level])) $listUser[$level] = [];
+        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $weekYear)->where('value', '>', 0)->paginate();
+
+        if($level == 1) $percent = 5;
+        if($level == 2) $percent = 2;
+        if($level == 3) $percent = 1;
+        if($level == 4) $percent = 1;
+        if($level == 5) $percent = 1;
+
+        return view('adminlte::mybonus.detail_level_agency',compact('binarys', 'level', 'percent'));
+    }
+
     public function binaryCalculatorBonus(Request $request){
 	    $totalBonus = 0;
         $currentuserid = Auth::user()->id;

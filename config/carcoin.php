@@ -5,6 +5,8 @@ return [
 	'reinvest_bonus_pay' => 0.4,
 	'bonus_maxout' => 30000, //Binary bonus cannot over $35000
 
+	'price_per_ticket' => 0.0002,
+
 	//Interest range
 	'min_interest' => 0.66,
 	'max_interest' => 0.8,

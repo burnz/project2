@@ -174,8 +174,6 @@
                                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                                     <h4 class="modal-title" id="myModalLabel">Buy Packages
                                         <b id="carcoin-info" class="carcoin-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-pri.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountCLP'], 5) }}</b>
-                                        <b id="reinvest-info" class="reinvest-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-sec.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountReinvest'], 5) }}</b>
-
                                         <p class="pull-right">Pick the best package for you</p>
                                     </h4>
                                   </div>
@@ -290,10 +288,9 @@
                                         <th>Date</th>
                                         <th>Package</th>
                                         <th>Refund Type</th>
-                                        <th>Lending Amount</th>
+                                        <th>Holding Amount</th>
                                         <th>Carcoin Amount</th>
-                                        <th>Release Date</th>
-                                        <th>Status</th>
+                                        <!-- <th>Status</th> -->
                                     </thead>
                                     <tbody>
                                         @if(count($userPack)>0)
@@ -304,8 +301,7 @@
                                                     <td>{{$upVal->refund_type==1?'By USD':'By Carcoin'}}</td>
                                                     <td>${{number_format($upVal->amount_increase,0)}}</td>
                                                     <td>{{number_format($upVal->amount_carcoin,0)}} CAR</td>
-                                                    <td>{{date_format(date_create($upVal->release_date),'m-d-Y H:i:s')}}</td>
-                                                    <td>
+                                                    <!-- <td>
                                                         @if($upVal->withdraw==1)
                                                             <button class="btn btn-simple btn-google m-0 p-0">Released</button>
                                                         @else
@@ -316,7 +312,7 @@
                                                             @endif
                                                         @endif
                                                         
-                                                    </td>
+                                                    </td> -->
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -359,13 +355,8 @@
 		        jQuery(this).closest('.card').find('.icon').addClass('active');
 		        jQuery(this).closest('.card').addClass('card-raised');
 
-
                 jQuery('#packageId').val($(this).val());
-
-
 		    });
-
-
 
             //buyPackage
             $('#btnBuyPackageS1').click(function(){
@@ -384,8 +375,6 @@
             $('#btnBuyPackage').click(function(){
                 var pricing=jQuery('.card-raised');
                 let packageId=pricing.children().find('input[type="radio"]').val();
-                let minAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-min'));
-                let maxAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-max'));
                 let refund=pricing.children().find('.selectpicker.refund-type').val();
                 let amount=pricing.children().find('input[type="number"]').val();
                 if(refund=='')
@@ -395,22 +384,6 @@
                     return false;
                 }
                 
-                if(amount<minAmount || amount>maxAmount)
-                {
-                    pricing.children().find('.errorAmount').text('$'+minAmount+' - $'+maxAmount);
-                    pricing.children().find('.label-floating').addClass('has-error');
-                    pricing.children().find('input[type="number"]').focus();
-                    return false;
-                }
-                if(amount%10!=0)
-                {
-                    pricing.children().find('.errorAmount').text('Amount divided by 10');
-                    pricing.children().find('.label-floating').addClass('has-error');
-                    pricing.children().find('input[type="number"]').focus();
-                    return false;
-                }
-                pricing.children().find('.errorAmount').text('');
-
 
                 if(!$('#term').is(':checked'))
                 {

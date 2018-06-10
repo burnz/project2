@@ -109,9 +109,13 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/transferholding', 'WalletController@transferFromHolding')->name('holding.transfer');
 
 
-    Route::get('mybonus/infinity-interest', 'MyBonusController@infinifyInterest');
+    Route::get('mybonus/tickets', 'MyBonusController@tickets');
     Route::get('mybonus/infinity', 'MyBonusController@binary');
-    Route::get('mybonus/loyalty', 'MyBonusController@loyalty');
+    Route::get('mybonus/awards', 'MyBonusController@awards');
+    Route::get('mybonus/agency', 'MyBonusController@agency');
+    Route::get('week/tickets/level/{level}', 'MyBonusController@detailTicket');
+    Route::get('week/awards/level/{level}', 'MyBonusController@detailAward');
+    Route::get('week/agency/level/{level}', 'MyBonusController@detailAgency');
     Route::resource('mybonus', 'MyBonusController');
 
     Route::get('packages/ibuy','PackageController@showBuyPackage');
@@ -157,6 +161,8 @@ Route::group( ['middleware' => ['auth']], function() {
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
 Route::post('clpnotification','GetNotificationController@clpNotification');
+
+
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
 //Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');

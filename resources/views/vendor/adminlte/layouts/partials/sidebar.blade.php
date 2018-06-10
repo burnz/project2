@@ -17,7 +17,6 @@
                 <span>{{ Auth::user()->name }}</span>
                 <span>ID: {{  Auth::user()->uid }}</span>
                 <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
-                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }} @else - @endif</span>
             </div>
         </div>
         <ul class="nav">
@@ -81,12 +80,6 @@
                                 <span class="sidebar-normal"> Carcoin Wallet </span>
                             </a>
                         </li>
-                        <li>
-                            <a href="/wallets/reinvest">
-                                <span class="sidebar-mini"> R </span>
-                                <span class="sidebar-normal"> Reinvest Wallet </span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
@@ -106,17 +99,23 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/mybonus/infinity-interest">
-                                <span class="sidebar-mini"> I </span>
-                                <span class="sidebar-normal"> Infinity Interest </span>
+                            <a href="/mybonus/tickets">
+                                <span class="sidebar-mini"> T </span>
+                                <span class="sidebar-normal"> Tickets </span>
                             </a>
                         </li>
-                        {{--<li>--}}
-                            {{--<a href="/mybonus/history-bonus">--}}
-                                {{--<span class="sidebar-mini"> I </span>--}}
-                                {{--<span class="sidebar-normal"> History Bonus </span>--}}
-                            {{--</a>--}}
-                        {{--</li>--}}
+                        <li>
+                            <a href="/mybonus/awards">
+                                <span class="sidebar-mini"> A </span>
+                                <span class="sidebar-normal"> Awards</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mybonus/agency">
+                                <span class="sidebar-mini"> C </span>
+                                <span class="sidebar-normal"> New Agency</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>

@@ -191,10 +191,7 @@
     border-color: transparent;
 }
 */
-.tree-node p
-{
-    margin:0 !important;
-}
+
 .node-if-header{
     padding-top: 5px;
 }

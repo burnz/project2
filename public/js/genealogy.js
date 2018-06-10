@@ -61,9 +61,9 @@ $(function () {
 			columns: [
 				{width: '50%', header: "ID/Username"},
 				{width: '5%', value: "totalMembers", header: "Total member"},
-				{width: '5%', value: "totalAmount", header: "Lending Amount"},
+				{width: '5%', value: "totalAmount", header: "Package"},
 				{width: '5%', value: "leg", header: "Left/Right"},
-				{width: '5%', value: "rankId", header: "Rank"}
+				{width: '5%', value: "rankId", header: "Ticket sale"}
 			],
 			width: "100%",
 			fixedHeader: false,
