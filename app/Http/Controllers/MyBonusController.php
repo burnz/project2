@@ -25,7 +25,6 @@ class MyBonusController extends Controller
         $this->middleware('auth');
     }
 
-
 	public function faststart(Request $request){
 		$currentuserid = Auth::user()->id;
         $fastStarts = BonusFastStart::where('userId', '=',$currentuserid)->orderBy('id', 'desc')->paginate();

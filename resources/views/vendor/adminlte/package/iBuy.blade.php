@@ -137,9 +137,8 @@
 					<div class="card" section="buy-package">
 						<div class="card-header">
 	                        <h3 class="card-title text-center" style="position: relative;">
-	                            Buy Packages
+	                            Become a CSC Jackpot agency
                                 <b id="carcoin-info" class="carcoin-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-pri.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountCLP'], 5) }}</b>
-                                <b id="reinvest-info" class="reinvest-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-sec.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountReinvest'], 5) }}</b>
 	                        </h3>
 	                    </div>
 	                    <div class="card-content clearfix">
@@ -158,11 +157,11 @@
                                                 </div>
                                                 <div class="card-description">
                                                     <span>
-                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
+                                                        <b>${{number_format($pval->min_price)}}</b>
                                                     </span>
                                                     <span class="carcoin-color">
                                                         <i class="material-icons" icon="carcoin-primary"></i>
-                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
+                                                        <b>{{number_format($pval->min_price_clp,2)}}</b>
                                                     </span>
                                                 </div>
                                                 <div class="card-action">
@@ -179,17 +178,6 @@
 													<p class="help-block errorRefund"></p>
 												</div>
 												</div>
-                                                    <div class="input-group form-group my-4 amount">
-                                                        <span class="input-group-addon pr-0">
-                                                            <i class="material-icons">attach_money</i>
-                                                        </span>
-                                                        <div class="form-group label-floating">
-                                                            
-                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10" placeholder="Your Amount">
-                                                            <span class="material-input"></span>
-                                                            <p class="help-block errorAmount"></p>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,7 +200,7 @@
                                 </div>
                             </div>
                             <div class="col-md-12 text-center">
-                            	<button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Buy Package</button>
+                            	<button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Choose</button>
                                     <button type="button" onclick="window.history.go(-1); return false;" class="btn btn-primary btn-round btn-outline-primary" data-dismiss="modal">Back</button>	
                             </div>
 							
@@ -260,10 +248,8 @@
 		    $('#btnBuyPackage').click(function(){
                 var pricing=jQuery('.card-raised');
                 let packageId=pricing.children().find('input[type="radio"]').val();
-                let minAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-min'));
-                let maxAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-max'));
+                
                 let refund=pricing.children().find('.selectpicker.refund-type').val();
-                let amount=pricing.children().find('input[type="number"]').val();
                 if(refund=='')
                 {
                     pricing.children().find('.errorRefund').text('Choose refund type');
@@ -271,20 +257,6 @@
                     return false;
                 }
                 
-                if(amount<minAmount || amount>maxAmount)
-                {
-                    pricing.children().find('.errorAmount').text('$'+minAmount+' - $'+maxAmount);
-                    pricing.children().find('.label-floating').addClass('has-error');
-                    pricing.children().find('input[type="number"]').focus();
-                    return false;
-                }
-                if(amount%10!=0)
-                {
-                    pricing.children().find('.errorAmount').text('Amount divided by 10');
-                    pricing.children().find('.label-floating').addClass('has-error');
-                    pricing.children().find('input[type="number"]').focus();
-                    return false;
-                }
                 pricing.children().find('.errorAmount').text('');
                 if(!$('#term').is(':checked'))
                 {
