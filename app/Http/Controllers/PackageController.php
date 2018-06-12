@@ -57,8 +57,8 @@ class PackageController extends Controller
     public function showBuyPackage(Request $request)
     {
         $wid=$request->wid;
-        if(!empty($wid) && ($wid==2 | $wid==3 ))
-        {
+        // if(!empty($wid) && ($wid==2 | $wid==3 ))
+        // {
 
             $package=Package::all();
             $exchange=ExchangeRate::where([['from_currency','=','clp'],['to_currency','=','usd']])->first();
@@ -74,9 +74,9 @@ class PackageController extends Controller
                 }
             }
             return view('adminlte::package.iBuy',compact('dataPack','package','exchange','userPack'));
-        }
-        return redirect('packages/buy')
-        ->with('flash_error','Whoops. Something went wrong.');
+        // }
+        // return redirect('packages/buy')
+        // ->with('flash_error','Whoops. Something went wrong.');
         
     }
 
