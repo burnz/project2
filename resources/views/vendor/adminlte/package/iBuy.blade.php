@@ -244,12 +244,11 @@
 
 		    });
 
-
 		    $('#btnBuyPackage').click(function(){
                 var pricing=jQuery('.card-raised');
                 let packageId=pricing.children().find('input[type="radio"]').val();
-                
                 let refund=pricing.children().find('.selectpicker.refund-type').val();
+                
                 if(refund=='')
                 {
                     pricing.children().find('.errorRefund').text('Choose refund type');
@@ -263,6 +262,7 @@
                     $('.termAgree').css('display','block');
                     return false;
                 }
+
                 $('.termAgree').css('display','none');
                 $('#modBuyPackage').modal('hide');
                 swal({
@@ -279,7 +279,6 @@
                   buttonsStyling: false,
                   reverseButtons: true
                 }).then(function(result){
-                    $('#packageAmount').val(amount);
                     $('#packageId').val(packageId);
                     $('#refundType').val(refund);
                     $('#bPackageF').submit();

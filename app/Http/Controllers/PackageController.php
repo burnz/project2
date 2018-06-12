@@ -286,8 +286,7 @@ class PackageController extends Controller
 
             $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(), 2);
             $userCoin = $userData->userCoin;
-            if($request->walletId==2)
-                $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
+            $userCoin->clpCoinAmount = $userCoin->clpCoinAmount - $amountCLPDecrease;
             $userCoin->save();
             $fieldUsd = [
                 'walletType' => Wallet::CLP_WALLET,//usd

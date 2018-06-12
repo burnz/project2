@@ -358,12 +358,8 @@
 
             //buyPackage
             $('#btnBuyPackageS1').click(function(){
-                var walletType=2;
-                
-                $('#walletId').val(walletType);
-                
                 if ( window.iOS && window.iOS11 ) {
-                    window.location.href='{{URL::to("packages/ibuy?wid=")}}'+walletType;
+                    window.location.href='{{URL::to("packages/ibuy")}}';
                     return false;
                 }
 
@@ -381,7 +377,6 @@
                     pricing.children().find('.refund').children('.label-floating').addClass('has-error');
                     return false;
                 }
-                
 
                 if(!$('#term').is(':checked'))
                 {
@@ -389,8 +384,6 @@
                     return false;
                 }
                 $('.termAgree').css('display','none');
-
-
 
                 //alert(packageId+' - '+minAmount+' - '+maxAmount+' - '+amount);
                 $('#modBuyPackage').modal('hide');
@@ -408,7 +401,6 @@
                   buttonsStyling: false,
                   reverseButtons: true
                 }).then(function(result){
-                    $('#packageAmount').val(amount);
                     $('#packageId').val(packageId);
                     $('#refundType').val(refund);
                     $('#bPackageF').submit();
