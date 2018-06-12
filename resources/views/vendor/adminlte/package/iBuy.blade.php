@@ -213,8 +213,6 @@
 
 	{!! Form::open(['action'=>'PackageController@invest','method'=>'post','id'=>'bPackageF','style'=>'display:none']) !!}
         <input type="hidden" id="packageId" name="packageId"/>
-        <input type="hidden" name="packageAmount" id="packageAmount"/>
-        <input type="hidden" id="walletId" name="walletId" />
         <input type="hidden" name="refundType" id="refundType" />
     {!! Form::close() !!}
 @stop

@@ -370,7 +370,6 @@
                 var pricing=jQuery('.card-raised');
                 let packageId=pricing.children().find('input[type="radio"]').val();
                 let refund=pricing.children().find('.selectpicker.refund-type').val();
-                let amount=pricing.children().find('input[type="number"]').val();
                 if(refund=='')
                 {
                     pricing.children().find('.errorRefund').text('Choose refund type');
