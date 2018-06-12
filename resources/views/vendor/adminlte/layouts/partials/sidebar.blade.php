@@ -95,7 +95,7 @@
                         <li>
                             <a href="/mybonus/infinity">
                                 <span class="sidebar-mini"> I </span>
-                                <span class="sidebar-normal"> Infinity Bonus </span>
+                                <span class="sidebar-normal"> Infinity </span>
                             </a>
                         </li>
                         <li>
@@ -122,7 +122,7 @@
             <li>
                 <a href="{{ url('packages/buy')}}">
                     <i class="material-icons">payment</i>
-                    <p> Buy Package </p>
+                    <p> Become A Agency </p>
                 </a>
             </li>
 

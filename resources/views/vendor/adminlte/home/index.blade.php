@@ -27,8 +27,8 @@
                                     <span class="glyphicon glyphicon-restart" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Pre week commission agency</p>
-                                    <p class="h5 mt-3">${{number_format($data['PreAgencyCommission'],3)}}</p>
+                                    <p class="mt-4 mb-0">Last week agency commission</p>
+                                    <p class="h5 mt-3">${{number_format($data['PreAgencyCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -39,8 +39,8 @@
                                     <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Pre week commission ticket</p>
-                                    <p class="h5 mt-3">${{number_format($data['PreTicketCommission'],3)}}</p>
+                                    <p class="mt-4 mb-0">Last week ticket commission</p>
+                                    <p class="h5 mt-3">${{number_format($data['PreTicketCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -51,8 +51,8 @@
                                     <span class="glyphicon glyphicon-wallet" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Pre week binary commission</p>
-                                    <p class="h5 mt-3">${{number_format($data['PreBinaryCommission'],3)}}</p>
+                                    <p class="mt-4 mb-0">Last week binary commission</p>
+                                    <p class="h5 mt-3">${{number_format($data['PreBinaryCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                             <i class="material-icons">history</i>
                         </div>
                         <div class="card-content">
-                            <h4 class="card-title">History Lending</h4>
+                            <h4 class="card-title">Agency information</h4>
                             <div class="table-responsive table-scroll-y">
                                 <table class="table" id="tbHLending">
                                     <thead class="text-thirdary">
