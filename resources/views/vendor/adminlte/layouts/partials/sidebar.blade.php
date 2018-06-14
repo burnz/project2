@@ -101,19 +101,19 @@
                         <li>
                             <a href="/mybonus/tickets">
                                 <span class="sidebar-mini"> T </span>
-                                <span class="sidebar-normal"> Tickets </span>
+                                <span class="sidebar-normal"> Ticket </span>
                             </a>
                         </li>
                         <li>
                             <a href="/mybonus/awards">
                                 <span class="sidebar-mini"> A </span>
-                                <span class="sidebar-normal"> Awards</span>
+                                <span class="sidebar-normal"> Award </span>
                             </a>
                         </li>
                         <li>
                             <a href="/mybonus/agency">
                                 <span class="sidebar-mini"> C </span>
-                                <span class="sidebar-normal"> New Agency</span>
+                                <span class="sidebar-normal"> Agency</span>
                             </a>
                         </li>
                     </ul>

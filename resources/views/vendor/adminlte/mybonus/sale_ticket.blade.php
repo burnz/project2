@@ -29,6 +29,7 @@
 	                					<thead class="text-thirdary">
 	                						<tr>
 	                							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
+	                							<th>Direct customer</th>
 												<th>Level 1</th>
 												<th>Level 2</th>
 												<th>Level 3</th>
@@ -41,6 +42,7 @@
 	                						@foreach ($binarys as $binary)
 											<tr>
 												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
+												<td><a href="{{ URL::to('week/tickets/level/0') }}">{{ number_format($binary->direct_cs) }}</a></td>
 												<td><a href="{{ URL::to('week/tickets/level/1') }}">{{ number_format($binary->level_1) }}</a></td>
 												<td><a href="{{ URL::to('week/tickets/level/2') }}">{{ number_format($binary->level_2) }}</a></td>
 												<td><a href="{{ URL::to('week/tickets/level/3') }}">{{ number_format($binary->level_3) }}</a></td>

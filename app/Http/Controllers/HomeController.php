@@ -90,6 +90,7 @@ class HomeController extends Controller
 
         //get this week sales interest
         $ticketThisWeek = Tickets::where([['user_id','=', Auth::user()->id],['week_year','=', $weekYear]])->first();
+        $ticketThisWeek = isset($ticketThisWeek) ? $ticketThisWeek->personal_quantity : 0;
         //end get today interest
 
         return view('adminlte::home.index')->with(compact('data','ticketThisWeek','levelRevenue'));

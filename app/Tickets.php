@@ -8,7 +8,7 @@ use App\Http\Controllers\Backend\Report\RepoReportController as Report;
 class Tickets extends Model
 {
     protected $fillable = [
-        'week_year', 'quantity', 'user_id', 'created_at', 'updated_at'
+        'week_year', 'personal_quantity', 'quantity', 'user_id', 'created_at', 'updated_at'
     ];
 
     public function __construct(array $attributes = [])

@@ -165,13 +165,17 @@ Route::post('clpnotification','GetNotificationController@clpNotification');
 
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
-//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+Route::get('update-ticket', 'TestController@showUpdateTicket')->name('test.showTicket');
+Route::post('save-ticket', 'TestController@updateTicket')->name('test.saveTicket');
+Route::get('update-award', 'TestController@showUpdateAward')->name('test.showAward');
+Route::post('save-award', 'TestController@updateAward')->name('test.saveAward');
 
 
-//Route::get('test-interest',"TestController@testInterest");
-//Route::get('test-infinity','TestController@testInfinityBonus');
-//Route::get('test-infinity-interest', 'TestController@testInfinityInterest');
+Route::get('test-interest',"TestController@testInterest");
+Route::get('test-infinity','TestController@testInfinityBonus');
+Route::get('test-infinity-interest', 'TestController@testInfinityInterest');
 //Route::get('test-global-bonus','TestController@testGlobalBonus');
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 //Route::get('test',"TestController@test");

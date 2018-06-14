@@ -26,6 +26,10 @@ class UserPackage extends Model
         parent::__construct($attributes);
         $this->setTable('user_packages');
     }
+
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'userId');
+    }
     
     public static function getHistoryPackage(){
         $package = new UserPackage;

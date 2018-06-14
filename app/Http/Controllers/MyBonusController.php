@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\UserData;
+use App\UserPackage;
 use App\BonusFastStart;
 use App\BonusBinary;
 use App\Tickets;
@@ -60,8 +61,12 @@ class MyBonusController extends Controller
         User::getListUserByLevel(1, $level, $listUser);
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
-        $binarys = Tickets::whereIn('user_id', $listUser[$level])->where('week_year', $weekYear)->where('quantity', '>', 0)->paginate();
+        $binarys = Tickets::whereIn('user_id', $listUser[$level])
+                    ->where('week_year', $weekYear)
+                    ->where('quantity', '>', 0)
+                    ->paginate();
 
+        if($level == 0) $percent = 5;
         if($level == 1) $percent = 5;
         if($level == 2) $percent = 2;
         if($level == 3) $percent = 1;
@@ -128,12 +133,14 @@ class MyBonusController extends Controller
         User::getListUserByLevel(1, $level, $listUser);
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
-        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $weekYear)->where('value', '>', 0)->paginate();
+        $binarys = UserPackage::whereIn('userId', $listUser[$level])
+                    ->where('weekYear', $weekYear)
+                    ->paginate();
 
         if($level == 1) $percent = 5;
-        if($level == 2) $percent = 2;
-        if($level == 3) $percent = 1;
-        if($level == 4) $percent = 1;
+        if($level == 2) $percent = 4;
+        if($level == 3) $percent = 3;
+        if($level == 4) $percent = 2;
         if($level == 5) $percent = 1;
 
         return view('adminlte::mybonus.detail_level_agency',compact('binarys', 'level', 'percent'));

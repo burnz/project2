@@ -21,7 +21,7 @@
 	                    <i class="material-icons">card_giftcard</i>
 	                </div>
 	                <div class="card-content">
-	                	<h4 class="card-title">Awards Bonus History</h4>
+	                	<h4 class="card-title">Agency Bonus History - Detail Level</h4>
 	                		<div class="row">
 	                				<div class="table-responsive">
 	                			<div class="col-sm-12">
@@ -29,26 +29,26 @@
 	                					<thead class="text-thirdary">
 	                						<tr>
 	                							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
-	                							<th>Direct customer</th>
-												<th>Level 1</th>
-												<th>Level 2</th>
-												<th>Level 3</th>
-												<th>Level 4</th>
-												<th>Level 5</th>
-												<th>Total</th>
+	                							<th>ID</th>
+												<th>Username</th>
+												<th>Level</th>
+												<th>Package</th>
+												<th>Amount Holding</th>
+												<th>%</th>
+												<th>Commission</th>
 	                						</tr>
 	                					</thead>
 	                					<tbody>
 	                						@foreach ($binarys as $binary)
 											<tr>
 												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
-												<td><a href="{{ URL::to('week/awards/level/0') }}">{{ number_format($binary->direct_cs, 2) }}</a></td>
-												<td><a href="{{ URL::to('week/awards/level/1') }}">{{ number_format($binary->level_1, 2) }}</a></td>
-												<td><a href="{{ URL::to('week/awards/level/2') }}">{{ number_format($binary->level_2, 2) }}</a></td>
-												<td><a href="{{ URL::to('week/awards/level/3') }}">{{ number_format($binary->level_3, 2) }}</a></td>
-												<td><a href="{{ URL::to('week/awards/level/4') }}">{{ number_format($binary->level_4, 2) }}</a></td>
-												<td><a href="{{ URL::to('week/awards/level/5') }}">{{ number_format($binary->level_5, 2) }}</a></td>
-												<td>{{ number_format($binary->total) }}</td>
+												<td>{{$binary->user->uid}}</td>
+												<td>{{$binary->user->name}}</td>
+												<td>{{$level}}</td>
+												<td>{{$binary->packageId}}</td>
+												<td>{{$binary->amount_increase}}</td>
+												<td>{{ $percent }}</td>
+												<td>{{ $binary->amount_increase * $percent / 100 }}</td>
 											</tr>
 											@endforeach
 	                					</tbody>

@@ -589,18 +589,23 @@ class User extends Authenticatable
     {
         $curUserId = Auth::user()->id;
 
-        if($level == 1) {
+        if($level == 1 || $level == 0) {
             $listUser = [$curUserId];
         }
 
-        $oUserF1 = User::whereIn('refererId', $listUser)->get();
+        if($level == 0)
+        	$oUserF1 = UserData::whereIn('refererId', $listUser)->where('packageId', 0)->get();
+        else
+        	$oUserF1 = UserData::whereIn('refererId', $listUser)->where('packageId', '>', 0)->get();
 
         foreach($oUserF1 as $f1)
         {
-            $expectListUser[$level][] = $f1->id;
+            $expectListUser[$level][] = $f1->userId;
         }
 
-        if($level < $expectLevel) {
+        if(!isset($expectListUser[$level])) $expectListUser[$level] = [];
+
+        if($level <= $expectLevel) {
             $nextListUser = $expectListUser[$level];
             self::getListUserByLevel($level + 1, $expectLevel, $expectListUser, $nextListUser);
         }
