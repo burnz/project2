@@ -734,3 +734,92 @@ CREATE TABLE `high_price_yesterday` (
 -- Records of high_price_yesterday
 -- ----------------------------
 INSERT INTO `high_price_yesterday` VALUES ('1', '2018-03-30 18:13:09', '2018-03-30 18:13:12', '0.00001667', '7246.05');
+
+/* SQL for csc jackpot */
+-- ----------------------------
+-- Table structure for awards
+-- ----------------------------
+DROP TABLE IF EXISTS `awards`;
+CREATE TABLE `awards` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `week_year` int(11) DEFAULT NULL,
+  `value` double DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for tickets
+-- ----------------------------
+DROP TABLE IF EXISTS `tickets`;
+CREATE TABLE `tickets` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `week_year` int(11) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `personal_quantity` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for week_ticket_sales_history
+-- ----------------------------
+DROP TABLE IF EXISTS `week_ticket_sales_history`;
+CREATE TABLE `week_ticket_sales_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `week_year` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `direct_cus` int(11) DEFAULT NULL,
+  `level_1` int(11) DEFAULT NULL,
+  `level_2` int(11) DEFAULT NULL,
+  `level_3` int(11) DEFAULT NULL,
+  `level_4` int(11) DEFAULT NULL,
+  `level_5` int(11) DEFAULT NULL,
+  `total` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for week_award_history
+-- ----------------------------
+DROP TABLE IF EXISTS `week_award_history`;
+CREATE TABLE `week_award_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `week_year` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `direct_cus` double DEFAULT NULL,
+  `level_1` double DEFAULT NULL,
+  `level_2` double DEFAULT NULL,
+  `level_3` double DEFAULT NULL,
+  `level_4` double DEFAULT NULL,
+  `level_5` double DEFAULT NULL,
+  `total` double DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for week_agency_history
+-- ----------------------------
+DROP TABLE IF EXISTS `week_agency_history`;
+CREATE TABLE `week_agency_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `week_year` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `level_1` double DEFAULT NULL,
+  `level_2` double DEFAULT NULL,
+  `level_3` double DEFAULT NULL,
+  `level_4` double DEFAULT NULL,
+  `level_5` double DEFAULT NULL,
+  `total` double DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

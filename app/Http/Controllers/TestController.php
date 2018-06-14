@@ -30,9 +30,20 @@ use App\CronBinaryLogs;
 use App\CronMatchingLogs;
 use App\CronLeadershipLogs;
 use App\TotalWeekSales;
+use App\UserPackage;
 
 use App\Cronjob\Bonus;
 use App\BonusBinary;
+
+use Ratchet\Client\Connector as Connection;
+use React\Socket\Connector;
+use React\EventLoop\Factory;
+
+use App\Tickets;
+use App\Awards;
+
+use Illuminate\Http\Request;
+
 /**
  * Description of TestController
  *
@@ -52,7 +63,7 @@ class TestController {
     function testInterest($param = null) {
         //Get Notification
 
-        Bonus::bonusDayCron();
+        Bonus::bonusNewAgencyCron();
         echo "Return bonus day for user successfully!";
     }
     function testInfinityBonus()
@@ -118,96 +129,98 @@ class TestController {
         }
     }
 
-    function test() {
-        set_time_limit(0);
-        //Insert log for user root (2)
-        $field = ['userId' => 2, 'status' => 0];
-        CronLeadershipLogs::create($field);
-        CronMatchingLogs::create($field);
-        CronProfitLogs::create($field);
-        CronBinaryLogs::create($field);
+    function showUpdateTicket() 
+    {
+        return view('adminlte::user.test_update_ticket');
+    }
 
-        // dd("XXX");
-        //Update logs for Land users
-        $listUser = DB::table('bonus_binary')->distinct()->whereNull('bonus')->where('bonus_tmp', '>', 0)->get(['userId']);
-        //dd($listUser);
-        foreach ($listUser as $key => $value) 
-        {
-            //if(in_array($value->userId, array('875', '876', '908', '1240', '1318', '2423' , '3042', '3637', '3673', '3727', '3731', '3827'))) continue;
-            $bonusList = BonusBinary::whereNull('bonus')->where('weeked', '>', 2)->where('weeked', '<', 7)->where('userId', '=', $value->userId)->orderBy('id', 'asc')->get();
-            
-            $rightOpen = 0; $leftOpen = 0;
-            foreach ($bonusList as $key => $val) {
-                if($val->bonus_tmp === 0) continue; 
-                $rightOpen += $val->rightOpen + $val->rightNew;
-                $leftOpen += $val->leftOpen + $val->leftNew;
-            }
+    function updateTicket(Request $request) 
+    {
+        $username = $request->name;
+        $ticket = $request->ticket;
 
-            //dd($bonusList);
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
 
-            //dd($value->userId . '---L:' . $leftOpen . '---R:' . $rightOpen);
+        try {
+            //get user id from name
+            $oUser = User::where('name', $username)->first();
 
-            //select weeked 7
-            $weeked = BonusBinary::where('weeked', 7)->where('userId', $value->userId)->first();
-            if($weeked) {
-                $weeked->rightOpen = $rightOpen;
-                $weeked->leftOpen = $leftOpen;
-                $weeked->save();
+            $oTicket = Tickets::where('user_id', $oUser->id)->where('week_year', $weekYear)->first();
+            if(isset($oTicket)) {
+                $oTicket->personal_quantity += $ticket;
+                $oTicket->quantity += $ticket;
+                $oTicket->save();
+
             } else {
-                $fieldUsd = [
-                    'userId' => $value->userId,
-                    'rightOpen' => $rightOpen,
-                    'leftOpen' => $leftOpen,
-                    'rightNew' => 0,
-                    'leftNew' => 0,
-                    'weeked' => 7,
-                    'year' => 2018,
-                    'weekYear' => '201807'
-                ];
-
-                BonusBinary::create($fieldUsd);
+                $field = ['user_id' => $oUser->id, 'week_year' => $weekYear, 'personal_quantity' => $ticket, 'quantity' => $ticket];
+                Tickets::create($field);
             }
 
-        }
-        dd("DONE");
-    }
-
-    private function GenerateAddress( $name = null ) {
-        $data = [];
-       
-        // tạo acc ví cho tk
-        $configuration = Configuration::apiKey( config('app.coinbase_key'), config('app.coinbase_secret'));
-        $client = Client::create($configuration);
-
-        //Account detail
-        $account = $client->getAccount(config('app.coinbase_account'));
-
-        // Generate new address and get this adress
-        $address = new Address([
-            'name' => $name
-        ]);
-
-        //Generate new address
-        $client->createAccountAddress($account, $address);
-
-        //Get all address
-        $listAddresses = $client->getAccountAddresses($account);
-
-        $address = '';
-        $id = '';
-        foreach($listAddresses as $add) {
-            if($add->getName() == $name) {
-                $address = $add->getAddress();
-                $id = $add->getId();
-                break;
+            //Update doanh so cho dai ly
+            if($oUser->userData->packageId == 0) {
+                $oTicket = Tickets::where('user_id', $oUser->refererId)->where('week_year', $weekYear)->first();
+                if(isset($oTicket)) {
+                    $oTicket->quantity += $ticket;
+                    $oTicket->save();
+                } else {
+                    $field = ['user_id' => $oUser->refererId, 'week_year' => $weekYear, 'quantity' => $ticket];
+                    Tickets::create($field);
+                }
             }
+
+            flash()->success('Update successully.');
+
+        } catch (\Exception $e) {
+            flash()->fail('Update fail.');
         }
 
-        $data = [ "accountId" => $id,
-            "walletAddress" => $address ];
-
-        return $data;
-            
+        return redirect()->route('test.showTicket');
     }
+
+    function showUpdateAward() 
+    {
+        return view('adminlte::user.test_update_award');
+    }
+
+    function updateAward(Request $request) 
+    {
+        $username = $request->name;
+        $award = $request->award;
+
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        try {
+            //get user id from name
+            $oUser = User::where('name', $username)->first();
+
+            $oAward = Award::where('user_id', $oUser->id)->where('week_year', $weekYear)->first();
+            if(isset($oAward)) {
+                $oAward->value += $ticket;
+                $oAward->save();
+
+            } else {
+                $field = ['user_id' => $oUser->id, 'week_year' => $weekYear, 'value' => $award];
+                Award::create($field);
+            }
+
+            flash()->success('Update successully.');
+
+        } catch (\Exception $e) {
+            flash()->fail('Update fail.');
+        }
+
+        return redirect()->route('test.showAward');
+    }
+
+    function test() 
+    {
+        //
+    }
+
+    
 
 }
