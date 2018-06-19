@@ -736,6 +736,32 @@ CREATE TABLE `high_price_yesterday` (
 INSERT INTO `high_price_yesterday` VALUES ('1', '2018-03-30 18:13:09', '2018-03-30 18:13:12', '0.00001667', '7246.05');
 
 /* SQL for csc jackpot */
+
+DROP TABLE IF EXISTS `packages`;
+CREATE TABLE `packages` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `min_price` int(10) NOT NULL,
+  `max_price` int(10) NOT NULL,
+  `capital_release` int(10) NOT NULL,
+  `bonus` float DEFAULT '0',
+  `pack_id` smallint(6) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `roles_name_unique` (`name`),
+  UNIQUE KEY `pack_id` (`pack_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ----------------------------
+-- Records of packages
+-- ----------------------------
+INSERT INTO `packages` VALUES ('1', 'Pack 1', '2017-08-16 14:06:07', '2017-09-18 11:14:07', '1000', '1000', '299', '0', '1');
+INSERT INTO `packages` VALUES ('2', 'Pack 2', '2017-08-16 14:06:35', '2017-09-18 11:14:46', '2000', '2000', '239', '0.001', '2');
+INSERT INTO `packages` VALUES ('3', 'Pack 3', '2017-08-16 14:58:33', '2017-09-18 11:14:33', '5000', '5000', '179', '0.0015', '3');
+INSERT INTO `packages` VALUES ('4', 'Pack 4', '2017-08-16 14:58:22', '2017-08-16 14:58:22', '10000', '10000', '120', '0.002', '4');
+INSERT INTO `packages` VALUES ('5', 'Pack 5', '2018-06-10 11:23:55', '2018-06-10 11:24:03', '20000', '20000', '0', '0', '5');
+
 -- ----------------------------
 -- Table structure for awards
 -- ----------------------------
