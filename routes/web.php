@@ -171,6 +171,7 @@ Route::get('update-ticket', 'TestController@showUpdateTicket')->name('test.showT
 Route::post('save-ticket', 'TestController@updateTicket')->name('test.saveTicket');
 Route::get('update-award', 'TestController@showUpdateAward')->name('test.showAward');
 Route::post('save-award', 'TestController@updateAward')->name('test.saveAward');
+Route::get('convert-package', 'TestController@convertPackage');
 
 
 Route::get('run-agency-bonus',"TestController@testInterest");
