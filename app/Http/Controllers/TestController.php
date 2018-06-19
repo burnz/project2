@@ -93,6 +93,26 @@ class TestController {
         echo "Return auto add binary successfully!";
     }
 
+    public function convertPackage()
+    {
+        //auto add
+        $users = UserData::where('packageId','>', 0)->where('userId', '>', 2)->get();
+        foreach($users as $user) {
+            //get package value
+            $packValue = DB::table('user_packages')->where('userId', $user->userId)->sum('amount_increase');
+
+            if($packValue > 0 && $packValue < 2000) $user->packageId = 1;
+            if($packValue >= 2000 && $packValue < 5000) $user->packageId = 2;
+            if($packValue >= 5000 && $packValue < 10000) $user->packageId = 3;
+            if($packValue >= 10000 && $packValue < 20000) $user->packageId = 4;
+            if($packValue >= 20000) $user->packageId = 5;
+
+            $user->save();
+        }
+
+        dd("successfully");
+    }
+
     function getAvailableAmount() {
 
         try {
