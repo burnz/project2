@@ -447,10 +447,14 @@ class Bonus
                             'inOut' => Wallet::IN,
                             'userId' => $user->userId,
                             'amount' => $bonus,
-                            'note'   => 'awards bonus',
+                            'note'   => 'Winning / Unilevel Bonus',
                         ];
                         
                         Wallet::create($fieldUsd);
+
+                        WeekAwardsHistory::where('week_year', $firstWeekYear)
+                        ->where('user_id', $user->userId)
+                        ->update(['total' => $bonus]);
                     }
                 }
 
@@ -695,7 +699,7 @@ class Bonus
             //calculate revenue
             $value = DB::table('awards')->whereIn('user_id', $listF1NotAgency)
                     ->where('week_year','=', $weekYear)
-                    ->sum('value');
+                    ->sum('personal_value');
             $bonus += $value * config('carcoin.award_dr_cus');
 
             WeekAwardsHistory::where('week_year', $weekYear)

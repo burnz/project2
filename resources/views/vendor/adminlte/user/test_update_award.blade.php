@@ -35,7 +35,7 @@
                                     </div>
                                     <div class="card-content">
                                         <div class="col-lg-12 m-0 p-0">@include('flash::message')</div>
-                                        <form role="form" method="POST" action="{{ route('test.registerAction') }}">
+                                        <form role="form" method="POST" action="{{ route('test.saveAward') }}">
                                             {!! csrf_field() !!}
 
                                             <div class="input-group">

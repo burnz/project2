@@ -773,6 +773,7 @@ CREATE TABLE `awards` (
   `user_id` int(10) unsigned DEFAULT NULL,
   `week_year` int(11) DEFAULT NULL,
   `value` double DEFAULT NULL,
+  `personal_value` double DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

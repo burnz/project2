@@ -101,6 +101,7 @@ class TestController {
             //get package value
             $packValue = DB::table('user_packages')->where('userId', $user->userId)->sum('amount_increase');
 
+            if($packValue == 0) $user->packageId = 0; //convert Land user sang package 0
             if($packValue > 0 && $packValue < 2000) $user->packageId = 1;
             if($packValue >= 2000 && $packValue < 5000) $user->packageId = 2;
             if($packValue >= 5000 && $packValue < 10000) $user->packageId = 3;
@@ -216,20 +217,34 @@ class TestController {
             //get user id from name
             $oUser = User::where('name', $username)->first();
 
-            $oAward = Award::where('user_id', $oUser->id)->where('week_year', $weekYear)->first();
+            $oAward = Awards::where('user_id', $oUser->id)->where('week_year', $weekYear)->first();
             if(isset($oAward)) {
-                $oAward->value += $ticket;
+                $oAward->personal_value += $award;
+                $oAward->value += $award;
                 $oAward->save();
 
             } else {
-                $field = ['user_id' => $oUser->id, 'week_year' => $weekYear, 'value' => $award];
-                Award::create($field);
+                $field = ['user_id' => $oUser->id, 'week_year' => $weekYear, 'personal_value' => $award, 'value' => $award];
+                Awards::create($field);
+            }
+
+            //Update doanh so cho dai ly
+            if($oUser->userData->packageId == 0) {
+                $oAward = Awards::where('user_id', $oUser->refererId)->where('week_year', $weekYear)->first();
+                if(isset($oAward)) {
+                    $oAward->value += $award;
+                    $oAward->save();
+                } else {
+                    $field = ['user_id' => $oUser->refererId, 'week_year' => $weekYear, 'value' => $award];
+                    Awards::create($field);
+                }
             }
 
             flash()->success('Update successully.');
 
         } catch (\Exception $e) {
-            flash()->fail('Update fail.');
+            echo $e->getMessage();
+            //flash()->fail('Update fail.');
         }
 
         return redirect()->route('test.showAward');
