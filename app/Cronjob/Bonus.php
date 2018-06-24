@@ -151,19 +151,19 @@ class Bonus
                 $binary->save();
 
                 if($bonus > 0){
-                    $clpAmount = $bonus / HighestPrice::getCarHighestPrice();
+                    //$clpAmount = $bonus / HighestPrice::getCarHighestPrice();
 
                     $userCoin = $binary->userCoin;
-                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+                    //$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+                    $userCoin->usdAmount = ($userCoin->usdAmount + $bonus);
                     $userCoin->save();
 
                     $fieldUsd = [
-                        'walletType' => Wallet::CLP_WALLET,//usd
+                        'walletType' => Wallet::USD_WALLET,//usd
                         'type' =>  Wallet::BINARY_TYPE,//bonus week
                         'inOut' => Wallet::IN,
                         'userId' => $binary->userId,
-                        'amount' => $clpAmount,
-                        'amount_usd' => $bonus,
+                        'amount' => $bonus,
                         'note'	=> ''
                     ];
 
