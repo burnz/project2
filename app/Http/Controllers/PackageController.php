@@ -172,9 +172,20 @@ class PackageController extends Controller
                 return false;
             });
 
-            $errors=['packageId.package_check'=>'Wallet amount is not enough to buy package', 'packageId.down_check'=>'The package downgrade is not allowed', 'refundType.fund_check'=>'Please select refund type'];
+            Validator::extend('withdrawCheck', function ($attribute, $value) {
+                $userPack = UserPackage::where("userId", Auth::user()->id)->where('withdraw',1)->first();
+                $user = Auth::user();
+                if($user->userData->packageId == 0 && isset($userPack->withdraw))
+                {
+                    return false;
+                }
+
+                return true;
+            });
+
+            $errors=['packageId.package_check'=>'Wallet amount is not enough to buy package', 'packageId.down_check'=>'The package downgrade is not allowed', 'packageId.withdraw_check'=>'You cannot become agency again after cancellation','refundType.fund_check'=>'Please select refund type'];
             $this->validate($request, [
-                'packageId' => 'required|not_in:0|packageCheck|downCheck',
+                'packageId' => 'required|not_in:0|packageCheck|downCheck|withdrawCheck',
                 'refundType'=>'required|fundCheck:'.$request->refundType
             ],$errors);
 

@@ -93,7 +93,9 @@ class ClpWalletController extends Controller {
             if($key == 15) $wallet_type[$key] = trans($val);//buy package
             if($key == 3) $wallet_type[$key] = trans($val);//infinity
             if($key == 1) $wallet_type[$key] = 'Fast Start';//referral
+
         }
+        $wallet_type[25] = 'Convert from USD';
 
         ksort($wallet_type);
 

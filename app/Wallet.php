@@ -20,6 +20,7 @@ class Wallet extends Model
 
     const REINVEST_WALLET = 3;
 
+    const USD_WALLET = 4;
 
     /**
      * Bonus Type
@@ -70,6 +71,8 @@ class Wallet extends Model
     const BINARY_BONUS = 23;
     //agency commission 
     const AGENCY_BONUS = 24;
+
+    const USD_TO_CAR = 25;
 
     //inOut 
     const IN = "in" ;

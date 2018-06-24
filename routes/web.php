@@ -97,6 +97,8 @@ Route::group( ['middleware' => ['auth']], function() {
     //CLP WALLET
     Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
+    Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
+    Route::post('wallets/buy-car', 'Wallet\UsdWalletController@buyCar')->name('wallet.buy-car');
     Route::get('wallets/car/getaddresswallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
     Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');

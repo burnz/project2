@@ -15,6 +15,7 @@ use Auth;
 use function Sodium\compare;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
+use App\HighestPrice;
 use Log;
 /**
  * Description of UsdWalletController
@@ -42,65 +43,102 @@ class UsdWalletController extends Controller
      * @param Request $request
      * @return type
      */
-    public function reinvestWallet( Request $request ) {
+    public function usdWallet( Request $request ) {
         //tranfer if request post
-        if($request->isMethod('post')) {
-            $this->validate($request, [
-                'usd'=>'required|numeric',
-                'clp'=>'required|numeric'
-            ]);
-            $clp = $request->usd / User::getCLPUSDRate();
-            //Tranfer
-            $this->tranferReinvestUSDCLP($request->usd, $clp, $request);
-        }
-        
-        //get tỷ giá usd btc
-        //$dataCurrencyPair = $this->getRateUSDBTC();
-        
-        //get dữ liệu bảng hiển thị trên site
         $currentuserid = Auth::user()->id;
         $query = Wallet::where('userId', '=',$currentuserid);
         if(isset($request->type) && $request->type > 0){
             $query->where('type', $request->type);
         }
+        $wallets = $query->where('walletType', Wallet::USD_WALLET)->orderBy('created_at', 'desc')->paginate();
 
-        $wallets = $query->where('walletType', Wallet::REINVEST_WALLET)->orderBy('id', 'desc')->paginate();
-        //Add thêm tỷ giá vào $wallets
-        $wallets->currencyPair = Auth()->user()->usercoin->reinvestAmount ;
-            
+        if(isset($request->type) && $request->type > 0){
+             $pagination = $wallets->appends ( array (
+                 'type' => $request->type
+             ));
+        }
+        //get Packgage
+        $user = Auth::user();
+        
         $requestQuery = $request->query();
-        //Holding Wallet has 4 types: Farst start, binary, loyalty, Transfer to CLP Wallet
+
         $all_wallet_type = config('carcoin.wallet_type');
+
         $wallet_type = [];
         $wallet_type[0] = trans('adminlte_lang::wallet.title_selection_filter');
         foreach ($all_wallet_type as $key => $val) {
-            if($key==1) $wallet_type[$key]= trans($val);
-            if($key == 3) $wallet_type[$key] = trans($val);
-            if($key==15) $wallet_type[$key]=trans($val);
-            if($key == 18) $wallet_type[$key] = trans($val);
-            if($key == 19) $wallet_type[$key] = trans($val);
-            if($key==20) $wallet_type[$key] =trans($val);
-            
+            if($key == 3) $wallet_type[$key] = trans($val);//infinity
+            if($key == 1) $wallet_type[$key] = 'Fast Start';//referral
         }
-        return view('adminlte::wallets.reinvest', compact('wallets','wallet_type', 'requestQuery'));
+        $wallet_type[25] = 'Convert to CAR';
+
+        ksort($wallet_type);
+
+        return view('adminlte::wallets.usd', [
+            'user' => $user, 
+            'wallets'=> $wallets,
+            'wallet_type'=> $wallet_type,
+            'requestQuery'=> $requestQuery,
+        ]);
     }
     
-    public function getDataWallet() {
-        //get số liệu 
-        $dataCurrencyPair = $this->getRateUSDBTC();
-        
-        $data["usd"] =  Auth()->user()->usercoin->usdAmount ;
-        
-        $data["btc"] = round( $data["usd"] / 
-                json_decode($dataCurrencyPair)->last , 4);
-        
-        $data["clp"] = $data["usd"] / 
-                ExchangeRate::getCLPUSDRate();
-        
-        $data["clpbtc"] = ExchangeRate::getCLPBTCRate();
-        
-        $data["clpusd"] = ExchangeRate::getCLPUSDRate();
-        
-        return $this->responseSuccess($data);
+    public function buyCar(Request $request) 
+    {
+       if($request->ajax()) 
+       {
+            $userCoin = Auth::user()->userCoin;
+
+            $usdAmountErr = '';
+            if($request->usdAmount == ''){
+                $usdAmountErr = trans('adminlte_lang::wallet.msg_usd_amount_required');
+            }elseif (!is_numeric($request->usdAmount) || $request->usdAmount < 0){
+                $usdAmountErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->usdAmount < $request->usdAmount){
+                $usdAmountErr = trans('adminlte_lang::wallet.error_not_enough');
+            }
+     
+            if($usdAmountErr == '')
+            {
+                $carRate = HighestPrice::getCarHighestPrice();
+                $amountCAR = $request->usdAmount / $carRate;
+
+                $userCoin->usdAmount = $userCoin->usdAmount - $request->usdAmount;
+                $userCoin->clpCoinAmount =  $userCoin->clpCoinAmount + $amountCAR;
+                $userCoin->save();
+
+                $usd_to_car = [
+                    "walletType" => Wallet::USD_WALLET,
+                    "type"       => Wallet::USD_TO_CAR,
+                    "inOut"      => Wallet::OUT,
+                    "userId"     => Auth::user()->id,
+                    "amount"     => $request->usdAmount,
+                ];
+                $result = Wallet::create($usd_to_car);
+
+                $car_from_usd = [
+                    "walletType" => Wallet::CLP_WALLET,
+                    "type"       => Wallet::USD_TO_CAR,
+                    "inOut"      => Wallet::IN,
+                    "userId"     => Auth::user()->id,
+                    "amount"     => $amountCAR,
+                ];
+                // Bulk insert
+                $result = Wallet::create($car_from_usd);
+
+                $request->session()->flash( 'successMessage', "Convert successfully!" );
+                return response()->json(array('err' => false));
+                
+            } else {
+                $result = [
+                        'err' => true,
+                        'msg' =>[
+                                'usdAmountErr' => $usdAmountErr,
+                            ]
+                    ];
+                return response()->json($result);
+            }
+
+        }
+        return response()->json(array('err' => false, 'msg' => null));
     }
 }
