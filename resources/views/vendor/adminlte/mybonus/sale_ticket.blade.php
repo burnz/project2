@@ -21,7 +21,7 @@
 	                    <i class="material-icons">card_giftcard</i>
 	                </div>
 	                <div class="card-content">
-	                	<h4 class="card-title">Ticket Bonus History</h4>
+	                	<h4 class="card-title">Retail / Unilevel Bonus History ( unit is ticket )</h4>
 	                		<div class="row">
 	                				<div class="table-responsive">
 	                			<div class="col-sm-12">
@@ -42,13 +42,13 @@
 	                						@foreach ($binarys as $binary)
 											<tr>
 												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
-												<td><a href="{{ URL::to('week/tickets/level/0') }}">{{ number_format($binary->direct_cs) }}</a></td>
-												<td><a href="{{ URL::to('week/tickets/level/1') }}">{{ number_format($binary->level_1) }}</a></td>
-												<td><a href="{{ URL::to('week/tickets/level/2') }}">{{ number_format($binary->level_2) }}</a></td>
-												<td><a href="{{ URL::to('week/tickets/level/3') }}">{{ number_format($binary->level_3) }}</a></td>
-												<td><a href="{{ URL::to('week/tickets/level/4') }}">{{ number_format($binary->level_4) }}</a></td>
-												<td><a href="{{ URL::to('week/tickets/level/5') }}">{{ number_format($binary->level_5) }}</a></td>
-												<td>{{ number_format($binary->total) }}</td>
+												<td><a href="{{ URL::to('week/tickets/level/0') }}">{{ number_format($binary->direct_cus, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/tickets/level/1') }}">{{ number_format($binary->level_1, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/tickets/level/2') }}">{{ number_format($binary->level_2, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/tickets/level/3') }}">{{ number_format($binary->level_3, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/tickets/level/4') }}">{{ number_format($binary->level_4, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/tickets/level/5') }}">{{ number_format($binary->level_5, 2) }}</a></td>
+												<td>{{ number_format($binary->total, 2) }}</td>
 											</tr>
 											@endforeach
 	                					</tbody>

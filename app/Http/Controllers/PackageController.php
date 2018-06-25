@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\UserCoin;
 use App\UserData;
 use App\UserPackage;
+use App\Tickets;
 use Illuminate\Http\Request;
 use App\User;
 use App\Package;
@@ -215,7 +216,7 @@ class PackageController extends Controller
 
             Validator::extend('downCheck', function ($attribute, $value) {
                 $user = Auth::user();
-                if($user->userData->packageId < $value)
+                if($user->userData->packageId <= $value)
                 {
                     return true;
                 }
@@ -277,12 +278,29 @@ class PackageController extends Controller
                 'weekYear' => $weekYear,
             ]);
 
+            //deduct ticket sale of agency sponsor 
+            if($packageOldId == 0) {
+                //find sponsor
+                $sponsor = UserData::where('refererId', $user->refererId)->first();
+                if($sponsor->packageId > 0) {
+                    $weeked = date('W');
+                    $year = date('Y');
+                    $weekYear = $year.$weeked;
+
+                    $sponsorTicket = Tickets::where('user_id', $user->refererId)->where('week_year', $weekYear)->first();
+                    $oTicket = Tickets::where('user_id', $user->id)->where('week_year', $weekYear)->first();
+                    if($sponsorTicket && $oTicket) {
+                        $sponsorTicket->quantity -= $oTicket->personal_quantity;
+                        $sponsorTicket->save();
+                    }
+                }
+            }
+
             $userData->packageDate = date('Y-m-d H:i:s');
             $userData->packageId = $request->packageId;
             $userData->status = 1;
             $userData->save();
             //end add data to user package
-
 
             $amountCLPDecrease = round($amount_increase / ExchangeRate::getCLPUSDRate(), 2);
             $userCoin = $userData->userCoin;
@@ -299,7 +317,7 @@ class PackageController extends Controller
 
             Wallet::create($fieldUsd);
             // Calculate fast start bonus
-            //User::investBonus($user->id, $user->refererId, $request['packageId'], $amount_increase);
+            User::investBonus($user->id, $user->refererId, $request->packageId, $amount_increase, 1);
             
             // Case: User already in tree and then upgrade package => re-caculate loyalty
             // if($userData->binaryUserId && $userData->packageId > 0)

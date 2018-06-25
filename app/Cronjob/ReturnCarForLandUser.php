@@ -54,7 +54,13 @@ class ReturnCarForLandUser {
                 if($revenueF1->sumamount > 90000) $percentReturn = 0.01;
 
                 //Return coin
-                $returnAmount = $percentReturn * $user->usdAmount;
+                $returnAmount = $percentReturn * $user->availableAmount;
+                if($user->usdAmount > $returnAmount)
+                    $user->usdAmount -= $returnAmount;
+                else{
+                    $user->usdAmount = 0;
+                    $returnAmount = $user->usdAmount;
+                }
                 $user->clpCoinAmount += $returnAmount;
                 $user->save();
 

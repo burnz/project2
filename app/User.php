@@ -9,6 +9,7 @@ use App\Notifications\ResetPasswords;
 use Auth;
 use DB;
 use App\Http\Controllers\Backend\Report\RepoReportController as Report;
+use App\HighestPrice;
 
 class User extends Authenticatable
 {
@@ -73,33 +74,31 @@ class User extends Authenticatable
 	/**
 	* Calculate fast start bonus
 	*/
-	public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0)
+	public static function investBonus($userId = 0, $refererId = 0, $packageId = 0, $usdCoinAmount = 0, $level = 1)
 	{
 		if($refererId > 0)
 		{
 			$packageBonus = 0;
 			$userData = UserData::find($refererId);
 			
-			if(isset($userData) && $userData->packageId > 0)
+			if(isset($userData) && $userData->packageId > 0 && $level <= 5)
 			{
-				
-				if($userData->packageId == 1)
-					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_1_pay');
-
-				if($userData->packageId == 2)
-					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_2_pay');
-
-				if($userData->packageId ==3)
-					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_3_pay');
-
-				if($userData->packageId == 4)
-					$packageBonus = $usdCoinAmount * config('carcoin.bonus_range_4_pay');
-
-				$userData->totalBonus = $userData->totalBonus + $packageBonus;
-				$userData->save();
-
-				
-
+				if($level == 1)
+				{//F1
+                    $packageBonus = $usdCoinAmount * config('carcoin.agency_level_1');
+                }elseif($level == 2 && isset($userData->package) &&  $userData->package->pack_id >= 2)
+                {//F2
+                    $packageBonus = $usdCoinAmount * config('carcoin.agency_level_2');
+                }elseif($level == 3 && isset($userData->package) &&  $userData->package->pack_id >= 3)
+                {//F3
+                    $packageBonus = $usdCoinAmount * config('carcoin.agency_level_3');
+                }elseif($level == 4 && isset($userData->package) &&  $userData->package->pack_id >= 4)
+                {//F4
+                    $packageBonus = $usdCoinAmount * config('carcoin.agency_level_4');
+                }elseif($level == 5 && isset($userData->package) &&  $userData->package->pack_id >= 5)
+                {//F5
+                    $packageBonus = $usdCoinAmount * config('carcoin.agency_level_5');
+                }
 
 				$userCoin = $userData->userCoin;
 				if($userCoin && $packageBonus > 0)
@@ -107,54 +106,41 @@ class User extends Authenticatable
 					//Get info of user
 					$user = Auth::user();
 
-					$clpAmount = ($packageBonus * config('carcoin.clp_bonus_pay') / ExchangeRate::getCLPUSDRate());
-					$reinvestAmount = ($packageBonus * config('carcoin.reinvest_bonus_pay') / ExchangeRate::getCLPUSDRate());
-					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-					$userCoin->reinvestAmount = ($userCoin->reinvestAmount + $reinvestAmount);
+					$carBonus = $packageBonus / HighestPrice::getCarHighestPrice();
+					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $carBonus);
 					$userCoin->save();
 					
-					$fieldUsd = [
+					$fields = [
 						'walletType' => Wallet::CLP_WALLET,
 						'type' => Wallet::FAST_START_TYPE,
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
-						'amount' => $clpAmount,
-						'amount_usd' => $packageBonus * config('carcoin.clp_bonus_pay'),
-						'note'   => '60% bonus - ' . $user->name . ' lending amount $' . $usdCoinAmount,
+						'amount' => $carBonus,
+						'amount_usd' => $packageBonus,
+						'note'   => '$' . $packageBonus . ' from ' . $user->name . ' became a new agency/upgrade',
 					];
 					
-					Wallet::create($fieldUsd);
-
-					$fieldInvest = [
-						'walletType' => Wallet::REINVEST_WALLET,//reinvest
-						'type' => Wallet::FAST_START_TYPE,
-						'inOut' => Wallet::IN,
-						'userId' => $userData->userId,
-						'amount' => $reinvestAmount,
-						'amount_usd' => $packageBonus * config('carcoin.reinvest_bonus_pay'),
-						'note'   => '40% bonus - ' . $user->name . ' lending amount $' . $usdCoinAmount,
-					];
-					Wallet::create($fieldInvest);
+					Wallet::create($fields);
 				}
 
 				if($packageBonus > 0)
-					self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus);
+					self::investBonusFastStart($refererId, $userId, $packageId, $packageBonus, $level);
+
+				self::investBonus($userId, $userData->refererId, $packageId, $usdCoinAmount, ($level + 1));
 			}
-			
-			self::bonusBinaryThisWeek($userId);
 		}
 	}
 
 	/**
 	*   Insert log for Fast Start Bonus
 	*/
-	public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0)
+	public static function investBonusFastStart($userId = 0, $partnerId = 0, $packageId = 0, $amount = 0, $level)
 	{
 		if($userId > 0) {
 			$fields = [
 				'userId'     => $userId,
 				'partnerId'     => $partnerId,
-				'generation'     => 1,
+				'generation'     => $level,
 				'packageId'     => $packageId,
 				'amount'     => $amount,
 			];
@@ -259,7 +245,6 @@ class User extends Authenticatable
 			
 			//Caculate loyalty bonus for up level of $userRoot in binary tree
 			// $user->userId = $binaryUserId
-			if($user->packageId > 0) self::bonusLoyaltyUser($user->userId, $user->refererId, $nextLegpos);
 			
 			if($user->binaryUserId > 0 && $user->packageId > 0) {
 				User::bonusBinary($userId, $partnerId, $packageId, $user->binaryUserId, $nextLegpos, $isUpgrade, $continue);
@@ -303,152 +288,8 @@ class User extends Authenticatable
 			}
 
 			BonusBinary::create($fields);
-
-			$interestFields = [
-				'userId'     => $binaryUserId,
-				'weekYear'     => $weekYear,
-				'leftOpen'	=> 0,
-				'rightOpen'	=> 0,
-				'leftNew'	=> 0,
-				'rightNew'	=> 0
-			];
-			$bonusBinaryInterest=BonusBinaryInterest::where('userId',$binaryUserId)->where('weekYear',$weekYear)->first();
-			if(count($bonusBinaryInterest)==0)
-			{
-				BonusBinaryInterest::create($interestFields);
-			}
 		}
-
-		//Caculate temporary binary bonus this week right after have a new user in tree
-		self::bonusBinaryThisWeek($binaryUserId);
 	}
-
-	/**
-	*   Caculate temporary binary bonus this week right after have a new user in tree
-	*/
-	public static function bonusBinaryThisWeek($userId){
-		$weeked = date('W');
-		$year = date('Y');
-		$weekYear = $year.$weeked;
-
-		$binary = BonusBinary::where('weekYear', '=', $weekYear)->where('userId', '=', $userId)->first();
-		if($binary){
-			$leftOver = $binary->leftOpen + $binary->leftNew;
-			$rightOver = $binary->rightOpen + $binary->rightNew;
-			
-			//Caculate level to get binary commision
-			$bonus = 0;
-			$level = 0;
-			$percentBonus = 0;
-			$packageId = $binary->userData->packageId;
-			
-			if($leftOver >= config('carcoin.bi_sale_cond_lv_1') && 
-				$rightOver >= config('carcoin.bi_sale_cond_lv_1') && 
-				$packageId >= 1 )
-			{
-				$level = config('carcoin.bi_sale_cond_lv_1');
-				$percentBonus = config('carcoin.bi_lv_1_bonus');
-			}
-
-			if($leftOver >= config('carcoin.bi_sale_cond_lv_2') && 
-				$rightOver >= config('carcoin.bi_sale_cond_lv_2') && 
-				$packageId >= 2)
-			{
-				$level = config('carcoin.bi_sale_cond_lv_2');
-				$percentBonus = config('carcoin.bi_lv_2_bonus');
-			}
-
-			if($leftOver >= config('carcoin.bi_sale_cond_lv_3') && 
-				$rightOver >= config('carcoin.bi_sale_cond_lv_3') && 
-				$packageId >= 3)
-			{
-				$level = config('carcoin.bi_sale_cond_lv_3');
-				$percentBonus = config('carcoin.bi_lv_3_bonus');
-			}
-
-			if($leftOver > config('carcoin.bi_sale_cond_lv_4') && 
-				$rightOver > config('carcoin.bi_sale_cond_lv_4') && 
-				$packageId == 4)
-			{
-				$level = config('carcoin.bi_sale_cond_lv_4');
-				$percentBonus = config('carcoin.bi_lv_4_bonus');
-			}
-
-			$bonus = $level * $percentBonus;
-
-			if($bonus > config('carcoin.bonus_maxout')) $bonus = config('carcoin.bonus_maxout');
-
-			$binary->settled = $level;
-			$binary->bonus_tmp = $bonus;
-			$binary->save();
-		}
-
-	}
-
-
-	/**
-	*   Calculate loyalty bonus
-	*/
-	public static function bonusLoyaltyUser($userId, $refererId, $legpos){
-
-		$userData = UserData::where('userId', $userId)->where('packageId', '>', 0)->first();
-
-
-		//Get sale left, right
-		$saleOnLeft = $userData->saleGenLeft;
-
-		$saleOnRight = $userData->saleGenRight;
-		
-		//Get UserData
-		$userInfo = UserData::where('userId', '=', $userId)->get()->first();
-
-		$rank = self::getRank($saleOnLeft, $saleOnRight, $userInfo->packageId);
-
-		$userInfo->loyaltyId = $rank;
-		$userInfo->save();
-	}
-
-
-	/**
-	*  Check and Get loyalty type
-	*/
-	public static function getRank($saleOnLeft, $saleOnRight, $packageId)
-	{
-		$rank = 0;
-		if($saleOnLeft >= config('carcoin.loyalty_upgrate_silver') 
-			&& $saleOnRight >= config('carcoin.loyalty_upgrate_silver')
-			&& $packageId > 1) {
-			$rank = 1;
-		}
-	
-		
-		if($saleOnLeft >= config('carcoin.loyalty_upgrate_gold') 
-			&& $saleOnRight >= config('carcoin.loyalty_upgrate_gold')
-			&& $packageId > 2) {
-			$rank = 2;
-		}
-	
-		if($saleOnLeft >= config('carcoin.loyalty_upgrate_pear') 
-			&& $saleOnRight >= config('carcoin.loyalty_upgrate_pear')
-			&& $packageId > 3) {
-			$rank = 3;
-		}
-	
-		if($saleOnLeft >= config('carcoin.loyalty_upgrate_emerald') 
-			&& $saleOnRight >= config('carcoin.loyalty_upgrate_emerald')
-			&& $packageId > 3) {
-			$rank = 4;
-		}
-	
-		if($saleOnLeft >= config('carcoin.loyalty_upgrate_diamond') 
-			&& $saleOnRight >= config('carcoin.loyalty_upgrate_diamond')
-			&& $packageId > 3) {
-			$rank = 5;
-		}
-
-		return $rank;
-	}
-
 
 	public function sendPasswordResetNotification($token)
 	{

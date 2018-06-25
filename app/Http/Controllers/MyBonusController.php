@@ -53,16 +53,28 @@ class MyBonusController extends Controller
         $year = date('Y');
         $weekYear = $year.$weeked;
 
+        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+        $firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
+
+        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
         $currentuserid = Auth::user()->id;
 
         //get list user by level
         $listUser = [];
 
-        User::getListUserByLevel(1, $level, $listUser);
+        User::getListUserByLevel(0, $level, $listUser);
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
         $binarys = Tickets::whereIn('user_id', $listUser[$level])
-                    ->where('week_year', $weekYear)
+                    ->where('week_year', $firstWeekYear)
                     ->where('quantity', '>', 0)
                     ->paginate();
 
@@ -91,6 +103,18 @@ class MyBonusController extends Controller
         $year = date('Y');
         $weekYear = $year.$weeked;
 
+        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+        $firstYear = $year;
+        $firstWeekYear = $firstYear.$firstWeek;
+
+        if($firstWeek == 0){
+            $firstWeek = 52;
+            $firstYear = $year - 1;
+            $firstWeekYear = $firstYear.$firstWeek;
+        }
+
+        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+
         $currentuserid = Auth::user()->id;
 
         //get list user by level
@@ -99,7 +123,7 @@ class MyBonusController extends Controller
         User::getListUserByLevel(1, $level, $listUser);
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
-        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $weekYear)->where('value', '>', 0)->paginate();
+        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $firstWeekYear)->where('value', '>', 0)->paginate();
 
         if($level == 1) $percent = 5;
         if($level == 2) $percent = 2;
@@ -131,6 +155,8 @@ class MyBonusController extends Controller
         $listUser = [];
 
         User::getListUserByLevel(1, $level, $listUser);
+
+
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
         $binarys = UserPackage::whereIn('userId', $listUser[$level])

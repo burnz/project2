@@ -21,38 +21,49 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="card card-earning">
                                 <div class="card-header text-center">
                                     <span class="glyphicon glyphicon-restart" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Last week agency commission</p>
+                                    <p class="mt-4 mb-0">Last week fast start bonus</p>
                                     <p class="h5 mt-3">${{number_format($data['PreAgencyCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="card card-earning">
                                 <div class="card-header text-center">
                                     <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Last week ticket commission</p>
-                                    <p class="h5 mt-3">${{number_format($data['PreTicketCommission'],2)}}</p>
+                                    <p class="mt-4 mb-0">Last week retail / unilevel bonus</p>
+                                    <p class="h5 mt-3"><span class="glyphicon glyphicon-bitcoin"></span>{{number_format($data['PreTicketCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="card card-earning">
                                 <div class="card-header text-center">
                                     <span class="glyphicon glyphicon-wallet" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Last week binary commission</p>
+                                    <p class="mt-4 mb-0">Last week infinity bonus</p>
                                     <p class="h5 mt-3">${{number_format($data['PreBinaryCommission'],2)}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-wallet" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Your tickets this week</p>
+                                    <p class="h5 mt-3">{{number_format($ticketThisWeek)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -99,8 +110,8 @@
                                     <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">This week tickets</p>
-                                    <p class="h5 mt-3">{{number_format($ticketThisWeek)}}</p>
+                                    <p class="mt-4 mb-0">Direct ticket</p>
+                                    <p class="h5 mt-3">{{number_format($directSale)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +202,7 @@
 												<tr>
 		                                            <td>{{date_format(date_create($pval->buy_date),'d-m-Y')}}</td>
 		                                            <td>{{$pval->name}}</td>
-		                                            <td>${{$pval->amount_increase}}</td>
+		                                            <td>${{number_format($pval->amount_increase)}}</td>
                                                     <td>
                                                         @if($pval->withdraw==1)
                                                             <button class="btn btn-simple btn-google m-0 p-0">Released</button>

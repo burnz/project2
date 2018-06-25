@@ -25,6 +25,7 @@ use App\HighestPrice;
 use App\WeekTicketsHistory;
 use App\WeekAgencyHistory;
 use App\WeekAwardsHistory;
+use App\Tickets;
 
 use DB;
 use Log;
@@ -38,46 +39,6 @@ use App\UserCoin;
  */
 class Bonus
 {
-    //commission for direct customer when get reward
-    const AWARD_DR_CUS = 0.025;
-
-    const AWARD_AGENCY = 0.005;
-
-    //Agency
-    const AGENCY_LEVEL_1 = 0.05;
-
-    const AGENCY_LEVEL_2 = 0.04;
-
-    const AGENCY_LEVEL_3 = 0.03;
-
-    const AGENCY_LEVEL_4 = 0.02;
-
-    const AGENCY_LEVEL_5 = 0.01;
-
-    //Ticket
-    const TICKET_DR_CUS = 0.05;
-    
-    const TICKET_LEVEL_1 = 0.05;
-
-    const TICKET_LEVEL_2 = 0.02;
-
-    const TICKET_LEVEL_3 = 0.01;
-
-    const TICKET_LEVEL_4 = 0.01;
-
-    const TICKET_LEVEL_5 = 0.01;
-
-    //Binary
-    const BINARY_LEVEL_1 = 0.06;
-
-    const BINARY_LEVEL_2 = 0.07;
-
-    const BINARY_LEVEL_3 = 0.08;
-
-    const BINARY_LEVEL_4 = 0.09;
-
-    const BINARY_LEVEL_5 = 0.1;
-	
 	/**
 	* This cronjob function will run every 00:01 Monday of week to caculate and return bonus to user's wallet 
 	*/
@@ -121,42 +82,6 @@ class Bonus
                     CronBinaryLogs::create($field);
                 }
 
-                //in the initial period don't care about condition
-                if(config('app.condition')) {
-                    //get total sale this week
-                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
-
-                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
-                        $user->packageId >= 1)
-                    {
-                        $maxLevel = 1;
-                    }
-
-                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
-                        $user->packageId >= 2)
-                    {
-                        $maxLevel = 2;
-                    }
-
-                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
-                        $user->packageId >= 3)
-                    {
-                        $maxLevel = 3;
-                    }
-
-                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
-                        $user->packageId >= 4)
-                    {
-                        $maxLevel = 4;
-                    }
-
-                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
-                        $user->packageId >= 5)
-                    {
-                        $maxLevel = 5;
-                    }
-                }
-
                 $lefAgencyF1 = UserData::where('refererId', '=', $binary->userId)
                                 ->where('status', 1)->where('leftRight',  'left')->count();
                 $rightAgencyF1 = UserData::where('refererId', '=', $binary->userId)
@@ -171,35 +96,35 @@ class Bonus
                     $rightAgencyF1 >= 1 &&
                     $packageId >= 1 )
                 {
-                    $percentBonus = config('carcoin.bi_lv_1_bonus');
+                    $percentBonus = config('carcoin.binary_level_1');
                 }
 
                 if($lefAgencyF1 >= 2 &&
                     $rightAgencyF1 >= 2 &&
                     $packageId >= 2)
                 {
-                    $percentBonus = config('carcoin.bi_lv_2_bonus');
+                    $percentBonus = config('carcoin.binary_level_2');
                 }
 
                 if($lefAgencyF1 >= 3 &&
                     $rightAgencyF1 >= 3 &&
                     $packageId >= 3)
                 {
-                    $percentBonus = config('carcoin.bi_lv_3_bonus');
+                    $percentBonus = config('carcoin.binary_level_3');
                 }
 
                 if($lefAgencyF1 > 4 &&
                     $rightAgencyF1 > 4 &&
                     $packageId >= 4)
                 {
-                    $percentBonus = config('carcoin.bi_lv_4_bonus');
+                    $percentBonus = config('carcoin.binary_level_4');
                 }
 
                 if($lefAgencyF1 > 5 &&
                     $rightAgencyF1 > 5 &&
                     $packageId >= 5)
                 {
-                    $percentBonus = config('carcoin.bi_lv_5_bonus');
+                    $percentBonus = config('carcoin.binary_level_5');
                 }
 
                 $leftOver = $binary->leftOpen + $binary->leftNew;
@@ -316,7 +241,8 @@ class Bonus
 
         /* =======END ===== */
         try {
-            $lstUser = UserData::where('status', '=', 1)->get();
+
+            $lstUser = UserData::where('packageId', '>', 0)->orderBy('userId','asc')->get();
             foreach($lstUser as $user){
                 //Get cron status
                 $cronStatus = CronLeadershipLogs::where('userId', $user->userId)->first();
@@ -334,59 +260,45 @@ class Bonus
 
                 $maxLevel = 0;
                 //in the initial period don't care about condition
-                if(config('app.condition')) {
-                    //get total sale this week
-                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+                //get total sale this week
+                $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
+                $personalSale = isset($totalTicket) ? $totalTicket->personal_quantity : 0;
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
-                        $user->packageId >= 1)
-                    {
-                        $maxLevel = 1;
-                    }
+                if($personalSale >= config('carcoin.condition')[1] &&
+                    $user->packageId >= 1)
+                {
+                    $maxLevel = 1;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
-                        $user->packageId >= 2)
-                    {
-                        $maxLevel = 2;
-                    }
+                if($personalSale >= config('carcoin.condition')[2] &&
+                    $user->packageId >= 2)
+                {
+                    $maxLevel = 2;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
-                        $user->packageId >= 3)
-                    {
-                        $maxLevel = 3;
-                    }
+                if($personalSale >= config('carcoin.condition')[3] &&
+                    $user->packageId >= 3)
+                {
+                    $maxLevel = 3;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
-                        $user->packageId >= 4)
-                    {
-                        $maxLevel = 4;
-                    }
+                if($personalSale >= config('carcoin.condition')[4] &&
+                    $user->packageId >= 4)
+                {
+                    $maxLevel = 4;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
-                        $user->packageId >= 5)
-                    {
-                        $maxLevel = 5;
-                    }
-                } else {
-                    switch($user->packageId) {
-                        case 1: $maxLevel = 1;
-                                break;
-                        case 2: $maxLevel = 2;
-                                break;
-                        case 3: $maxLevel = 3;
-                                break;
-                        case 4: $maxLevel = 4;
-                                break;
-                        case 5: $maxLevel = 5;
-                                break;
-                    }
+                if($personalSale >= config('carcoin.condition')[5] &&
+                    $user->packageId >= 5)
+                {
+                    $maxLevel = 5;
                 }
 
                 if($maxLevel > 0) {
                     //Inset to weekly log
                     $fields = [
-                        'user_id' => $rootId,
-                        //'week_year' => $firstWeekYear,
+                        'user_id' => $user->userId,
+                        'week_year' => $firstWeekYear,
                     ];
 
                     WeekTicketsHistory::create($fields);
@@ -396,9 +308,9 @@ class Bonus
 
                     if($bonus > 0) {
                         //each ticket price 0.0002 btc
-                        $bonus = $bonus * config('carcoin.price_per_ticket');
+                        $btcAmountBonus = $bonus * config('carcoin.price_per_ticket');
                         $userCoin = $user->userCoin;
-                        $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $bonus);
+                        $userCoin->btcCoinAmount = ($userCoin->btcCoinAmount + $btcAmountBonus);
                         $userCoin->save();
 
                         //insert to log
@@ -407,11 +319,15 @@ class Bonus
                             'type' => Wallet::REVENUE_BONUS,
                             'inOut' => Wallet::IN,
                             'userId' => $user->userId,
-                            'amount' => $bonus,
-                            'note'   => 'return revenue bonus',
+                            'amount' => $btcAmountBonus,
+                            'note'   => 'Retail / Unilevel Bonus',
                         ];
                         
                         Wallet::create($fieldUsd);
+
+                        WeekTicketsHistory::where('week_year', $firstWeekYear)
+                        ->where('user_id', $user->userId)
+                        ->update(['total' => $bonus]);
                     }
                 }
 
@@ -474,52 +390,37 @@ class Bonus
 
                 $maxLevel = 0;
                 //in the initial period don't care about condition
-                if(config('app.condition')) {
-                    //get total sale this week
-                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+                //get total sale this week
+                $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
-                        $user->packageId >= 1)
-                    {
-                        $maxLevel = 1;
-                    }
+                if($totalTicket->personal_quantity >= config('carcoin.condition')[1] &&
+                    $user->packageId >= 1)
+                {
+                    $maxLevel = 1;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
-                        $user->packageId >= 2)
-                    {
-                        $maxLevel = 2;
-                    }
+                if($totalTicket->personal_quantity >= config('carcoin.condition')[2] &&
+                    $user->packageId >= 2)
+                {
+                    $maxLevel = 2;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
-                        $user->packageId >= 3)
-                    {
-                        $maxLevel = 3;
-                    }
+                if($totalTicket->personal_quantity >= config('carcoin.condition')[3] &&
+                    $user->packageId >= 3)
+                {
+                    $maxLevel = 3;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
-                        $user->packageId >= 4)
-                    {
-                        $maxLevel = 4;
-                    }
+                if($totalTicket->personal_quantity >= config('carcoin.condition')[4] &&
+                    $user->packageId >= 4)
+                {
+                    $maxLevel = 4;
+                }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
-                        $user->packageId >= 5)
-                    {
-                        $maxLevel = 5;
-                    }
-                } else {
-                    switch($user->packageId) {
-                        case 1: $maxLevel = 1;
-                                break;
-                        case 2: $maxLevel = 2;
-                                break;
-                        case 3: $maxLevel = 3;
-                                break;
-                        case 4: $maxLevel = 4;
-                                break;
-                        case 5: $maxLevel = 5;
-                                break;
-                    }
+                if($totalTicket->personal_quantity >= config('carcoin.condition')[5] &&
+                    $user->packageId >= 5)
+                {
+                    $maxLevel = 5;
                 }
 
                 if($maxLevel > 0) {
@@ -571,145 +472,145 @@ class Bonus
     /**
     * This cronjob function will run every week ( return by BTC )
     */
-    public static function bonusNewAgencyCron()
-    {
-        set_time_limit(0);
-        /* Get previous weekYear */
-        /* =======BEGIN ===== */
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
+    // public static function bonusNewAgencyCron()
+    // {
+    //     set_time_limit(0);
+    //     /* Get previous weekYear */
+    //     /* =======BEGIN ===== */
+    //     $weeked = date('W');
+    //     $year = date('Y');
+    //     $weekYear = $year.$weeked;
 
-        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-        $firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
+    //     $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
+    //     $firstYear = $year;
+    //     $firstWeekYear = $firstYear.$firstWeek;
 
-        if($firstWeek == 0){
-            $firstWeek = 52;
-            $firstYear = $year - 1;
-            $firstWeekYear = $firstYear.$firstWeek;
-        }
+    //     if($firstWeek == 0){
+    //         $firstWeek = 52;
+    //         $firstYear = $year - 1;
+    //         $firstWeekYear = $firstYear.$firstWeek;
+    //     }
 
-        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+    //     if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
 
-        /* =======END ===== */
-        try {
-            $lstUser = UserData::where('status', '=', 1)->get();
-            foreach($lstUser as $user){
-                //Get cron status
-                $cronStatus = CronProfitLogs::where('userId', $user->userId)->first();
-                if(!is_null($cronStatus)) {
-                    if($cronStatus->status == 1) continue;
-                } else {
-                    //insert to log
-                    $field = [
-                        'userId' => $user->userId,
-                        'status' => 0,
-                    ];
+    //     /* =======END ===== */
+    //     try {
+    //         $lstUser = UserData::where('status', '=', 1)->get();
+    //         foreach($lstUser as $user){
+    //             //Get cron status
+    //             $cronStatus = CronProfitLogs::where('userId', $user->userId)->first();
+    //             if(!is_null($cronStatus)) {
+    //                 if($cronStatus->status == 1) continue;
+    //             } else {
+    //                 //insert to log
+    //                 $field = [
+    //                     'userId' => $user->userId,
+    //                     'status' => 0,
+    //                 ];
                     
-                    CronProfitLogs::create($field);
-                }
+    //                 CronProfitLogs::create($field);
+    //             }
 
-                $maxLevel = 0;
-                //in the initial period don't care about condition
-                if(config('app.condition')) {
-                    //get total sale this week
-                    $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+    //             $maxLevel = 0;
+    //             //in the initial period don't care about condition
+    //             if(config('app.condition')) {
+    //                 //get total sale this week
+    //                 $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[1] &&
-                        $user->packageId >= 1)
-                    {
-                        $maxLevel = 1;
-                    }
+    //                 if($totalTicket->quantity >= config('carcoin.condition')[1] &&
+    //                     $user->packageId >= 1)
+    //                 {
+    //                     $maxLevel = 1;
+    //                 }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[2] &&
-                        $user->packageId >= 2)
-                    {
-                        $maxLevel = 2;
-                    }
+    //                 if($totalTicket->quantity >= config('carcoin.condition')[2] &&
+    //                     $user->packageId >= 2)
+    //                 {
+    //                     $maxLevel = 2;
+    //                 }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[3] &&
-                        $user->packageId >= 3)
-                    {
-                        $maxLevel = 3;
-                    }
+    //                 if($totalTicket->quantity >= config('carcoin.condition')[3] &&
+    //                     $user->packageId >= 3)
+    //                 {
+    //                     $maxLevel = 3;
+    //                 }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[4] &&
-                        $user->packageId >= 4)
-                    {
-                        $maxLevel = 4;
-                    }
+    //                 if($totalTicket->quantity >= config('carcoin.condition')[4] &&
+    //                     $user->packageId >= 4)
+    //                 {
+    //                     $maxLevel = 4;
+    //                 }
 
-                    if($totalTicket->quantity >= config('carcoin.condition')[5] &&
-                        $user->packageId >= 5)
-                    {
-                        $maxLevel = 5;
-                    }
-                } else {
-                    switch($user->packageId) {
-                        case 1: $maxLevel = 1;
-                                break;
-                        case 2: $maxLevel = 2;
-                                break;
-                        case 3: $maxLevel = 3;
-                                break;
-                        case 4: $maxLevel = 4;
-                                break;
-                        case 5: $maxLevel = 5;
-                                break;
-                    }
-                }
+    //                 if($totalTicket->quantity >= config('carcoin.condition')[5] &&
+    //                     $user->packageId >= 5)
+    //                 {
+    //                     $maxLevel = 5;
+    //                 }
+    //             } else {
+    //                 switch($user->packageId) {
+    //                     case 1: $maxLevel = 1;
+    //                             break;
+    //                     case 2: $maxLevel = 2;
+    //                             break;
+    //                     case 3: $maxLevel = 3;
+    //                             break;
+    //                     case 4: $maxLevel = 4;
+    //                             break;
+    //                     case 5: $maxLevel = 5;
+    //                             break;
+    //                 }
+    //             }
 
-                if($maxLevel > 0) {
-                    $exit = WeekAgencyHistory::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
+    //             if($maxLevel > 0) {
+    //                 $exit = WeekAgencyHistory::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
 
-                    if(!isset($exit)) {
-                        $fields = [
-                            'user_id' => $user->userId,
-                            'week_year' => $firstWeekYear,
-                        ];
+    //                 if(!isset($exit)) {
+    //                     $fields = [
+    //                         'user_id' => $user->userId,
+    //                         'week_year' => $firstWeekYear,
+    //                     ];
 
-                        WeekAgencyHistory::create($fields);
-                    }
+    //                     WeekAgencyHistory::create($fields);
+    //                 }
 
-                    $bonus = 0;
-                    self::calculateBonusOnNewAgency(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus, $user->userId);
+    //                 $bonus = 0;
+    //                 self::calculateBonusOnNewAgency(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus, $user->userId);
 
-                    if($bonus > 0) {
-                        $bonusCar = $bonus / HighestPrice::getCarHighestPrice();
-                        $userCoin = $user->userCoin;
-                        $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $bonusCar);
-                        $userCoin->save();
+    //                 if($bonus > 0) {
+    //                     $bonusCar = $bonus / HighestPrice::getCarHighestPrice();
+    //                     $userCoin = $user->userCoin;
+    //                     $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $bonusCar);
+    //                     $userCoin->save();
 
-                        //insert to log
-                        $fieldUsd = [
-                            'walletType' => Wallet::CLP_WALLET,
-                            'type' => Wallet::AGENCY_BONUS,
-                            'inOut' => Wallet::IN,
-                            'userId' => $user->userId,
-                            'amount' => $bonusCar,
-                            'amount_usd' => $bonus,
-                            'note'   => 'agency bonus',
-                        ];
+    //                     //insert to log
+    //                     $fieldUsd = [
+    //                         'walletType' => Wallet::CLP_WALLET,
+    //                         'type' => Wallet::AGENCY_BONUS,
+    //                         'inOut' => Wallet::IN,
+    //                         'userId' => $user->userId,
+    //                         'amount' => $bonusCar,
+    //                         'amount_usd' => $bonus,
+    //                         'note'   => 'agency bonus',
+    //                     ];
                         
-                        Wallet::create($fieldUsd);
-                    }
-                }
+    //                     Wallet::create($fieldUsd);
+    //                 }
+    //             }
 
-                //Update cron status from 0 => 1
-                if(!is_null($cronStatus)) {
-                    $cronStatus->status = 1;
-                    $cronStatus->save();
-                }
-            }
+    //             //Update cron status from 0 => 1
+    //             if(!is_null($cronStatus)) {
+    //                 $cronStatus->status = 1;
+    //                 $cronStatus->save();
+    //             }
+    //         }
 
-            //Update status from 1 => 0 after run all user
-            DB::table('cron_profit_day_logs')->update(['status' => 0]);
-        } catch(\Exception $e) {
-            Log::error('Running Profit Bonus has error: ' . date('Y-m-d') .$e->getMessage());
-            Log::info($e->getTraceAsString());
-        }
-    }
+    //         //Update status from 1 => 0 after run all user
+    //         DB::table('cron_profit_day_logs')->update(['status' => 0]);
+    //     } catch(\Exception $e) {
+    //         Log::error('Running Profit Bonus has error: ' . date('Y-m-d') .$e->getMessage());
+    //         Log::info($e->getTraceAsString());
+    //     }
+    // }
 
     /* 
     *  Calculate bonus base on  revenue of agency
@@ -719,7 +620,7 @@ class Bonus
     public static function calculateRevenueByLevel($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
     {
         if($level == 1) {
-            $listF1NotAgency = DB::table('users_data')->whereIn('refererId', $userId)
+            $listF1NotAgency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '=', 0)
                             ->pluck('userId')
                             ->toArray();
@@ -727,14 +628,14 @@ class Bonus
             //calculate revenue
             $revenue = DB::table('tickets')->whereIn('user_id', $listF1NotAgency)
                     ->where('week_year','=', $weekYear)
-                    ->sum('quantity');
-            $bonus += $revenue * self::TICKET_DR_CUS;
+                    ->sum('personal_quantity');
+            $bonus += $revenue * config('carcoin.ticket_dr_cus');
 
             WeekTicketsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
-                        ->update(['direct_cs' => $revenue * self::TICKET_DR_CUS]);
+                        ->update(['direct_cus' => $revenue * config('carcoin.ticket_dr_cus')]);
 
-            $listF1Agency = DB::table('users_data')->whereIn('refererId', $userId)
+            $listF1Agency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
                             ->pluck('userId')
                             ->toArray();
@@ -743,28 +644,27 @@ class Bonus
             $revenue = DB::table('tickets')->whereIn('user_id', $listF1Agency)
                     ->where('week_year','=', $weekYear)
                     ->sum('quantity');
-            $bonus += $revenue * self::TICKET_LEVEL_1;
+            $bonus += $revenue * config('carcoin.ticket_level_1');
 
             WeekTicketsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
-                        ->update(['level_' . $level => $revenue *  self::TICKET_LEVEL_1]);
+                        ->update(['level_' . $level => $revenue *  config('carcoin.ticket_level_1')]);
 
             $listF1 = $listF1Agency;
         } else {
             //get all F1
-            $listF1 = DB::table('users_data')->whereIn('refererId', $userId)
+            $listF1 = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
                             ->pluck('userId')
                             ->toArray();
 
             //calculate revenue
             $revenue = DB::table('tickets')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('quantity');
-
             $commission = 0;
-            if($level == 2) $commission = self::TICKET_LEVEL_2;
-            if($level == 3) $commission = self::TICKET_LEVEL_3;
-            if($level == 4) $commission = self::TICKET_LEVEL_4;
-            if($level == 5) $commission = self::TICKET_LEVEL_5;
+            if($level == 2) $commission = config('carcoin.ticket_level_2');
+            if($level == 3) $commission = config('carcoin.ticket_level_3');
+            if($level == 4) $commission = config('carcoin.ticket_level_4');
+            if($level == 5) $commission = config('carcoin.ticket_level_5');
 
             $bonus += $revenue * $commission;
         
@@ -773,7 +673,7 @@ class Bonus
                         ->update(['level_' . $level => $revenue * $commission]);
         }
 
-        if($level <= $maxLevel)
+        if($level < $maxLevel)
             self::calculateRevenueByLevel($listF1, $weekYear, $level + 1, $maxLevel, $bonus, $rootId);
     }
 
@@ -787,7 +687,7 @@ class Bonus
         
 
         if($level == 1) {
-            $listF1NotAgency = DB::table('users_data')->whereIn('refererId', $userId)
+            $listF1NotAgency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '=', 0)
                             ->pluck('userId')
                             ->toArray();
@@ -796,13 +696,13 @@ class Bonus
             $value = DB::table('awards')->whereIn('user_id', $listF1NotAgency)
                     ->where('week_year','=', $weekYear)
                     ->sum('value');
-            $bonus += $value * self::AWARD_DR_CUS;
+            $bonus += $value * config('carcoin.award_dr_cus');
 
             WeekAwardsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
-                        ->update(['direct_cs' => $value * self::AWARD_DR_CUS]);
+                        ->update(['direct_cus' => $value * config('carcoin.award_dr_cus')]);
 
-            $listF1Agency = DB::table('users_data')->whereIn('refererId', $userId)
+            $listF1Agency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
                             ->pluck('userId')
                             ->toArray();
@@ -811,27 +711,27 @@ class Bonus
             $value = DB::table('awards')->whereIn('user_id', $listF1Agency)
                     ->where('week_year','=', $weekYear)
                     ->sum('value');
-            $bonus += $value * self::AWARD_AGENCY;
+            $bonus += $value * config('carcoin.award_agency');
 
             WeekAwardsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
-                        ->update(['level_' . $level => $value * self::AWARD_AGENCY]);
+                        ->update(['level_' . $level => $value * config('carcoin.award_agency')]);
 
             $listF1 = $listF1Agency;
         } else {
             //get all F1
-            $listF1 = DB::table('users_data')->whereIn('refererId', $userId)
+            $listF1 = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
                             ->pluck('userId')
                             ->toArray();
             //calculate revenue
             $value = DB::table('awards')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('value');
 
-            $bonus += $value * self::AWARD_AGENCY;
+            $bonus += $value * config('carcoin.award_agency');
         
             WeekAwardsHistory::where('week_year', $weekYear)
                         ->where('user_id', $rootId)
-                        ->update(['level_' . $level => $value * self::AWARD_AGENCY]);
+                        ->update(['level_' . $level => $value * config('carcoin.award_agency')]);
         }
 
         if($level <= $maxLevel)
@@ -843,27 +743,27 @@ class Bonus
     *  @userId array
     *  @maxLevel max level of agency can receive bonus
     */
-    public static function calculateBonusOnNewAgency($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
-    {
-        //get all F1
-        $listF1 = DB::table('users')->whereIn('refererId', $userId)->pluck('id')->toArray();
-        //calculate revenue
-        $totalPackage = DB::table('user_packages')->whereIn('userId', $listF1)->where('weekYear','=', $weekYear)->sum('amount_increase');
+    // public static function calculateBonusOnNewAgency($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
+    // {
+    //     //get all F1
+    //     $listF1 = DB::table('users')->whereIn('refererId', $userId)->pluck('id')->toArray();
+    //     //calculate revenue
+    //     $totalPackage = DB::table('user_packages')->whereIn('userId', $listF1)->where('weekYear','=', $weekYear)->sum('amount_increase');
 
-        $commission = 0;
-        if($level == 1) $commission = self::AGENCY_LEVEL_1;
-        if($level == 2) $commission = self::AGENCY_LEVEL_2;
-        if($level == 3) $commission = self::AGENCY_LEVEL_3;
-        if($level == 4) $commission = self::AGENCY_LEVEL_4;
-        if($level == 5) $commission = self::AGENCY_LEVEL_5;
+    //     $commission = 0;
+    //     if($level == 1) $commission = self::AGENCY_LEVEL_1;
+    //     if($level == 2) $commission = self::AGENCY_LEVEL_2;
+    //     if($level == 3) $commission = self::AGENCY_LEVEL_3;
+    //     if($level == 4) $commission = self::AGENCY_LEVEL_4;
+    //     if($level == 5) $commission = self::AGENCY_LEVEL_5;
 
-        $bonus += $totalPackage * $commission;
+    //     $bonus += $totalPackage * $commission;
 
-        WeekAgencyHistory::where('week_year', $weekYear)
-                        ->where('user_id', $rootId)
-                        ->update(['level_' . $level => $totalPackage * $commission]);
+    //     WeekAgencyHistory::where('week_year', $weekYear)
+    //                     ->where('user_id', $rootId)
+    //                     ->update(['level_' . $level => $totalPackage * $commission]);
 
-        if($level < $maxLevel)
-            self::calculateBonusOnNewAgency($listF1, $weekYear, $level + 1, $maxLevel, $bonus, $rootId);
-    }
+    //     if($level < $maxLevel)
+    //         self::calculateBonusOnNewAgency($listF1, $weekYear, $level + 1, $maxLevel, $bonus, $rootId);
+    // }
 }

@@ -1,64 +1,44 @@
 <?php
 
 return [
-	'clp_bonus_pay' => 0.6,
-	'reinvest_bonus_pay' => 0.4,
-	'bonus_maxout' => 30000, //Binary bonus cannot over $35000
+	'bonus_maxout' => 30000, //Binary bonus cannot over $30000
 
 	'price_per_ticket' => 0.0002,
 
-	//Interest range
-	'min_interest' => 0.66,
-	'max_interest' => 0.8,
-
-	//Bonus when member have new F1
-	'bonus_range_1_pay' => 0.07,
-	'bonus_range_2_pay' => 0.08,
-	'bonus_range_3_pay' => 0.09,
-	'bonus_range_4_pay' => 0.1,
+	//agency commission
+	'agency_level_1' => 0.05,
+	'agency_level_2' => 0.04,
+	'agency_level_3' => 0.03,
+	'agency_level_4' => 0.02,
+	'agency_level_5' => 0.01,
 	
-	//Binary level
-	'bi_sale_cond_lv_1' => 1000,
-	'bi_sale_cond_lv_2' => 10000,
-	'bi_sale_cond_lv_3' => 100000,
-	'bi_sale_cond_lv_4' => 200000,
+	//agency commission for each binary level
+	'binary_level_1' => 0.06,
+	'binary_level_2' => 0.07,
+	'binary_level_3' => 0.08,
+	'binary_level_4' => 0.09,
+	'binary_level_5' => 0.1,
+
+	//ticket commission
+	'ticket_dr_cus' => 0.05,
+	'ticket_level_1' => 0.05,
+	'ticket_level_2' => 0.02,
+	'ticket_level_3' => 0.01,
+	'ticket_level_4' => 0.01,
+	'ticket_level_5' => 0.01,
 	
-	//Bonus for each binary level
-	'bi_lv_1_bonus' => 0.06,
-	'bi_lv_2_bonus' => 0.07,
-	'bi_lv_3_bonus' => 0.08,
-	'bi_lv_4_bonus' => 0.09,
-	'bi_lv_5_bonus' => 0.1,
+	//award commision
+	'award_dr_cus' => 0.025,
+	'award_agency' => 0.005,
 
-	//Binary interest level
-	'bi_inter_cond_lv_1' => 500,
-	'bi_inter_cond_lv_2' => 3000,
-	'bi_inter_cond_lv_3' => 30000,
-	'bi_inter_cond_lv_4' => 50000,
+	'condition' => array(
+    	1 => '35',
+    	2 => '70',
+    	3 => '140',
+    	4 => '280',
+    	5 => '560',
+    ),
 
-	//Bonus for each binary interest level
-	'bi_lv_1_inter_bonus' => 0.08,
-	'bi_lv_2_inter_bonus' => 0.1,
-	'bi_lv_3_inter_bonus' => 0.12,
-	'bi_lv_4_inter_bonus' => 0.14,
-
-
-	'binary_matching_bonus' => 0.05,
-
-	//Leadership bonus
-	'sapphire_leadership_bonus' => 0.02,
-	'emerald_leadership_bonus' => 0.015,
-	'diamond_leadership_bonus' => 0.01,
-	'bluediamond_leadership_bonus' => 0.0075,
-	'blackdiamond_leadership_bonus' => 0.005,
-	
-	//Leadership level
-	'loyalty_upgrate_silver' => 20000,
-	'loyalty_upgrate_gold' => 50000,
-	'loyalty_upgrate_pear' => 100000,
-	'loyalty_upgrate_emerald' => 200000,
-	'loyalty_upgrate_diamond' => 500000,
-	
     'wallet_type' => array(
         1 => 'adminlte_lang::wallet.fast_start_type',
         2 => 'adminlte_lang::wallet.interest',
@@ -79,13 +59,4 @@ return [
         19 => 'adminlte_lang::wallet.global_bonus',
     ),
 
-    'listLoyalty' => array(1 => "Sapphire", 2 => "Emerald", 3 => "Diamond", 4 => "Blue Diamond", 5 => "Black Diamond"),
-
-    'condition' => array(
-    	1 => '35',
-    	2 => '70',
-    	3 => '140',
-    	4 => '280',
-    	5 => '560',
-    ),
 ];

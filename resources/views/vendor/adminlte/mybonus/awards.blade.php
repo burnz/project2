@@ -21,7 +21,7 @@
 	                    <i class="material-icons">card_giftcard</i>
 	                </div>
 	                <div class="card-content">
-	                	<h4 class="card-title">Awards Bonus History</h4>
+	                	<h4 class="card-title">Winning / Unilevel Winning Bonus History</h4>
 	                		<div class="row">
 	                				<div class="table-responsive">
 	                			<div class="col-sm-12">
@@ -42,7 +42,7 @@
 	                						@foreach ($binarys as $binary)
 											<tr>
 												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
-												<td><a href="{{ URL::to('week/awards/level/0') }}">{{ number_format($binary->direct_cs, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/awards/level/0') }}">{{ number_format($binary->direct_cus, 2) }}</a></td>
 												<td><a href="{{ URL::to('week/awards/level/1') }}">{{ number_format($binary->level_1, 2) }}</a></td>
 												<td><a href="{{ URL::to('week/awards/level/2') }}">{{ number_format($binary->level_2, 2) }}</a></td>
 												<td><a href="{{ URL::to('week/awards/level/3') }}">{{ number_format($binary->level_3, 2) }}</a></td>

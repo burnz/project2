@@ -111,8 +111,8 @@ Route::group( ['middleware' => ['auth']], function() {
 
     Route::get('mybonus/tickets', 'MyBonusController@tickets');
     Route::get('mybonus/infinity', 'MyBonusController@binary');
-    Route::get('mybonus/awards', 'MyBonusController@awards');
-    Route::get('mybonus/agency', 'MyBonusController@agency');
+    Route::get('mybonus/winning', 'MyBonusController@awards');
+    Route::get('mybonus/fast-start', 'MyBonusController@faststart');
     Route::get('week/tickets/level/{level}', 'MyBonusController@detailTicket');
     Route::get('week/awards/level/{level}', 'MyBonusController@detailAward');
     Route::get('week/agency/level/{level}', 'MyBonusController@detailAgency');

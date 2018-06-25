@@ -209,7 +209,7 @@
 */
 .lb-tt-tt{
     line-height: 0;
-    width: 20px;
+    width: 12px;
 }
 .left-posi{
     left: -186%;
@@ -242,7 +242,7 @@
 .tt-saleLeft{
     width: 50%;
     float: left;
-    padding-left: 5px;
+    padding-left: 1px;
 }
 .tt-saleRight{
     width: 50%;

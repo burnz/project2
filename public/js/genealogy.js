@@ -25,7 +25,7 @@ $(function () {
                                     packageId: '<b class="psi  psi1">'+ user.packageId +'</b>',
                                     totalMembers: user.totalMembers,
                                     leg: user.leg,
-                                    rankId: getRank(user.rankId),
+                                    ticket: user.ticket,
 								},
 								id: user.id,
 								children: user.dmc?true:false,
@@ -44,7 +44,7 @@ $(function () {
                                 totalAmount: '$'+user.totalAmount,
                                 totalMembers: user.totalMembers,
                                 leg: user.leg,
-                                rankId: getRank(user.rankId),
+                                ticket: user.ticket,
 							},
 							id: user.id,
 							children: user.dmc?true:false,
@@ -61,9 +61,9 @@ $(function () {
 			columns: [
 				{width: '50%', header: "ID/Username"},
 				{width: '5%', value: "totalMembers", header: "Total member"},
-				{width: '5%', value: "totalAmount", header: "Package"},
+				{width: '5%', value: "packageId", header: "Package"},
 				{width: '5%', value: "leg", header: "Left/Right"},
-				{width: '5%', value: "rankId", header: "Ticket sale"}
+				{width: '5%', value: "ticket", header: "Ticket sale"}
 			],
 			width: "100%",
 			fixedHeader: false,
