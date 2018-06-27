@@ -12,6 +12,6 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'getnotification','logout', 'clpnotification'
+        'getnotification','logout', 'clpnotification', 'api/update-ticket', 'api/update-award', 'api/create-user'
     ];
 }

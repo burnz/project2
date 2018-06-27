@@ -160,6 +160,11 @@ Route::group( ['middleware' => ['auth']], function() {
 
 
 });
+
+Route::post('api/update-ticket','JackpotController@updateTicket');
+Route::post('api/update-award','JackpotController@updateAward');
+Route::post('api/create-user','JackpotController@createUser');
+
 Route::get('getnotification','GetNotificationController@getNotification');
 Route::post('getnotification','GetNotificationController@getNotification');
 Route::post('clpnotification','GetNotificationController@clpNotification');
