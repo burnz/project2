@@ -262,7 +262,7 @@ class Bonus
                 //in the initial period don't care about condition
                 //get total sale this week
                 $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
-                $personalSale = isset($totalTicket) ? $totalTicket->personal_quantity : 0;
+                $personalSale = isset($totalTicket) ? $totalTicket->quantity : 0;
 
                 if($personalSale >= config('carcoin.condition')[1] &&
                     $user->packageId >= 1)
@@ -391,33 +391,33 @@ class Bonus
                 $maxLevel = 0;
                 //in the initial period don't care about condition
                 //get total sale this week
-                $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->get();
+                $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
 
-                if($totalTicket->personal_quantity >= config('carcoin.condition')[1] &&
+                if($totalTicket->quantity >= config('carcoin.condition')[1] &&
                     $user->packageId >= 1)
                 {
                     $maxLevel = 1;
                 }
 
-                if($totalTicket->personal_quantity >= config('carcoin.condition')[2] &&
+                if($totalTicket->quantity >= config('carcoin.condition')[2] &&
                     $user->packageId >= 2)
                 {
                     $maxLevel = 2;
                 }
 
-                if($totalTicket->personal_quantity >= config('carcoin.condition')[3] &&
+                if($totalTicket->quantity >= config('carcoin.condition')[3] &&
                     $user->packageId >= 3)
                 {
                     $maxLevel = 3;
                 }
 
-                if($totalTicket->personal_quantity >= config('carcoin.condition')[4] &&
+                if($totalTicket->quantity >= config('carcoin.condition')[4] &&
                     $user->packageId >= 4)
                 {
                     $maxLevel = 4;
                 }
 
-                if($totalTicket->personal_quantity >= config('carcoin.condition')[5] &&
+                if($totalTicket->quantity >= config('carcoin.condition')[5] &&
                     $user->packageId >= 5)
                 {
                     $maxLevel = 5;
@@ -688,8 +688,6 @@ class Bonus
     */
     public static function calculateAwardReturn($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
     {
-        
-
         if($level == 1) {
             $listF1NotAgency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '=', 0)

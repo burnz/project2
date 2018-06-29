@@ -375,7 +375,7 @@ class MemberController extends Controller
                                 );
 
                     //Calculate loyalty
-                    User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
+                    //User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     User::updateUserBinary($userData->userId);
                     return redirect('members/binary')
                         ->with('flash_message', trans('adminlte_lang::member.msg_push_tree_success'));

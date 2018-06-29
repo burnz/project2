@@ -183,10 +183,9 @@ class PackageController extends Controller
                 return true;
             });
 
-            $errors=['packageId.package_check'=>'Wallet amount is not enough to buy package', 'packageId.down_check'=>'The package downgrade is not allowed', 'packageId.withdraw_check'=>'You cannot become agency again after cancellation','refundType.fund_check'=>'Please select refund type'];
+            $errors=['packageId.package_check'=>'Wallet amount is not enough to buy package', 'packageId.down_check'=>'The package downgrade is not allowed', 'packageId.withdraw_check'=>'You cannot become agency again after cancellation'];
             $this->validate($request, [
                 'packageId' => 'required|not_in:0|packageCheck|downCheck|withdrawCheck',
-                'refundType'=>'required|fundCheck:'.$request->refundType
             ],$errors);
 
             //add data to user data
@@ -231,7 +230,6 @@ class PackageController extends Controller
                 'userId' => $currentuserid,
                 'packageId' => $request->packageId,
                 'amount_increase' => $amount_increase,
-                'refund_type'=>$request->refundType,
                 'amount_carcoin'=>round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
                 'buy_date' => date('Y-m-d H:i:s'),
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 90 days")),
@@ -280,8 +278,8 @@ class PackageController extends Controller
             User::investBonus($user->id, $user->refererId, $request->packageId, $amount_increase, 1);
             
             // Case: User already in tree and then upgrade package => re-caculate loyalty
-            // if($userData->binaryUserId && $userData->packageId > 0)
-            //     User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);
+            /*if($userData->binaryUserId && $userData->packageId > 0)
+                User::bonusLoyaltyUser($userData->userId, $userData->refererId, $userData->leftRight);*/
 
             // Case: User already in tree and then upgrade package => re-caculate binary bonus
             if($userData->binaryUserId > 0 && in_array($userData->leftRight, ['left', 'right'])) {
@@ -432,18 +430,38 @@ class PackageController extends Controller
                 }
 
                 $amountCLP = $package->refund_type == 1 ? round($package->amount_increase / ExchangeRate::getCLPUSDRate(), 2):$package->amount_carcoin;
-                $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
-                $update = UserCoin::where("userId",Auth::user()->id)
-                        ->update(["clpCoinAmount" => $money]);
-                $fields = [
-                    'walletType' => Wallet::CLP_WALLET,//usd
-                    'type' => Wallet::WITHDRAW_PACK_TYPE,
-                    'inOut' => Wallet::IN,
-                    'userId' => Auth::user()->id,
-                    'amount' => $amountCLP,
-                    'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
-                ];
-                Wallet::create($fields);
+
+                if($package->refund_type == 1)
+                {
+                    $money = Auth()->user()->userCoin->usdAmount + $package->amount_increase;
+                    $update = UserCoin::where("userId",Auth::user()->id)
+                            ->update(["usdAmount" => $money]);
+                    $fields = [
+                        'walletType' => Wallet::USD_WALLET,//usd
+                        'type' => Wallet::WITHDRAW_PACK_TYPE,
+                        'inOut' => Wallet::IN,
+                        'userId' => Auth::user()->id,
+                        'amount' => $package->amount_increase,
+                        'note'   => 'Withdraw $'.$package->amount_increase.' from package '.$package->packageId
+                    ];
+                    Wallet::create($fields);
+                } 
+                else 
+                {
+                    $amountCLP = $package->amount_carcoin;
+                    $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
+                    $update = UserCoin::where("userId",Auth::user()->id)
+                            ->update(["clpCoinAmount" => $money]);
+                    $fields = [
+                        'walletType' => Wallet::CLP_WALLET,//clp
+                        'type' => Wallet::WITHDRAW_PACK_TYPE,
+                        'inOut' => Wallet::IN,
+                        'userId' => Auth::user()->id,
+                        'amount' => $amountCLP,
+                        'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
+                    ];
+                    Wallet::create($fields);
+                }
 
                 $package->withdraw = 1;
                 $package->save();

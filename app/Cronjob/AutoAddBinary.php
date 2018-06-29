@@ -173,7 +173,7 @@ class AutoAddBinary {
                             );
 
                 //Calculate loyalty
-                User::bonusLoyaltyUser($userData->userId, $userData->refererId, $legPos);
+                //User::bonusLoyaltyUser($userData->userId, $userData->refererId, $legPos);
                 User::updateUserBinary($userData->userId);
             }
         }

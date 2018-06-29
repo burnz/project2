@@ -168,37 +168,33 @@
                         <div class="col-md-12 my-4">
                             <!-- Modal -->
                             <div class="modal fade" id="modBuyPackage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                              <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                   <div class="modal-header" style="padding-top: 10px;">
-                                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
                                     <h4 class="modal-title" id="myModalLabel">Pick the best package for you
                                         <b id="carcoin-info" class="carcoin-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-pri.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountCLP'], 5) }}</b>
                                     </h4>
                                   </div>
                                   <div class="modal-body">
-                                        <!-- <div class="card-header">
-                                            <h3 class="card-title text-center">Pick the best package for you</h3>
-                                        </div> -->
                                         <div class="card-content clearfix mt-5" style="padding-top: 0px; padding-bottom: 0px">
                                             @if(count($dataPack)>0)
                                                 @foreach($dataPack as $pkey=>$pval)
                                                     <div class="row">
                                                         <div class="col-md-12 ibox">
                                                             <div class="row ibox-package">
-                                                                <div style="margin-top: 0px !important; margin-bottom: 0px !important;" class="card card-pricing mt-5  <?=$pkey==0?'card-raised':''?>">
+                                                                <div  class="card card-pricing mt-5  <?=$pkey==0?'card-raised':''?>">
                                                                     <div class="card-content p-0">
-                                                                        <div class="col-md-2 text-center align-self-center">
+                                                                        <div class="col-md-4 text-center align-self-center">
                                                                             <div class="icon mb-0 <?=$pkey==0?'active':''?>">
                                                                                 <h3 style="text-transform: uppercase;margin-top: 7px">{{$pval->name}}</h3>
-                                                                                <div class="radio" big="md">
+                                                                                <div class="radio" big="md" style="margin-top: -6px;">
                                                                                     <label>
                                                                                         <input data-min="{{$pval->min_price}}" data-max="{{$pval->max_price}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':''?> value="{{$pval->pack_id}}">
                                                                                     </label>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-3 text-center align-self-center">
+                                                                        <div class="col-md-4 text-center align-self-center">
                                                                             <div class="form-group mt-3">
                                                                                 <div class="card-description">
                                                                                     <label class="mb-4 font-weight-normal">Lending Amount (car)</label>
@@ -210,7 +206,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-3 text-center align-self-center">
+                                                                        <div class="col-md-4 text-center align-self-center">
                                                                             <div class="form-group mt-3">
                                                                                 <div class="card-description">
                                                                                     <label class="mb-4 font-weight-normal">Lending Amount ($)</label>
@@ -218,25 +214,6 @@
                                                                                         <b>${{number_format($pval->min_price)}}</b>
                                                                                     </span>
                                         
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="card-action col-md-4 mb-0 p-0">
-                                                                            <div class="col-md-6 text-center align-self-center">
-                                                                                <div class="form-group mt-3">
-                                                                                    <label class="mb-0 font-weight-normal">Refund Type</label>
-                                                                                    <div class="form-group my-4 refund input-group">
-                                                                                        <span class="input-group-addon pr-0">
-                                                                                            <i class="material-icons">refresh</i>
-                                                                                        </span>
-                                                                                        <div class="form-group label-floating mt-0">
-                                                                                            <select class="selectpicker refund-type" name="refundType" id="refund_type" data-style="select-with-transition" title="Refund Type" data-size="2">
-                                                                                                <option value="1">REFUND BY USD</option>
-                                                                                                <option value="2">REFUND BY CAR</option>
-                                                                                            </select>
-                                                                                            <p class="help-block errorRefund"></p>
-                                                                                        </div>
-                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -252,8 +229,6 @@
                                                 There are no package available
                                             </div>
                                             @endif
-
-
                                             <div class="col-md-6 text-left">
                                                 <div class="checkbox">
                                                     <label>
@@ -270,7 +245,6 @@
                                             </div>
                                         </div>
                                   </div>
-                                  
                                 </div>
                               </div>
                             </div>
@@ -285,7 +259,6 @@
                                     <thead class="text-thirdary">
                                         <th>Date</th>
                                         <th>Package</th>
-                                        <th>Refund Type</th>
                                         <th>Holding Amount</th>
                                         <th>Carcoin Amount</th>
                                         <th>Status</th>
@@ -297,7 +270,6 @@
                                                 <tr>
                                                     <td>{{date_format(date_create($upVal->buy_date),'m-d-Y H:i:s')}}</td>
                                                     <td>{{$upVal->name}}</td>
-                                                    <td>{{$upVal->refund_type==1?'By USD':'By Carcoin'}}</td>
                                                     <td>${{number_format($upVal->amount_increase,0)}}</td>
                                                     <td>{{number_format($upVal->amount_carcoin,0)}} CAR</td>
                                                     <td>
@@ -375,13 +347,6 @@
             $('#btnBuyPackage').click(function(){
                 var pricing=jQuery('.card-raised');
                 let packageId=pricing.children().find('input[type="radio"]').val();
-                let refund=pricing.children().find('.selectpicker.refund-type').val();
-                if(refund=='')
-                {
-                    pricing.children().find('.errorRefund').text('Choose refund type');
-                    pricing.children().find('.refund').children('.label-floating').addClass('has-error');
-                    return false;
-                }
 
                 if(!$('#term').is(':checked'))
                 {
@@ -390,7 +355,6 @@
                 }
                 $('.termAgree').css('display','none');
 
-                //alert(packageId+' - '+minAmount+' - '+maxAmount+' - '+amount);
                 $('#modBuyPackage').modal('hide');
                 swal({
                   title: 'Are you sure?',
@@ -407,7 +371,6 @@
                   reverseButtons: true
                 }).then(function(result){
                     $('#packageId').val(packageId);
-                    $('#refundType').val(refund);
                     $('#bPackageF').submit();
                 })
 

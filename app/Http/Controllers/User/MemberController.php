@@ -546,7 +546,7 @@ class MemberController extends Controller
                     );
 
                     //Calculate loyalty
-                    User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
+                    //User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     User::updateUserBinary($userData->userId);
                     //$this->rankProcess();
                     return redirect('members/binary')
