@@ -38,7 +38,7 @@
 
                         <td>{!! $new->short_desc !!}</td>
                         <td>
-                            <a href="/news/{{ $new->id }}/edit" class="btn btn-default glyphicon glyphicon-edit">Edit</a>
+                            <a href="/admin/news/{{ $new->id }}/edit" class="btn btn-default glyphicon glyphicon-edit">Edit</a>
                             {{ Form::open(['method' => 'DELETE', 'route' => ['news.destroy', $new->id] ]) }}
                                 {{ Form::hidden('id', $new->id) }}
                                 {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
