@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.backend')
 
 @section('contentheader_title')
-	Agency Commission
+	{{ trans('adminlte_lang::mybonus.binary') }}
 @endsection
 
 
@@ -21,29 +21,35 @@
 	                    <i class="material-icons">card_giftcard</i>
 	                </div>
 	                <div class="card-content">
-	                	<h4 class="card-title">Fast Start Bonus History</h4>
+	                	<h4 class="card-title">Agency Bonus History - Detail Level</h4>
 	                		<div class="row">
 	                				<div class="table-responsive">
 	                			<div class="col-sm-12">
 	                				<table class="table no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
 	                					<thead class="text-thirdary">
 	                						<tr>
-	                							<th>{{ trans('adminlte_lang::mybonus.date_time') }}</th>
+	                							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
+	                							<th>ID</th>
+												<th>Username</th>
 												<th>Level</th>
-												<th>Agency</th>
-					                            <th>{{ trans('adminlte_lang::mybonus.package') }}</th>
-												<th>{{ trans('adminlte_lang::mybonus.amount') }}</th>
+												<th>Package</th>
+												<th>Amount Holding</th>
+												<th>%</th>
+												<th>Commission</th>
 	                						</tr>
 	                					</thead>
 	                					<tbody>
-	                						@foreach ($fastStarts as $key => $fastStart)
-												<tr>
-													<td>{{ $fastStart->created_at }}</td>
-													<td>{{ $fastStart->generation }}</td>
-													<td>{{ $fastStart->users->name }}</td>
-													<td>{{ $fastStart->package->name }}</td>
-													<td>{{ number_format($fastStart->amount, 2) }}</td>
-												</tr>							
+	                						@foreach ($binarys as $binary)
+											<tr>
+												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
+												<td>{{$binary->user->uid}}</td>
+												<td>{{$binary->user->name}}</td>
+												<td>{{$level}}</td>
+												<td>{{$binary->packageId}}</td>
+												<td>{{$binary->amount_increase}}</td>
+												<td>{{ $percent }}</td>
+												<td>{{ $binary->amount_increase * $percent / 100 }}</td>
+											</tr>
 											@endforeach
 	                					</tbody>
 	                				</table>

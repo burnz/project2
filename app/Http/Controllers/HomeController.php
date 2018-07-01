@@ -16,6 +16,7 @@ use App\UserCoin;
 use App\User;
 use App\UserPackage;
 use App\Wallet;
+use App\Tickets;
 use Auth;
 use Log;
 use DB;
@@ -46,79 +47,103 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $monday = date("Y-m-d", strtotime('monday this week'));
+
         $data = [];
         
-        //Goi Packgade id
-        $userData = UserData::where('userId', Auth::user()->id)->get()->first();
-        //Caculate total bonus from start
-        $totalBonus = Wallet::where('userId', Auth::user()->id)
-                            ->whereIn('walletType', [Wallet::CLP_WALLET, Wallet::REINVEST_WALLET])
-                            ->where('inOut', Wallet::IN)
-                            ->get();
+        //Caculate pre week commssion from tickets
+        $PreTicketCommission = Wallet::where('userId', Auth::user()->id)
+                            ->where('walletType', Wallet::CLP_WALLET)
+                            ->where('type', Wallet::REVENUE_BONUS)
+                            ->where('created_at','>=', $monday)
+                            ->first();
 
+        //Caculate pre week binary commission
+        $PreBinaryCommission = Wallet::where('userId', Auth::user()->id)
+                            ->where('walletType', Wallet::CLP_WALLET)
+                            ->where('type', Wallet::BINARY_TYPE)
+                            ->where('created_at','>=', $monday)
+                            ->first();
 
-        $amount = 0;
-        if(count($totalBonus)>0)
-        {
-            foreach($totalBonus as $bonus) {
-                if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
-                    || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
-                    || $bonus->type == Wallet::BONUS_TYPE
-                    ) {
-                    $amount += $bonus->amount;
-                }
-            }
-        }
-        $data['total_bonus'] = round($amount *ExchangeRate::getCLPUSDRate(),2);
+        //Caculate pre week commission from agency
+        $PreAgencyCommission = Wallet::where('userId', Auth::user()->id)
+                            ->where('walletType', Wallet::CLP_WALLET)
+                            ->where('type', Wallet::AGENCY_BONUS)
+                            ->where('created_at','>=', $monday)
+                            ->first();
 
-
-        //Calculate today earning
-        $tdAmount=0;
-        $todayEarning = Wallet::where('userId', $userData->userId)
-                            ->whereIn('walletType',[Wallet::CLP_WALLET, Wallet::REINVEST_WALLET])
-                            ->where('inOut', Wallet::IN)
-                            ->where('created_at','>=',date('Y-m-d').' 00:00:00')
-                            ->get();
-
-        if(count($todayEarning)>0)
-        {
-            foreach($todayEarning as $bonus)
-            {
-                if($bonus->type == Wallet::FAST_START_TYPE //bonus children buy package 
-                    || $bonus->type == Wallet::INTEREST_TYPE//bonus day interest
-                    || $bonus->type == Wallet::BONUS_TYPE
-                    ) {
-                    $tdAmount += $bonus->amount;
-                }
-            }
-        }
-        $data['today_earning']=round($tdAmount *ExchangeRate::getCLPUSDRate(),2);
-
+        $data['PreTicketCommission'] = isset($PreTicketCommission) ? $PreTicketCommission->amount : 0;
+        $data['PreBinaryCommission'] = isset($PreBinaryCommission) ? $PreBinaryCommission->amount_usd : 0;
+        $data['PreAgencyCommission'] = isset($PreAgencyCommission) ? $PreAgencyCommission->amount_usd : 0;
 
         //Get F1 lef, right Volume
-        $ttSale=$this->getTotalSale();
+        $levelRevenue = $this->getTicketByLevel(Auth::user()->id, $weekYear);
 
         //Get lịch sử package
         $data['history_package'] = UserPackage::getHistoryPackage();
         // check turn on/off button withdraw
-        
 
-        //get today interest
-        $todayInterest=Wallet::where([['userId','=',$userData->userId],['created_at','>=',date('Y-m-d').' 00:00:00'],['inOut','=',WALLET::IN]])->whereIn('type',[Wallet::INTEREST_TYPE,Wallet::BONUS_TYPE])->sum('amount');
+        //get direct sale
+        $directSale = $this->getDirectSale(Auth::user()->id, $weekYear);
+        
+        //get this week sales interest
+        $ticketThisWeek = Tickets::where([['user_id','=', Auth::user()->id],['week_year','=', $weekYear]])->first();
+        $ticketThisWeek = isset($ticketThisWeek) ? $ticketThisWeek->personal_quantity : 0;
         //end get today interest
 
-        return view('adminlte::home.index')->with(compact('data','todayInterest','totalSale','ttSale'));
+        return view('adminlte::home.index')->with(compact('data','ticketThisWeek','levelRevenue', 'directSale'));
     }
 
 
-    private function getTotalSale()
+    public function getTicketByLevel($userId, $weekYear)
     {
-        $userData=UserData::where('userId','=',Auth::user()->id)->first();
-        
-        $data['left'] = isset($userData->saleGenLeft) ? $userData->saleGenLeft : 0;
-        $data['right'] = isset($userData->saleGenRight) ? $userData->saleGenRight : 0;
+        //get all F1
+        $listF1 = DB::table('user_datas')->where('refererId', $userId)->where('packageId', '>', 0)->pluck('userId')->toArray();
+        //calculate revenue
+        $revenueF1 = DB::table('tickets')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('quantity');
 
-        return $data;
+        //get ticket level 2
+        $listF2 = DB::table('user_datas')->whereIn('refererId', $listF1)->where('packageId', '>', 0)->pluck('userId')->toArray();
+        //calculate revenue
+        $revenueF2 = DB::table('tickets')->whereIn('user_id', $listF2)->where('week_year','=', $weekYear)->sum('quantity');
+
+        //get ticket level 3
+        $listF3 = DB::table('user_datas')->whereIn('refererId', $listF2)->where('packageId', '>', 0)->pluck('userId')->toArray();
+        //calculate revenue
+        $revenueF3 = DB::table('tickets')->whereIn('user_id', $listF3)->where('week_year','=', $weekYear)->sum('quantity');
+
+        //get ticket level 4
+        $listF4 = DB::table('user_datas')->whereIn('refererId', $listF3)->where('packageId', '>', 0)->pluck('userId')->toArray();
+        //calculate revenue
+        $revenueF4 = DB::table('tickets')->whereIn('user_id', $listF4)->where('week_year','=', $weekYear)->sum('quantity');
+
+        //get ticket level 5
+        $listF5 = DB::table('user_datas')->whereIn('refererId', $listF4)->where('packageId', '>', 0)->pluck('userId')->toArray();
+        //calculate revenue
+        $revenueF5 = DB::table('tickets')->whereIn('user_id', $listF5)->where('week_year','=', $weekYear)->sum('quantity');
+
+        $levelRevenue['f1'] = $revenueF1;
+        $levelRevenue['f2'] = $revenueF2;
+        $levelRevenue['f3'] = $revenueF3;
+        $levelRevenue['f4'] = $revenueF4;
+        $levelRevenue['f5'] = $revenueF5;
+
+        return $levelRevenue;
+    }
+
+    public function getDirectSale($userId, $weekYear)
+    {
+        //get all F1
+        $listF1 = DB::table('user_datas')->where('refererId', $userId)->where('packageId', '=', 0)->pluck('userId')->toArray();
+
+        //calculate revenue
+        $revenueF1 = DB::table('tickets')->whereIn('user_id', $listF1)->where('week_year','=', $weekYear)->sum('personal_quantity');
+
+        return $revenueF1;
     }
 
 }

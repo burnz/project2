@@ -6,8 +6,12 @@
 @section('content')
     <style type="text/css">
         .card-marketing{
-        padding:8px !important;
-    }
+            padding:8px !important;
+        }
+        .level-ticket .card {
+            /*margin-top: 10px !important;*/
+            margin-bottom: -15px !important;
+        }
     </style>
 	<div class="content">
         <div id="popup" style="display: none">
@@ -17,38 +21,49 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="card card-earning">
                                 <div class="card-header text-center">
                                     <span class="glyphicon glyphicon-restart" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Today Interest</p>
-                                    <p class="h5 mt-3">${{number_format($todayInterest,3)}}</p>
+                                    <p class="mt-4 mb-0">Last week fast start bonus</p>
+                                    <p class="h5 mt-3">${{number_format($data['PreAgencyCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="card card-earning">
                                 <div class="card-header text-center">
                                     <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Today Earning</p>
-                                    <p class="h5 mt-3">${{number_format($data['today_earning'],3)}}</p>
+                                    <p class="mt-4 mb-0">Last week retail / unilevel bonus</p>
+                                    <p class="h5 mt-3"><span class="glyphicon glyphicon-bitcoin"></span>{{number_format($data['PreTicketCommission'],2)}}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="card card-earning">
                                 <div class="card-header text-center">
                                     <span class="glyphicon glyphicon-wallet" aria-hidden="true"></span>
                                 </div>
                                 <div class="card-content text-center">
-                                    <p class="mt-4 mb-0">Total Earning</p>
-                                    <p class="h5 mt-3">${{number_format($data['total_bonus'],3)}}</p>
+                                    <p class="mt-4 mb-0">Last week infinity bonus</p>
+                                    <p class="h5 mt-3">${{number_format($data['PreBinaryCommission'],2)}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-wallet" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Your tickets this week</p>
+                                    <p class="h5 mt-3">{{number_format($ticketThisWeek)}}</p>
                                 </div>
                             </div>
                         </div>
@@ -87,35 +102,81 @@
 
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="card card-generational">
-                        <div class="card-header card-header-icon" data-background-color="carcoin-primary-1">
-                            <i class="material-icons">ac_unit</i>
-                        </div>
-                        <div class="card-content">
-                            <h4 class="card-title">Generational Volume</h4>
-                            <div class="generational">
-                                <div class="row">
-                                    <div class="col-sm-6 col-lg-6">
-                                        <div class="left">
-                                            <div class="icon" rel="tooltip" data-placement="left" title="Left">
-                                                L
-                                            </div>
-                                            <p class="h2 mt-5">${{number_format($ttSale['left'],0)}}</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-lg-6">
-                                        <div class="right">
-                                            <div class="icon" rel="tooltip" data-placement="right" title="Right">
-                                                R
-                                            </div>
-                                            <p class="h2 mt-5">${{number_format($ttSale['right'],0)}}</p>
-                                        </div>
-                                    </div>
+                <div class="col-md-6 level-ticket">
+                    <!-- <div class="row"> -->
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Direct ticket</p>
+                                    <p class="h5 mt-3">{{number_format($directSale)}}</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Level 1 tickets</p>
+                                    <p class="h5 mt-3">{{number_format($levelRevenue['f1'])}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Level 2 tickets</p>
+                                    <p class="h5 mt-3">{{number_format($levelRevenue['f2'])}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- </div> -->
+                    <!-- <div class="row"> -->
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Level 3 tickets</p>
+                                    <p class="h5 mt-3">{{number_format($levelRevenue['f3'])}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Level 4 tickets</p>
+                                    <p class="h5 mt-3">{{number_format($levelRevenue['f4'])}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-6">
+                            <div class="card card-earning">
+                                <div class="card-header text-center">
+                                    <span class="glyphicon glyphicon-money" aria-hidden="true"></span>
+                                </div>
+                                <div class="card-content text-center">
+                                    <p class="mt-4 mb-0">Level 5 tickets</p>
+                                    <p class="h5 mt-3">{{number_format($levelRevenue['f5'])}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- </div> -->
                 </div>
 
                 <div class="col-md-6">
@@ -124,15 +185,14 @@
                             <i class="material-icons">history</i>
                         </div>
                         <div class="card-content">
-                            <h4 class="card-title">History Lending</h4>
+                            <h4 class="card-title">Agency information</h4>
                             <div class="table-responsive table-scroll-y">
                                 <table class="table" id="tbHLending">
                                     <thead class="text-thirdary">
                                         <th>Date</th>
                                         <th>Package</th>
                                         <!-- <th>Lending</th> -->
-                                        <th>Lending Amount</th>
-                                        <th>Release Date</th>
+                                        <th>Holding Amount</th>
                                         <th>Status</th>
 
                                     </thead>
@@ -142,13 +202,12 @@
 												<tr>
 		                                            <td>{{date_format(date_create($pval->buy_date),'d-m-Y')}}</td>
 		                                            <td>{{$pval->name}}</td>
-		                                            <td>{{$pval->amount_increase}}</td>
-                                                    <td>{{date_format(date_create($pval->release_date),'d-m-Y')}}</td>
+		                                            <td>${{number_format($pval->amount_increase)}}</td>
                                                     <td>
                                                         @if($pval->withdraw==1)
                                                             <button class="btn btn-simple btn-google m-0 p-0">Released</button>
                                                         @else
-                                                            <button class="btn btn-simple btn-linkedin m-0 p-0">Lending</button>
+                                                            <button class="btn btn-simple btn-linkedin m-0 p-0">Holding</button>
                                                         @endif
                                                     </td>
 		                                        </tr>

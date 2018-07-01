@@ -47,43 +47,6 @@
 
       gtag('config', 'UA-110960621-1');
     </script>
-    <script type="text/javascript">
-
-    var formatter = new Intl.NumberFormat('en-US', {
-            style: 'decimal',
-            minimumFractionDigits: 2,
-        });
-    var formatterBTC = new Intl.NumberFormat('en-US', {
-            style: 'decimal',
-            minimumFractionDigits: 8,
-        });
-    function doLogout(){
-         document.cookie = "open=1";
-    }
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
     
-    function getRate(){
-        $.ajax({
-            dataType: "json",
-            url: '{{ URL::to("exchange") }}',
-            success: function(data){
-               $('.btcusd').html(formatter.format(data[1].exchrate));
-               $('.carusd').html(formatter.format(data[2].exchrate));
-               $('.carbtc').html(formatterBTC.format(data[0].exchrate));
-               globalBTCUSD = data[1].exchrate;
-               globalCARUSD = data[2].exchrate;
-               globalCARBTC = data[0].exchrate;
-            }
-        });
-    }
-    getRate();
-    setInterval(function(){ getRate() }, {{ config('app.time_interval') }}); 
-    
-</script>
 
 

@@ -14,6 +14,7 @@ use App\Cronjob\AutoAddBinary;
 use App\Cronjob\UpdateStatusBTCWithdraw;
 use App\Cronjob\UpdateStatusCLPWithdraw;
 use App\Cronjob\UpdateCLPCoin;
+use App\Cronjob\ReturnCarForLandUser;
 use App\RandCronjobInterest;
 use App\RandCronjobBinary;
 use App\RandCronjobBinaryInterest;
@@ -47,21 +48,12 @@ class Kernel extends ConsoleKernel
         } catch (\Exception $ex) {
             Log::info($ex);
         }
-        
-        //Profit run everyday
-        try {
-            $schedule->call(function () {
-                Bonus::bonusDayCron();
-            })->dailyAt('00:01');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
 
         // Binary bonus run on monday each week
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->mondays()->at('00:30');
+            })->weekly()->mondays()->at('00:15');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -71,8 +63,8 @@ class Kernel extends ConsoleKernel
 	
         try {
             $schedule->call(function () {
-                Bonus::bonusMatchingWeekCron();
-            })->weekly()->mondays()->at('01:00');
+                Bonus::bonusRevenueCron();
+            })->weekly()->mondays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -81,8 +73,8 @@ class Kernel extends ConsoleKernel
         // Binary bonus leadership monthly
         try {
             $schedule->call(function () {
-                Bonus::bonusLeadershipMonthCron();
-            })->monthlyOn(1, '2:00');
+                Bonus::bonusAwardCron();
+            })->weekly()->mondays()->at('00:45');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -93,7 +85,7 @@ class Kernel extends ConsoleKernel
          */
         try {
             $schedule->call(function () {
-                UpdateBtcCoin::UpdateBtcCoinAmount();
+                //UpdateBtcCoin::UpdateBtcCoinAmount();
             })->everyMinute();
         } catch (\Exception $ex) {
             Log::info($ex);

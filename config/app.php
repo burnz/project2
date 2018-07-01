@@ -144,6 +144,10 @@ return [
     'virtual_account' => env('LIST_VIRTUAL_ACCOUNT'),
     'top_leaders' => env('TOP_LEADERS'),
     'fullnode_api_url' => env('FULLNODE_API_URL'),
+    'car_exchange_url' => env('CAR_EXCHANGE_URL'),
+    'condition' => env('CONDITION'),
+    'salt' => env('SALT'),
+    'access_token' => env('ACCESS_TOKEN'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

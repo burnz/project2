@@ -67,6 +67,7 @@
         }
         .modal-content .modal-body{
             padding-top:0 !important;
+            padding-bottom: 0 !important;
         }
         .card .card-title{
             font-size:20px;
@@ -103,6 +104,36 @@
         .has-error .help-block{
             display: block !important;
         }
+        @media (min-width: 992px)
+        {
+            .modal-lg {
+                width: 1100px;
+            }
+        }
+        .card-pricing{
+            margin-top:5px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .card-pricing .card-action .amount{
+            display: inline-table;
+            margin:0 !important;
+
+        }
+        .card-action .refund{
+            margin:0 !important;
+        }
+        .modal .modal-dialog{
+            margin-top: 10px !important;
+        }
+
+        .form-group {
+            padding-bottom: 8px !important;
+        }
+
+        .mt-3 {
+            margin-top: 5px !important;
+        }
     </style>
 	<div class="content">
         <div class="container-fluid">
@@ -137,70 +168,58 @@
                         <div class="col-md-12 my-4">
                             <!-- Modal -->
                             <div class="modal fade" id="modBuyPackage" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                              <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-dialog" role="document">
                                 <div class="modal-content">
-                                  <div class="modal-header">
-                                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
-                                    <h4 class="modal-title" id="myModalLabel">Buy Packages
+                                  <div class="modal-header" style="padding-top: 10px;">
+                                    <h4 class="modal-title" id="myModalLabel">Pick the best package for you
                                         <b id="carcoin-info" class="carcoin-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-pri.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountCLP'], 5) }}</b>
-                                        <b id="reinvest-info" class="reinvest-color" style="vertical-align: bottom;"><img src="{{asset('Carcoin/img/ic_zcoin-sec.svg')}}" style="width: 24px;">&nbsp;{{ number_format($walletAmount['amountReinvest'], 5) }}</b>
-
-                                        <p class="pull-right">Pick the best package for you</p>
                                     </h4>
                                   </div>
                                   <div class="modal-body">
-                                        <!-- <div class="card-header">
-                                            <h3 class="card-title text-center">Pick the best package for you</h3>
-                                        </div> -->
-                                        <div class="card-content clearfix">
+                                        <div class="card-content clearfix mt-5" style="padding-top: 0px; padding-bottom: 0px">
                                             @if(count($dataPack)>0)
                                                 @foreach($dataPack as $pkey=>$pval)
-                                                    <div class="col-md-3">
-                                                        <div class="card card-pricing  <?=$pkey==0?'card-raised':''?>">
-                                                            <div class="card-content p-0">
-                                                                <div class="icon <?=$pkey==0?'active':''?>">
-                                                                    <h3 style="text-transform: uppercase;">{{$pval->name}}</h3>
-                                                                    <div class="radio" big="md">
-                                                                        <label>
-                                                                            <input data-min="{{$pval->min_price}}" data-max="{{$pval->max_price}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':'' ?> value="{{$pval->pack_id}}" > 
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="card-description">
-                                                                    <span>
-                                                                        <b>${{number_format($pval->min_price)}} - ${{number_format($pval->max_price)}}</b>
-                                                                    </span>
-                                                                    <span class="carcoin-color">
-                                                                        <i class="material-icons" icon="carcoin-primary"></i>
-                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b> - <b>{{number_format($pval->max_price_clp,2)}}</b>
-                                                                    </span>
-                                                                </div>
-                                                                <div class="card-action">
+                                                    <div class="row">
+                                                        <div class="col-md-12 ibox">
+                                                            <div class="row ibox-package">
+                                                                <div  class="card card-pricing mt-5  <?=$pkey==0?'card-raised':''?>">
+                                                                    <div class="card-content p-0">
+                                                                        <div class="col-md-4 text-center align-self-center">
+                                                                            <div class="icon mb-0 <?=$pkey==0?'active':''?>">
+                                                                                <h3 style="text-transform: uppercase;margin-top: 7px">{{$pval->name}}</h3>
+                                                                                <div class="radio" big="md" style="margin-top: -6px;">
+                                                                                    <label>
+                                                                                        <input data-min="{{$pval->min_price}}" data-max="{{$pval->max_price}}" type="radio" name="optionsRadios" <?=$pkey==0?'checked="checked"':''?> value="{{$pval->pack_id}}">
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4 text-center align-self-center">
+                                                                            <div class="form-group mt-3">
+                                                                                <div class="card-description">
+                                                                                    <label class="mb-4 font-weight-normal">Lending Amount (car)</label>
 
-<div class="form-group my-4 refund input-group">
-    <span class="input-group-addon pr-0">
-        <i class="material-icons">refresh</i>
-    </span>
-    <div class="form-group label-floating">
-        <select class="selectpicker refund-type" name="refundType" id="refund_type" data-style="select-with-transition" title="Refund Type" data-size="2">
-            <option value="1">REFUND BY USD</option>
-            <option value="2">REFUND BY CAR</option>
-        </select>
-        <p class="help-block errorRefund"></p>
-    </div>
-</div>
-                                                                    <div class="input-group form-group my-4 amount">
-                                                                        <span class="input-group-addon pr-0">
-                                                                            <i class="material-icons">attach_money</i>
-                                                                        </span>
-                                                                        <div class="form-group label-floating">
-                                                                            
-                                                                            <input name="lastname" type="number" class="form-control" min="{{$pval->min_price}}" max="{{$pval->max_price}}" step="10" placeholder="Your Amount">
-                                                                            <span class="material-input"></span>
-                                                                            <p class="help-block errorAmount"></p>
+                                                                                    <span class="carcoin-color">
+                                                                                        <i class="material-icons" icon="carcoin-primary"></i>
+                                                                                        <b>{{number_format($pval->min_price_clp,2)}}</b>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4 text-center align-self-center">
+                                                                            <div class="form-group mt-3">
+                                                                                <div class="card-description">
+                                                                                    <label class="mb-4 font-weight-normal">Lending Amount ($)</label>
+                                                                                    <span>
+                                                                                        <b>${{number_format($pval->min_price)}}</b>
+                                                                                    </span>
+                                        
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -210,9 +229,7 @@
                                                 There are no package available
                                             </div>
                                             @endif
-
-
-                                            <div class="col-md-12">
+                                            <div class="col-md-6 text-left">
                                                 <div class="checkbox">
                                                     <label>
                                                         <input id="term" type="checkbox">
@@ -221,25 +238,19 @@
                                                     <p class="help-block termAgree">Please agree terms and conditions</p>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6 text-right">
+                                                    <button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Choose</button>
+                                                    <button type="button" class="btn btn-primary btn-round btn-outline-primary" data-dismiss="modal">Close</button>
+                                                
+                                            </div>
                                         </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary btn-round" id="btnBuyPackage">Buy Package</button>
-                                    <button type="button" class="btn btn-primary btn-round btn-outline-primary" data-dismiss="modal">Close</button>
                                   </div>
                                 </div>
                               </div>
                             </div>
                             <!--end modal-->
 
-                            <div class=" col-md-2 col-xs-6 col-sm-3">
-                                    <select class="selectpicker" name="wallet_type" id="wallet_type" data-style="select-with-transition" title="Sellect Wallet" data-size="2">
-                                    <option value="2">CARCOIN WALLET</option>
-                                    <option value="3">REINVEST WALLET</option>
-                                </select>
-                            </div>
-                            
-                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Buy Packages</button>
+                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Become a CSC Jackpot agency</button>
 
                         </div>
                         <div class="col-md-12 my-4">
@@ -248,11 +259,10 @@
                                     <thead class="text-thirdary">
                                         <th>Date</th>
                                         <th>Package</th>
-                                        <th>Refund Type</th>
-                                        <th>Lending Amount</th>
+                                        <th>Holding Amount</th>
                                         <th>Carcoin Amount</th>
-                                        <th>Release Date</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                     </thead>
                                     <tbody>
                                         @if(count($userPack)>0)
@@ -260,21 +270,24 @@
                                                 <tr>
                                                     <td>{{date_format(date_create($upVal->buy_date),'m-d-Y H:i:s')}}</td>
                                                     <td>{{$upVal->name}}</td>
-                                                    <td>{{$upVal->refund_type==1?'By USD':'By Carcoin'}}</td>
                                                     <td>${{number_format($upVal->amount_increase,0)}}</td>
                                                     <td>{{number_format($upVal->amount_carcoin,0)}} CAR</td>
-                                                    <td>{{date_format(date_create($upVal->release_date),'m-d-Y H:i:s')}}</td>
                                                     <td>
                                                         @if($upVal->withdraw==1)
                                                             <button class="btn btn-simple btn-google m-0 p-0">Released</button>
                                                         @else
-                                                            @if($datetimeNow->diff(new DateTime($upVal->release_date))->format('%R%a')>0)
-                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Lending</button>
-                                                            @else
-                                                                <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
+                                                            @if($datetimeNow->diff(new DateTime(date('Y-m-d H:i:s', strtotime($upVal->buy_date . "+ 90 days"))))->format('%R%a') > 0 || $upVal->withdraw == 0)
+                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Holding</button>
                                                             @endif
                                                         @endif
                                                         
+                                                    </td>
+                                                    <td>
+                                                        @if($datetimeNow->diff(new DateTime(date('Y-m-d H:i:s', strtotime($upVal->buy_date . "+ 90 days"))))->format('%R%a') < 0  && $upKey == 0)
+                                                            <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
+                                                        @else
+                                                            <button class="btn btn-simple btn-linkedin m-0 p-0"></button>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -318,36 +331,13 @@
 		        jQuery(this).closest('.card').find('.icon').addClass('active');
 		        jQuery(this).closest('.card').addClass('card-raised');
 
-
                 jQuery('#packageId').val($(this).val());
-
-
 		    });
-
-
 
             //buyPackage
             $('#btnBuyPackageS1').click(function(){
-                var walletType=parseFloat($('#wallet_type').val());
-                switch(walletType)
-                {
-                    case 2:
-                        $('#carcoin-info').css('display','inline-block');
-                        $('#reinvest-info').css('display','none');
-                    break;
-                    case 3:
-                        $('#carcoin-info').css('display','none');
-                        $('#reinvest-info').css('display','inline-block');
-                    break;
-                    default:
-                        swal('','Please select wallet to buy packages!','error');
-                        return false;
-                    break;
-                }
-                $('#walletId').val(walletType);
-                
                 if ( window.iOS && window.iOS11 ) {
-                    window.location.href='{{URL::to("packages/ibuy?wid=")}}'+walletType;
+                    window.location.href='{{URL::to("packages/ibuy")}}';
                     return false;
                 }
 
@@ -357,33 +347,6 @@
             $('#btnBuyPackage').click(function(){
                 var pricing=jQuery('.card-raised');
                 let packageId=pricing.children().find('input[type="radio"]').val();
-                let minAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-min'));
-                let maxAmount=parseFloat(pricing.children().find('input[type="radio"]').attr('data-max'));
-                let refund=pricing.children().find('.selectpicker.refund-type').val();
-                let amount=pricing.children().find('input[type="number"]').val();
-                if(refund=='')
-                {
-                    pricing.children().find('.errorRefund').text('Choose refund type');
-                    pricing.children().find('.refund').children('.label-floating').addClass('has-error');
-                    return false;
-                }
-                
-                if(amount<minAmount || amount>maxAmount)
-                {
-                    pricing.children().find('.errorAmount').text('$'+minAmount+' - $'+maxAmount);
-                    pricing.children().find('.label-floating').addClass('has-error');
-                    pricing.children().find('input[type="number"]').focus();
-                    return false;
-                }
-                if(amount%10!=0)
-                {
-                    pricing.children().find('.errorAmount').text('Amount divided by 10');
-                    pricing.children().find('.label-floating').addClass('has-error');
-                    pricing.children().find('input[type="number"]').focus();
-                    return false;
-                }
-                pricing.children().find('.errorAmount').text('');
-
 
                 if(!$('#term').is(':checked'))
                 {
@@ -392,9 +355,6 @@
                 }
                 $('.termAgree').css('display','none');
 
-
-
-                //alert(packageId+' - '+minAmount+' - '+maxAmount+' - '+amount);
                 $('#modBuyPackage').modal('hide');
                 swal({
                   title: 'Are you sure?',
@@ -410,9 +370,7 @@
                   buttonsStyling: false,
                   reverseButtons: true
                 }).then(function(result){
-                    $('#packageAmount').val(amount);
                     $('#packageId').val(packageId);
-                    $('#refundType').val(refund);
                     $('#bPackageF').submit();
                 })
 
@@ -435,27 +393,43 @@
         //withdraw package
         $('.btnWD').click(function(){
             var $this=$(this);
-            var pid=$(this).attr('data-id'); 
-            $.ajax({
-                type:'post',
-                url:'{{url("packages/withdraw")}}',
-                data:{id:pid,_token:'{{csrf_token()}}',type: 'withdraw'},
-                success:function(result){
-                    if (result.success){
-                        $this.parent().append('<button class="btn btn-simple btn-google m-0 p-0">Withdrawn<div class="ripple-container"></div></button>');
-                        $this.remove();
+            var pid=$(this).attr('data-id');
+            swal({
+                  title: 'Are you sure?',
+                  text: "After the withdrawing you cannot active agency on this account again!",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, return my cars!',
+                  cancelButtonText: 'No, cancel!',
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: false,
+                  reverseButtons: true
+                }).then(function(result){
+                    $.ajax({
+                        type:'post',
+                        url:'{{url("packages/withdraw")}}',
+                        data:{id:pid,_token:'{{csrf_token()}}',type: 'withdraw'},
+                        success:function(result){
+                            if (result.success){
+                                $this.parent().append('<button class="btn btn-simple btn-google m-0 p-0">Withdrawn<div class="ripple-container"></div></button>');
+                                $this.remove();
 
-                        $(".carcoin_bl").html(formatter.format(result.result).replace("$", ""));
-                        swal("Withdraw Package","Package has been withdrawn success","success").then(function(){
-                            window.location.reload();
-                        });
-                    } 
-                    else
-                    {
-                        swal('Oops...',result.message,'error');
-                    }
-                }
-            });
+                                $(".carcoin_bl").html(formatter.format(result.result).replace("$", ""));
+                                swal("Withdraw Package","Package has been withdrawn success","success").then(function(){
+                                    window.location.reload();
+                                });
+                            } 
+                            else
+                            {
+                                swal('Oops...',result.message,'error');
+                            }
+                        }
+                    });
+                }) 
+            
         });
         //end
 

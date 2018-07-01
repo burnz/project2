@@ -26,6 +26,10 @@ class UserPackage extends Model
         parent::__construct($attributes);
         $this->setTable('user_packages');
     }
+
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'userId');
+    }
     
     public static function getHistoryPackage(){
         $package = new UserPackage;
@@ -33,6 +37,7 @@ class UserPackage extends Model
         $data = $package->select("$tableName.id","$tableName.buy_date","$tableName.release_date","$tableName.amount_increase","packages.name","$tableName.withdraw","$tableName.amount_carcoin","$tableName.refund_type")
                 ->where("userId",Auth::user()->id)
                 ->join("packages","packages.id","=","$tableName.packageId")
+                ->orderBy("$tableName.id","desc")
                 ->get();
                 
         return $data;

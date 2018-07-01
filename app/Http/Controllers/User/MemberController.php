@@ -14,6 +14,7 @@ use Session;
 use App\UserTreePermission;
 use App\Http\Controllers\Controller;
 use App\BonusBinaryInterest;
+use App\Tickets;
 
 class MemberController extends Controller
 {
@@ -49,7 +50,7 @@ class MemberController extends Controller
                                 'u'     => $user->name,
                                 'totalMembers' => $user->userTreePermission ? $user->userTreePermission->genealogy_total : 0,
                                 'packageId'     => $user->userData->packageId,
-                                'rankId'     => $this->getLoyalty($user->id),
+                                'ticket'     => $this->ticketSale($user->id),
                                 'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $user->userTreePermission && $user->userTreePermission->genealogy_total ? 1 : 0,
                                 'generation'     => $this->getQualify($user->userData->packageId),
@@ -65,7 +66,7 @@ class MemberController extends Controller
                             'u'     => $user->name,
                             'totalMembers' => $user->userTreePermission ? $user->userTreePermission->genealogy_total : 0,
                             'packageId'     => $user->userData->packageId,
-                            'rankId'     => $this->getLoyalty($user->id),
+                            'ticket'     => $this->ticketSale($user->id),
                             'leg'     => $user->userData->leftRight == 'left' ? 'L' : ($user->userData->leftRight == 'right' ? 'R' : '-'),
                             'dmc' => 3,
                             'totalAmount'=>UserPackage::getTotalAmount(Auth::user()->id),
@@ -90,7 +91,7 @@ class MemberController extends Controller
                                 'u' => $userData->user->name,
                                 'totalMembers' => $userData->userTreePermission ? $userData->userTreePermission->genealogy_total : 0,
                                 'packageId' => $userData->packageId,
-                                'rankId' => $this->getLoyalty($userData->userId),
+                                'ticket' => $this->ticketSale($userData->userId),
                                 'leg' => $userData->leftRight == 'left' ? 'L' : ($userData->leftRight == 'right' ? 'R' : '-'),
                                 'dmc' => $userData->userTreePermission && $userData->userTreePermission->genealogy_total ? 1 : 0,
                                 'totalAmount'=>UserPackage::getTotalAmount($userData->userId),
@@ -116,6 +117,17 @@ class MemberController extends Controller
         if($packageId > 4) $result = 'F3';
 
         return $result;
+    }
+
+    public function ticketSale($userId) {
+        //
+        $weeked = date('W');
+        $year = date('Y');
+        $weekYear = $year.$weeked;
+
+        $oTicket = Tickets::where('user_id', $userId)->where('week_year', $weekYear)->first();
+
+        return isset($oTicket) ? $oTicket->personal_quantity : 0;
     }
     
     public function binary(Request $request){
@@ -534,7 +546,7 @@ class MemberController extends Controller
                     );
 
                     //Calculate loyalty
-                    User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
+                    //User::bonusLoyaltyUser($userData->userId, $userData->refererId, $request['legpos']);
                     User::updateUserBinary($userData->userId);
                     //$this->rankProcess();
                     return redirect('members/binary')

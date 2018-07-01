@@ -17,7 +17,6 @@
                 <span>{{ Auth::user()->name }}</span>
                 <span>ID: {{  Auth::user()->uid }}</span>
                 <span>Pack: @if(isset(Auth::user()->userData->package->name)){{ Auth::user()->userData->package->name }}@endif</span>
-                <span>Rank: @if(Auth::user()->userData->loyaltyId){{ config('carcoin.listLoyalty')[Auth::user()->userData->loyaltyId] }} @else - @endif</span>
             </div>
         </div>
         <ul class="nav">
@@ -82,9 +81,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="/wallets/reinvest">
-                                <span class="sidebar-mini"> R </span>
-                                <span class="sidebar-normal"> Reinvest Wallet </span>
+                            <a href="/wallets/usd">
+                                <span class="sidebar-mini"> U </span>
+                                <span class="sidebar-normal"> USD Wallet </span>
                             </a>
                         </li>
                     </ul>
@@ -102,28 +101,34 @@
                         <li>
                             <a href="/mybonus/infinity">
                                 <span class="sidebar-mini"> I </span>
-                                <span class="sidebar-normal"> Infinity Bonus </span>
+                                <span class="sidebar-normal"> Infinity </span>
                             </a>
                         </li>
                         <li>
-                            <a href="/mybonus/infinity-interest">
-                                <span class="sidebar-mini"> I </span>
-                                <span class="sidebar-normal"> Infinity Interest </span>
+                            <a href="/mybonus/tickets">
+                                <span class="sidebar-mini"> T </span>
+                                <span class="sidebar-normal"> Retail / Unilevel </span>
                             </a>
                         </li>
-                        {{--<li>--}}
-                            {{--<a href="/mybonus/history-bonus">--}}
-                                {{--<span class="sidebar-mini"> I </span>--}}
-                                {{--<span class="sidebar-normal"> History Bonus </span>--}}
-                            {{--</a>--}}
-                        {{--</li>--}}
+                        <li>
+                            <a href="/mybonus/winning">
+                                <span class="sidebar-mini"> A </span>
+                                <span class="sidebar-normal"> Winning / Unilevel </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/mybonus/fast-start">
+                                <span class="sidebar-mini"> C </span>
+                                <span class="sidebar-normal"> Fast Start</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
             <li>
                 <a href="{{ url('packages/buy')}}">
                     <i class="material-icons">payment</i>
-                    <p> Buy Package </p>
+                    <p> Become A Agency </p>
                 </a>
             </li>
 

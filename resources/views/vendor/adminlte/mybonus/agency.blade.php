@@ -1,7 +1,7 @@
 @extends('adminlte::layouts.backend')
 
 @section('contentheader_title')
-	Agency Commission
+	{{ trans('adminlte_lang::mybonus.binary') }}
 @endsection
 
 
@@ -21,29 +21,33 @@
 	                    <i class="material-icons">card_giftcard</i>
 	                </div>
 	                <div class="card-content">
-	                	<h4 class="card-title">Fast Start Bonus History</h4>
+	                	<h4 class="card-title">Agency Bonus History</h4>
 	                		<div class="row">
 	                				<div class="table-responsive">
 	                			<div class="col-sm-12">
 	                				<table class="table no-footer" id="referrals-grid" role="grid" aria-describedby="employee-grid_info">
 	                					<thead class="text-thirdary">
 	                						<tr>
-	                							<th>{{ trans('adminlte_lang::mybonus.date_time') }}</th>
-												<th>Level</th>
-												<th>Agency</th>
-					                            <th>{{ trans('adminlte_lang::mybonus.package') }}</th>
-												<th>{{ trans('adminlte_lang::mybonus.amount') }}</th>
+	                							<th>{{ trans('adminlte_lang::mybonus.week') }}</th>
+												<th>Level 1</th>
+												<th>Level 2</th>
+												<th>Level 3</th>
+												<th>Level 4</th>
+												<th>Level 5</th>
+												<th>Total</th>
 	                						</tr>
 	                					</thead>
 	                					<tbody>
-	                						@foreach ($fastStarts as $key => $fastStart)
-												<tr>
-													<td>{{ $fastStart->created_at }}</td>
-													<td>{{ $fastStart->generation }}</td>
-													<td>{{ $fastStart->users->name }}</td>
-													<td>{{ $fastStart->package->name }}</td>
-													<td>{{ number_format($fastStart->amount, 2) }}</td>
-												</tr>							
+	                						@foreach ($binarys as $binary)
+											<tr>
+												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
+												<td><a href="{{ URL::to('week/agency/level/1') }}">{{ number_format($binary->level_1, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/agency/level/2') }}">{{ number_format($binary->level_2, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/agency/level/3') }}">{{ number_format($binary->level_3, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/agency/level/4') }}">{{ number_format($binary->level_4, 2) }}</a></td>
+												<td><a href="{{ URL::to('week/agency/level/5') }}">{{ number_format($binary->level_5, 2) }}</a></td>
+												<td>{{ number_format($binary->total) }}</td>
+											</tr>
 											@endforeach
 	                					</tbody>
 	                				</table>

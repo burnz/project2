@@ -28,7 +28,6 @@
                                             <th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
                                             <th>Package</th>
                                             <th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
-                                            <th>{{ trans('adminlte_lang::member.refferals_loyalty') }}</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
@@ -45,11 +44,6 @@
                                                 <td class="text-uppercase">{{ isset($userData->package)?$userData->package->name:'Null' }}</td>
                                                 <td>
                                                     <a href="{{ URL::to('members/referrals/'.$userData->user->uid.'/detail') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_view') }}</a>
-                                                </td>
-                                                <td>
-                                                    @if($userData->loyaltyId >0 )
-                                                    {{ config('cryptolanding.listLoyalty')[$userData->loyaltyId] }}
-                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if($userData->isBinary==0 && Auth::user()->userData->isBinary > 0)

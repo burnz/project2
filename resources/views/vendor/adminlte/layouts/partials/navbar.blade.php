@@ -23,13 +23,6 @@
                                     <br><big class="carcoin-color"><span class="carcoin_bl">{{ number_format($walletAmount['amountCLP'], 5) }}</span></big></div>
                             </a>
                         </li>
-                        <li>
-                            <a href="#">
-                                <div class="icon"><img src="/Carcoin/img/ic_zcoin-sec.svg"></div>
-                                <div class="content"><small>Reinvest Wallet</small>
-                                    <br><big class="reinvest-color"><span class="reinvest_bl">{{ number_format($walletAmount['amountReinvest'], 5) }}</span></big></div>
-                                </a>
-                            </li>
                             <li class="dropdown hidden">
                                 <div class="dropdown-toggle text-white text-center p-0" data-toggle="dropdown" href="#">
                                     <i class="material-icons">arrow_drop_down_circle</i>
@@ -93,8 +86,14 @@
         <script>
             var formatter = new Intl.NumberFormat('en-US', {
                 style: 'decimal',
+                minimumFractionDigits: 5,
+            });
+
+            var formatterBTCUSD = new Intl.NumberFormat('en-US', {
+                style: 'decimal',
                 minimumFractionDigits: 2,
             });
+
             var formatterBTC = new Intl.NumberFormat('en-US', {
                 style: 'decimal',
                 minimumFractionDigits: 8,
@@ -114,7 +113,7 @@
                 dataType: "json",
                 url: '{{ URL::to("exchange") }}',
                 success: function(data){
-                 $('.btcusd').html(' = $'+formatter.format(data[1].exchrate));
+                 $('.btcusd').html(' = $'+formatterBTCUSD.format(data[1].exchrate));
                  $('.carusd').html('= $ ' + formatter.format(data[2].exchrate));
                  $('.carbtc').html('= ' + formatterBTC.format(data[0].exchrate)+' BTC');
                  globalBTCUSD = data[1].exchrate;

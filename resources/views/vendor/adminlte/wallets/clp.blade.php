@@ -68,19 +68,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if($walletAmount['amountHoldingCAR'] > 0)
-                                            <div>
-                                                <div class="left">
-                                                    <i class="material-icons" icon="img" size="lg"><img src="/Carcoin/img/ic_zcoin-sec.svg"></i>
-                                                </div>
-                                                <div class="right">
-                                                    <span>Suspended Amount</span>
-                                                    <div class="content">
-                                                    {{ number_format($walletAmount['amountHoldingCAR'], 5) }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @endif
                                         </div>
                                         <div class="align-self-center">  
                                             <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-deposit" id ="btnDeposit">
