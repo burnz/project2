@@ -164,7 +164,7 @@ class PackageController extends Controller
 
             Validator::extend('downCheck', function ($attribute, $value) {
                 $user = Auth::user();
-                if($user->userData->packageId <= $value)
+                if($user->userData->packageId < $value)
                 {
                     return true;
                 }
