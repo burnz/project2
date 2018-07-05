@@ -128,7 +128,7 @@
             <li>
                 <a href="{{ url('packages/buy')}}">
                     <i class="material-icons">payment</i>
-                    <p> Become A Agency </p>
+                    <p> Become An Agency </p>
                 </a>
             </li>
 
