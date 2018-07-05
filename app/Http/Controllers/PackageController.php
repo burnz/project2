@@ -232,6 +232,7 @@ class PackageController extends Controller
                 'amount_increase' => $amount_increase,
                 'amount_carcoin'=>round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
                 'buy_date' => date('Y-m-d H:i:s'),
+                'refund_type' => 2,
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 90 days")),
                 'weekYear' => $weekYear,
             ]);
