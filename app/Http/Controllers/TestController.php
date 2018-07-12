@@ -253,6 +253,29 @@ class TestController {
     function test() 
     {
         //
+        $userCoins = UserCoin::where('reinvestAmount', '>', 0)->get();
+
+        foreach($userCoins as $user)
+        {
+            
+            //insert log
+            $fieldUsd = [
+                'walletType' => Wallet::CLP_WALLET,//usd
+                'type' =>  100,//bonus week
+                'inOut' => Wallet::IN,
+                'userId' => $user->userId,
+                'amount' => $user->reinvestAmount,
+                'note'  => 'Return car from reinvest wallet'
+            ];
+
+            Wallet::create($fieldUsd);
+
+            $user->clpCoinAmount += $user->reinvestAmount;
+            $user->reinvestAmount = 0;
+            $user->save();
+        }
+
+        dd("XXX");
     }
 
     
