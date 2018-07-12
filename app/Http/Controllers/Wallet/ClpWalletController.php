@@ -95,7 +95,6 @@ class ClpWalletController extends Controller {
             if($key == 1) $wallet_type[$key] = 'Fast Start';//referral
 
         }
-        $wallet_type[25] = 'Convert from USD';
 
         ksort($wallet_type);
 
