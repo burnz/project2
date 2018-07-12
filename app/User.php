@@ -106,17 +106,17 @@ class User extends Authenticatable
 					//Get info of user
 					$user = Auth::user();
 
-					//$carBonus = $packageBonus / HighestPrice::getCarHighestPrice();
-					//$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $carBonus);
-					$userCoin->usdAmount = ($userCoin->usdAmount + $packageBonus);
+					$carBonus = $packageBonus / HighestPrice::getCarHighestPrice();
+					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $carBonus);
+					//$userCoin->usdAmount = ($userCoin->usdAmount + $packageBonus);
 					$userCoin->save();
 					
 					$fields = [
-						'walletType' => Wallet::USD_WALLET,
+						'walletType' => Wallet::CLP_WALLET,
 						'type' => Wallet::FAST_START_TYPE,
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
-						'amount' => $packageBonus,
+						'amount' => $carBonus,
 						'note'   => '$' . $packageBonus . ' from ' . $user->name . ' became a new agency/upgrade',
 					];
 					

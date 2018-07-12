@@ -21,6 +21,8 @@ use App\CronLeadershipLogs;
 use App\TotalWeekSales;
 use App\Cronjob\Bonus;
 use App\UserTreePermission;
+use App\HighestPrice;
+
 class PackageController extends Controller
 {
     use Authorizable;
@@ -430,39 +432,38 @@ class PackageController extends Controller
                     return $this->responseError($errorCode = true,$message);
                 }
 
-                $amountCLP = $package->refund_type == 1 ? round($package->amount_increase / ExchangeRate::getCLPUSDRate(), 2):$package->amount_carcoin;
+                $amountCLP = $package->refund_type == 1 ? round($package->amount_increase / HighestPrice::getCarHighestPrice(), 2):$package->amount_carcoin;
 
-                if($package->refund_type == 1)
-                {
-                    $money = Auth()->user()->userCoin->usdAmount + $package->amount_increase;
-                    $update = UserCoin::where("userId",Auth::user()->id)
-                            ->update(["usdAmount" => $money]);
-                    $fields = [
-                        'walletType' => Wallet::USD_WALLET,//usd
-                        'type' => Wallet::WITHDRAW_PACK_TYPE,
-                        'inOut' => Wallet::IN,
-                        'userId' => Auth::user()->id,
-                        'amount' => $package->amount_increase,
-                        'note'   => 'Withdraw $'.$package->amount_increase.' from package '.$package->packageId
-                    ];
-                    Wallet::create($fields);
-                } 
-                else 
-                {
-                    $amountCLP = $package->amount_carcoin;
-                    $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
-                    $update = UserCoin::where("userId",Auth::user()->id)
-                            ->update(["clpCoinAmount" => $money]);
-                    $fields = [
-                        'walletType' => Wallet::CLP_WALLET,//clp
-                        'type' => Wallet::WITHDRAW_PACK_TYPE,
-                        'inOut' => Wallet::IN,
-                        'userId' => Auth::user()->id,
-                        'amount' => $amountCLP,
-                        'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
-                    ];
-                    Wallet::create($fields);
-                }
+                // if($package->refund_type == 1)
+                // {
+                //     $money = Auth()->user()->userCoin->usdAmount + $package->amount_increase;
+                //     $update = UserCoin::where("userId",Auth::user()->id)
+                //             ->update(["usdAmount" => $money]);
+                //     $fields = [
+                //         'walletType' => Wallet::CLP_WALLET,//usd
+                //         'type' => Wallet::WITHDRAW_PACK_TYPE,
+                //         'inOut' => Wallet::IN,
+                //         'userId' => Auth::user()->id,
+                //         'amount' => $package->amount_increase,
+                //         'note'   => 'Withdraw $'.$package->amount_increase.' from package '.$package->packageId
+                //     ];
+                //     Wallet::create($fields);
+                // } 
+                // else 
+                // {
+                $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
+                $update = UserCoin::where("userId",Auth::user()->id)
+                        ->update(["clpCoinAmount" => $money]);
+                $fields = [
+                    'walletType' => Wallet::CLP_WALLET,//clp
+                    'type' => Wallet::WITHDRAW_PACK_TYPE,
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $amountCLP,
+                    'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
+                ];
+                Wallet::create($fields);
+                //}
 
                 $package->withdraw = 1;
                 $package->save();

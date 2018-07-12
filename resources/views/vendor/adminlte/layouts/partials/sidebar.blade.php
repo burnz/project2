@@ -80,12 +80,6 @@
                                 <span class="sidebar-normal"> Carcoin Wallet </span>
                             </a>
                         </li>
-                        <li>
-                            <a href="/wallets/usd">
-                                <span class="sidebar-mini"> U </span>
-                                <span class="sidebar-normal"> USD Wallet </span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
