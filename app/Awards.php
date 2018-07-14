@@ -8,7 +8,7 @@ use App\Http\Controllers\Backend\Report\RepoReportController as Report;
 class Awards extends Model
 {
     protected $fillable = [
-        'week_year', 'value', 'user_id', 'created_at', 'updated_at'
+        'week_year', 'value', 'personal_value', 'user_id', 'created_at', 'updated_at'
     ];
 
     public function __construct(array $attributes = [])

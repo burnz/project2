@@ -18,6 +18,7 @@ use App\WeekAwardsHistory;
 use App\LoyaltyUser;
 use Auth;
 use Session;
+use Carbon\Carbon;
 
 class MyBonusController extends Controller
 {
@@ -47,23 +48,25 @@ class MyBonusController extends Controller
         return view('adminlte::mybonus.sale_ticket',compact('binarys'));
     }
 
-    public function detailTicket($level)
+    public function detailTicket(Request $request)
     {
-        $weeked = date('W');
+        $level = $request->level;
+        $week = $request->week;
+
         $year = date('Y');
-        $weekYear = $year.$weeked;
-
-        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-        $firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
-
-        if($firstWeek == 0){
-            $firstWeek = 52;
-            $firstYear = $year - 1;
-            $firstWeekYear = $firstYear.$firstWeek;
+        $dt = Carbon::now();
+        $lastweek = $dt->weekOfYear - 1;
+        if($lastweek == 0) $lastweek = 52;
+        //neu la CN thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 0){
+            $lastweek = $dt->weekOfYear;
         }
 
-        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+        if($dt->dayOfWeek == 6 && $dt->hour > 8){
+            $lastweek = $dt->weekOfYear;
+        }
+
+        $lastWeekYear = $year . $lastweek; 
 
         $currentuserid = Auth::user()->id;
 
@@ -74,7 +77,7 @@ class MyBonusController extends Controller
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
         $binarys = Tickets::whereIn('user_id', $listUser[$level])
-                    ->where('week_year', $firstWeekYear)
+                    ->where('week_year', $week)
                     ->where('quantity', '>', 0)
                     ->paginate();
 
@@ -85,7 +88,7 @@ class MyBonusController extends Controller
         if($level == 4) $percent = 1;
         if($level == 5) $percent = 1;
 
-        return view('adminlte::mybonus.detail_level_ticket',compact('binarys', 'level', 'percent'));
+        return view('adminlte::mybonus.detail_level_ticket', compact('binarys', 'level', 'percent'));
     }
 
     public function awards(Request $request)

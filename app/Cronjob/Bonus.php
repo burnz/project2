@@ -26,6 +26,8 @@ use App\WeekTicketsHistory;
 use App\WeekAgencyHistory;
 use App\WeekAwardsHistory;
 use App\Tickets;
+use App\Awards;
+use Carbon\Carbon;
 
 use DB;
 use Log;
@@ -151,19 +153,19 @@ class Bonus
                 $binary->save();
 
                 if($bonus > 0){
-                    //$clpAmount = $bonus / HighestPrice::getCarHighestPrice();
+                    $clpAmount = $bonus / HighestPrice::getCarHighestPrice();
 
                     $userCoin = $binary->userCoin;
-                    //$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
-                    $userCoin->usdAmount = ($userCoin->usdAmount + $bonus);
+                    $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $clpAmount);
+                    //$userCoin->usdAmount = ($userCoin->usdAmount + $bonus);
                     $userCoin->save();
 
                     $fieldUsd = [
-                        'walletType' => Wallet::USD_WALLET,//usd
+                        'walletType' => Wallet::CLP_WALLET,//usd
                         'type' =>  Wallet::BINARY_TYPE,//bonus week
                         'inOut' => Wallet::IN,
                         'userId' => $binary->userId,
-                        'amount' => $bonus,
+                        'amount' => $clpAmount,
                         'note'	=> ''
                     ];
 
@@ -221,25 +223,13 @@ class Bonus
 	public static function bonusRevenueCron()
 	{
 		set_time_limit(0);
-        /* Get previous weekYear */
-        /* =======BEGIN ===== */
-        $weeked = date('W');
+
+        $dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
         $year = date('Y');
-        $weekYear = $year.$weeked;
 
-        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-        $firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
+        $firstWeekYear = $year . $weeked; //current week because the cronjob run on Sunday
 
-        if($firstWeek == 0){
-            $firstWeek = 52;
-            $firstYear = $year - 1;
-            $firstWeekYear = $firstYear.$firstWeek;
-        }
-
-        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
-
-        /* =======END ===== */
         try {
 
             $lstUser = UserData::where('packageId', '>', 0)->orderBy('userId','asc')->get();
@@ -303,6 +293,36 @@ class Bonus
 
                     WeekTicketsHistory::create($fields);
 
+                    //calculate revenue
+                    $oTicket = Tickets::where('user_id', $user->userId)
+                            ->where('week_year','=', $firstWeekYear)
+                            ->first();
+
+                    if(isset($oTicket)) $revenue = $oTicket->quantity - $oTicket->personal_quantity;
+                    else $revenue = 0;
+                    
+                    $bonusDirect =  $revenue * config('carcoin.ticket_dr_cus');
+
+                    if($bonusDirect > 0) {
+                        $btcBonus = $bonusDirect * config('carcoin.price_per_ticket');
+                        //insert to log
+                        $fieldUsd = [
+                            'walletType' => Wallet::BTC_WALLET,
+                            'type' => Wallet::REVENUE_RETAIL_BONUS,
+                            'inOut' => Wallet::IN,
+                            'userId' => $user->userId,
+                            'amount' => $btcBonus,
+                            'note'   => 'Retail Bonus',
+                        ];
+                        
+                        Wallet::create($fieldUsd);
+
+                        WeekTicketsHistory::where('week_year', $firstWeekYear)
+                                    ->where('user_id', $user->userId)
+                                    ->update(['direct_cus' => $bonusDirect]);
+
+                    }
+
                     $bonus = 0;
                     self::calculateRevenueByLevel(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus, $user->userId);
 
@@ -316,11 +336,11 @@ class Bonus
                         //insert to log
                         $fieldUsd = [
                             'walletType' => Wallet::BTC_WALLET,
-                            'type' => Wallet::REVENUE_BONUS,
+                            'type' => Wallet::REVENUE_UNILEVEL_BONUS,
                             'inOut' => Wallet::IN,
                             'userId' => $user->userId,
                             'amount' => $btcAmountBonus,
-                            'note'   => 'Retail / Unilevel Bonus',
+                            'note'   => 'Unilevel Bonus',
                         ];
                         
                         Wallet::create($fieldUsd);
@@ -352,23 +372,12 @@ class Bonus
     public static function bonusAwardCron()
     {
         set_time_limit(0);
-        /* Get previous weekYear */
-        /* =======BEGIN ===== */
-        $weeked = date('W');
+
+        $dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
         $year = date('Y');
-        $weekYear = $year.$weeked;
 
-        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-        $firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
-
-        if($firstWeek == 0){
-            $firstWeek = 52;
-            $firstYear = $year - 1;
-            $firstWeekYear = $firstYear.$firstWeek;
-        }
-
-        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+        $firstWeekYear = $year . $weeked; //current week because the cronjob run on Sunday
 
         /* =======END ===== */
         try {
@@ -393,31 +402,33 @@ class Bonus
                 //get total sale this week
                 $totalTicket = Tickets::where('user_id', $user->userId)->where('week_year', $firstWeekYear)->first();
 
-                if($totalTicket->quantity >= config('carcoin.condition')[1] &&
+                $personalSale = isset($totalTicket) ? $totalTicket->quantity : 0;
+
+                if($personalSale >= config('carcoin.condition')[1] &&
                     $user->packageId >= 1)
                 {
                     $maxLevel = 1;
                 }
 
-                if($totalTicket->quantity >= config('carcoin.condition')[2] &&
+                if($personalSale >= config('carcoin.condition')[2] &&
                     $user->packageId >= 2)
                 {
                     $maxLevel = 2;
                 }
 
-                if($totalTicket->quantity >= config('carcoin.condition')[3] &&
+                if($personalSale >= config('carcoin.condition')[3] &&
                     $user->packageId >= 3)
                 {
                     $maxLevel = 3;
                 }
 
-                if($totalTicket->quantity >= config('carcoin.condition')[4] &&
+                if($personalSale >= config('carcoin.condition')[4] &&
                     $user->packageId >= 4)
                 {
                     $maxLevel = 4;
                 }
 
-                if($totalTicket->quantity >= config('carcoin.condition')[5] &&
+                if($personalSale >= config('carcoin.condition')[5] &&
                     $user->packageId >= 5)
                 {
                     $maxLevel = 5;
@@ -432,6 +443,32 @@ class Bonus
 
                     WeekAwardsHistory::create($fields);
 
+                    $oAward = Awards::where('user_id', $user->userId)
+                            ->where('week_year','=', $firstWeekYear)
+                            ->first();
+
+                    if(isset($oAward)) $value = $oAward->value - $oAward->personal_value;
+                    else $value = 0;
+                    
+                    $directBonus = $value * config('carcoin.award_dr_cus');
+
+                    if($directBonus > 0) {
+                        WeekAwardsHistory::where('week_year', $firstWeekYear)
+                                ->where('user_id', $user->userId)
+                                ->update(['direct_cus' => $directBonus]);
+
+                        $fieldUsd = [
+                            'walletType' => Wallet::BTC_WALLET,
+                            'type' => Wallet::AWARD_WINNING_BONUS,
+                            'inOut' => Wallet::IN,
+                            'userId' => $user->userId,
+                            'amount' => $directBonus,
+                            'note'   => 'Winning Bonus',
+                        ];
+                        
+                        Wallet::create($fieldUsd);
+                    }
+
                     $bonus = 0;
                     self::calculateAwardReturn(array($user->userId), $firstWeekYear, 1, $maxLevel, $bonus, $user->userId);
 
@@ -443,11 +480,11 @@ class Bonus
                         //insert to log
                         $fieldUsd = [
                             'walletType' => Wallet::BTC_WALLET,
-                            'type' => Wallet::AWARD_BONUS,
+                            'type' => Wallet::AWARD_UNILEVEL_BONUS,
                             'inOut' => Wallet::IN,
                             'userId' => $user->userId,
                             'amount' => $bonus,
-                            'note'   => 'Winning / Unilevel Bonus',
+                            'note'   => 'Winning Unilevel Bonus',
                         ];
                         
                         Wallet::create($fieldUsd);
@@ -624,21 +661,6 @@ class Bonus
     public static function calculateRevenueByLevel($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
     {
         if($level == 1) {
-            $listF1NotAgency = DB::table('user_datas')->whereIn('refererId', $userId)
-                            ->where('packageId', '=', 0)
-                            ->pluck('userId')
-                            ->toArray();
-
-            //calculate revenue
-            $revenue = DB::table('tickets')->whereIn('user_id', $listF1NotAgency)
-                    ->where('week_year','=', $weekYear)
-                    ->sum('personal_quantity');
-            $bonus += $revenue * config('carcoin.ticket_dr_cus');
-
-            WeekTicketsHistory::where('week_year', $weekYear)
-                        ->where('user_id', $rootId)
-                        ->update(['direct_cus' => $revenue * config('carcoin.ticket_dr_cus')]);
-
             $listF1Agency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
                             ->pluck('userId')
@@ -689,21 +711,7 @@ class Bonus
     public static function calculateAwardReturn($userId = array(), $weekYear, $level = 1, $maxLevel, &$bonus, $rootId)
     {
         if($level == 1) {
-            $listF1NotAgency = DB::table('user_datas')->whereIn('refererId', $userId)
-                            ->where('packageId', '=', 0)
-                            ->pluck('userId')
-                            ->toArray();
-
             //calculate revenue
-            $value = DB::table('awards')->whereIn('user_id', $listF1NotAgency)
-                    ->where('week_year','=', $weekYear)
-                    ->sum('personal_value');
-            $bonus += $value * config('carcoin.award_dr_cus');
-
-            WeekAwardsHistory::where('week_year', $weekYear)
-                        ->where('user_id', $rootId)
-                        ->update(['direct_cus' => $value * config('carcoin.award_dr_cus')]);
-
             $listF1Agency = DB::table('user_datas')->whereIn('refererId', $userId)
                             ->where('packageId', '>', 0)
                             ->pluck('userId')
