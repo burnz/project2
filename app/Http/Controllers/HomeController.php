@@ -58,7 +58,7 @@ class HomeController extends Controller
         //Caculate pre week commssion from tickets
         $PreTicketCommission = Wallet::where('userId', Auth::user()->id)
                             ->where('walletType', Wallet::CLP_WALLET)
-                            ->where('type', Wallet::REVENUE_BONUS)
+                            ->where('type', Wallet::REVENUE_UNILEVEL_BONUS)
                             ->where('created_at','>=', $monday)
                             ->first();
 
