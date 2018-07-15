@@ -51,7 +51,7 @@ class HomeController extends Controller
         $year = date('Y');
         $weekYear = $year.$weeked;
 
-        $monday = date("Y-m-d", strtotime('monday this week'));
+        $sunday = date("Y-m-d", strtotime('last sunday'));
 
         $data = [];
         
@@ -59,21 +59,21 @@ class HomeController extends Controller
         $PreTicketCommission = Wallet::where('userId', Auth::user()->id)
                             ->where('walletType', Wallet::CLP_WALLET)
                             ->where('type', Wallet::REVENUE_UNILEVEL_BONUS)
-                            ->where('created_at','>=', $monday)
+                            ->where('created_at','>=', $sunday)
                             ->first();
 
         //Caculate pre week binary commission
         $PreBinaryCommission = Wallet::where('userId', Auth::user()->id)
                             ->where('walletType', Wallet::CLP_WALLET)
                             ->where('type', Wallet::BINARY_TYPE)
-                            ->where('created_at','>=', $monday)
+                            ->where('created_at','>=', $sunday)
                             ->first();
 
         //Caculate pre week commission from agency
         $PreAgencyCommission = Wallet::where('userId', Auth::user()->id)
                             ->where('walletType', Wallet::CLP_WALLET)
                             ->where('type', Wallet::AGENCY_BONUS)
-                            ->where('created_at','>=', $monday)
+                            ->where('created_at','>=', $sunday)
                             ->first();
 
         $data['PreTicketCommission'] = isset($PreTicketCommission) ? $PreTicketCommission->amount : 0;
