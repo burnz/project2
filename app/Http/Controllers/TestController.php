@@ -96,7 +96,7 @@ class TestController {
     public function convertPackage()
     {
         //auto add
-        $users = UserData::where('packageId', '>', 0)->where('userId', '>', 2)->get();
+        $users = UserData::where('packageId', '>', 0)->where('userId', '>', 2)->whereNotIn('userId', [1318,909,908,876,2401,2418,2405,2402,2407,2419,2515,451,2153,2145,2134,2068,2071,2107,2164,584,580,611,627,590,602,599,2161,2999,2993,3010,3007,2991,1238,1196,1226,1224,1186,1143,1144,1146,1138,1199,1168,1162,1220,1234,1235,1180,1147,2423,3301,3289,3206,3277,3292,1240,1077,1142])->get();
         foreach($users as $user) {
             //get package value
             $packValue = DB::table('user_packages')->where('userId', $user->userId)->where('withdraw', 0)->sum('amount_increase');
