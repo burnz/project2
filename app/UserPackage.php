@@ -13,10 +13,13 @@ class UserPackage extends Model
     public $incrementing = true;
     protected $fillable = [
         'userId', 
-        'packageId', 
+        'packageId',
+        'created_at',
+        'updated_at', 
         'amount_increase', 
         'amount_carcoin',
         'refund_type',
+        'withdraw',
         'buy_date', 
         'release_date', 
         'weekYear',

@@ -96,19 +96,42 @@ class TestController {
     public function convertPackage()
     {
         //auto add
-        $users = UserData::where('packageId','>', 0)->where('userId', '>', 2)->get();
+        $users = UserData::where('packageId', '>', 0)->where('userId', '>', 2)->get();
         foreach($users as $user) {
             //get package value
-            $packValue = DB::table('user_packages')->where('userId', $user->userId)->sum('amount_increase');
+            $packValue = DB::table('user_packages')->where('userId', $user->userId)->where('withdraw', 0)->sum('amount_increase');
+            $packCar = DB::table('user_packages')->where('userId', $user->userId)->where('withdraw', 0)->sum('amount_carcoin');
+            $pack = UserPackage::where('userId', $user->userId)->first();
 
-            if($packValue == 0) $user->packageId = 0; //convert Land user sang package 0
-            if($packValue > 0 && $packValue < 2000) $user->packageId = 1;
-            if($packValue >= 2000 && $packValue < 5000) $user->packageId = 2;
-            if($packValue >= 5000 && $packValue < 10000) $user->packageId = 3;
-            if($packValue >= 10000 && $packValue < 20000) $user->packageId = 4;
-            if($packValue >= 20000) $user->packageId = 5;
+            $packId = 0;
+            if($packValue > 0 && $packValue < 2000) $packId = 1;
+            if($packValue >= 2000 && $packValue < 5000) $packId = 2;
+            if($packValue >= 5000 && $packValue < 10000) $packId = 3;
+            if($packValue >= 10000 && $packValue < 20000) $packId = 4;
+            if($packValue >= 20000) $packId = 5;
 
-            $user->save();
+            //update all pack release
+            UserPackage::where('userId', $user->userId)->update(['withdraw' => 1]);
+
+            if($packId > 0)
+            {
+                $field = [
+                    'userId' => $user->userId,
+                    'packageId' => $packId,
+                    'amount_increase' => $packValue,
+                    'amount_carcoin' => $packCar,
+                    'created_at' => '2018-07-01 07:18:07',
+                    'updated_at' => '2018-07-01 07:18:07',
+                    'buy_date' => '2018-07-01 07:18:07',
+                    'withdraw' => 0,
+                    'weekYear' => '201827',
+                    'refund_type' => $pack->refund_type,
+                ];
+
+                UserPackage::create($field);
+            }
+
+            
         }
 
         dd("successfully");
