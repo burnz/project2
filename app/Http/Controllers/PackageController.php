@@ -22,6 +22,7 @@ use App\TotalWeekSales;
 use App\Cronjob\Bonus;
 use App\UserTreePermission;
 use App\HighestPrice;
+use Carbon\Carbon;
 
 class PackageController extends Controller
 {
@@ -223,9 +224,26 @@ class PackageController extends Controller
 
             //add data to user package
             //Get weekYear
-            $weeked = date('W');
             $year = date('Y');
-            $weekYear = $year.$weeked;
+                
+            $dt = Carbon::now();
+            $weeked = $dt->weekOfYear;
+            //neu la CN thi day la ve cua tuan moi
+            if($dt->dayOfWeek == 0){
+                $weeked = $weeked + 1;
+            }
+
+            //neu la thu 7 nhung qua 9h thi day la ve cua tuan moi
+            if($dt->dayOfWeek == 6 && $dt->hour > 8){
+                $weeked = $weeked + 1;
+            }
+
+            if($weeked == 53) {
+                $weeked = 1;
+                $year += 1;
+            }
+
+            $weekYear = $year . $weeked;
             
             $packageSelected = Package::find($request->packageId);
             UserPackage::create([
@@ -244,9 +262,6 @@ class PackageController extends Controller
                 //find sponsor
                 $sponsor = UserData::where('refererId', $user->refererId)->first();
                 if($sponsor->packageId > 0) {
-                    $weeked = date('W');
-                    $year = date('Y');
-                    $weekYear = $year.$weeked;
 
                     $sponsorTicket = Tickets::where('user_id', $user->refererId)->where('week_year', $weekYear)->first();
                     $oTicket = Tickets::where('user_id', $user->id)->where('week_year', $weekYear)->first();
@@ -415,15 +430,9 @@ class PackageController extends Controller
             $datetime1 = new DateTime(date("Y-m-d H:i:s"));
             
             //compare
-            $userPackages = UserPackage::where("userId",Auth::user()->id)->get();
+            $userPackages = UserPackage::where("userId",Auth::user()->id)->where('withdraw', 0)->get();
             foreach($userPackages as $package) 
             {
-                if($package->withdraw == 1) {
-                    $message = trans("adminlte_lang::home.package_withdrawn");
-                    return $this->responseError($errorCode = true,$message);
-                    break;
-                }
-
                 //get release date của package cuối cùng <-> max id
                 $datetime2 = new DateTime(date('Y-m-d H:i:s', strtotime($package->buy_date . "+ 90 days")));
                 $interval = $datetime1->diff($datetime2);
