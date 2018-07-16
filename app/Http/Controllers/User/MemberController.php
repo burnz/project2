@@ -15,6 +15,7 @@ use App\UserTreePermission;
 use App\Http\Controllers\Controller;
 use App\BonusBinaryInterest;
 use App\Tickets;
+use Carbon\Carbon;
 
 class MemberController extends Controller
 {
@@ -288,9 +289,26 @@ class MemberController extends Controller
 
     // Get BV - personal week sale
     function getBV($userId){
-        $weeked = date('W');
         $year = date('Y');
-        $weekYear = $year.$weeked;
+                
+        $dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
+        //neu la CN thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 0){
+            $weeked = $weeked + 1;
+        }
+
+        //neu la thu 7 nhung qua 9h thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 6 && $dt->hour > 8){
+            $weeked = $weeked + 1;
+        }
+
+        if($weeked == 53) {
+            $weeked = 1;
+            $year += 1;
+        }
+
+        $weekYear = $year . $weeked;
 
         $package = UserPackage::where('userId', $userId)
                             ->where('weekYear', '=', $weekYear)
@@ -365,11 +383,28 @@ class MemberController extends Controller
 
 
 
-    function getWeeklySale($userId, $type = 'total'){
-
-        $weeked = date('W');
+    function getWeeklySale($userId, $type = 'total')
+    {
         $year = date('Y');
-        $weekYear = $year.$weeked;
+                
+        $dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
+        //neu la CN thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 0){
+            $weeked = $weeked + 1;
+        }
+
+        //neu la thu 7 nhung qua 9h thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 6 && $dt->hour > 8){
+            $weeked = $weeked + 1;
+        }
+
+        if($weeked == 53) {
+            $weeked = 1;
+            $year += 1;
+        }
+
+        $weekYear = $year . $weeked;
 
         $week = BonusBinary::where('userId', '=', $userId)->where('weekYear', '=', $weekYear)->first();
         $result = ['left'=>0, 'right'=>0, 'total'=>0];

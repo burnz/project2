@@ -10,6 +10,7 @@ use Auth;
 use DB;
 use App\Http\Controllers\Backend\Report\RepoReportController as Report;
 use App\HighestPrice;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -254,9 +255,26 @@ class User extends Authenticatable
 
 	public static function bonusBinaryWeek($binaryUserId = 0, $usdCoinAmount = 0, $legpos)
 	{
-		$weeked = date('W');
 		$year = date('Y');
-		$weekYear = $year.$weeked;
+                
+        $dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
+        //neu la CN thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 0){
+            $weeked = $weeked + 1;
+        }
+
+        //neu la thu 7 nhung qua 9h thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 6 && $dt->hour > 8){
+            $weeked = $weeked + 1;
+        }
+
+        if($weeked == 53) {
+        	$weeked = 1;
+        	$year += 1;
+        }
+
+        $weekYear = $year . $weeked;
 
 		$week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
 
@@ -264,7 +282,6 @@ class User extends Authenticatable
 			if($legpos == 1){
 				$week->leftNew = $week->leftNew + $usdCoinAmount;
 			}else{
-
 				$week->rightNew = $week->rightNew + $usdCoinAmount;
 			}
 			$week->save();

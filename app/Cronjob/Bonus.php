@@ -49,21 +49,11 @@ class Bonus
 		set_time_limit(0);
 		/* Get previous weekYear */
 		/* =======BEGIN ===== */
-		$weeked = date('W');
-		$year = date('Y');
-		$weekYear = $year.$weeked;
+		$dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
+        $year = date('Y');
 
-		$firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-		$firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
-
-		if($firstWeek == 0){
-			$firstWeek = 52;
-			$firstYear = $year - 1;
-			$firstWeekYear = $firstYear.$firstWeek;
-		}
-
-		if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
+        $firstWeekYear = $year . $weeked; //current week because the cronjob run on Sunday
 
 		/* =======END ===== */
         try {
@@ -173,9 +163,19 @@ class Bonus
                 }
 
                 //Check already have record for this week?
-                $weeked = date('W');
-                $year = date('Y');
-                $weekYear = $year.$weeked;
+                $todayDate = Carbon::now();
+                $weeked = $todayDate->weekOfYear;
+
+                if($todayDate->dayOfWeek == 0){ //because run on sunday
+                    $weeked = $weeked + 1;
+                }
+
+                if($weeked == 53) {
+                    $weeked = 1;
+                    $year += 1;
+                }
+
+                $weekYear = $year . $weeked;
 
                 $week = BonusBinary::where('userId', '=', $binary->userId)->where('weekYear', '=', $weekYear)->first();
 
