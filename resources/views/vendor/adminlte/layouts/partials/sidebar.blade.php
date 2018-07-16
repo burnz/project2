@@ -125,6 +125,12 @@
                     <p> Become An Agency </p>
                 </a>
             </li>
+            <li>
+                <a href="http://beta.cscjackpot.com" target="_blank">
+                    <i class="material-icons">screen_share</i>
+                    <p>Play demo Jackpot</p>
+                </a>
+            </li>
 
             <li >
                 <a href="{{ url('/news')}}" id="news">
