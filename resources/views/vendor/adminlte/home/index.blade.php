@@ -15,7 +15,7 @@
     </style>
 	<div class="content">
         <div id="popup" style="display: none">
-            <a href="{{ asset('img/popup/Maldives_Incentive_Trip.jpg') }}" data-lightbox="image-1" data-title="Maldives Incentive Trip" class="example-image-link" >Image #1</a>
+            <a href="{{ asset('img/popup/Maldives_Incentive_Trip.jpg') }}" data-lightbox="image-1" data-title="" class="example-image-link" >Image #1</a>
         </div>
         <div class="container-fluid">
             <div class="row">
