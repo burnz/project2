@@ -259,15 +259,19 @@ class PackageController extends Controller
 
             //deduct ticket sale of agency sponsor 
             if($packageOldId == 0) {
-                //find sponsor
-                $sponsor = UserData::where('refererId', $user->refererId)->first();
-                if($sponsor->packageId > 0) {
+                //find agency
+                $parentId = User::_getAgency($user->id);
 
-                    $sponsorTicket = Tickets::where('user_id', $user->refererId)->where('week_year', $weekYear)->first();
-                    $oTicket = Tickets::where('user_id', $user->id)->where('week_year', $weekYear)->first();
-                    if($sponsorTicket && $oTicket) {
-                        $sponsorTicket->quantity -= $oTicket->personal_quantity;
-                        $sponsorTicket->save();
+                if($parentId > 0) 
+                {
+                    $agency = UserData::where('userId', $parentId)->first();
+                    if($agency->packageId > 0) {
+                        $sponsorTicket = Tickets::where('user_id', $agency->userId)->where('week_year', $weekYear)->first();
+                        $oTicket = Tickets::where('user_id', $user->id)->where('week_year', $weekYear)->first();
+                        if($sponsorTicket && $oTicket) {
+                            $sponsorTicket->quantity -= $oTicket->personal_quantity;
+                            $sponsorTicket->save();
+                        }
                     }
                 }
             }
@@ -322,7 +326,6 @@ class PackageController extends Controller
         return redirect('packages/buy')
         ->with('flash_error','Whoops. Something went wrong.');
     }
-
 
     public function show($id)
     {
