@@ -5,35 +5,109 @@ use Illuminate\Http\Request;
 use App\Tickets;
 use App\Awards;
 use App\UserData;
+use App\UserCoin;
+use App\Notifications\UserAPI;
 use Carbon\Carbon;
 use App\User;
+use Google2FA;
+use Illuminate\Support\Str;
 
 
 class JackpotController extends Controller
 { 
     public function createUser(Request $request)
     {
-        if($request->isMethod('post'))
+        try
         {
-            $accessToken = $request->first_token;
-            $secondToken = $request->second_token;
-            $email = $request->email;
+            if($request->isMethod('post'))
+            {
+                $accessToken = $request->first_token;
+                $secondToken = $request->second_token;
+                $email = trim($request->email);
+                $referralEmail = trim($request->referral_email);
+                $firstname = trim($request->firstname);
+                $lastnname = trim($request->lastname);
+                $phone = trim($request->phone);
+                $countryCode = trim($request->country_code);
+                $countryName = trim($request->country_name);
 
-            if($accessToken != config('app.access_token')) {
-                return response()->json(['result' => '0', 'error_msg' => 'Access token is invalid'], 500);
+                if($accessToken != config('app.access_token')) {
+                    return response()->json(['result' => '0', 'error_msg' => 'Access token is invalid'], 500);
+                }
+
+                $hash = md5($email . config('app.salt'));
+                if($hash != strtolower($secondToken)) {
+                    return response()->json(['result' => '0', 'error_msg' => 'Validation token is invalid'], 500);
+                }
+
+                if($email == null){
+                    return response()->json(['result' => '0', 'error_msg' => 'email is required'], 500);
+                }
+
+                if($referralEmail == null){
+                    return response()->json(['result' => '0', 'error_msg' => 'referral_email is required'], 500);
+                }
+
+                //create user
+                $exist = User::where('email', $email)->first();
+                if($exist) {
+                    return response()->json(['result' => '0', 'error_msg' => 'This email has been taken'], 500);
+                }
+
+                $emailSplit = explode("@", $email);
+                $name = $emailSplit[0];
+
+                $existName = User::where('name', $name)->first();
+                if($existName) {
+                    $dt = Carbon::now();
+                    $name = $name . "csc" . $dt->hour;
+                }
+
+                //get referral id
+                $referral = User::where('email', $referralEmail)->first();
+                $password = Str::random();
+
+
+                $fields = [
+                        'firstname'         => $firstname,
+                        'lastname'          => $lastnname,
+                        //'password'          => bcrypt(12),
+                        'password'          => bcrypt($password),
+                        'name'              => $name,
+                        'email'             => $email,
+                        'refererId'         => isset($referral) ? $referral->id : 3042, //cscglobal
+                        'phone'             => $phone,
+                        'country'           => $countryCode,
+                        'name_country'      => $countryName,
+                        'active'            => 1,
+                        'uid'               => User::getUid(),
+                        'google2fa_secret'  => Google2FA::generateSecretKey(16)
+                    ];
+
+                $user = User::create($fields);
+
+                //send email cho user
+                $user->notify(new UserAPI($user, $password));
+
+                //user_data
+                $fieldData = [
+                        'userId' => $user->id,
+                        'refererId' => isset($referral) ? $referral->id : 3042 //cscglobal,
+                    ];
+
+                $userData = UserData::create($fieldData);
+
+                //user_coin
+                $userCoin = UserCoin::create(['userId' => $user->id]);
+
+                return response()->json(['result' => '1', 'email' => $email], 200);
+            } else {
+                return response()->json(['result' => '0', 'error_msg' => 'Request is invalid'], 500);
             }
 
-            $hash = md5($email . config('app.salt'));
-            if($hash != strtolower($secondToken)) {
-                return response()->json(['result' => '0', 'error_msg' => 'Validation token is invalid'], 500);
-            }
+        }catch (\Exception $e){
 
-            //create user
-
-
-            return response()->json(['result' => '1', 'email' => $email], 200);
-        } else {
-            return response()->json(['result' => '0', 'error_msg' => 'Request is invalid'], 500);
+            return response()->json(['result' => '0', 'error_msg' => 'Application have error'], 500);
         }
     }
 
@@ -43,9 +117,25 @@ class JackpotController extends Controller
         {
             $accessToken = $request->first_token;
             $secondToken = $request->second_token;
-            $email = $request->email;
+            $email = trim($request->email);
             $ticket = $request->num_of_ticket;
             $dateTime = $request->date_time;
+
+
+            if($email == null){
+                return response()->json(['result' => '0', 'error_msg' => 'email is required'], 500);
+            }
+
+
+            if($ticket == null){
+                return response()->json(['result' => '0', 'error_msg' => 'num_of_ticket is required'], 500);
+            }
+
+
+            if($dateTime == null){
+                return response()->json(['result' => '0', 'error_msg' => 'date_time is required'], 500);
+            }
+
 
             if($accessToken != config('app.access_token')) {
                 return response()->json(['result' => '0', 'error_msg' => 'Access token is invalid'], 500);
@@ -55,6 +145,7 @@ class JackpotController extends Controller
             if($hash != strtolower($secondToken)) {
                 return response()->json(['result' => '0', 'error_msg' => 'Validation token is invalid'], 500);
             }
+
 
             //Update ticket
             try {
@@ -115,18 +206,33 @@ class JackpotController extends Controller
         } else {
             return response()->json(['result' => '0', 'error_msg' => 'Request is invalid'], 500);
         }
-        
     }
 
     public function updateAward(Request $request)
     {
         if($request->isMethod('post'))
         {
-            $accessToken = $request->first_token;
-            $secondToken = $request->second_token;
-            $email = $request->email;
-            $award = $request->value;
-            $dateTime = $request->date_time;
+            $accessToken = trim($request->first_token);
+            $secondToken = trim($request->second_token);
+            $email = trim($request->email);
+            $award = trim($request->value);
+            $dateTime = trim($request->date_time);
+
+            
+            if($email == null){
+                return response()->json(['result' => '0', 'error_msg' => 'email is required'], 500);
+            }
+
+
+            if($award == null){
+                return response()->json(['result' => '0', 'error_msg' => 'value is required'], 500);
+            }
+
+
+            if($dateTime == null){
+                return response()->json(['result' => '0', 'error_msg' => 'date_time is required'], 500);
+            }
+
 
             if($accessToken != config('app.access_token')) {
                 return response()->json(['result' => '0', 'error_msg' => 'Access token is invalid'], 500);
