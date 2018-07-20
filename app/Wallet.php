@@ -91,6 +91,10 @@ class Wallet extends Model
         $this->setTable('wallets');
     }
 
+    public function withdraws() {
+        return $this->hasOne(WithDraw::class, 'wallet_id', 'id');
+    }
+
     /*
      * Get data for report Commission
      * */
