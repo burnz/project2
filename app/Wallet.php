@@ -92,7 +92,7 @@ class Wallet extends Model
     }
 
     public function withdraws() {
-        return $this->hasOne(WithDraw::class, 'wallet_id', 'id');
+        return $this->hasOne(Withdraw::class, 'wallet_id', 'id');
     }
 
     /*
