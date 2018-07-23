@@ -115,6 +115,7 @@
                                                         <th>In</th>
                                                         <th>Out</th>
                                                         <th>Info</th>
+                                                        <th>Transaction</th>
                                                     </thead>
                                                     <tbody>
                                                         @foreach($wallets as $wallet)
@@ -136,6 +137,11 @@
                                                                 </td>
                                                                 <td>
                                                                     {{ $wallet->note }}
+                                                                </td>
+                                                                <td>
+                                                                    @if($wallet->note == 'Completed' && $wallet->created_at > '2018-07-20')
+                                                                    <a href="https://etherscan.io/tx/{{ $wallet->withdraws->transaction_hash }}" target="_blank">{{ $wallet->withdraws->transaction_hash }}</a>
+                                                                    @endif
                                                                 </td>
                                                             </tr>
                                                         @endforeach

@@ -283,8 +283,8 @@
                                                         
                                                     </td>
                                                     <td>
-                                                        @if($datetimeNow->diff(new DateTime(date('Y-m-d H:i:s', strtotime($upVal->buy_date . "+ 90 days"))))->format('%R%a') < 0  && $upKey == 0)
-                                                            <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
+                                                        @if($datetimeNow->diff(new DateTime(date('Y-m-d H:i:s', strtotime($upVal->buy_date . "+ 90 days"))))->format('%R%a') < 0  && $upKey == 0 && $upVal->withdraw == 0)
+                                                            <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Cancel Agency</button>
                                                         @else
                                                             <button class="btn btn-simple btn-linkedin m-0 p-0"></button>
                                                         @endif
@@ -396,7 +396,7 @@
             var pid=$(this).attr('data-id');
             swal({
                   title: 'Are you sure?',
-                  text: "After the withdrawing you cannot active agency on this account again!",
+                  text: "After the cancel you cannot active agency on this account again!",
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',

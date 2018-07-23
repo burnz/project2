@@ -521,6 +521,7 @@ class WithDrawController extends Controller
 	 * @return type
 	 */
 	public function clpWithDraw( Request $request ) {
+		
 		if($request->ajax()) 
 		{
 			$userCoin = Auth::user()->userCoin;
@@ -538,10 +539,6 @@ class WithDrawController extends Controller
 			}
 
 			$userData = Auth::user()->userData;
-			if($userData->packageId < 1)
-			{
-				$withdrawAmountErr = 'Please be noted that the minimum lending amount for any withdrawal requests is $200';
-			}
 
 			if($request->withdrawAmount * ExchangeRate::getCLPUSDRate() > 4000)
 			{

@@ -80,12 +80,6 @@
                                 <span class="sidebar-normal"> Carcoin Wallet </span>
                             </a>
                         </li>
-                        <li>
-                            <a href="/wallets/usd">
-                                <span class="sidebar-mini"> U </span>
-                                <span class="sidebar-normal"> USD Wallet </span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
@@ -128,7 +122,13 @@
             <li>
                 <a href="{{ url('packages/buy')}}">
                     <i class="material-icons">payment</i>
-                    <p> Become A Agency </p>
+                    <p> Become An Agency </p>
+                </a>
+            </li>
+            <li>
+                <a href="http://beta.cscjackpot.com" target="_blank">
+                    <i class="material-icons">screen_share</i>
+                    <p>Play demo Jackpot</p>
                 </a>
             </li>
 

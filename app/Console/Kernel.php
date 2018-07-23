@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 AutoAddBinary::addBinary();
-            })->weekly()->sundays()->at('23:30'); //->weekly()->sundays()->at('23:30');
+            })->weekly()->saturdays()->at('07:00'); //->weekly()->sundays()->at('23:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusBinaryWeekCron();
-            })->weekly()->mondays()->at('00:15');
+            })->weekly()->sundays()->at('00:15');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -64,7 +64,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusRevenueCron();
-            })->weekly()->mondays()->at('00:30');
+            })->weekly()->sundays()->at('00:30');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel
         try {
             $schedule->call(function () {
                 Bonus::bonusAwardCron();
-            })->weekly()->mondays()->at('00:45');
+            })->weekly()->sundays()->at('00:45');
         } catch (\Exception $ex) {
             Log::info($ex);
         }
@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel
         // Cron job update status withdraw BTC
         try {
             $schedule->call(function () {
-                UpdateStatusBTCWithdraw::updateStatusWithdraw();
+                //UpdateStatusBTCWithdraw::updateStatusWithdraw();
             })->everyFiveMinutes();
         } catch (\Exception $ex) {
             Log::info($ex);

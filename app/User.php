@@ -10,6 +10,7 @@ use Auth;
 use DB;
 use App\Http\Controllers\Backend\Report\RepoReportController as Report;
 use App\HighestPrice;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -106,17 +107,17 @@ class User extends Authenticatable
 					//Get info of user
 					$user = Auth::user();
 
-					//$carBonus = $packageBonus / HighestPrice::getCarHighestPrice();
-					//$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $carBonus);
-					$userCoin->usdAmount = ($userCoin->usdAmount + $packageBonus);
+					$carBonus = $packageBonus / HighestPrice::getCarHighestPrice();
+					$userCoin->clpCoinAmount = ($userCoin->clpCoinAmount + $carBonus);
+					//$userCoin->usdAmount = ($userCoin->usdAmount + $packageBonus);
 					$userCoin->save();
 					
 					$fields = [
-						'walletType' => Wallet::USD_WALLET,
+						'walletType' => Wallet::CLP_WALLET,
 						'type' => Wallet::FAST_START_TYPE,
 						'inOut' => Wallet::IN,
 						'userId' => $userData->userId,
-						'amount' => $packageBonus,
+						'amount' => $carBonus,
 						'note'   => '$' . $packageBonus . ' from ' . $user->name . ' became a new agency/upgrade',
 					];
 					
@@ -254,9 +255,26 @@ class User extends Authenticatable
 
 	public static function bonusBinaryWeek($binaryUserId = 0, $usdCoinAmount = 0, $legpos)
 	{
-		$weeked = date('W');
 		$year = date('Y');
-		$weekYear = $year.$weeked;
+                
+        $dt = Carbon::now();
+        $weeked = $dt->weekOfYear;
+        //neu la CN thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 0){
+            $weeked = $weeked + 1;
+        }
+
+        //neu la thu 7 nhung qua 9h thi day la ve cua tuan moi
+        if($dt->dayOfWeek == 6 && $dt->hour > 8){
+            $weeked = $weeked + 1;
+        }
+
+        if($weeked == 53) {
+        	$weeked = 1;
+        	$year += 1;
+        }
+
+        $weekYear = $year . $weeked;
 
 		$week = BonusBinary::where('userId', '=', $binaryUserId)->where('weekYear', '=', $weekYear)->first();
 
@@ -264,7 +282,6 @@ class User extends Authenticatable
 			if($legpos == 1){
 				$week->leftNew = $week->leftNew + $usdCoinAmount;
 			}else{
-
 				$week->rightNew = $week->rightNew + $usdCoinAmount;
 			}
 			$week->save();
@@ -450,6 +467,66 @@ class User extends Authenticatable
             $nextListUser = $expectListUser[$level];
             self::getListUserByLevel($level + 1, $expectLevel, $expectListUser, $nextListUser);
         }
+    }
+
+
+    //Return id of agency
+    public static function _getAgency($userId)
+    {
+        $returnId = 0;
+        $oUserData = UserData::where('userId', $userId)->first();
+        if($oUserData->packageId == 0)
+        {
+            //next user
+            $oUserDataF2 = UserData::where('userId', $oUserData->refererId)->first();
+            if($oUserDataF2->packageId == 0)
+            {
+                $oUserDataF3 = UserData::where('userId', $oUserDataF2->refererId)->first();
+
+                if($oUserDataF3->packageId == 0)
+                {
+                    $oUserDataF4 = UserData::where('userId', $oUserDataF3->refererId)->first();
+                    if($oUserDataF4->packageId == 0)
+                    {
+                        $oUserDataF5 = UserData::where('userId', $oUserDataF4->refererId)->first();
+                        if($oUserDataF5->packageId == 0)
+                        {
+                            $oUserDataF6 = UserData::where('userId', $oUserDataF5->refererId)->first();
+                            if($oUserDataF6->packageId == 0)
+                            {
+
+                            }
+                            else 
+                            {
+                                $returnId = $oUserDataF6->userId;
+                            }
+                        }
+                        else 
+                        {
+                            $returnId = $oUserDataF5->userId;
+                        }
+                    }
+                    else 
+                    {
+                        $returnId = $oUserDataF4->userId;
+                    }
+                }
+                else 
+                {
+                    $returnId = $oUserDataF3->userId;
+                }
+            }
+            else 
+            {
+                $returnId = $oUserDataF2->userId;
+            }
+        } 
+        else 
+        {
+            $returnId = $oUserData->userId;
+        }
+
+        return $returnId;
     }
 
 }

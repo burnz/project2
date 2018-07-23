@@ -77,8 +77,8 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::post('wallets/btcwithdraw', 'Wallet\WithDrawController@btcWithDraw');
 
     //Re-invest WALLET
-    Route::get('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet')->name('wallet.reinvest');
-    Route::post('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet');
+    //Route::get('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet')->name('wallet.reinvest');
+    //Route::post('wallets/reinvest', 'Wallet\UsdWalletController@reinvestWallet');
 
     //BTC WALLET
     Route::get('wallets/btc', 'Wallet\BtcWalletController@showBTCWallet')->name('wallet.btc');
@@ -97,8 +97,8 @@ Route::group( ['middleware' => ['auth']], function() {
     //CLP WALLET
     Route::get('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
     Route::post('wallets/car', 'Wallet\ClpWalletController@clpWallet')->name('wallet.clp');
-    Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
-    Route::post('wallets/buy-car', 'Wallet\UsdWalletController@buyCar')->name('wallet.buy-car');
+    //Route::get('wallets/usd', 'Wallet\UsdWalletController@usdWallet')->name('wallet.usd');
+    //Route::post('wallets/buy-car', 'Wallet\UsdWalletController@buyCar')->name('wallet.buy-car');
     Route::get('wallets/car/getaddresswallet', 'Wallet\ClpWalletController@getClpWallet');
     Route::post('wallets/car/withdraw', 'Wallet\WithDrawController@clpWithDraw');
     Route::post('wallets/sellclp', 'Wallet\ClpWalletController@sellCLP');
@@ -115,9 +115,9 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('mybonus/infinity', 'MyBonusController@binary');
     Route::get('mybonus/winning', 'MyBonusController@awards');
     Route::get('mybonus/fast-start', 'MyBonusController@faststart');
-    Route::get('week/tickets/level/{level}', 'MyBonusController@detailTicket');
-    Route::get('week/awards/level/{level}', 'MyBonusController@detailAward');
-    Route::get('week/agency/level/{level}', 'MyBonusController@detailAgency');
+    Route::get('week/tickets/level/{level}/w/{week}', 'MyBonusController@detailTicket');
+    Route::get('week/awards/level/{level}/w/{week}', 'MyBonusController@detailAward');
+    Route::get('week/agency/level/{level}/w/{week}', 'MyBonusController@detailAgency');
     Route::resource('mybonus', 'MyBonusController');
 
     Route::get('packages/ibuy','PackageController@showBuyPackage');
@@ -172,19 +172,19 @@ Route::post('clpnotification','GetNotificationController@clpNotification');
 
 /***------- TEST -------***/
 //Route::get('ethereumtest', 'EthereumTestController@index');
-Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
-Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
-Route::get('update-ticket', 'TestController@showUpdateTicket')->name('test.showTicket');
-Route::post('save-ticket', 'TestController@updateTicket')->name('test.saveTicket');
-Route::get('update-award', 'TestController@showUpdateAward')->name('test.showAward');
-Route::post('save-award', 'TestController@updateAward')->name('test.saveAward');
-Route::get('convert-package', 'TestController@convertPackage');
+//Route::get('test-register', 'Auth\TestRegisterController@showRegistrationFormNoActive')->name('test.showRegister');
+//Route::post('registernoactiveaction', 'Auth\TestRegisterController@registerNoActive')->name('test.registerAction');
+//Route::get('update-ticket', 'TestController@showUpdateTicket')->name('test.showTicket');
+//Route::post('save-ticket', 'TestController@updateTicket')->name('test.saveTicket');
+//Route::get('update-award', 'TestController@showUpdateAward')->name('test.showAward');
+//Route::post('save-award', 'TestController@updateAward')->name('test.saveAward');
+//Route::get('convert-package', 'TestController@convertPackage');
 
 
-Route::get('run-agency-bonus',"TestController@testInterest");
-Route::get('run-infinity','TestController@testInfinityBonus');
-Route::get('run-ticket-bonus', 'TestController@testInfinityInterest');
-Route::get('run-award-bonus','TestController@testGlobalBonus');
+//Route::get('run-agency-bonus',"TestController@testInterest");
+//Route::get('run-infinity','TestController@testInfinityBonus');
+//Route::get('run-ticket-bonus', 'TestController@testInfinityInterest');
+//Route::get('run-award-bonus','TestController@testGlobalBonus');
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
 //Route::get('test',"TestController@test");
 

@@ -21,6 +21,9 @@ use App\CronLeadershipLogs;
 use App\TotalWeekSales;
 use App\Cronjob\Bonus;
 use App\UserTreePermission;
+use App\HighestPrice;
+use Carbon\Carbon;
+
 class PackageController extends Controller
 {
     use Authorizable;
@@ -221,9 +224,26 @@ class PackageController extends Controller
 
             //add data to user package
             //Get weekYear
-            $weeked = date('W');
             $year = date('Y');
-            $weekYear = $year.$weeked;
+                
+            $dt = Carbon::now();
+            $weeked = $dt->weekOfYear;
+            //neu la CN thi day la ve cua tuan moi
+            if($dt->dayOfWeek == 0){
+                $weeked = $weeked + 1;
+            }
+
+            //neu la thu 7 nhung qua 9h thi day la ve cua tuan moi
+            if($dt->dayOfWeek == 6 && $dt->hour > 8){
+                $weeked = $weeked + 1;
+            }
+
+            if($weeked == 53) {
+                $weeked = 1;
+                $year += 1;
+            }
+
+            $weekYear = $year . $weeked;
             
             $packageSelected = Package::find($request->packageId);
             UserPackage::create([
@@ -232,24 +252,26 @@ class PackageController extends Controller
                 'amount_increase' => $amount_increase,
                 'amount_carcoin'=>round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
                 'buy_date' => date('Y-m-d H:i:s'),
+                'refund_type' => 2,
                 'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 90 days")),
                 'weekYear' => $weekYear,
             ]);
 
             //deduct ticket sale of agency sponsor 
             if($packageOldId == 0) {
-                //find sponsor
-                $sponsor = UserData::where('refererId', $user->refererId)->first();
-                if($sponsor->packageId > 0) {
-                    $weeked = date('W');
-                    $year = date('Y');
-                    $weekYear = $year.$weeked;
+                //find agency
+                $parentId = User::_getAgency($user->id);
 
-                    $sponsorTicket = Tickets::where('user_id', $user->refererId)->where('week_year', $weekYear)->first();
-                    $oTicket = Tickets::where('user_id', $user->id)->where('week_year', $weekYear)->first();
-                    if($sponsorTicket && $oTicket) {
-                        $sponsorTicket->quantity -= $oTicket->personal_quantity;
-                        $sponsorTicket->save();
+                if($parentId > 0) 
+                {
+                    $agency = UserData::where('userId', $parentId)->first();
+                    if($agency->packageId > 0) {
+                        $sponsorTicket = Tickets::where('user_id', $agency->userId)->where('week_year', $weekYear)->first();
+                        $oTicket = Tickets::where('user_id', $user->id)->where('week_year', $weekYear)->first();
+                        if($sponsorTicket && $oTicket) {
+                            $sponsorTicket->quantity -= $oTicket->personal_quantity;
+                            $sponsorTicket->save();
+                        }
                     }
                 }
             }
@@ -304,7 +326,6 @@ class PackageController extends Controller
         return redirect('packages/buy')
         ->with('flash_error','Whoops. Something went wrong.');
     }
-
 
     public function show($id)
     {
@@ -412,15 +433,9 @@ class PackageController extends Controller
             $datetime1 = new DateTime(date("Y-m-d H:i:s"));
             
             //compare
-            $userPackages = UserPackage::where("userId",Auth::user()->id)->get();
+            $userPackages = UserPackage::where("userId",Auth::user()->id)->where('withdraw', 0)->get();
             foreach($userPackages as $package) 
             {
-                if($package->withdraw == 1) {
-                    $message = trans("adminlte_lang::home.package_withdrawn");
-                    return $this->responseError($errorCode = true,$message);
-                    break;
-                }
-
                 //get release date của package cuối cùng <-> max id
                 $datetime2 = new DateTime(date('Y-m-d H:i:s', strtotime($package->buy_date . "+ 90 days")));
                 $interval = $datetime1->diff($datetime2);
@@ -429,39 +444,38 @@ class PackageController extends Controller
                     return $this->responseError($errorCode = true,$message);
                 }
 
-                $amountCLP = $package->refund_type == 1 ? round($package->amount_increase / ExchangeRate::getCLPUSDRate(), 2):$package->amount_carcoin;
+                $amountCLP = $package->refund_type == 1 ? round($package->amount_increase / HighestPrice::getCarHighestPrice(), 2):$package->amount_carcoin;
 
-                if($package->refund_type == 1)
-                {
-                    $money = Auth()->user()->userCoin->usdAmount + $package->amount_increase;
-                    $update = UserCoin::where("userId",Auth::user()->id)
-                            ->update(["usdAmount" => $money]);
-                    $fields = [
-                        'walletType' => Wallet::USD_WALLET,//usd
-                        'type' => Wallet::WITHDRAW_PACK_TYPE,
-                        'inOut' => Wallet::IN,
-                        'userId' => Auth::user()->id,
-                        'amount' => $package->amount_increase,
-                        'note'   => 'Withdraw $'.$package->amount_increase.' from package '.$package->packageId
-                    ];
-                    Wallet::create($fields);
-                } 
-                else 
-                {
-                    $amountCLP = $package->amount_carcoin;
-                    $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
-                    $update = UserCoin::where("userId",Auth::user()->id)
-                            ->update(["clpCoinAmount" => $money]);
-                    $fields = [
-                        'walletType' => Wallet::CLP_WALLET,//clp
-                        'type' => Wallet::WITHDRAW_PACK_TYPE,
-                        'inOut' => Wallet::IN,
-                        'userId' => Auth::user()->id,
-                        'amount' => $amountCLP,
-                        'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
-                    ];
-                    Wallet::create($fields);
-                }
+                // if($package->refund_type == 1)
+                // {
+                //     $money = Auth()->user()->userCoin->usdAmount + $package->amount_increase;
+                //     $update = UserCoin::where("userId",Auth::user()->id)
+                //             ->update(["usdAmount" => $money]);
+                //     $fields = [
+                //         'walletType' => Wallet::CLP_WALLET,//usd
+                //         'type' => Wallet::WITHDRAW_PACK_TYPE,
+                //         'inOut' => Wallet::IN,
+                //         'userId' => Auth::user()->id,
+                //         'amount' => $package->amount_increase,
+                //         'note'   => 'Withdraw $'.$package->amount_increase.' from package '.$package->packageId
+                //     ];
+                //     Wallet::create($fields);
+                // } 
+                // else 
+                // {
+                $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
+                $update = UserCoin::where("userId",Auth::user()->id)
+                        ->update(["clpCoinAmount" => $money]);
+                $fields = [
+                    'walletType' => Wallet::CLP_WALLET,//clp
+                    'type' => Wallet::WITHDRAW_PACK_TYPE,
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $amountCLP,
+                    'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
+                ];
+                Wallet::create($fields);
+                //}
 
                 $package->withdraw = 1;
                 $package->save();

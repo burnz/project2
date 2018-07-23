@@ -18,6 +18,7 @@ use App\WeekAwardsHistory;
 use App\LoyaltyUser;
 use Auth;
 use Session;
+use Carbon\Carbon;
 
 class MyBonusController extends Controller
 {
@@ -47,25 +48,10 @@ class MyBonusController extends Controller
         return view('adminlte::mybonus.sale_ticket',compact('binarys'));
     }
 
-    public function detailTicket($level)
+    public function detailTicket(Request $request)
     {
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
-
-        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-        $firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
-
-        if($firstWeek == 0){
-            $firstWeek = 52;
-            $firstYear = $year - 1;
-            $firstWeekYear = $firstYear.$firstWeek;
-        }
-
-        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
-
-        $currentuserid = Auth::user()->id;
+        $level = $request->level;
+        $week = $request->week;
 
         //get list user by level
         $listUser = [];
@@ -74,7 +60,7 @@ class MyBonusController extends Controller
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
         $binarys = Tickets::whereIn('user_id', $listUser[$level])
-                    ->where('week_year', $firstWeekYear)
+                    ->where('week_year', $week)
                     ->where('quantity', '>', 0)
                     ->paginate();
 
@@ -85,7 +71,7 @@ class MyBonusController extends Controller
         if($level == 4) $percent = 1;
         if($level == 5) $percent = 1;
 
-        return view('adminlte::mybonus.detail_level_ticket',compact('binarys', 'level', 'percent'));
+        return view('adminlte::mybonus.detail_level_ticket', compact('binarys', 'level', 'percent'));
     }
 
     public function awards(Request $request)
@@ -97,80 +83,29 @@ class MyBonusController extends Controller
         return view('adminlte::mybonus.awards',compact('binarys'));
     }
 
-    public function detailAward($level)
+    public function detailAward(Request $request)
     {
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
-
-        $firstWeek = $weeked -1; //if run cronjob in 00:00:00 sunday
-        $firstYear = $year;
-        $firstWeekYear = $firstYear.$firstWeek;
-
-        if($firstWeek == 0){
-            $firstWeek = 52;
-            $firstYear = $year - 1;
-            $firstWeekYear = $firstYear.$firstWeek;
-        }
-
-        if($firstWeek < 10 && $firstWeek > 0) $firstWeekYear = $firstYear.'0'.$firstWeek;
-
-        $currentuserid = Auth::user()->id;
+        $level = $request->level;
+        $week = $request->week;
 
         //get list user by level
         $listUser = [];
 
-        User::getListUserByLevel(1, $level, $listUser);
+        User::getListUserByLevel(0, $level, $listUser);
 
         if(!isset($listUser[$level])) $listUser[$level] = [];
-        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $firstWeekYear)->where('value', '>', 0)->paginate();
+        $binarys = Awards::whereIn('user_id', $listUser[$level])->where('week_year', $week)->where('value', '>', 0)->paginate();
 
-        if($level == 1) $percent = 5;
-        if($level == 2) $percent = 2;
-        if($level == 3) $percent = 1;
-        if($level == 4) $percent = 1;
-        if($level == 5) $percent = 1;
+        if($level == 0) $percent = 2.5;
+        if($level == 1) $percent = 0.5;
+        if($level == 2) $percent = 0.5;
+        if($level == 3) $percent = 0.5;
+        if($level == 4) $percent = 0.5;
+        if($level == 5) $percent = 0.5;
 
         return view('adminlte::mybonus.detail_level_award',compact('binarys', 'level', 'percent'));
     }
 
-    public function agency(Request $request)
-    {
-        $currentuserid = Auth::user()->id;
-
-        $binarys = WeekAgencyHistory::where('user_id','=', $currentuserid)->orderBy('id','desc')->paginate();
-
-        return view('adminlte::mybonus.agency',compact('binarys'));
-    }
-
-    public function detailAgency($level)
-    {
-        $weeked = date('W');
-        $year = date('Y');
-        $weekYear = $year.$weeked;
-
-        $currentuserid = Auth::user()->id;
-
-        //get list user by level
-        $listUser = [];
-
-        User::getListUserByLevel(1, $level, $listUser);
-
-
-
-        if(!isset($listUser[$level])) $listUser[$level] = [];
-        $binarys = UserPackage::whereIn('userId', $listUser[$level])
-                    ->where('weekYear', $weekYear)
-                    ->paginate();
-
-        if($level == 1) $percent = 5;
-        if($level == 2) $percent = 4;
-        if($level == 3) $percent = 3;
-        if($level == 4) $percent = 2;
-        if($level == 5) $percent = 1;
-
-        return view('adminlte::mybonus.detail_level_agency',compact('binarys', 'level', 'percent'));
-    }
 
     public function binaryCalculatorBonus(Request $request){
 	    $totalBonus = 0;

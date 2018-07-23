@@ -45,7 +45,7 @@
 												<td>{{$binary->user->name}}</td>
 												<td>{{$level}}</td>
 												<td>{{$binary->value}}</td>
-												<td>{{ $percent }}</td>
+												<td>{{$percent}}</td>
 												<td>{{ $binary->value * $percent / 100}}</td>
 											</tr>
 											@endforeach
