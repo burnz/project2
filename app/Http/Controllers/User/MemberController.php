@@ -169,7 +169,7 @@ class MemberController extends Controller
                         'weeklySale' => number_format(self::getBV($user->id)),
                         'left' => number_format($weeklySale['left'], 2),
                         'right' => number_format($weeklySale['right'], 2),
-                        'loyaltyId' => $user->userData->loyaltyId,
+                        'packageId' => $user->userData->packageId,
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
@@ -219,7 +219,7 @@ class MemberController extends Controller
                         'weeklySale' => number_format(self::getBV($user->id)),
                         'left' => number_format($weeklySale['left']),
                         'right' => number_format($weeklySale['right']),
-                        'loyaltyId' => $user->userData->loyaltyId,
+                        'packageId' => $user->userData->packageId,
                         'pkg' => 2000,
                         'lMembers' => $user->userData->leftMembers,
                         'rMembers' => $user->userData->rightMembers,
@@ -260,7 +260,7 @@ class MemberController extends Controller
                     'weeklySale'     => number_format(self::getBV($user->id)),
                     'left'     => number_format($weeklySale['left']),
                     'right'     => number_format($weeklySale['right']),
-                    'loyaltyId' => $user->userData->loyaltyId,
+                    'packageId' => $user->userData->packageId,
                     'pkg'     => 2000,
                     'lMembers'     => $user->userData->leftMembers,
                     'rMembers'     => $user->userData->rightMembers,
@@ -427,7 +427,7 @@ class MemberController extends Controller
         $level = $level + 1;
         $fields = array();
         if($level < 4){
-            $UserDatas = UserData::where('binaryUserId', '=', $userId)->where('status', 1)->get();
+            $UserDatas = UserData::where('binaryUserId', '=', $userId)->get();
             foreach ($UserDatas as $user) {
                 //if($user->refererId == $currentuserid || $user->binaryUserId == $currentuserid) {
                     $childLeft = UserData::where('binaryUserId', $user->user->id)->where('leftRight', 'left')->first();
@@ -455,7 +455,7 @@ class MemberController extends Controller
                         'weeklySale'     => number_format(self::getBV($user->user->id)),
                         'left'     => number_format($weeklySale['left']),
                         'right'     => number_format($weeklySale['right']),
-                        'loyaltyId' => $user->loyaltyId,
+                        'packageId' => $user->packageId,
                         'pkg'     => 2000,
                         'lMembers' => $user->leftMembers,
                         'rMembers' => $user->rightMembers,

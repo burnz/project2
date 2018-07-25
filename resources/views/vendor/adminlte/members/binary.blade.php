@@ -36,6 +36,8 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
+
+
     .tree-node {
     /*padding: 0;
     -webkit-border-radius: 10px;
@@ -110,6 +112,11 @@
 .node-lvl-3{
     background: linear-gradient(90deg, #FC7279, #FF9A9F);
 }
+
+.node-loyalty-0 .node-name{
+    background: linear-gradient(90deg, #a92133, #a92133);
+}
+
 .wp-node-loyalty{
     display: block;
     width: 100%;
@@ -547,7 +554,7 @@ var getTree = function (id, cb) {
                             weeklySale: -1,
                             avatarURL: 'default-avatar',
                             children: [],
-                            loyaltyId: 0,
+                            packageId: 0,
                             pos: 1,
                             level: 0,
                             lMembers: 0,
@@ -560,7 +567,7 @@ var getTree = function (id, cb) {
                             weeklySale: -1,
                             avatarURL: 'default-avatar',
                             children: [],
-                            loyaltyId: 0,
+                            packageId: 0,
                             pos: 2,
                             level: 0,
                             lMembers: 0,
@@ -573,7 +580,7 @@ var getTree = function (id, cb) {
                                 levelTitle: null,
                                 pkg: -1,
                                 weeklySale: -1,
-                                loyaltyId: 0,
+                                packageId: 0,
                                 avatarURL: 'default-avatar',
                                 children: [],
                                 pos: 1,
@@ -587,7 +594,7 @@ var getTree = function (id, cb) {
                                 levelTitle: null,
                                 pkg: -1,
                                 weeklySale: -1,
-                                loyaltyId: 0,
+                                packageId: 0,
                                 avatarURL: 'default-avatar',
                                 children: [],
                                 pos: 2,
@@ -604,7 +611,6 @@ var getTree = function (id, cb) {
                         fillTree(node.children[i]);
                     }
                 }
-
             }
 
             function rebuild(node) {
@@ -613,7 +619,7 @@ var getTree = function (id, cb) {
                     pkg: node.weeklySale < 0 ? '' : 'BV:' + node.weeklySale,
                     leginfo: node.weeklySale < 0 ? '' : 'L:' + node.left + ' R:' + node.right,
                     level: node.level,
-                    loyaltyId: node.loyaltyId,
+                    packageId: node.packageId,
                     lMembers: node.lMembers,
                     rMembers: node.rMembers,
                     lSale: node.left,
