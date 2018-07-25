@@ -3,6 +3,9 @@
     .help-block{
         display:block !important;
     }
+    .trans:hover{
+        text-decoration: underline;;
+    }
 </style>
 <div class="content">
     <div class="container-fluid">
@@ -108,14 +111,14 @@
                                             <!-- <h4 class="card-title">Command</h4> -->
 
                                             <div class="material-datatables table-responsive">
-                                                <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                                <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%;">
                                                     <thead class="text-thirdary">
                                                         <th style="width: 20%;">Date/Time</th>
                                                         <th>Type</th>
                                                         <th>In</th>
                                                         <th>Out</th>
                                                         <th>Info</th>
-                                                        <th>Transaction</th>
+                                                        <th width="30%">Transaction</th>
                                                     </thead>
                                                     <tbody>
                                                         @foreach($wallets as $wallet)
@@ -138,9 +141,9 @@
                                                                 <td>
                                                                     {{ $wallet->note }}
                                                                 </td>
-                                                                <td>
-                                                                    @if($wallet->note == 'Completed' && $wallet->created_at > '2018-07-20')
-                                                                    <a href="https://etherscan.io/tx/{{ $wallet->withdraws->transaction_hash }}" target="_blank">{{ $wallet->withdraws->transaction_hash }}</a>
+                                                                <td class="trans" width = "50" style="text-overflow: ellipsis; overflow: hidden">
+                                                                    @if($wallet->type == 10 && $wallet->created_at > '2018-07-20')
+                                                                    <a href="https://etherscan.io/tx/{{ $wallet->withdraws->transaction_hash }}" target="_blank" title="{{ $wallet->withdraws->transaction_hash }}">{{ str_limit($wallet->withdraws->transaction_hash, 30) }}</a>
                                                                     @endif
                                                                 </td>
                                                             </tr>
