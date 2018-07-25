@@ -481,7 +481,7 @@ class PackageController extends Controller
                 $package->save();
             }
            
-            $update = UserData::where('userId', Auth::user()->id)->update(["packageId" => 0]);
+            $update = UserData::where('userId', Auth::user()->id)->update(["packageId" => 0, "status" => 0]);
             if($update){
                 return $this->responseSuccess( $data = $money );
             }
