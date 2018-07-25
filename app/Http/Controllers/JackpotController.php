@@ -154,14 +154,17 @@ class JackpotController extends Controller
                     //Update doanh so cho dai ly
                     if($oUser->userData->packageId == 0) {
                         //get id agency
-                        $agencyId = User::_getAgency($oUser->id);
-                        $oTicket = Tickets::where('user_id', $agencyId)->where('week_year', $weekYear)->first();
-                        if(isset($oTicket)) {
-                            $oTicket->quantity += $item->ticket;
-                            $oTicket->save();
-                        } else {
-                            $field = ['user_id' => $agencyId, 'week_year' => $weekYear, 'quantity' => $item->ticket];
-                            Tickets::create($field);
+                        $agencyId = 0;
+                        User::_getAgency($oUser->id);
+                        if($agencyId > 0){
+                            $oTicket = Tickets::where('user_id', $agencyId)->where('week_year', $weekYear)->first();
+                            if(isset($oTicket)) {
+                                $oTicket->quantity += $item->ticket;
+                                $oTicket->save();
+                            } else {
+                                $field = ['user_id' => $agencyId, 'week_year' => $weekYear, 'quantity' => $item->ticket];
+                                Tickets::create($field);
+                            }
                         }
                     }
 
@@ -226,14 +229,17 @@ class JackpotController extends Controller
                     //Update doanh so cho dai ly
                     if($oUser->userData->packageId == 0) {
                         //get id agency
-                        $agencyId = User::_getAgency($oUser->id);
-                        $oTicket = Awards::where('user_id', $agencyId)->where('week_year', $weekYear)->first();
-                        if(isset($oTicket)) {
-                            $oTicket->value += $item->value;
-                            $oTicket->save();
-                        } else {
-                            $field = ['user_id' => $agencyId, 'week_year' => $weekYear, 'value' => $item->value];
-                            Awards::create($field);
+                        $agencyId = 0;
+                        User::_getAgency($oUser->id, $agencyId);
+                        if($agencyId > 0) {
+                            $oTicket = Awards::where('user_id', $agencyId)->where('week_year', $weekYear)->first();
+                            if(isset($oTicket)) {
+                                $oTicket->value += $item->value;
+                                $oTicket->save();
+                            } else {
+                                $field = ['user_id' => $agencyId, 'week_year' => $weekYear, 'value' => $item->value];
+                                Awards::create($field);
+                            }
                         }
                     }
 

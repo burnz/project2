@@ -260,7 +260,8 @@ class PackageController extends Controller
             //deduct ticket sale of agency sponsor 
             if($packageOldId == 0) {
                 //find agency
-                $parentId = User::_getAgency($user->id);
+                $parentId = 0;
+                User::_getAgency($user->id, $parentId);
 
                 if($parentId > 0) 
                 {
