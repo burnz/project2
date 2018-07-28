@@ -427,12 +427,12 @@
                                         })
                                     });
                                     $('#go-up').on('click', function () {
-                                        if (parentNode >= root) {
+                                        //if (parentNode >= root) {
                                             selectedNodeID = parentNode;
                                             getTree(parentNode, function (err) {
                                                 if (err) console.log(err);
                                             })
-                                        }
+                                        //}
                                     });
                                     $('#go-left').on('click', function () {
                                         if (childLeftId > 0) {
