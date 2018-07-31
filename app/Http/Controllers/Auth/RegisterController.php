@@ -24,7 +24,7 @@ use URL;
 use Session;
 use Mail;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzClient;
 
 /**
  * Class RegisterController
@@ -332,7 +332,7 @@ class RegisterController extends Controller
     //Call API to create user on cscjackpot
     public function createUserCSCJackpot($email, $referralEmail)
     {
-        $client = new Client([
+        $client = new GuzzClient([
             'base_uri' => config('app.cscjackpot_uri'),
             'headers' => [
                 'Accept' => 'application/json',
