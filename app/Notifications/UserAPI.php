@@ -28,7 +28,7 @@ class UserAPI extends Notification
             // ->cc($dataSendMail['mail_to'], $this->user->name)
             ->greeting('Dear '.$this->user->name. ',')
             ->line('Thank you for registering on the CARCoin.')
-            ->line('Your random password:', $this->password)
+            ->line('Your random password:' . $this->password)
             ->line('Please change password as soon as possilbe!');
     }
 }
