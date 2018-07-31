@@ -136,7 +136,7 @@ return [
     'f3_bonus' => 0.01,
     'percent_reserve' => 0.4,
     'link_ty_gia' => 'https://www.bitstamp.net/api/v2/ticker/',
-    'time_interval'=> 30000,
+    'time_interval'=> 5000,
     'count_down_time_login' => 15,
     'amount_add_wallet'=> 10,
     'pre_sale_end'=> env('PRE_SALE_END', '2017-12-31'),
@@ -146,7 +146,8 @@ return [
     'fullnode_api_url' => env('FULLNODE_API_URL'),
     'car_exchange_url' => env('CAR_EXCHANGE_URL'),
     'condition' => env('CONDITION'),
-    'salt' => env('SALT'),
+    'jackpot_api_key' => env('JACKPOT_API_KEY'),
+    'cscjackpot_uri' => env('CSCJACKPOT_URI'),
     'access_token' => env('ACCESS_TOKEN'),
     /*
     |--------------------------------------------------------------------------

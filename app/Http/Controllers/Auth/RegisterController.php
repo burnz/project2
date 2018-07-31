@@ -19,9 +19,12 @@ use App\Notifications\UserRegistered;
 use App\UserData;
 use App\UserCoin;
 use App\CLPWallet;
+use App\UserFailList;
 use URL;
 use Session;
 use Mail;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 /**
  * Class RegisterController
@@ -287,8 +290,6 @@ class RegisterController extends Controller
 
             $user = User::create($fields);
 
-            
-
             //SAVE to User_datas
             $fields['userId'] = $user->id;
             //$fields['walletAddress'] = $accountWallet['walletAddress'];
@@ -304,6 +305,10 @@ class RegisterController extends Controller
             //Luu thong tin ca nhan vao bang user_coin
             //$fields['backupKey'] = $backupKey;
             $userCoin = UserCoin::create($fields);
+
+            //Call API Jackpot to create users
+            //$referralEmail = User::find($user->refererId)->email;
+            //$this->createUserCSCJackpot($user->email, $referralEmail);
 
             //gui mail
             //ma hoa send link active qua mail
@@ -323,6 +328,34 @@ class RegisterController extends Controller
             \Log::error('Running RegisterController has error: ' . date('Y-m-d') .$e->getMessage());
         }
     }
+
+    //Call API to create user on cscjackpot
+    public function createUserCSCJackpot($email, $referralEmail)
+    {
+        $client = new Client([
+            'base_uri' => config('app.cscjackpot_uri'),
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $data = [
+                    'Email' => $email,
+                    'EmailReferal' => $referralEmail,
+                    'APIKey' => config('app.jackpot_api_key')
+                ];
+        $request = $client->request('POST', '/api/User/CreateUser', ['json' => $data]);
+
+        $contents = $request->getBody()->getContents();
+        $result = json_decode($contents, true);
+
+        //if fail insert to log
+        if($result['IsError'] == 1) {
+            $fields = ['email' => $email, 'referral_email' => $referralEmail, 'status' => 0];
+            UserFailList::create($fields);
+        }
+    }
+
     /** 
      * @author huynq
      * @param type $username
