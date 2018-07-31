@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use ErrorException;
 
 class Handler extends ExceptionHandler
@@ -46,11 +47,18 @@ class Handler extends ExceptionHandler
 	 */
 	public function render($request, Exception $exception)
 	{
-		if(config('app.debug')=== false) {
+		if(config('app.debug') === false) {
 
 			if ($exception instanceof AuthorizationException) {
 				return $this->unauthorized($request, $exception);
 			}
+
+			if ($exception instanceof TokenMismatchException) {
+	            return redirect()
+	                ->back()
+	                ->withErrors(["The form has expired due to inactivity. Please try again."]);
+
+	        }
 
 			if ($this->isHttpException($exception)) {
 				switch ($exception->getStatusCode()) {
