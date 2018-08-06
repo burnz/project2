@@ -69,7 +69,7 @@ class JackpotController extends Controller
                 $user = User::create($fields);
 
                 //send email cho user
-                $user->notify(new UserAPI($user, $password));
+                //$user->notify(new UserAPI($user, $password));
 
                 //user_data
                 $fieldData = [
