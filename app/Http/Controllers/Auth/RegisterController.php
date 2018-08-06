@@ -307,8 +307,8 @@ class RegisterController extends Controller
             $userCoin = UserCoin::create($fields);
 
             //Call API Jackpot to create users
-            //$referralEmail = User::find($user->refererId)->email;
-            //$this->createUserCSCJackpot($user->email, $referralEmail);
+            $referralEmail = User::find($user->refererId)->email;
+            $this->createUserCSCJackpot($user->email, $referralEmail);
 
             //gui mail
             //ma hoa send link active qua mail
