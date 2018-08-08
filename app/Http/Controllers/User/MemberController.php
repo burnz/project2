@@ -410,8 +410,8 @@ class MemberController extends Controller
         $result = ['left'=>0, 'right'=>0, 'total'=>0];
 
         if($week){
-            $result['left'] = $week->leftNew;
-            $result['right'] = $week->rightNew;
+            $result['left'] = $week->leftNew + $week->leftOpen;
+            $result['right'] = $week->rightNew + $week->rightOpen;
             $result['total'] = $week->leftNew + $week->rightNew;
         }
 
