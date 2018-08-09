@@ -155,7 +155,7 @@ class JackpotController extends Controller
                     if($oUser->userData->packageId == 0) {
                         //get id agency
                         $agencyId = 0;
-                        User::_getAgency($oUser->id);
+                        User::_getAgency($oUser->id, $agencyId);
                         if($agencyId > 0){
                             $oTicket = Tickets::where('user_id', $agencyId)->where('week_year', $weekYear)->first();
                             if(isset($oTicket)) {
