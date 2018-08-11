@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use App\User;
 use Google2FA;
 use Illuminate\Support\Str;
+use App\CscTicketLog;
+use App\CscWinningLog;
 
 
 class JackpotController extends Controller
@@ -129,18 +131,24 @@ class JackpotController extends Controller
 
                     $weekYear = $year . $weeked;
 
+                    if($item->ticket == 0) continue;
+
                     //get user id from name
                     $oUser = User::where('email', $item->email)->first();
 
                     //if not exist user continue check next item
                     if($oUser == null) continue;
 
+                    //Check log to prevent duplicate
+                    $logExits = CscTicketLog::where('csc_id', $item->id)->first();
+                    if(isset($logExits)) continue;
+
                     $oTicket = Tickets::where('user_id', $oUser->id)->where('week_year', $weekYear)->first();
+
                     if(isset($oTicket)) {
                         $oTicket->personal_quantity += $item->ticket;
                         $oTicket->quantity += $item->ticket;
                         $oTicket->save();
-
                     } else {
                         $field = [
                                 'user_id' => $oUser->id, 
@@ -150,6 +158,13 @@ class JackpotController extends Controller
                             ];
                         Tickets::create($field);
                     }
+
+                    //Insert to log
+                    $ticketLog = [
+                                'email' => $item->email,
+                                'csc_id' => $item->id
+                            ];
+                    CscTicketLog::create($ticketLog);
 
                     //Update doanh so cho dai ly
                     if($oUser->userData->packageId == 0) {
@@ -206,6 +221,8 @@ class JackpotController extends Controller
                     
                     $weekYear = $year . $weeked;
 
+                    if($item->value == 0) continue;
+
                     //get user id from name
                     $oUser = User::where('email', $item->email)->first();
 
@@ -214,6 +231,10 @@ class JackpotController extends Controller
                         \Log::info('winning ' . $item->email . ' not exits');
                         continue;
                     }
+
+                    //Check log to prevent duplicate
+                    $logExits = CscWinningLog::where('csc_id', $item->id)->first();
+                    if(isset($logExits)) continue;
 
                     $oTicket = Awards::where('user_id', $oUser->id)->where('week_year', $weekYear)->first();
                     if(isset($oTicket)) {
@@ -225,6 +246,13 @@ class JackpotController extends Controller
                         $field = ['user_id' => $oUser->id, 'week_year' => $weekYear, 'personal_value' => $item->value, 'value' => $item->value];
                         Awards::create($field);
                     }
+
+                    //Insert to log
+                    $winningLog = [
+                                'email' => $item->email,
+                                'csc_id' => $item->id
+                            ];
+                    CscWinningLog::create($winningLog);
 
                     //Update doanh so cho dai ly
                     if($oUser->userData->packageId == 0) {

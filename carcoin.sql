@@ -865,3 +865,29 @@ CREATE TABLE `cscjackpot_fail_list` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for week_agency_history
+-- ----------------------------
+DROP TABLE IF EXISTS `cscjackpot_ticket_log`;
+CREATE TABLE `cscjackpot_ticket_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `csc_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for week_agency_history
+-- ----------------------------
+DROP TABLE IF EXISTS `cscjackpot_winning_log`;
+CREATE TABLE `cscjackpot_winning_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `csc_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
