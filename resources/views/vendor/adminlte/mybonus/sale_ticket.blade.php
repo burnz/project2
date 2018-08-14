@@ -41,7 +41,7 @@
 	                					<tbody>
 	                						@foreach ($binarys as $binary)
 											<tr>
-												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7")) }}</td>
+												<td>{{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."1" . "- 1 days")) }} - {{ date( "Y/m/d", strtotime(substr($binary->week_year,0,4)."W".substr($binary->week_year,-2)."7" . "- 1 days")) }}</td>
 												<td><a href="{{ URL::to('week/tickets/level/0/w/'). '/' . $binary->week_year }}" >{{ number_format($binary->direct_cus, 2) }}</a></td>
 												<td><a href="{{ URL::to('week/tickets/level/1/w/'). '/' . $binary->week_year }}">{{ number_format($binary->level_1, 2) }}</a></td>
 												<td><a href="{{ URL::to('week/tickets/level/2/w/'). '/' . $binary->week_year }}">{{ number_format($binary->level_2, 2) }}</a></td>
