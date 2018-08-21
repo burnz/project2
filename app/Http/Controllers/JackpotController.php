@@ -81,6 +81,7 @@ class JackpotController extends Controller
 
                 $userData = UserData::create($fieldData);
 
+                User::updateUserGenealogy($user->id);
                 //user_coin
                 $userCoin = UserCoin::create(['userId' => $user->id]);
 
