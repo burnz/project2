@@ -82,7 +82,7 @@ class MemberController extends Controller
                     if($userTreePermission = $user->userTreePermission)
                         $lstGenealogyUser = explode(',', $userTreePermission->genealogy);
                     $fields = array();
-                    if(isset($request['id']) && $request['id'] > 0 && (($lstGenealogyUser && in_array($request['id'], $lstGenealogyUser)) || $currentuserid == $request['id']) ){
+                    if(isset($request['id']) && $request['id'] > 0 ){
                         $userDatas = UserData::where('refererId', $request['id'])->get();
                         $fields = array();
                         foreach ($userDatas as $userData) {
