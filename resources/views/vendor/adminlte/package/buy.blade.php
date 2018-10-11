@@ -250,7 +250,7 @@
                             </div>
                             <!--end modal-->
 
-                            <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Become a CSC Jackpot agency</button>
+                            <!-- <button type="button" id="btnBuyPackageS1" class="btn btn-primary btn-round">Become a CSC Jackpot agency</button> -->
 
                         </div>
                         <div class="col-md-12 my-4">

@@ -91,12 +91,12 @@
                                                                         </span> Transfer
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button id="btnConvert" class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-convert">
+                                            <!-- <button id="btnConvert" class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-convert">
                                                 <span class="btn-label">
                                                     <i class="material-icons">swap_horiz</i>
                                                                         </span> Convert to BTC
                                                 <div class="ripple-container"></div>
-                                            </button>
+                                            </button> -->
                                         </div>
                                     </div>
                                     <div class="col-md-12">
