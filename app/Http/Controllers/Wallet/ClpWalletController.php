@@ -268,6 +268,68 @@ class ClpWalletController extends Controller {
         return response()->json(array('err' => true, 'msg' => null));
     }
 
+    public function sellCAR(Request $request)
+    {
+        if($request->ajax()) 
+        {
+            $userCoin = Auth::user()->userCoin;
+
+            $carConvertErr = '';
+            if($request->carConvert == ''){
+                $carConvertErr = trans('adminlte_lang::wallet.amount_required');
+            }elseif (!is_numeric($request->carConvert)  || $request->carConvert < 0){
+                $carConvertErr = trans('adminlte_lang::wallet.amount_number');
+            }elseif ($userCoin->clpCoinAmount < $request->carConvert){
+                $carConvertErr = 'Not enough CAR';
+            }
+
+            if ( $carConvertErr == '') {
+                //Amount CAR
+                $clpRate = ExchangeRate::getCLPBTCRate();
+                $amountBTC = $request->carConvert * $clpRate;
+                $userCoin->clpCoinAmount = ($userCoin->clpCoinAmount - $request->carConvert);
+                $userCoin->btcCoinAmount = $userCoin->btcCoinAmount + $amountBTC;
+                $userCoin->save();
+
+                $fieldCLP = [
+                    'walletType' => Wallet::CLP_WALLET,//usd
+                    'type' => 100,
+                    'inOut' => Wallet::OUT,
+                    'userId' => Auth::user()->id,
+                    'amount' => $request->carConvert,
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
+                ];
+                Wallet::create($fieldCLP);
+
+                $fieldBTC = [
+                    'walletType' => Wallet::BTC_WALLET,//reinvest
+                    'type' => 100,
+                    'inOut' => Wallet::IN,
+                    'userId' => Auth::user()->id,
+                    'amount' => $amountBTC,
+                    'note'   => 'Rate ' . number_format($clpRate, 8) . ' BTC'
+                ];
+
+                Wallet::create($fieldBTC);
+                $request->session()->flash( 'successMessage', 'Success!' );
+
+                return response()->json(array('err' => false));
+            } else {
+                $result = [
+                        'err' => true,
+                        'msg' =>[
+                                'carConvertErr' => $carConvertErr,
+                            ]
+                    ];
+
+                return response()->json($result);
+            }
+            
+        }
+
+        return response()->json(array('err' => false, 'msg' => null));
+    }
+
     /**
      * @author Huynq
      * @param Request $request

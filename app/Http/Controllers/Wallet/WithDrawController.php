@@ -622,6 +622,8 @@ class WithDrawController extends Controller
 
 	public function btcWithDraw( Request $request )
 	{
+		return redirect()->route('wallet.btc');
+		
 		$user = Auth::user()->userCoin;
 		//send coin if request post
 		if ( $request->isMethod('post') ) {

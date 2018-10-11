@@ -71,11 +71,11 @@
                                                     </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button id="btnWithdraw" class="btn btn-thirdary btn-round" data-toggle="modal"
-                                                    data-target="#bitcoin-withdraw">
+                                            <button id="btnTransferToCSC" class="btn btn-thirdary btn-round" data-toggle="modal"
+                                                    data-target="#bitcoin-csc">
                                                     <span class="btn-label">
-                                                        <i class="material-icons reflect">shop</i>
-                                                    </span> Withdraw
+                                                        <i class="material-icons reflect">swap_horiz</i>
+                                                    </span> Transfer to Jackpot
                                                 <div class="ripple-container"></div>
                                             </button>
                                         </div>

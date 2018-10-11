@@ -88,6 +88,7 @@ Route::group( ['middleware' => ['auth']], function() {
     Route::get('wallets/btctranfer',"Wallet\BtcWalletController@btctranfer");
 
     Route::get('wallets/car/transfer',"Wallet\ClpWalletController@clptranfer");
+    Route::get('wallets/car/convert',"Wallet\ClpWalletController@sellCAR");
 
     //Route::get('wallets/deposit', 'Wallet\BtcWalletController@deposit');
     //Route::get('wallets/switchbtcclp', 'Wallet\BtcWalletController@switchBTCCLP');

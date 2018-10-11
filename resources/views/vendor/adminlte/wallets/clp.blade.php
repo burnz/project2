@@ -91,6 +91,12 @@
                                                                         </span> Transfer
                                                 <div class="ripple-container"></div>
                                             </button>
+                                            <button id="btnConvert" class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-convert">
+                                                <span class="btn-label">
+                                                    <i class="material-icons">swap_horiz</i>
+                                                                        </span> Convert to BTC
+                                                <div class="ripple-container"></div>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -291,6 +297,40 @@
             </div>
             <div class="modal-footer">
                 <button type="button" id="car-tranfer" class="btn btn-primary btn-round">Submit</button>
+                <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="carcoin-convert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">close</i> </button>
+                <h4 class="modal-title" id="myModalLabel8">Transfer - <b class="carcoin-color" style="vertical-align: bottom;"><img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;">{{ number_format($walletAmount['amountCLP'], 5) }}</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group form-group"> <span class="input-group-addon"> <img src="/Carcoin/img/ic_zcoin-pri.svg" style="width: 24px;"> </span>
+                            <div class="form-group label-floating">
+                                <label class="control-label">Carcoin Amount</label>
+                                <input type="number" class="form-control switch-CAR-to-BTC" id="carConvert" name="carConvert">
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"> <img src="/Carcoin/img/bitcoin-symbol.svg" style="width: 24px;"> </span>
+                            <div class="form-group label-floating">
+                                <input type="number" class="form-control switch-BTC-to-CAR" id="btcAmount" name="btcAmount" readonly>
+                                <p class="help-block"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="car-convert" class="btn btn-primary btn-round">Submit</button>
                 <button type="button" class="btn btn-outline-primary btn-round" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -568,6 +608,56 @@
                         swal("Some things wrong!");
                     });
                 }
+            });
+            $('#car-convert').on('click', function () {
+                var carConvert = $('#carConvert').val();
+                var btcAmount = $('#btcAmount').val();
+
+                if($.trim(carConvert) == ''){
+                    $("#carConvert").parents("div.form-group").addClass('has-error');
+                    $("#carConvert").parents("div.form-group").find('.help-block').text("{{trans('adminlte_lang::wallet.amount_required')}}");
+                }else{
+                    $("#carConvert").parents("div.form-group").removeClass('has-error');
+                    $("#carConvert").parents("div.form-group").find('.help-block').text('');
+                }
+                if($.trim(btcAmount) == ''){
+                    $("#btcAmount").parents("div.form-group").addClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text("BTC Amount is required");
+                }else{
+                    $("#btcAmount").parents("div.form-group").removeClass('has-error');
+                    $("#btcAmount").parents("div.form-group").find('.help-block').text('');
+                }
+                
+                if($.trim(carConvert) != '' && $.trim(btcAmount) != ''){
+                    $.ajax({
+                        url: "{{ url('wallets/car/convert') }}",
+                        data: {carConvert: carConvert}
+                    }).done(function (data) {
+                        if (data.err) {
+                            if(typeof data.msg !== undefined){
+                                if(data.msg.carConvertErr !== '') {
+                                    $("#carConvert").parents("div.form-group").addClass('has-error');
+                                    $("#carConvert").parents("div.form-group").find('.help-block').text(data.msg.carConvertErr);
+                                }else {
+                                    $("#carConvert").parents("div.form-group").removeClass('has-error');
+                                    $("#carConvert").parents("div.form-group").find('.help-block').text('');
+                                }
+                            }
+                        } else {
+                            $('#tranfer').modal('hide');
+                            location.href = '{{ url()->current() }}';
+                        }
+                    }).fail(function () {
+                        $('#tranfer').modal('hide');
+                        swal("Some things wrong!");
+                    });
+                }
+            });
+
+            $(".switch-CAR-to-BTC").on('keyup change mousewheel', function () {
+                var value = $(this).val();
+                var result = value * globalCARBTC;
+                $(".switch-BTC-to-CAR").val(result.toFixed(5));
             });
 
             //filter
