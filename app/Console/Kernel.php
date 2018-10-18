@@ -41,55 +41,55 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //Auto add to binary at 23:30 every sunday
-        try {
-            $schedule->call(function () {
-                AutoAddBinary::addBinary();
-            })->weekly()->saturdays()->at('07:00'); //->weekly()->sundays()->at('23:30');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         AutoAddBinary::addBinary();
+        //     })->weekly()->saturdays()->at('07:00'); //->weekly()->sundays()->at('23:30');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 
-        // Binary bonus run on monday each week
-        try {
-            $schedule->call(function () {
-                Bonus::bonusBinaryWeekCron();
-            })->weekly()->sundays()->at('00:15');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // // Binary bonus run on monday each week
+        // try {
+        //     $schedule->call(function () {
+        //         Bonus::bonusBinaryWeekCron();
+        //     })->weekly()->sundays()->at('00:15');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 	
 
-        // Binary bonus infinity interest
+        // // Binary bonus infinity interest
 	
-        try {
-            $schedule->call(function () {
-                Bonus::bonusRevenueCron();
-            })->weekly()->sundays()->at('00:30');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         Bonus::bonusRevenueCron();
+        //     })->weekly()->sundays()->at('00:30');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 	
 
-        // Binary bonus leadership monthly
-        try {
-            $schedule->call(function () {
-                Bonus::bonusAwardCron();
-            })->weekly()->sundays()->at('00:45');
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // // Binary bonus leadership monthly
+        // try {
+        //     $schedule->call(function () {
+        //         Bonus::bonusAwardCron();
+        //     })->weekly()->sundays()->at('00:45');
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 
         /**
          * @author Huynq 
          * run every 30s update notification
          */
-        try {
-            $schedule->call(function () {
-                //UpdateBtcCoin::UpdateBtcCoinAmount();
-            })->everyMinute();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         //UpdateBtcCoin::UpdateBtcCoinAmount();
+        //     })->everyMinute();
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 
         // Cronjob update exchange BTC, CLP rate
         try {
@@ -101,13 +101,13 @@ class Kernel extends ConsoleKernel
         }
 
         // Cron job update status withdraw BTC
-        try {
-            $schedule->call(function () {
-                //UpdateStatusBTCWithdraw::updateStatusWithdraw();
-            })->everyFiveMinutes();
-        } catch (\Exception $ex) {
-            Log::info($ex);
-        }
+        // try {
+        //     $schedule->call(function () {
+        //         //UpdateStatusBTCWithdraw::updateStatusWithdraw();
+        //     })->everyFiveMinutes();
+        // } catch (\Exception $ex) {
+        //     Log::info($ex);
+        // }
 
         // Cron job update status withdraw CLP
         try {
