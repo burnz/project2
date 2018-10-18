@@ -59,7 +59,9 @@ class RegisterController extends Controller
             $referrerName = $user->name;
         }
 
-        return view('adminlte::auth.register', ['refererId' =>$refererId, 'referrerName' => $referrerName]);
+        return redirect("login");
+
+        //return view('adminlte::auth.register', ['refererId' =>$refererId, 'referrerName' => $referrerName]);
     }
 
     /**
