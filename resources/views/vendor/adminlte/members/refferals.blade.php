@@ -28,7 +28,7 @@
                                             <th>{{ trans('adminlte_lang::member.refferals_fullname') }}</th>
                                             <th>Package</th>
                                             <th>{{ trans('adminlte_lang::member.refferals_more') }}</th>
-                                            <th>Action</th>
+                                            <!-- <th>Action</th> -->
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -45,7 +45,7 @@
                                                 <td>
                                                     <a href="{{ URL::to('members/referrals/'.$userData->user->uid.'/detail') }}" class="btn btn-xs btn-info pull-left" style="margin-right: 3px;margin-top: 1px;">{{ trans('adminlte_lang::default.btn_view') }}</a>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                     @if($userData->isBinary==0 && Auth::user()->userData->isBinary > 0)
                                                         <button type="button" class="btn btn-fill btn-xs btn-info btn-round btn_submit_left" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Left</button>
                                                         <button type="button" class="btn btn-fill btn-xs btn-primary btn-round btn_submit_right" data-name="{{$userData->user->name}}" data-select="{{$userData->userId}}">Push to Right</button>
@@ -53,7 +53,7 @@
                                                         <button type="button" class="btn btn-fill btn-xs btn-info btn-round btn_submit_left" disabled="true" >Push to Left</button>
                                                         <button type="button" class="btn btn-fill btn-xs btn-primary btn-round btn_submit_right" disabled="true">Push to Right</button>
                                                     @endif
-                                                </td>
+                                                </td> -->
                                             </tr>
                                             @endforeach
                                         </tbody>
