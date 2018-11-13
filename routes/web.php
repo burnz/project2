@@ -187,7 +187,7 @@ Route::post('clpnotification','GetNotificationController@clpNotification');
 //Route::get('run-ticket-bonus', 'TestController@testInfinityInterest');
 //Route::get('run-award-bonus','TestController@testGlobalBonus');
 //Route::get('test-auto-binary',"TestController@testAutoAddBinary");
-//Route::get('test',"TestController@test");
+Route::get('test',"TestController@test");
 
 
 /***------- END TEST -------***/

@@ -79,12 +79,12 @@
                                                                         </span> Deposit
                                                 <div class="ripple-container"></div>
                                             </button>
-                                            <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw" id="btnWithdraw">
+                                            <!-- <button class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-withdraw" id="btnWithdraw">
                                                 <span class="btn-label">
                                                     <i class="material-icons reflect">shop</i>
                                                                         </span> Withdraw
                                                 <div class="ripple-container"></div>
-                                            </button>
+                                            </button> -->
                                             <button id="btnTransfer" class="btn btn-thirdary btn-round" data-toggle="modal" data-target="#carcoin-transfer">
                                                 <span class="btn-label">
                                                     <i class="material-icons">swap_horiz</i>

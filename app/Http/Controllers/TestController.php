@@ -43,6 +43,9 @@ use App\Tickets;
 use App\Awards;
 
 use Illuminate\Http\Request;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client as GuzzClient;
+use App\UserFailList;
 
 /**
  * Description of TestController
@@ -273,34 +276,55 @@ class TestController {
         return redirect()->route('test.showAward');
     }
 
+    //Call API to create user on cscjackpot
+    public function createUserCSCJackpot($email, $referralEmail)
+    {
+        $client = new GuzzClient([
+            'base_uri' => config('app.cscjackpot_uri'),
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+        $data = [
+                    'Email' => $email,
+                    'EmailReferal' => $referralEmail,
+                    'APIKey' => config('app.jackpot_api_key')
+                ];
+        $request = $client->request('POST', '/api/User/CreateUser', ['json' => $data]);
+
+        $contents = $request->getBody()->getContents();
+        $result = json_decode($contents, true);
+
+        //if fail insert to log
+        if($result['IsError'] == 1) {
+            $fields = ['email' => $email, 'referral_email' => $referralEmail, 'status' => 0];
+            UserFailList::create($fields);
+        }
+    }
+
     function test() 
     {
-        //
-        $userCoins = UserCoin::where('reinvestAmount', '>', 0)->get();
+        //up gói tự động
+        $userPackage = ['chihieu.luong@gmail.com', 'phuonghongcb85@gmail.com', 'sin92tn@gmail.com', 'justin.nguyen.hn@gmail.com', 'hoahoangh2n@gmail.com'];
+        $baotro = ['donhung499@gmail.com', 'lequan90tn@gmail.com', 'chuyencoi77@gmail.com', 'chihieu.luong@gmail.com', 'phuonghongcb85@gmail.com'];
 
-        foreach($userCoins as $user)
-        {
-            
-            //insert log
-            $fieldUsd = [
-                'walletType' => Wallet::CLP_WALLET,//usd
-                'type' =>  100,//bonus week
-                'inOut' => Wallet::IN,
-                'userId' => $user->userId,
-                'amount' => $user->reinvestAmount,
-                'note'  => 'Return car from reinvest wallet'
-            ];
-
-            Wallet::create($fieldUsd);
-
-            $user->clpCoinAmount += $user->reinvestAmount;
-            $user->reinvestAmount = 0;
-            $user->save();
+        foreach($userPackage as $key => $userData)
+        {            
+            //echo $userData . '---'  . $baotro[$key];
+            $this->createUserCSCJackpot($userData, $baotro[$key]);
         }
 
         dd("XXX");
     }
 
-    
+    static function getNextActiveAgency($id) {
+        $ref = UserData::where('userId', '=', $id)->first();
+        if($ref->packageId == 0) {
+            self::getNextActiveAgency($ref->userId);
+        }else{
+            return $ref->userId;
+        }
+    }
 
 }
