@@ -103,59 +103,7 @@ class PackageController extends Controller
 
 
 
-    public function rankProcess()
-    {
-        $lstUser = User::where('active', '=', 1)->get();
-        foreach($lstUser as $user){
-            $userData=$user->userData;
-            $packageId=$userData->packageId;
-            $rank=0;
-            $totalLeft=$userData->totalSaleLeft;
-            $totalRight=$userData->totalSaleRight;
-            if($totalLeft >= config('carcoin.loyalty_upgrate_silver') && 
-                $totalRight >= config('carcoin.loyalty_upgrate_silver') && 
-                $packageId >= 1 )
-            {
-                $rank=1;
-            }
-
-            if($totalLeft >= config('carcoin.loyalty_upgrate_gold') && 
-                $totalRight >=config('carcoin.loyalty_upgrate_gold') && 
-                $packageId >= 2)
-            {
-                $rank=2;
-            }
-
-            if($totalLeft >= config('carcoin.loyalty_upgrate_pear') && 
-                $totalRight >= config('carcoin.loyalty_upgrate_pear') && 
-                $packageId >= 3)
-            {
-                $rank=3;
-            }
-
-            if($totalLeft >= config('carcoin.loyalty_upgrate_emerald') && 
-                $totalRight >= config('carcoin.loyalty_upgrate_emerald') && 
-                $packageId == 4)
-            {
-                $rank=4;
-            }
-
-            if($totalLeft >= config('carcoin.loyalty_upgrate_diamond') && 
-                $totalRight >= config('carcoin.loyalty_upgrate_diamond') && 
-                $packageId == 4)
-            {
-                $rank=5;
-            }
-
-            if($userData->loyaltyId<$rank)
-            {
-                $userData->loyaltyId=$rank;
-                $userData->save();
-            }
-
-        }
-    }
-
+   
     public function invest(Request $request)
     {
 
@@ -275,6 +223,7 @@ class PackageController extends Controller
                 'refund_type'=>$request->refundType,
                 'amount_carcoin'=>round($amount_increase / ExchangeRate::getCLPUSDRate(), 2),
                 'buy_date' => date('Y-m-d H:i:s'),
+                'release_date' => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") ."+ 90 days")),
                 'weekYear' => $weekYear,
             ]);
 
@@ -398,9 +347,6 @@ class PackageController extends Controller
      * @param Request $request
      * @return type
      */
-
-
-
     public function reduceAmount($amount_increase)
     {
         $lstUser = User::where('active', '=', 1)->get();
@@ -450,57 +396,51 @@ class PackageController extends Controller
         }
     }
 
-    public function withDraw(Request $request) {
-        if($request->ajax()){
-            $tempHistoryPackage = UserPackage::where("userId",Auth::user()->id)
-                    ->where('id',$request->id)->first();
-            if(!isset($tempHistoryPackage)){
-                $message = trans("adminlte_lang::home.not_buy_package");
-                return $this->responseError($errorCode = true,$message);
-            }
-            //check userID and check withdraw
-            if( $tempHistoryPackage->withdraw == 1 ){
-                $message = trans("adminlte_lang::home.package_withdrawn");
-                return $this->responseError($errorCode = true,$message);
-            }
-           
+    public function withDraw(Request $request) 
+    {
+        if($request->ajax())
+        {
             $datetime1 = new DateTime(date("Y-m-d H:i:s"));
-            //get release date của package cuối cùng <-> max id
-            $datetime2 = new DateTime($tempHistoryPackage->release_date);
-            $interval = $datetime1->diff($datetime2);
-
+            
             //compare
-            if( $interval->format('%R%a') > 0 ){
-                $message = trans("adminlte_lang::home.not_enought_time");
-                return $this->responseError($errorCode = true,$message);
-            }else{
-                UserPackage::where("id",$tempHistoryPackage->id)->update(["withdraw"=> 1 ]);
-                $amountCLP=$tempHistoryPackage->refund_type==1?round($tempHistoryPackage->amount_increase / ExchangeRate::getCLPUSDRate(), 2):$tempHistoryPackage->amount_carcoin;
+            $userPackages = UserPackage::where("userId",Auth::user()->id)->get();
+            foreach($userPackages as $package) 
+            {
+                if($package->withdraw == 1) {
+                    $message = trans("adminlte_lang::home.package_withdrawn");
+                    return $this->responseError($errorCode = true,$message);
+                    break;
+                }
+
+                //get release date của package cuối cùng <-> max id
+                $datetime2 = new DateTime(date('Y-m-d H:i:s', strtotime($package->buy_date . "+ 90 days")));
+                $interval = $datetime1->diff($datetime2);
+                if( $interval->format('%R%a') > 0 ){
+                    $message = trans("adminlte_lang::home.not_enought_time");
+                    return $this->responseError($errorCode = true,$message);
+                }
+
+                $amountCLP = $package->refund_type == 1 ? round($package->amount_increase / ExchangeRate::getCLPUSDRate(), 2):$package->amount_carcoin;
                 $money = Auth()->user()->userCoin->clpCoinAmount + $amountCLP;
                 $update = UserCoin::where("userId",Auth::user()->id)
                         ->update(["clpCoinAmount" => $money]);
-                $fieldUsd = [
+                $fields = [
                     'walletType' => Wallet::CLP_WALLET,//usd
                     'type' => Wallet::WITHDRAW_PACK_TYPE,
                     'inOut' => Wallet::IN,
                     'userId' => Auth::user()->id,
                     'amount' => $amountCLP,
-                    'note'   => 'Withdraw $'.$tempHistoryPackage->amount_increase.' = '.$amountCLP.' Carcoin from package '.$tempHistoryPackage->packageId
+                    'note'   => 'Withdraw $'.$package->amount_increase.' = '.$amountCLP.' car from package '.$package->packageId
                 ];
-                Wallet::create($fieldUsd);
-                //Update packageId = 0 after withdraw
-                //If over 12 months from release_date then withdraw don't update packageId = 
-                $twelveMonth = strtotime($tempHistoryPackage->release_date . "+ 6 months");
-                $datetime2 = new DateTime(date('Y-m-d H:i:s', $twelveMonth));
-                $interval = $datetime1->diff($datetime2);
+                Wallet::create($fields);
 
-                $this->reduceAmount($tempHistoryPackage->amount_increase);//reduce amount
-
-                if( $interval->format('%R%a') > 0 ) 
-                    $update=UserData::where('userId', Auth::user()->id)->update(["packageId" => 0,"packageDate"=>null]);
-                if($update){
-                    return $this->responseSuccess( $data = $money );
-                }
+                $package->withdraw = 1;
+                $package->save();
+            }
+           
+            $update = UserData::where('userId', Auth::user()->id)->update(["packageId" => 0]);
+            if($update){
+                return $this->responseSuccess( $data = $money );
             }
         }
     }

@@ -288,7 +288,8 @@
                                         <th>Refund Type</th>
                                         <th>Holding Amount</th>
                                         <th>Carcoin Amount</th>
-                                        <!-- <th>Status</th> -->
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </thead>
                                     <tbody>
                                         @if(count($userPack)>0)
@@ -299,18 +300,23 @@
                                                     <td>{{$upVal->refund_type==1?'By USD':'By Carcoin'}}</td>
                                                     <td>${{number_format($upVal->amount_increase,0)}}</td>
                                                     <td>{{number_format($upVal->amount_carcoin,0)}} CAR</td>
-                                                    <!-- <td>
+                                                    <td>
                                                         @if($upVal->withdraw==1)
                                                             <button class="btn btn-simple btn-google m-0 p-0">Released</button>
                                                         @else
-                                                            @if($datetimeNow->diff(new DateTime($upVal->release_date))->format('%R%a')>0)
-                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Lending</button>
-                                                            @else
-                                                                <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
+                                                            @if($datetimeNow->diff(new DateTime(date('Y-m-d H:i:s', strtotime($upVal->buy_date . "+ 90 days"))))->format('%R%a') > 0 || $upVal->withdraw == 0)
+                                                                <button class="btn btn-simple btn-linkedin m-0 p-0">Holding</button>
                                                             @endif
                                                         @endif
                                                         
-                                                    </td> -->
+                                                    </td>
+                                                    <td>
+                                                        @if($datetimeNow->diff(new DateTime(date('Y-m-d H:i:s', strtotime($upVal->buy_date . "+ 90 days"))))->format('%R%a') < 0  && $upKey == 0)
+                                                            <button data-id="{{$upVal->id}}" class="btn btn-danger btn-sm btnWD m-0" type="button">Withdraw</button>
+                                                        @else
+                                                            <button class="btn btn-simple btn-linkedin m-0 p-0"></button>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -424,27 +430,43 @@
         //withdraw package
         $('.btnWD').click(function(){
             var $this=$(this);
-            var pid=$(this).attr('data-id'); 
-            $.ajax({
-                type:'post',
-                url:'{{url("packages/withdraw")}}',
-                data:{id:pid,_token:'{{csrf_token()}}',type: 'withdraw'},
-                success:function(result){
-                    if (result.success){
-                        $this.parent().append('<button class="btn btn-simple btn-google m-0 p-0">Withdrawn<div class="ripple-container"></div></button>');
-                        $this.remove();
+            var pid=$(this).attr('data-id');
+            swal({
+                  title: 'Are you sure?',
+                  text: "After the withdrawing you cannot active agency on this account again!",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, return my cars!',
+                  cancelButtonText: 'No, cancel!',
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: false,
+                  reverseButtons: true
+                }).then(function(result){
+                    $.ajax({
+                        type:'post',
+                        url:'{{url("packages/withdraw")}}',
+                        data:{id:pid,_token:'{{csrf_token()}}',type: 'withdraw'},
+                        success:function(result){
+                            if (result.success){
+                                $this.parent().append('<button class="btn btn-simple btn-google m-0 p-0">Withdrawn<div class="ripple-container"></div></button>');
+                                $this.remove();
 
-                        $(".carcoin_bl").html(formatter.format(result.result).replace("$", ""));
-                        swal("Withdraw Package","Package has been withdrawn success","success").then(function(){
-                            window.location.reload();
-                        });
-                    } 
-                    else
-                    {
-                        swal('Oops...',result.message,'error');
-                    }
-                }
-            });
+                                $(".carcoin_bl").html(formatter.format(result.result).replace("$", ""));
+                                swal("Withdraw Package","Package has been withdrawn success","success").then(function(){
+                                    window.location.reload();
+                                });
+                            } 
+                            else
+                            {
+                                swal('Oops...',result.message,'error');
+                            }
+                        }
+                    });
+                }) 
+            
         });
         //end
 
